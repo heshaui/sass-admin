@@ -4,18 +4,17 @@ import { request } from '@umijs/max';
 
 /** 发送验证码 POST /api/login/captcha */
 export async function getFakeCaptcha(
-  params: {
-    // query
-    /** 手机号 */
-    phone?: string;
-  },
+  body:API.FackeParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.FakeCaptcha>('/tenant-admin/v1/sendCaptchaBase/mail/not', {
-    method: 'GET',
-    params: {
-      ...params,
+  return request<API.FackeResult>('/tenant-admin/v1/sendCaptchaBase/mail/not', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
     },
     ...(options || {}),
   });
 }
+
+

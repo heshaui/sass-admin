@@ -3,25 +3,93 @@
 
 declare namespace API {
   type CurrentUser = {
-    name?: string;
-    avatar?: string;
-    userid?: string;
-    email?: string;
-    signature?: string;
-    title?: string;
-    group?: string;
-    tags?: { key?: string; label?: string }[];
-    notifyCount?: number;
-    unreadCount?: number;
-    country?: string;
-    access?: string;
-    geographic?: {
-      province?: { label?: string; key?: string };
-      city?: { label?: string; key?: string };
-    };
-    address?: string;
-    phone?: string;
+    employeeResp?: EmployeeResp;
+    /**
+     * 权限数据 顶级父类Id是0
+     */
+    tenantAuthorityList?: TenantAuthority[];
+    [property: string]: any;
   };
+
+  
+  type EmployeeResp = {
+    /**
+     * 员工邮箱
+     */
+    email?: string;
+    /**
+     * 员工ID
+     */
+    id?: number;
+    /**
+     * 员工昵称
+     */
+    nickname?: string;
+    /**
+     * 员工手机号
+     */
+    phone?: string;
+    /**
+     * 备注信息
+     */
+    remark?: string;
+    /**
+     * 员工角色/权限
+     */
+    role?: string;
+    /**
+     * 状态 1 正常 0 冻结
+     */
+    status?: number;
+    [property: string]: any;
+}
+
+/**
+ * 管理员权限表，权限数据 顶级父类Id是0
+ */
+ type TenantAuthority = {
+    /**
+     * 描述
+     */
+    description: string;
+    /**
+     * 图标
+     */
+    icon?: string;
+    /**
+     * 主键ID
+     */
+    id?: number;
+    /**
+     * Shiro名称
+     */
+    name: string;
+    /**
+     * 父级ID
+     */
+    parentId: number;
+    /**
+     * 路径
+     */
+    path?: string;
+    /**
+     * 排序
+     */
+    sort: number;
+    /**
+     * 中文标题
+     */
+    title: string;
+    /**
+     * 多语言标题key
+     */
+    titleKey: string;
+    /**
+     * 类型，1 - 导航栏, 2 - 操作权限
+     */
+    type: number;
+    [property: string]: any;
+}
 
   type LoginResult = {
     status?: string;
@@ -56,6 +124,20 @@ declare namespace API {
     success?: boolean;
   };
 
+  type FackeParams = {
+    number?: String;
+    deviceType?: String;
+  };
+
+type FackeResult={
+  code?: string;
+  data?: { [key: string]: any };
+  failMsg?: Response;
+  message?: string;
+  reqNo?: string;
+  [property: string]: any;
+}
+
   type FakeCaptcha = {
     code?: number;
     status?: string;
@@ -65,8 +147,9 @@ declare namespace API {
     account?: string;
     password?: string;
     googleCode?: string;
+    emailCode?: string;
     rememberPassword?: boolean;
-    type?: string;
+
   };
 
   type ErrorResponse = {

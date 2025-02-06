@@ -2,6 +2,7 @@
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
 
+
 // 错误处理方案： 错误类型
 enum ErrorShowType {
   SILENT = 0,
@@ -90,7 +91,14 @@ export const errorConfig: RequestConfig = {
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
       const url = config?.url
-      return { ...config, url };
+      const token = localStorage.getItem('token');
+      const newHeaders = {
+        ...config.headers,
+        
+        'sa-token-admin': token ? `${token}` : '', // 添加 Authorization 头
+        // 可以根据需要添加更多自定义的请求头
+      };
+      return { ...config, url,newHeaders };
     },
   ],
 
