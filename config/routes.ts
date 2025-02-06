@@ -45,6 +45,29 @@ export default [
       },
     ],
   },
+  {
+    path: '/authAdmin',
+    name: 'authAdmin',
+    icon: 'crown',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/authAdmin/role',
+        name: 'role',
+        component: './AuthAdmin/RoleAdmin',
+      },
+      {
+        path: '/authAdmin/userAdmin',
+        name: 'userAdmin',
+        component: './AuthAdmin/UserAdmin',
+      },
+      {
+        path: '/authAdmin/permissionAdmin',
+        name: 'permission',
+        component: './AuthAdmin/PermissionAdmin',
+      },
+    ],
+  },
 
   {
     path: '/',

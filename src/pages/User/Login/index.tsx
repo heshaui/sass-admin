@@ -173,12 +173,7 @@ const Login: React.FC = () => {
                 rules={[
                   {
                     required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.phoneNumber.required"
-                        defaultMessage="请输入账户！"
-                      />
-                    ),
+                    message:"请输入账户"
                   },
                 ]}
               />
