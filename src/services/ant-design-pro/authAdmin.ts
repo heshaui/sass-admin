@@ -84,7 +84,7 @@ export async function updateTenantById(
 }
 
 
-// /tenant-admin/v1/role/roleList
+
 //角色列表
 export async function roleList(
   body:API.RoleVo,
@@ -100,7 +100,7 @@ export async function roleList(
   });
 }
 
-// /tenant-admin/v1/role/saveRole
+
 //角色新增
 export async function saveRole(
   body:API.RoleVo,
@@ -116,7 +116,7 @@ export async function saveRole(
   });
 }
 
-// /tenant-admin/v1/role/deleteTenantById
+
 //角色删除
 export async function deleteRoleById(
   body:API.RoleVo,
@@ -133,7 +133,7 @@ export async function deleteRoleById(
 }
 
 
-// /tenant-admin/v1/role/tenantParams
+
 //角色查询
 export async function roleParams(
   body:API.RoleVo,
@@ -150,13 +150,30 @@ export async function roleParams(
 }
 
 
-// /tenant-admin/v1/role/updateTenantById
+
 //角色修改
 export async function updateRoleById(
   body:API.RoleVo,
   options?: { [key: string]: any },
 ) {
   return request<API.Role>('/tenant-admin/v1/role/updateTenantById', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
+
+//员工列表
+export async function employeeList(
+  body:API.EmployeeVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Employee>('/tenant-admin/v1/employee/employeeList', {
     method: 'POST',
     data: body,
     headers: {

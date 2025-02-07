@@ -1,9 +1,12 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Select, Space, Tag } from 'antd';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import React from 'react';
+import { useState, useEffect } from 'react';
+import { employeeList} from '@/services/ant-design-pro/authAdmin';
 
 const UserAdmin: React.FC = () => {
+   const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
   // 表格的列配置
   const columns = [
     {
@@ -63,17 +66,17 @@ const UserAdmin: React.FC = () => {
     },
   ];
 
-  // 模拟数据
-  const data = Array.from({ length: 10 }, (_, index) => ({
-    id: 'USDT',
-    nickname: 'XXXXXXXXXXX',
-    remark: `0x1234....123456`,
-    role: Math.floor(Math.random() * 100),
-    phone: Math.floor(Math.random() * 100),
-    email: index % 2 === 0 ? `${Math.random().toFixed(4)}@mail.com` : '',
-    twoFactorAuth: index % 3 === 0 ? '已开启' : '未开启',
-    status: index % 2 === 0 ? '正常' : '禁用',
-  }));
+  const getUserList = async (params = { pageNo: 1, pageSize: 10 }) => {
+    try {
+      const res = await employeeList(params);
+      if (res?.data) {
+        setData(res.data.list || []); // 更新数据
+      }
+    } catch (error) {
+      console.error('Failed to fetch user list:', error);
+      return [];
+    }
+  }
 
   return (
     <PageContainer>
@@ -81,6 +84,13 @@ const UserAdmin: React.FC = () => {
         rowKey="id"
         columns={columns}
         dataSource={data}
+        loading={loading}
+        request={async (params) => {
+          await getUserList({
+            pageNo: params.current,
+            pageSize: params.pageSize,
+          });
+        }}
         search={{
           labelWidth: 'auto',
         }}
