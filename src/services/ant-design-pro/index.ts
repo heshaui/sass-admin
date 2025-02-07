@@ -4,7 +4,7 @@
 // API 唯一标识：
 import * as api from './api';
 import * as login from './login';
-import * as role from './role';
+import * as role from './authAdmin';
 export default {
   api,
   login,
