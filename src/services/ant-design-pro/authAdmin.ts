@@ -182,3 +182,99 @@ export async function employeeList(
     ...(options || {}),
   });
 }
+
+
+
+//员工新增
+export async function saveEmployee(
+  body:API.EmployeeVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Employee>('/tenant-admin/v1/employee/saveEmployee', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
+//员工删除
+export async function deleteEmployeeById(
+  body:API.EmployeeVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Employee>('/tenant-admin/v1/employee/deleteEmployeeById?idString='+body, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
+//员工启用
+export async function enableEmployee(
+  body:API.EmployeeVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Employee>('/tenant-admin/v1/employee/enableEmployee/'+body+'/1', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
+
+//员工禁用
+export async function offEmployee(
+  body:API.EmployeeVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Employee>('/tenant-admin/v1/employee/offEmployee/'+body+'/0', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
+
+//员工重置密码
+export async function resetPassword(
+  body:API.EmployeeVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Employee>('/tenant-admin/v1/employee/resetPassword/'+body, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
+// /tenant-admin/v1/employee/updateEmployeeById
+//员工修改
+export async function updateEmployeeById(
+  body:API.EmployeeVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Employee>('/tenant-admin/v1/employee/updateEmployeeById', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
