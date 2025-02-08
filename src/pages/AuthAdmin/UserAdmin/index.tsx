@@ -1,18 +1,20 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Select, Space, Tag,message } from 'antd';
-import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+import { Dropdown, Menu, Button, Tag, Space, message, Select } from 'antd';
+import { PlusOutlined, ReloadOutlined,DownOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { employeeList,saveEmployee,deleteEmployeeById,enableEmployee,offEmployee,resetPassword,updateEmployeeById} from '@/services/ant-design-pro/authAdmin';
 import UserModal from './component/UserModal'; // 引入UserModal
+import ResetPasswordModal from './component/ResetPasswordModal';
+import ResetGoogleModal from './component/ResetGoogleModal';
 
 const UserAdmin: React.FC = () => {
    const [data, setData] = useState([]);
    const [loading, setLoading] = useState(false);
-   const [modalVisible, setModalVisible] = useState(false);  // 控制弹窗的显示
-   const [editingRecord, setEditingRecord] = useState(null); // 用于保存编辑时的记录
-
-
-
+   const [modalVisible, setModalVisible] = useState(false); // 控制用户弹框
+   const [resetPasswordVisible, setResetPasswordVisible] = useState(false); // 控制重置密码弹框
+   const [resetGoogleVisible, setResetGoogleVisible] = useState(false); // 控制重置谷歌弹框
+   const [editingRecord, setEditingRecord] = useState(null); // 当前操作的记录
+ 
 
     
   // 表格的列配置
@@ -66,14 +68,44 @@ const UserAdmin: React.FC = () => {
         text === 1 ? <Tag color="green">正常</Tag> : <Tag color="red">禁用</Tag>,
     },
     {
-      title: '选项',
+      title: '操作',
       key: 'action',
       render: (_, record) => (
-        <Space>
-          
-          <Button onClick={() => handleEdit(record)}>修改</Button>
-          <Button style={{ color: '#ff4d4f' }} onClick={() => handleDelete(record.id)}>删除</Button>
-        </Space>
+        <Dropdown
+          overlay={
+            <Menu>
+              <Menu.Item key="edit" onClick={() => handleEdit(record)}>
+                修改
+              </Menu.Item>
+              <Menu.Item
+                key="resetPassword"
+                onClick={() => {
+                  setEditingRecord(record);
+                  setResetPasswordVisible(true);
+                }}
+              >
+                重置密码
+              </Menu.Item>
+              <Menu.Item
+                key="resetGoogle"
+                onClick={() => {
+                  setEditingRecord(record);
+                  setResetGoogleVisible(true);
+                }}
+              >
+                重置谷歌
+              </Menu.Item>
+              <Menu.Item key="delete" onClick={() => handleDelete(record.id)} danger>
+                删除
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={['click']}
+        >
+          <Button>
+            操作 <DownOutlined />
+          </Button>
+        </Dropdown>
       ),
     },
   ];
@@ -101,8 +133,14 @@ const UserAdmin: React.FC = () => {
           message.success('用户编辑成功');
         } else {
           // 新建用户
-          await saveEmployee(values);
-          message.success('用户新建成功');
+        const res=  await saveEmployee(values);
+          if(res.code==='0'){
+            message.success('用户新建成功');
+          }else{
+            message.error('用户新建失败');
+          }
+
+          
         }
         setModalVisible(false);  // 关闭弹窗
         setEditingRecord(null);  // 清空编辑记录
@@ -129,6 +167,28 @@ const UserAdmin: React.FC = () => {
         message.error('删除失败');
       }
     };
+
+// 重置密码
+const handleResetPassword = async (values) => {
+  try {
+    // await resetPassword({ userId: editingRecord.id, newPassword: values.newPassword });
+    message.success('密码重置成功');
+    setResetPasswordVisible(false);
+  } catch (error) {
+    message.error('密码重置失败');
+  }
+};
+
+// 重置谷歌
+const handleResetGoogleAuth = async () => {
+  try {
+    // await resetGoogleAuth({ userId: editingRecord.id });
+    message.success('谷歌身份验证重置成功');
+    setResetGoogleVisible(false);
+  } catch (error) {
+    message.error('谷歌身份验证重置失败');
+  }
+};
   
     useEffect(() => {
       getUserList();  // 获取用户列表
@@ -162,27 +222,31 @@ const UserAdmin: React.FC = () => {
           showSizeChanger: true,
         }}
         toolBarRender={() => [
-          <Select placeholder="状态" key="status" style={{ width: 120 }}>
-            <Select.Option value="全部">全部</Select.Option>
-            <Select.Option value="正常">正常</Select.Option>
-            <Select.Option value="禁用">禁用</Select.Option>
-          </Select>,
-          <Button key="search" type="primary">
-            查询
-          </Button>,
-          <Button key="reset" icon={<ReloadOutlined />}>
-            重置
-          </Button>,
           <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
             新建
           </Button>,
         ]}
       />
+        {/* 用户弹框 */}
        <UserModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSubmit={handleSubmit}
         initialValues={editingRecord}
+      />
+
+      {/* 重置密码弹框 */}
+      <ResetPasswordModal
+        visible={resetPasswordVisible}
+        onClose={() => setResetPasswordVisible(false)}
+        onSubmit={handleResetPassword}
+      />
+
+      {/* 重置谷歌弹框 */}
+      <ResetGoogleModal
+        visible={resetGoogleVisible}
+        onClose={() => setResetGoogleVisible(false)}
+        onSubmit={handleResetGoogleAuth}
       />
     </PageContainer>
   );

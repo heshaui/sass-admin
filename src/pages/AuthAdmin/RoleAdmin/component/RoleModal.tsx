@@ -85,7 +85,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
         </Form.Item>
 
         {/* 权限选择（树形结构） */}
-        <Form.Item
+        {/* <Form.Item
           label="权限分配"
           required
         >
@@ -96,7 +96,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
             onCheck={handleSelect}
             checkStrictly
           />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );

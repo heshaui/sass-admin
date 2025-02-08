@@ -3,7 +3,7 @@ import { Button, Space, message } from 'antd';
 import { useIntl } from '@umijs/max';
 import { useState, useEffect } from 'react';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import { roleList,saveRole,deleteRoleById,updateRoleById,AuthorityList} from '@/services/ant-design-pro/authAdmin';
+import { roleList,saveRole,deleteRoleById,updateRoleById,AuthorityList,savePermissionsList} from '@/services/ant-design-pro/authAdmin';
 import RoleModal from './component/RoleModal';  // 引入RoleModal
 
 const RoleAdmin: React.FC = () => {
@@ -55,8 +55,9 @@ const RoleAdmin: React.FC = () => {
       valueType: 'option',
       render: (_, record) => (
         <Space>
-          <a onClick={() => handleEdit(record)}>修改</a>
-          <a style={{ color: 'red' }} onClick={() => handleDelete(record.roleId)}>删除</a>
+          <Button  type="primary" onClick={() => handleEdit(record)}>权限分配</Button>
+          <Button  type="primary" onClick={() => handleEdit(record)}>修改</Button>
+          <Button danger onClick={() => handleDelete(record.roleId)}>删除</Button>
         </Space>
       ),
     },

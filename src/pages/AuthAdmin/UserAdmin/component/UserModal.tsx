@@ -69,6 +69,20 @@ const UserModal: React.FC<UserModalProps> = ({
         >
           <Input />
         </Form.Item>
+        <Form.Item
+          name="googleCode"
+          label="googleCode"
+          rules={[{ message: '请输入googleCode' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="role"
+          label="权限"
+          rules={[{  message: '请输入权限' }]}
+        >
+          <Input />
+        </Form.Item>
 
         <Form.Item
           name="status"
