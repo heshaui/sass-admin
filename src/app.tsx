@@ -7,9 +7,11 @@ import { history, Link } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
+import { generateMenuTree } from '@/utils/index';
 import React from 'react';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -25,7 +27,10 @@ export async function getInitialState(): Promise<{
       const msg = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      return msg.data;
+      const menuTree = generateMenuTree(msg.data.tenantAuthorityList);
+      localStorage.setItem('menuTree', JSON.stringify(menuTree));
+
+      return { ...msg.data, menuTree };
     } catch (error) {
       history.push(loginPath);
     }
@@ -94,7 +99,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       ? [
           <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
             <LinkOutlined />
-            <span>OpenAPI 文档</span>
+           
           </Link>,
         ]
       : [],
@@ -102,6 +107,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
+
+    menuDataRender: () => initialState?.currentUser?.menuTree || [],
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return (

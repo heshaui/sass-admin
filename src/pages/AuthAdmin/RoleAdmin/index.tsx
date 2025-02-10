@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import { roleList,saveRole,deleteRoleById,updateRoleById,AuthorityList,savePermissionsList} from '@/services/ant-design-pro/authAdmin';
 import RoleModal from './component/RoleModal';  // 引入RoleModal
-
+import Dispense from './component/Dispense'
 const RoleAdmin: React.FC = () => {
   const intl = useIntl();
   const [data, setData] = useState([]);
@@ -13,6 +13,7 @@ const RoleAdmin: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);  // 控制弹窗的显示
   const [editingRecord, setEditingRecord] = useState(null); // 用于保存编辑时的记录
   const [permissions, setPermissions] = useState<string[]>([]); // 存储所有权限列表
+  const [disVisible,setDisVisible]=useState(false)
   // 表格的列配置
   const columns = [
     {
@@ -55,7 +56,7 @@ const RoleAdmin: React.FC = () => {
       valueType: 'option',
       render: (_, record) => (
         <Space>
-          <Button  type="primary" onClick={() => handleEdit(record)}>权限分配</Button>
+          <Button  type="primary" onClick={() => handleDispense(record)}>权限分配</Button>
           <Button  type="primary" onClick={() => handleEdit(record)}>修改</Button>
           <Button danger onClick={() => handleDelete(record.roleId)}>删除</Button>
         </Space>
@@ -129,6 +130,11 @@ const RoleAdmin: React.FC = () => {
       message.error('删除失败');
     }
   }
+
+  const handleDispense=(record)=>{
+    setEditingRecord(record)
+    setDisVisible(true)
+  }
   useEffect(() => {
     fetchPermissions();  // 获取所有权限
   }, []);
@@ -172,6 +178,13 @@ const RoleAdmin: React.FC = () => {
       <RoleModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
+        onSubmit={handleSubmit}
+        initialValues={editingRecord}
+        allPermissions={permissions}
+      />
+      <Dispense
+        visible={disVisible}
+        onClose={() => setDisVisible(false)}
         onSubmit={handleSubmit}
         initialValues={editingRecord}
         allPermissions={permissions}

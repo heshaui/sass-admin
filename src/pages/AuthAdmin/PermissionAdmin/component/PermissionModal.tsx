@@ -72,15 +72,24 @@ const PermissionModal: React.FC<PermissionModalProps> = ({ visible, onClose, onS
           <Input />
         </Form.Item>
         <Form.Item
-          name="description"
+          name="component"
           label="前端路径"
-          rules={[{ required: true, message: '请输入前端路径' }]}
+          rules={[{ message: '请输入前端路径' }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          name="description"
+          label="描述"
+          rules={[{ required: true,message: '请输入描述' }]}
         >
           <Input />
         </Form.Item>
         <Form.Item
           name="parentId"
           label="父级ID"
+          rules={[{ required: true, message: '请输入父级ID' }]}
+
         >
           <Input />
         </Form.Item>
