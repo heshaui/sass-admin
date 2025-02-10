@@ -3,17 +3,18 @@ import { Button, Space, message } from 'antd';
 import { useIntl } from '@umijs/max';
 import { useState, useEffect } from 'react';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import { roleList,saveRole,deleteRoleById,updateRoleById,AuthorityList,savePermissionsList} from '@/services/ant-design-pro/authAdmin';
+import { roleList,saveRole,deleteRoleById,updateRoleById,AuthorityList,savePermissionsList,permissionsParams} from '@/services/ant-design-pro/authAdmin';
 import RoleModal from './component/RoleModal';  // 引入RoleModal
 import Dispense from './component/Dispense'
 const RoleAdmin: React.FC = () => {
   const intl = useIntl();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);  // 控制弹窗的显示
-  const [editingRecord, setEditingRecord] = useState(null); // 用于保存编辑时的记录
-  const [permissions, setPermissions] = useState<string[]>([]); // 存储所有权限列表
-  const [disVisible,setDisVisible]=useState(false)
+  const [modalVisible, setModalVisible] = useState(false); 
+  const [editingRecord, setEditingRecord] = useState(null); 
+  const [allPermissions, setAllPermissions] = useState<string[]>([]); 
+  const [disVisible, setDisVisible] = useState(false);
+  const [rolePermissions, setRolePermissions] = useState<string[]>([]); // ✅ 角色已分配的权限
   // 表格的列配置
   const columns = [
     {
@@ -64,133 +65,151 @@ const RoleAdmin: React.FC = () => {
     },
   ];
 
-  // 获取角色列表
-  const getRoleList = async (params = { pageNo: 1, pageSize: 10 }) => {
-    setLoading(true); // 设置加载状态
-    try {
-      const res = await roleList(params); // 调用 API
-      if (res?.data) {
-        setData(res.data.list || []); // 更新数据
-      }
-    } catch (error) {
-      console.error('Failed to fetch authority list:', error);
-    } finally {
-      setLoading(false); // 结束加载状态
-    }
-  };
-    // 获取所有权限
-    const fetchPermissions = async () => {
-      try {
-        let data={
-          pageNo:1,
-          pageSize:1000
-        }
-        const res = await AuthorityList(data);  // 获取所有权限
-        if (res?.data) {
-          setPermissions(res.data.list|| []);  // 设置权限列表
-        }
-      } catch (error) {
-        console.error('Failed to fetch permissions:', error);
-      }
-    };
-
-      // 新建/编辑角色提交
-  const handleSubmit = async (values) => {
-    try {
-      if (editingRecord) {
-        // 编辑角色
-        await updateRoleById({ ...editingRecord, ...values });
-        message.success('角色编辑成功');
-      } else {
-        // 新建角色
-        await saveRole(values);
-        message.success('角色新建成功');
-      }
-      setModalVisible(false);  // 关闭弹窗
-      setEditingRecord(null);  // 清空编辑记录
-      getRoleList();  // 刷新角色列表
-    } catch (error) {
-      message.error('操作失败');
-    }
-  };
-
-  // 编辑角色
-  const handleEdit = (record) => {
-    setEditingRecord(record);  // 设置编辑记录
-    setModalVisible(true);  // 打开弹窗
-  };
-
-  // 删除角色
-  const handleDelete = async (roleId) => {
-    try {
-      await deleteRoleById({ roleId });  // 调用API删除角色
-      message.success('角色删除成功');
-      getRoleList();  // 刷新角色列表
-    } catch (error) {
-      message.error('删除失败');
-    }
+ // 📌 获取角色列表
+ const getRoleList = async (params = { pageNo: 1, pageSize: 10 }) => {
+  setLoading(true);
+  try {
+    const res = await roleList(params);
+    if (res?.data) setData(res.data.list || []);
+  } catch (error) {
+    console.error('Failed to fetch roles:', error);
+  } finally {
+    setLoading(false);
   }
+};
 
-  const handleDispense=(record)=>{
-    setEditingRecord(record)
-    setDisVisible(true)
+// 📌 获取所有权限（加载时调用一次）
+const fetchPermissions = async () => {
+  try {
+    const res = await AuthorityList({ pageNo: 1, pageSize: 1000 });
+    if (res?.data) setAllPermissions(res.data.list || []);
+  } catch (error) {
+    console.error('Failed to fetch permissions:', error);
   }
-  useEffect(() => {
-    fetchPermissions();  // 获取所有权限
-  }, []);
+};
 
-  return (
-    <PageContainer>
-      <ProTable
+// 📌 获取某个角色的已分配权限
+const getRoleInfo = async (record) => {
+  try {
+    const res = await permissionsParams({ roleId: record.roleId, pageNo: 1, pageSize: 10000 });
+    if (res?.data) {
+      // ✅ 提取 permissionsId
+      const checkedKeys = res.data.list.map((item) => item.permissionsId);
+      setRolePermissions(checkedKeys);
+    }
+  } catch (error) {
+    console.error('Failed to fetch role permissions:', error);
+  }
+};
+
+// 📌 新建/编辑角色提交
+const handleSubmit = async (values) => {
+  try {
+    if (editingRecord) {
+      await updateRoleById({ ...editingRecord, ...values });
+      message.success('角色编辑成功');
+    } else {
+      await saveRole(values);
+      message.success('角色新建成功');
+    }
+    setModalVisible(false);
+    setEditingRecord(null);
+    await getRoleList(); // ✅ 刷新角色列表
+  } catch (error) {
+    message.error('操作失败');
+  }
+};
+
+// 📌 编辑角色
+const handleEdit = (record) => {
+  setEditingRecord(record);
+  setModalVisible(true);
+};
+
+// 📌 删除角色
+const handleDelete = async (roleId) => {
+  try {
+    await deleteRoleById({ roleId });
+    message.success('角色删除成功');
+    await getRoleList();
+  } catch (error) {
+    message.error('删除失败');
+  }
+};
+
+// 📌 角色权限分配（打开弹框 + 获取角色权限）
+const handleDispense = async (record) => {
+  setEditingRecord(record);
+  await getRoleInfo(record);
+  setDisVisible(true);
+};
+
+// 📌 提交权限分配
+const handleSubmitDis = async (values) => {
+  try {
+    await savePermissionsList({ roleId: editingRecord.roleId, permissionsIds: values.permissions });
+    message.success('权限分配成功');
+    setDisVisible(false);
+    await getRoleList(); // ✅ 刷新角色列表，确保权限生效
+  } catch (error) {
+    message.error('操作失败');
+  }
+};
+
+useEffect(() => {
+  fetchPermissions(); 
+}, []);
+
+
+return (
+  <PageContainer>
+    <ProTable
       rowKey="roleId"
       columns={columns}
       dataSource={data}
+      scroll={{ x: 'max-content' }}
       loading={loading}
       request={async (params) => {
-        await getRoleList({
-          pageNo: params.current,
-          pageSize: params.pageSize,
-        });
+        await getRoleList({ pageNo: params.current, pageSize: params.pageSize });
       }}
-        options={{
-          density: false,
-          fullScreen: true,
-          reload: false,
-          setting: false,
-        }}
-        pagination={{
-          showQuickJumper: true,
-          defaultPageSize: 10,
-          showSizeChanger: true,
-        }}
-        toolBarRender={() => [
-          <Button key="search" type="primary">
-            查询
-          </Button>,
-          <Button key="reset" icon={<ReloadOutlined />}>
-            重置
-          </Button>,
-          <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
-            新建
-          </Button>,
-        ]}
-      />
-      <RoleModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSubmit={handleSubmit}
-        initialValues={editingRecord}
-        allPermissions={permissions}
-      />
-      <Dispense
-        visible={disVisible}
-        onClose={() => setDisVisible(false)}
-        onSubmit={handleSubmit}
-        initialValues={editingRecord}
-        allPermissions={permissions}
-      />
-    </PageContainer>
-  );
+      options={{
+        density: false,
+        fullScreen: true,
+        reload: false,
+        setting: false,
+      }}
+      pagination={{
+        showQuickJumper: true,
+        defaultPageSize: 10,
+        showSizeChanger: true,
+      }}
+      toolBarRender={() => [
+        <Button key="search" type="primary">
+          查询
+        </Button>,
+        <Button key="reset" icon={<ReloadOutlined />}>
+          重置
+        </Button>,
+        <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
+          新建
+        </Button>,
+      ]}
+    />
+    <RoleModal
+      visible={modalVisible}
+      onClose={() => setModalVisible(false)}
+      onSubmit={handleSubmit}
+      initialValues={editingRecord}
+    />
+    <Dispense
+      visible={disVisible}
+      onClose={() => setDisVisible(false)}
+      onSubmit={handleSubmitDis}
+      initialValues={{ ...editingRecord, permissions: rolePermissions }} // ✅ 传递回显数据
+      allPermissions={allPermissions}
+    />
+  </PageContainer>
+);
 };
 
 export default RoleAdmin;

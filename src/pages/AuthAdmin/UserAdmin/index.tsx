@@ -171,7 +171,7 @@ const UserAdmin: React.FC = () => {
 // 重置密码
 const handleResetPassword = async (values) => {
   try {
-    // await resetPassword({ userId: editingRecord.id, newPassword: values.newPassword });
+     await resetPassword({ id: editingRecord.id});
     message.success('密码重置成功');
     setResetPasswordVisible(false);
   } catch (error) {
@@ -199,6 +199,7 @@ const handleResetGoogleAuth = async () => {
       <ProTable
         rowKey="id"
         columns={columns}
+        scroll={{ x: 'max-content' }}
         dataSource={data}
         loading={loading}
         request={async (params) => {

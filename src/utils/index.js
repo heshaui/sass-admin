@@ -45,3 +45,24 @@ export const generateMenuTree = (menuList) => {
   
     return result;
   };
+
+
+  // ✅ 将后端返回的权限列表转换成 `antd` 的 `Tree` 组件可识别的格式
+  export const generateTreeData = (permissions) => {
+    const map = new Map();
+    const tree = [];
+  
+    permissions.forEach((perm) => {
+      map.set(perm.id, { ...perm, key: perm.id, title: perm.title, children: [] });
+    });
+  
+    permissions.forEach((perm) => {
+      if (perm.parentId && map.has(perm.parentId)) {
+        map.get(perm.parentId).children.push(map.get(perm.id));
+      } else {
+        tree.push(map.get(perm.id));
+      }
+    });
+  
+    return tree;
+  };

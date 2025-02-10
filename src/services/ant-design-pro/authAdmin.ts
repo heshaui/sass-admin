@@ -165,7 +165,7 @@ export async function updateRoleById(
     ...(options || {}),
   });
 }
-// /tenant-admin/v1/permissions/savePermissionsList
+
 //权限分配
 export async function savePermissionsList(
   body:API.PermissionsVo,
@@ -180,6 +180,23 @@ export async function savePermissionsList(
     ...(options || {}),
   });
 }
+
+// /tenant-admin/v1/permissions/tenantParams
+//权限查询
+export async function permissionsParams(
+  body:API.PermissionsVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Permissions>('/tenant-admin/v1/permissions/permissionsList', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
 
 
 
