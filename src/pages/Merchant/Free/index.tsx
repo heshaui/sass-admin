@@ -2,20 +2,25 @@ import React, { useState, useEffect } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
 import { Button, Space, Modal, message } from "antd";
 import MerchantEdit from "./component/MerchantEdit";
-import { saveTenant, tenantList } from "@/services/ant-design-pro/merchant";
+import ServerAdmin from "./component/ServerAdmin";
+import ConvertToPaid from "./component/ConvertToPaid"; // 导入新组件
+import { saveTenant, tenantList,updateTenantById } from "@/services/ant-design-pro/merchant";
 import dayjs from "dayjs";
+
 const Free: React.FC = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [serverModalVisible, setServerModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<any>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [convertModalVisible, setConvertModalVisible] = useState(false);
   const [merchantData, setMerchantData] = useState<any[]>([]);
-  
+
   // **获取商户列表**
   const fetchMerchantList = async () => {
     setLoading(true);
     try {
-      const res = await tenantList({ pageNo: 1, pageSize: 10 });
+      const res = await tenantList({ pageNo: 1, pageSize: 10, paymentStatus: 0 });
       if (res.code === "0") {
         setMerchantData(res.data.list || []);
       } else {
@@ -46,7 +51,13 @@ const Free: React.FC = () => {
     setEditModalVisible(true);
   };
 
-  // **提交表单 (新建 / 编辑)**
+  // **打开服务器管理弹窗**
+  const handleServerConfig = (record: any) => {
+    setCurrentRecord(record);
+    setServerModalVisible(true);
+  };
+
+  // **提交商户表单**
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
@@ -54,7 +65,7 @@ const Free: React.FC = () => {
       if (res.code === "0") {
         message.success(isCreating ? "新增商户成功" : "更新商户成功");
         setEditModalVisible(false);
-        fetchMerchantList(); // 刷新表格数据
+        fetchMerchantList();
       } else {
         message.error(res.message || "操作失败");
       }
@@ -65,6 +76,46 @@ const Free: React.FC = () => {
     }
   };
 
+  // **提交服务器配置**
+  const handleServerSubmit = async (values: any) => {
+    let data={
+      tenantId:currentRecord.tenantId,
+      tenantHost:values.tenantHost
+    }
+   let res=await updateTenantById(data);
+   if(res.code==='0'){
+    message.success("服务器配置已更新");
+    setServerModalVisible(false);
+   }
+    
+  };
+
+  const handleConvertToPaid = (record: any) => {
+    setCurrentRecord(record);
+    setConvertModalVisible(true);
+  };
+
+  // **提交 "转为正式商户" 操作**
+  const handleConvertSubmit =async (values: any) => {
+    // console.log("转为正式商户:", values);
+    // 
+    let data={
+      tenantId:currentRecord.tenantId,
+      paymentStatus:1,
+      tenantEndTime:dayjs(values.tenantEndTime).valueOf()
+      
+
+    } 
+   let res=await updateTenantById(data);
+   if(res.code==='0'){
+    message.success("商户已转为正式商户！");
+    setConvertModalVisible(false);
+    fetchMerchantList();
+   }
+    
+   
+  };
+
   // **表格列配置**
   const columns: ProColumns<any>[] = [
     { title: "商户ID", dataIndex: "tenantId", width: 100 },
@@ -73,37 +124,33 @@ const Free: React.FC = () => {
     {
       title: "服务时间",
       dataIndex: "serviceTime",
-      width: 300,
       render: (_, record) => (
         <div>
-          <div>注册时间：{record.createTime?dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss"):'--'}</div>
-          <div>开通时间：{record.tenantStartTime?dayjs(record.tenantStartTime).format("YYYY-MM-DD HH:mm:ss"):'--'}</div>
-          <div>到期时间：{record.tenantEndTime?dayjs(record.tenantEndTime).format("YYYY-MM-DD HH:mm:ss"):'--'}</div>
+          <div>注册时间：{record.createTime ? dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
+          <div>开通时间：{record.tenantStartTime ? dayjs(record.tenantStartTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
+          <div>到期时间：{record.tenantEndTime ? dayjs(record.tenantEndTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
         </div>
       ),
     },
     {
       title: "服务状态",
       dataIndex: "tenantStatus",
-      width: 100,
-      valueType: "select",
-      valueEnum: {
-        all: { text: "全部", status: "Default" },
-        服务中: { text: "服务中", status: "Success" },
-        未开始: { text: "未开始", status: "Warning" },
-        已欠费: { text: "已欠费", status: "Error" },
-      },
+      render: (_, record) => <div>{record.tenantStatus === 1 ? "正常" : "禁用"}</div>,
+    },
+    {
+      title: "付费状态",
+      dataIndex: "paymentStatus",
+      render: (_, record) => <div>{record.paymentStatus === 1 ? "付费" : "免费"}</div>,
     },
     {
       title: "操作",
       dataIndex: "action",
-      width: 250,
       render: (_, record) => (
         <Space>
           <a onClick={() => handleEdit(record)}>修改</a>
-          {record.status === "未开始" && <a>转为正式商户</a>}
-          <a>服务器配置</a>
-          {record.status === "服务中" && <a>创建Root账号</a>}
+          {record.paymentStatus !== 1 ? <a onClick={() => handleConvertToPaid(record)}>转为正式商户</a> : ""}
+          <a onClick={() => handleServerConfig(record)}>服务器配置</a>
+          <a>创建Root账号</a>
         </Space>
       ),
     },
@@ -113,7 +160,7 @@ const Free: React.FC = () => {
     <PageContainer>
       {/* 表格 */}
       <ProTable
-        rowKey="id"
+        rowKey="tenantId"
         columns={columns}
         dataSource={merchantData}
         loading={loading}
@@ -126,7 +173,7 @@ const Free: React.FC = () => {
         ]}
       />
 
-      {/* 商户编辑/新建弹窗 */}
+      {/* 商户编辑弹窗 */}
       <Modal
         title={isCreating ? "新增商户" : "编辑商户"}
         open={editModalVisible}
@@ -134,13 +181,17 @@ const Free: React.FC = () => {
         footer={null}
         width={600}
       >
-        <MerchantEdit
-          record={currentRecord}
-          isCreating={isCreating}
-          onSubmit={handleSubmit}
-          onCancel={() => setEditModalVisible(false)}
-        />
+        <MerchantEdit record={currentRecord} isCreating={isCreating} onSubmit={handleSubmit} onCancel={() => setEditModalVisible(false)} />
       </Modal>
+
+      {/* 服务器管理弹窗 */}
+      <ServerAdmin visible={serverModalVisible} onCancel={() => setServerModalVisible(false)} onSubmit={handleServerSubmit} initialValues={currentRecord} />
+      <ConvertToPaid
+        visible={convertModalVisible}
+        onCancel={() => setConvertModalVisible(false)}
+        onSubmit={handleConvertSubmit}
+        initialValues={currentRecord}
+      />
     </PageContainer>
   );
 };

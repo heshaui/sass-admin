@@ -69,6 +69,11 @@ export default [
         name: 'charge',
         component: './Merchant/Charge',
       },
+      {
+        path: '/merchant/root',
+        name: 'root',
+        component: './Merchant/Root',
+      },
      
     ],
   },

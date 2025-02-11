@@ -40,9 +40,9 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
         <Input />
       </Form.Item>
 
-      <Form.Item label="商户ID" name="merchantId">
+      {/* <Form.Item label="商户ID" name="merchantId">
         <Input disabled={!isCreating} style={{ background: "#f5f5f5" }} />
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item label="联系人" name="tenantContact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
         <Input />

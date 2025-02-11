@@ -16,60 +16,62 @@ const Charge: React.FC = () => {
     const getList = async () => {
         setLoading(true);
         const requestData = {
-            pageNo: 1,
+            pageNo: 1, 
             pageSize: 10,
-            tenantId: "",
-            tenantName: "",
-            tenantContact: "",
-            tenantPhone: "",
-            tenantEmail: "",
+            paymentStatus:1
+            // tenantId: "",
+            // tenantName: "",
+            // tenantContact: "",
+            // tenantPhone: "",
+            // tenantEmail: "",
+
         };
         const res = await tenantList(requestData);
         if (res.code === "0") {
-            setMerchantData(res.data.records || []);
+            setMerchantData(res.data.list || []);
         }
         setLoading(false);
     };
 
     useEffect(() => {
-        getList();
+
     }, []);
 
     // **基本信息表格的列**
     const basicColumns: ProColumns<any>[] = [
         {
             title: "商户ID",
-            dataIndex: "id",
+            dataIndex: "tenantId",
         },
         {
             title: "交易所名称",
-            dataIndex: "exchange",
+            dataIndex: "tenantName",
         },
         {
             title: "邮箱",
-            dataIndex: "email",
+            dataIndex: "tenantEmail",
             search: false,
         },
         {
             title: "联系人",
-            dataIndex: "contact",
+            dataIndex: "tenantContact",
             search: false,
         },
         {
             title: "到期时间",
-            dataIndex: "expiryTime",
+            dataIndex: "tenantEndTime",
             valueType: "dateTime",
             search: false,
         },
         {
             title: "开通时间",
-            dataIndex: "activationTime",
+            dataIndex: "tenantStartTime",
             valueType: "dateTime",
             search: false,
         },
         {
             title: "状态",
-            dataIndex: "status",
+            dataIndex: "tenantStatus",
             valueType: "select",
             search: false,
             valueEnum: {
