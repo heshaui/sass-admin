@@ -62,12 +62,12 @@ export default [
       {
         path: '/merchant/free',
         name: 'free',
-        component: './Merchant/free',
+        component: './Merchant/Free',
       },
       {
         path: '/merchant/userAdmin',
         name: 'charge',
-        component: './Merchant/charge',
+        component: './Merchant/Charge',
       },
      
     ],
