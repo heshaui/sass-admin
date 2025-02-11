@@ -54,6 +54,26 @@ export default [
   },
 
   {
+    path: '/merchant',
+    name: 'merchant',
+    icon: 'crown',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/merchant/free',
+        name: 'free',
+        component: './Merchant/free',
+      },
+      {
+        path: '/merchant/userAdmin',
+        name: 'charge',
+        component: './Merchant/charge',
+      },
+     
+    ],
+  },
+
+  {
     path: '/',
     redirect: '/welcome',
   },

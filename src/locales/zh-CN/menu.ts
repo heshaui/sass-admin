@@ -52,6 +52,8 @@ export default {
   'menu.authAdmin': '权限管理',
   'menu.authAdmin.permission': '权限列表',
   'menu.authAdmin.userAdmin': '用户管理',
-
   'menu.authAdmin.role': '角色管理',
+  'menu.merchant': '商户管理',
+  'menu.merchant.free': '免费商户',
+  'menu.merchant.charge': '付费商户',
 };
