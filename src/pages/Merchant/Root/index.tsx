@@ -150,12 +150,7 @@ const Root: React.FC = () => {
       />
 
       {/* 新建 / 编辑商户弹窗组件 */}
-      <RootModal
-        visible={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        onSave={handleSave}
-        initialValues={currentRecord}
-      />
+     
     </PageContainer>
   );
 };

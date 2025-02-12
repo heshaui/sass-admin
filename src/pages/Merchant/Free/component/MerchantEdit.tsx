@@ -32,9 +32,7 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
         email: "",
       }}
     >
-      <Typography.Title level={4} style={{ marginBottom: 16 }}>
-        {isCreating ? "新增商户" : "编辑商户"}
-      </Typography.Title>
+
 
       <Form.Item label="交易所名称" name="tenantName" rules={[{ required: true, message: "请输入交易所名称" }]}>
         <Input />

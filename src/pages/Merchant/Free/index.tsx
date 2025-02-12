@@ -3,13 +3,15 @@ import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components"
 import { Button, Space, Modal, message } from "antd";
 import MerchantEdit from "./component/MerchantEdit";
 import ServerAdmin from "./component/ServerAdmin";
-import ConvertToPaid from "./component/ConvertToPaid"; // 导入新组件
+import ConvertToPaid from "./component/ConvertToPaid"; 
+import RootModal from "./component/RootModal";
 import { saveTenant, tenantList,updateTenantById } from "@/services/ant-design-pro/merchant";
 import dayjs from "dayjs";
 
 const Free: React.FC = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [serverModalVisible, setServerModalVisible] = useState(false);
+  const [serverModalVisible, setServerModalVisible] = useState(false)
+    const [modalVisible, setModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<any>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -116,6 +118,18 @@ const Free: React.FC = () => {
    
   };
 
+
+  const handleSave=(values:any)=>{
+   
+    setModalVisible(false);
+  }
+
+
+  const handleOpenModal = (record?: any) => {
+    setCurrentRecord(record || null);
+    setModalVisible(true);
+  }
+
   // **表格列配置**
   const columns: ProColumns<any>[] = [
     { title: "商户ID", dataIndex: "tenantId", width: 100 },
@@ -135,12 +149,12 @@ const Free: React.FC = () => {
     {
       title: "服务状态",
       dataIndex: "tenantStatus",
-      render: (_, record) => <div>{record.tenantStatus === 1 ? "正常" : "禁用"}</div>,
+      render: (_, record) => <div>{record.tenantStatus === '1' ? "正常" : "禁用"}</div>,
     },
     {
       title: "付费状态",
       dataIndex: "paymentStatus",
-      render: (_, record) => <div>{record.paymentStatus === 1 ? "付费" : "免费"}</div>,
+      render: (_, record) => <div>{record.paymentStatus === '1' ? "付费" : "免费"}</div>,
     },
     {
       title: "操作",
@@ -148,9 +162,9 @@ const Free: React.FC = () => {
       render: (_, record) => (
         <Space>
           <a onClick={() => handleEdit(record)}>修改</a>
-          {record.paymentStatus !== 1 ? <a onClick={() => handleConvertToPaid(record)}>转为正式商户</a> : ""}
+          {record.paymentStatus !== '1' ? <a onClick={() => handleConvertToPaid(record)}>转为正式商户</a> : ""}
           <a onClick={() => handleServerConfig(record)}>服务器配置</a>
-          <a>创建Root账号</a>
+          <a onClick={() => handleOpenModal()}>创建Root账号</a>
         </Space>
       ),
     },
@@ -192,6 +206,12 @@ const Free: React.FC = () => {
         onSubmit={handleConvertSubmit}
         initialValues={currentRecord}
       />
+       <RootModal
+              visible={modalVisible}
+              onCancel={() => setModalVisible(false)}
+              onSave={handleSave}
+              initialValues={currentRecord}
+            />
     </PageContainer>
   );
 };
