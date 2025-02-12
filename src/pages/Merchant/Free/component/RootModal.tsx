@@ -30,23 +30,21 @@ const RootModal: React.FC<MerchantFormProps> = ({ visible, onCancel, onSave, ini
   return (
     <Modal title='创建root账号' open={visible} onCancel={onCancel} onOk={handleOk} width={600}>
       <Form form={form} layout="vertical">
-        <Form.Item name="nickname" label="nickname" rules={[{ required: true, message: "请输入交易所名称" }]}>
+        <Form.Item name="nickname" label="昵称" rules={[{ required: true, message: "请输入昵称" }]}>
           <Input placeholder="请输入交易所名称" />
         </Form.Item>
-        <Form.Item name="contact" label="联系人" rules={[{ required: true, message: "请输入联系人" }]}>
-          <Input placeholder="请输入联系人" />
+        <Form.Item name="role" label="角色" rules={[{ required: true, message: "请输入角色" }]}>
+          <Input placeholder="请输入角色" />
         </Form.Item>
+       
         <Form.Item name="email" label="邮箱" rules={[{ required: true, message: "请输入邮箱" }]}>
           <Input placeholder="请输入邮箱" />
         </Form.Item>
-        <Form.Item name="phone" label="手机号">
+        <Form.Item name="phone" label="手机号" rules={[{ required: true, message: "请输入邮箱" }]}>
           <Input placeholder="请输入手机号" />
         </Form.Item>
-        <Form.Item name="status" label="交易所状态" rules={[{ required: true, message: "请选择状态" }]}>
-          <Select>
-            <Select.Option value="1">服务中</Select.Option>
-            <Select.Option value="0">已欠费</Select.Option>
-          </Select>
+        <Form.Item name="remark" label="备注">
+          <Input placeholder="请输入联系人" />
         </Form.Item>
         {/* <Form.Item name="accountStatus" label="商户状态" rules={[{ required: true, message: "请选择状态" }]}>
           <Select>

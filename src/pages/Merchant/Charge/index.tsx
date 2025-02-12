@@ -28,7 +28,8 @@ const Charge: React.FC = () => {
         };
         const res = await tenantList(requestData);
         if (res.code === "0") {
-            setMerchantData(res.data.list || []);
+            const listData= res.data.list.filter(item => item.paymentStatus === 1);
+            setMerchantData(listData || []);
         }
         setLoading(false);
     };

@@ -5,7 +5,7 @@ import MerchantEdit from "./component/MerchantEdit";
 import ServerAdmin from "./component/ServerAdmin";
 import ConvertToPaid from "./component/ConvertToPaid"; 
 import RootModal from "./component/RootModal";
-import { saveTenant, tenantList,updateTenantById } from "@/services/ant-design-pro/merchant";
+import { saveTenant, tenantList,updateTenantById,saveTenantRoot } from "@/services/ant-design-pro/merchant";
 import dayjs from "dayjs";
 
 const Free: React.FC = () => {
@@ -119,8 +119,15 @@ const Free: React.FC = () => {
   };
 
 
-  const handleSave=(values:any)=>{
-   
+  const handleSave=async (values:any)=>{
+    let data={
+      tenantId:currentRecord.tenantId,
+      ...values
+    }
+    const res=await saveTenantRoot(data);
+    if(res.code==='0'){
+      message.success("root账户创建成功");
+    }
     setModalVisible(false);
   }
 
@@ -149,22 +156,22 @@ const Free: React.FC = () => {
     {
       title: "服务状态",
       dataIndex: "tenantStatus",
-      render: (_, record) => <div>{record.tenantStatus === '1' ? "正常" : "禁用"}</div>,
+      render: (_, record) => <div>{record.tenantStatus === 1 ? "正常" : "禁用"}</div>,
     },
-    {
-      title: "付费状态",
-      dataIndex: "paymentStatus",
-      render: (_, record) => <div>{record.paymentStatus === '1' ? "付费" : "免费"}</div>,
-    },
+    // {
+    //   title: "付费状态",
+    //   dataIndex: "paymentStatus",
+    //   render: (_, record) => <div>{record.paymentStatus === 1 ? "付费" : "免费"}</div>,
+    // },
     {
       title: "操作",
       dataIndex: "action",
       render: (_, record) => (
         <Space>
           <a onClick={() => handleEdit(record)}>修改</a>
-          {record.paymentStatus !== '1' ? <a onClick={() => handleConvertToPaid(record)}>转为正式商户</a> : ""}
+          {record.paymentStatus !== 1 ? <a onClick={() => handleConvertToPaid(record)}>转为正式商户</a> : ""}
           <a onClick={() => handleServerConfig(record)}>服务器配置</a>
-          <a onClick={() => handleOpenModal()}>创建Root账号</a>
+          <a onClick={() => handleOpenModal(record)}>创建Root账号</a>
         </Space>
       ),
     },
@@ -176,7 +183,7 @@ const Free: React.FC = () => {
       <ProTable
         rowKey="tenantId"
         columns={columns}
-        dataSource={merchantData}
+        dataSource={merchantData.filter(item => item.paymentStatus === 0)}
         loading={loading}
         pagination={{ pageSize: 10 }}
         search={{ labelWidth: "auto" }}
