@@ -1,93 +1,97 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
 import { Button, Space, message } from "antd";
 import RootModal from "./component/RootModal";
-import { saveTenantRoot } from "@/services/ant-design-pro/merchant";
+import { tenantRootList,updatePasswordById, updateGoogleById,updateTenantRootById} from "@/services/ant-design-pro/merchant";
+import { get } from "lodash";
 
 
-// **模拟商户数据**
-const initialData = [
-  {
-    id: "1122",
-    exchange: "IM",
-    status: "服务中",
-    contact: "小李",
-    email: "12@qq.com",
-    phone: "12221",
-    accountStatus: "正常",
-    createdAt: "2022-12-25 12:12:12",
-  },
-  {
-    id: "11223",
-    exchange: "IMBIT",
-    status: "已欠费",
-    contact: "小王",
-    email: "445@qq.com",
-    phone: "--",
-    accountStatus: "冻结",
-    createdAt: "2022-12-25 12:12:12",
-  },
-];
 
 const Root: React.FC = () => {
-  const [dataSource, setDataSource] = useState(initialData);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<any>(null);
+  const [dataSource, setDataSource] = useState([]);
 
-  // **打开 "新建 / 编辑" 弹窗**
-  const handleOpenModal = (record?: any) => {
-    setCurrentRecord(record || null);
-    setModalVisible(true);
-  };
 
-  // **处理表单提交**
-  const handleSave = (values: any) => {
-    if (currentRecord) {
-      // **编辑模式**
-    //   setDataSource((prev) =>
-    //     prev.map((item) => (item.id === currentRecord.id ? { ...item, ...values } : item))
-    //   );
-
-      let res=saveTenantRoot(values);{
-        if(res.code === "0"){
-            message.success("商户信息更新成功！");
-        }else{
-            message.error(res.message || "操作失败");
-        }
-      }
-      
-    } else {
-      // **新建模式**
-      let res=saveTenantRoot(values);{
-        if(res.code === "0"){
-            message.success("商户信息更新成功！");
-        }else{
-            message.error(res.message || "操作失败");
-        }
-      }
-
+  const getList=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10
     }
-    setModalVisible(false);
-  };
+    const res=await tenantRootList(data);
+    if(res.code==='0'){
+      setDataSource(res.data.list)
+    }else{
+      message.error("获取商户列表失败")
+    }
+  }
+
+  const resetPassword=async(id:string)=>{
+    
+    const res=await updatePasswordById(id);
+    if(res.code==='0'){
+      message.success("重置密码成功")
+    }else{
+      message.error("重置密码失败")
+    }
+  }
+
+  const resetGoogle=async(id:string)=>{
+    
+    const res=await updateGoogleById(id);
+    if(res.code==='0'){
+      message.success("重置谷歌成功")
+    }else{
+      message.error("重置谷歌失败")
+    }
+  }
+
+  const changeStatus=async(id:string,status:number)=>{
+    let data={
+      id:id,
+      status:status
+    }
+    const res=await updateTenantRootById(data);
+    if
+    (res.code==='0'){
+      if(status===1){
+        message.success("允许登录成功")
+      }else{
+        message.success("禁止登录成功")
+      }
+     await getList()
+    }
+    else{
+      message.error("修改状态失败")
+    }
+  }
+  
+
+ 
+
+  useEffect(() => {
+    getList()
+  } ,[]);
 
   // **表格列配置**
   const columns: ProColumns<any>[] = [
     {
-      title: "商户ID",
+      title: "id",
       dataIndex: "id",
     },
     {
-      title: "交易所名称",
-      dataIndex: "exchange",
+      title:'nickname',
+      dataIndex:'nickname'
     },
     {
-      title: "交易所状态",
+      title: "交易所名称",
+      dataIndex: "tenantName",
+    },
+    {
+      title: "状态",
       dataIndex: "status",
-      valueType: "select",
-      valueEnum: {
-        服务中: { text: "服务中", status: "Success" },
-        已欠费: { text: "已欠费", status: "Error" },
-      },
+      render:(_,record)=>{
+        return record.status===1?'正常':'冻结'
+      }
+
     },
     {
       title: "联系人",
@@ -120,14 +124,16 @@ const Root: React.FC = () => {
       dataIndex: "action",
       render: (_, record) => (
         <Space>
-          <a onClick={() => handleOpenModal(record)}>编辑</a>
-          {record.accountStatus === "正常" ? (
-            <a style={{ color: "red" }}>禁止登录</a>
+
+           {record.status === 1 ? (
+              <a style={{ color: "red" }} onClick={()=>changeStatus(record.id,0)}>禁止登录</a>
           ) : (
-            <a style={{ color: "green" }}>允许登录</a>
-          )}
-          <a>重置密码</a>
-          <a>重置谷歌</a>
+             <a style={{ color: "green" }} onClick={()=>changeStatus(record.id,1)}>允许登录</a>
+          )} 
+        
+         
+          <a onClick={()=>resetPassword(record.id)}>重置密码</a>
+          <a onClick={()=>resetGoogle(record.id)}>重置谷歌</a>
         </Space>
       ),
     },
@@ -143,9 +149,7 @@ const Root: React.FC = () => {
         pagination={{ pageSize: 10 }}
         search={{ labelWidth: "auto" }}
         toolBarRender={() => [
-          <Button type="primary" key="new" onClick={() => handleOpenModal()}>
-            + 新建
-          </Button>,
+          
         ]}
       />
 

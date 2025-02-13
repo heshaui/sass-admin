@@ -79,3 +79,65 @@ export async function saveTenant(
       ...(options || {}),
     });
   }
+
+
+//root列表
+  export async function tenantRootList(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/tenantRoot/tenantRootList', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+
+  // /tenant-admin/v1/tenantRoot/updatePasswordById
+  export async function updatePasswordById(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/tenantRoot/updatePasswordById?idString='+body, {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+  // /tenant-admin/v1/tenantRoot/updateGoogleById
+  export async function updateGoogleById(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/tenantRoot/updateGoogleById?idString='+body, {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+  // /tenant-admin/v1/tenantRoot/updateTenantById
+  export async function updateTenantRootById(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/tenantRoot/updateTenantById', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
