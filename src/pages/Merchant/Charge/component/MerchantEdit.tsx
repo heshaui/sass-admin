@@ -1,75 +1,121 @@
-import React from "react";
-import { Form, Input, Button, Select, DatePicker } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, DatePicker, message, Card } from "antd";
+import dayjs from "dayjs";
+import { tenantParams, updateTenantById } from "@/services/ant-design-pro/merchant";
 
-const { Option } = Select;
+interface MerchantEditProps {
+  tenantId: string | null;
+  onBack: () => void; // 增加返回按钮
+}
 
-const MerchantEdit: React.FC = () => {
+const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
-  // 表单提交处理
-  const onFinish = (values: any) => {
-    console.log("Form Submitted:", values);
+  useEffect(() => {
+    const fetchMerchant = async () => {
+      if (!tenantId) return;
+      setLoading(true);
+      try {
+        const res = await tenantParams(tenantId);
+        if (res.code === "0") {
+          const merchantData = res.data || {};
+          // **填充表单数据**
+          form.setFieldsValue({
+            tenantName: merchantData.tenantName,
+            tenantId: merchantData.tenantId,
+            contact: merchantData.tenantContact,
+            phone: merchantData.tenantPhone,
+            email: merchantData.tenantEmail,
+            // **时间格式转换** - 从时间戳转换成 dayjs
+            tenantStartTime: merchantData.tenantStartTime ? dayjs(merchantData.tenantStartTime) : null,
+            tenantEndTime: merchantData.tenantEndTime ? dayjs(merchantData.tenantEndTime) : null,
+          });
+        } else {
+          message.error("获取商户详情失败");
+        }
+      } catch (error) {
+        message.error("请求出错，请稍后重试");
+      }
+      setLoading(false);
+    };
+
+    fetchMerchant();
+  }, [tenantId]);
+
+  // **表单提交处理**
+  const onFinish = async (values: any) => {
+    console.log("原始表单数据:", values);
+
+    // **确保 tenantId 存在**
+    if (!tenantId) {
+      message.error("无效的商户ID");
+      return;
+    }
+
+    // **转换时间戳**
+    const formattedData = {
+      ...values,
+      tenantId,
+      tenantStartTime: values.tenantStartTime ? values.tenantStartTime.valueOf() : null, // 转换为时间戳
+      tenantEndTime: values.tenantEndTime ? values.tenantEndTime.valueOf() : null, // 转换为时间戳
+    };
+
+    console.log("提交到后端的数据:", formattedData);
+
+    try {
+      const res = await updateTenantById(formattedData);
+      if (res.code === "0") {
+        message.success("更新商户信息成功");
+        onBack(); // 返回上一页
+      } else {
+        message.error("更新商户信息失败");
+      }
+    } catch (error) {
+      message.error("请求出错，请稍后重试");
+    }
   };
 
   return (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={onFinish}
-      initialValues={{
-        exchangeName: "马克的公司",
-        merchantId: "123",
-        contact: "马克",
-        countryCode: "+86 中国",
-        phone: "123123",
-        email: "123@qq.com",
-        serviceStart: "2027-12-12 12:12:12",
-        serviceEnd: "2027-12-12 12:12:12",
-      }}
-    >
-      <Form.Item label="交易所名称" name="exchangeName" rules={[{ required: true, message: "请输入交易所名称" }]}>
-        <Input />
-      </Form.Item>
+    <Card title="编辑商户信息" extra={<Button onClick={onBack}>返回</Button>}>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form.Item label="交易所名称" name="tenantName" rules={[{ required: true, message: "请输入交易所名称" }]}>
+          <Input />
+        </Form.Item>
 
-      <Form.Item label="商户ID" name="merchantId">
-        <Input disabled />
-      </Form.Item>
+        <Form.Item label="商户ID" name="tenantId">
+          <Input disabled />
+        </Form.Item>
 
-      <Form.Item label="联系人" name="contact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
-        <Input />
-      </Form.Item>
+        <Form.Item label="联系人" name="contact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
+          <Input />
+        </Form.Item>
 
-      <Form.Item label="国家编码" name="countryCode" rules={[{ required: true, message: "请选择国家编码" }]}>
-        <Select>
-          <Option value="+86 中国">+86 中国</Option>
-          <Option value="+1 美国">+1 美国</Option>
-          <Option value="+44 英国">+44 英国</Option>
-        </Select>
-      </Form.Item>
+        <Form.Item label="手机号" name="phone" rules={[{ required: true, message: "请输入手机号" }]}>
+          <Input />
+        </Form.Item>
 
-      <Form.Item label="手机号" name="phone" rules={[{ required: true, message: "请输入手机号" }]}>
-        <Input />
-      </Form.Item>
+        <Form.Item label="邮箱" name="email" rules={[{ required: true, type: "email", message: "请输入有效的邮箱地址" }]}>
+          <Input />
+        </Form.Item>
 
-      <Form.Item label="邮箱" name="email" rules={[{ required: true, type: "email", message: "请输入有效的邮箱地址" }]}>
-        <Input />
-      </Form.Item>
+        <Form.Item label="服务开始" name="tenantStartTime">
+          <DatePicker showTime style={{ width: "100%" }} disabled />
+        </Form.Item>
 
-      <Form.Item label="服务开始" name="serviceStart">
-        <DatePicker showTime disabled style={{ width: "100%" }} />
-      </Form.Item>
+        <Form.Item label="服务到期" name="tenantEndTime">
+          <DatePicker showTime style={{ width: "100%" }} disabled/>
+        </Form.Item>
 
-      <Form.Item label="服务到期" name="serviceEnd">
-        <DatePicker showTime disabled style={{ width: "100%" }} />
-      </Form.Item>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>
-          提交
-        </Button>
-        <Button htmlType="button">取消</Button>
-      </Form.Item>
-    </Form>
+        {/* ✅ 按钮居中对齐 */}
+        <Form.Item style={{ textAlign: "center" }}>
+          <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>
+            提交
+          </Button>
+          <Button onClick={onBack}>取消</Button>
+        </Form.Item>
+      </Form>
+    </Card>
   );
 };
 

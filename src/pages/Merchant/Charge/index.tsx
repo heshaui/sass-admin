@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
 import { Tabs, Button, Modal } from "antd";
 import { tenantList } from "@/services/ant-design-pro/merchant";
-import MerchantEdit from "./component/MerchantEdit";
 import MerchantDetail from "./component/MerchantDetail"; // 引入详情组件
 
 const Charge: React.FC = () => {
