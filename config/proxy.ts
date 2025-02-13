@@ -9,15 +9,20 @@
  *
  * @doc https://umijs.org/docs/guides/proxy
  */
+
+const isAdmin = process.env.ADMIN_FLAG === "1";
+const isMerchant = process.env.MERCHANT_FLAG === "1";
 export default {
   // 如果需要自定义本地开发服务器  请取消注释按需调整
   dev: {
     // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
     '/tenant-admin/': {
       // 要代理的地址
-      target: 'http://10.233.29.13:8064',
-      // 配置了这个可以从 http 代理到 https
-      // 依赖 origin 的功能可能需要这个，比如 cookie
+      // target: 'http://10.233.29.13:8064',
+      target: isAdmin
+      ? "http://10.233.29.13:8064" // Admin API 地址
+      : isMerchant
+      ? "http://test-cn.your-api-server.com":"http://10.233.29.13:8064" ,
       changeOrigin: true,
     },
   },
