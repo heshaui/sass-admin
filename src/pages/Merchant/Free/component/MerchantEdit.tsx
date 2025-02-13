@@ -46,12 +46,12 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
         <Input />
       </Form.Item>
 
-      <Form.Item label="国家编码" name="tenantContact">
+      {/* <Form.Item label="国家编码" name="tenantContact">
         <Select>
           <Option value="+86 中国">+86 中国</Option>
           <Option value="+1 美国">+1 美国</Option>
         </Select>
-      </Form.Item>
+      </Form.Item> */}
 
       <Form.Item label="手机号" name="tenantPhone">
         <Input />
