@@ -1,5 +1,5 @@
 import { Footer } from '@/components';
-import { login } from '@/services/ant-design-pro/api';
+import { login,tenantLogin} from '@/services/ant-design-pro/api';
 import { emailCode, getFakeCaptcha } from '@/services/ant-design-pro/login';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
@@ -62,6 +62,7 @@ const Lang = () => {
 };
 
 const Login: React.FC = () => {
+  console.log('Login', process.env);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
   const { initialState, setInitialState } = useModel('@@initialState');
@@ -85,7 +86,15 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.LoginParams) => {
     try {
       // 登录
-      const msg = await login({ ...values });
+      let msg=null;
+      if(isAdmin){
+         msg = await login({ ...values });
+      }else{
+         msg = await tenantLogin({ ...values });
+      }
+      
+
+      
       if (msg.code === '0') {
         localStorage.setItem('token', msg.data.token);
         const defaultLoginSuccessMessage = intl.formatMessage({
@@ -143,7 +152,7 @@ const Login: React.FC = () => {
   };
 
   const titles = isAdmin ? 'Sass总后台' : '商户后台';
-
+  console.log(isAdmin)
   return (
     <div className={styles.container}>
       <Helmet>

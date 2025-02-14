@@ -26,7 +26,7 @@
     "preview": "npm run build && max preview --port 8000",
     "record": "cross-env NODE_ENV=development REACT_APP_ENV=test max record --scene=login",
     "serve": "umi-serve",
-    "start:admin": "cross-env UMI_APP_ADMIN_FLAG=1U MI_APP_MERCHANT_FLAG=0 max dev",
+    "start:admin": "cross-env UMI_APP_ADMIN_FLAG=1 MI_APP_MERCHANT_FLAG=0 max dev",
     "start:merchant": "cross-env UMI_APP_ADMIN_FLAG=0 UMI_APP_MERCHANT_FLAG=1 max dev",
     "start:no-mock": "cross-env MOCK=none UMI_ENV=dev max dev",
     "start:pre": "cross-env REACT_APP_ENV=pre UMI_ENV=dev max dev",
