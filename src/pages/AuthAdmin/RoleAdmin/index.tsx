@@ -95,6 +95,7 @@ const getRoleInfo = async (record) => {
     if (res?.data) {
       // ✅ 提取 permissionsId
       const checkedKeys = res.data.list.map((item) => item.permissionsId);
+      console.log(checkedKeys)
       setRolePermissions(checkedKeys);
     }
   } catch (error) {

@@ -14,7 +14,6 @@ const RoleModal: React.FC<RoleModalProps> = ({
   onClose,
   onSubmit,
   initialValues,
-  allPermissions,
 }) => {
   const [form] = Form.useForm();
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
@@ -22,6 +21,8 @@ const RoleModal: React.FC<RoleModalProps> = ({
   // 设置初始权限选择，编辑时填充用户已分配的权限
   useEffect(() => {
     if (initialValues) {
+
+      console.log('initialValues.permissions',initialValues.permissions)
       setSelectedPermissions(initialValues.permissions || []);
     }
   }, [initialValues]);

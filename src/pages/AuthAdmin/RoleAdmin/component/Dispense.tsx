@@ -12,7 +12,7 @@ interface RoleModalProps {
 
 // ✅ 解析回显数据，获取已选中的权限 ID
 const extractCheckedKeys = (rolePermissions) => {
-  return rolePermissions.map((item) => item.permissionsId);
+  return rolePermissions.map((item) => item);
 };
 
 const Dispense: React.FC<RoleModalProps> = ({

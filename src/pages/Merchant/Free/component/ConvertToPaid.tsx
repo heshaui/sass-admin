@@ -43,7 +43,7 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
         </Form.Item>
         <p>
           确定转移至付费商户后，服务开始计算，服务有效期至{" "}
-          <strong>{dayjs(initialValues.tenantEndTime).format("YYYY-MM-DD HH:mm:ss")}</strong>！
+          <strong>{initialValues?.tenantEndTime?dayjs(initialValues.tenantEndTime).format("YYYY-MM-DD HH:mm:ss"):'-'}</strong>！
          
         </p>
       </Form>
