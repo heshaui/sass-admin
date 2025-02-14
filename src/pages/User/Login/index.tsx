@@ -1,25 +1,19 @@
 import { Footer } from '@/components';
 import { login } from '@/services/ant-design-pro/api';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
+import { emailCode, getFakeCaptcha } from '@/services/ant-design-pro/login';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
   LoginForm,
   ProFormCaptcha,
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
-import { FormattedMessage, history, SelectLang, useIntl, useModel, Helmet } from '@umijs/max';
-import { Alert, message,FormInstance } from 'antd';
-import Settings from '../../../../config/defaultSettings';
-import React, { useState,useRef } from 'react';
-import { flushSync } from 'react-dom';
+import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
+import { FormInstance, message } from 'antd';
 import { createStyles } from 'antd-style';
+import React, { useRef } from 'react';
+import { flushSync } from 'react-dom';
+import Settings from '../../../../config/defaultSettings';
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -57,8 +51,6 @@ const useStyles = createStyles(({ token }) => {
   };
 });
 
-
-
 const Lang = () => {
   const { styles } = useStyles();
 
@@ -69,10 +61,9 @@ const Lang = () => {
   );
 };
 
-
-
 const Login: React.FC = () => {
-  const [userLoginState, setUserLoginState] = useState<API.LoginResult>({});
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+  const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
   const { initialState, setInitialState } = useModel('@@initialState');
   const formRef = useRef<FormInstance>();
 
@@ -109,7 +100,6 @@ const Login: React.FC = () => {
       }
       console.log(msg);
       // 如果失败去设置用户错误信息
-      setUserLoginState(msg);
     } catch (error) {
       const defaultLoginFailureMessage = intl.formatMessage({
         id: 'pages.login.failure',
@@ -120,6 +110,39 @@ const Login: React.FC = () => {
     }
   };
 
+  const getEmailCode = async () => {
+    try {
+      const account = formRef.current?.getFieldValue('account');
+      if (!account) {
+        message.error('请输入账户后再获取验证码！');
+        return;
+      }
+
+      let result = null;
+      console.log(isAdmin);
+      console.log(isMerchant);
+      if (isAdmin) {
+        result = await getFakeCaptcha({ number: account, deviceType: 'admin-pc' });
+      } else if (isMerchant) {
+        result = await emailCode({ number: account, deviceType: 'merchant-pc' });
+      }
+      console.log(result);
+      if (!result) {
+        throw new Error('未能获取验证码');
+      }
+
+      if (result.code === '0') {
+        message.success('获取验证码成功！');
+      } else {
+        message.error(`验证码获取失败: ${result.message || '未知错误'}`);
+      }
+    } catch (error) {
+      console.error('获取验证码失败:', error);
+      message.error('验证码请求失败，请稍后再试');
+    }
+  };
+
+  const titles = isAdmin ? 'Sass总后台' : '商户后台';
 
   return (
     <div className={styles.container}>
@@ -146,111 +169,88 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" src="/logo.svg" />}
-          title="Sass总后台"
-          subTitle='总后台'
+          title={titles}
+          subTitle={titles}
           initialValues={{
             autoLogin: true,
           }}
-         
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
         >
-          
-
-        
-        
-
-
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined />,
-                }}
-                name="account"
-                placeholder="请输入账户"
-                rules={[
-                  {
-                    required: true,
-                    message:"请输入账户"
-                  },
-                ]}
-              />
-              <ProFormCaptcha
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                captchaProps={{
-                  size: 'large',
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.captcha.placeholder',
-                  defaultMessage: '请输入验证码',
-                })}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${intl.formatMessage({
-                      id: 'pages.getCaptchaSecondText',
-                      defaultMessage: '获取验证码',
-                    })}`;
-                  }
-                  return intl.formatMessage({
-                    id: 'pages.login.phoneLogin.getVerificationCode',
+          <>
+            <ProFormText
+              fieldProps={{
+                size: 'large',
+                prefix: <UserOutlined />,
+              }}
+              name="account"
+              placeholder="请输入账户"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入账户',
+                },
+              ]}
+            />
+            <ProFormCaptcha
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+              }}
+              captchaProps={{
+                size: 'large',
+              }}
+              placeholder={intl.formatMessage({
+                id: 'pages.login.captcha.placeholder',
+                defaultMessage: '请输入验证码',
+              })}
+              captchaTextRender={(timing, count) => {
+                if (timing) {
+                  return `${count} ${intl.formatMessage({
+                    id: 'pages.getCaptchaSecondText',
                     defaultMessage: '获取验证码',
-                  });
-                }}
-                name="emailCode"
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.captcha.required"
-                        defaultMessage="请输入验证码！"
-                      />
-                    ),
-                  },
-                ]}
-                onGetCaptcha={async () => {
-                  const account = formRef.current?.getFieldValue('account');
-      if (!account) {
-        message.error('请输入账户后再获取验证码！');
-        throw new Error('Account is required');
-      }
-
-                  const result = await getFakeCaptcha({
-                    number: account,
-                    deviceType: 'admin-pc',
-                  });
-                  console.log(result);
-                  if (result) {
-                    return;
-                  }
-                  message.success('获取验证码成功！验证码为：1234');
-                }}
-              />
-               <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder="请输入密码!"
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                        defaultMessage="请输入密码!"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
+                  })}`;
+                }
+                return intl.formatMessage({
+                  id: 'pages.login.phoneLogin.getVerificationCode',
+                  defaultMessage: '获取验证码',
+                });
+              }}
+              name="emailCode"
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage
+                      id="pages.login.captcha.required"
+                      defaultMessage="请输入验证码！"
+                    />
+                  ),
+                },
+              ]}
+              onGetCaptcha={getEmailCode}
+            />
+            <ProFormText.Password
+              name="password"
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+              }}
+              placeholder="请输入密码!"
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage
+                      id="pages.login.password.required"
+                      defaultMessage="请输入密码!"
+                    />
+                  ),
+                },
+              ]}
+            />
+          </>
 
           <div
             style={{
@@ -260,7 +260,6 @@ const Login: React.FC = () => {
             <ProFormCheckbox noStyle name="autoLogin">
               <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
             </ProFormCheckbox>
-      
           </div>
         </LoginForm>
       </div>

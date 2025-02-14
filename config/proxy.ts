@@ -10,21 +10,27 @@
  * @doc https://umijs.org/docs/guides/proxy
  */
 
-const isAdmin = process.env.ADMIN_FLAG === "1";
-const isMerchant = process.env.MERCHANT_FLAG === "1";
+const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
+console.log('isAdmin', isAdmin);
+console.log('isMerchant', isMerchant);
 export default {
   // 如果需要自定义本地开发服务器  请取消注释按需调整
+
   dev: {
-    // localhost:8000/api/** -> https://preview.pro.ant.design/api/**
-    '/tenant-admin/': {
-      // 要代理的地址
-      // target: 'http://10.233.29.13:8064',
-      target: isAdmin
-      ? "http://10.233.29.13:8064" // Admin API 地址
-      : isMerchant
-      ? "http://test-cn.your-api-server.com":"http://10.233.29.13:8064" ,
-      changeOrigin: true,
-    },
+    ...(isAdmin
+      ? {
+          '/tenant-admin/': {
+            target: 'http://10.233.29.13:8064',
+            changeOrigin: true,
+          },
+        }
+      : {
+          '/tenant/': {
+            target: 'http://10.233.50.129:8063',
+            changeOrigin: true,
+          },
+        }),
   },
 
   /**
