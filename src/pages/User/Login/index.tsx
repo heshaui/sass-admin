@@ -1,11 +1,9 @@
-import { Footer } from '@/components';
 import { login,tenantLogin} from '@/services/ant-design-pro/api';
 import { emailCode, getFakeCaptcha } from '@/services/ant-design-pro/login';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import {
   LoginForm,
   ProFormCaptcha,
-  ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
 import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
@@ -266,13 +264,13 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="autoLogin">
+            {/* <ProFormCheckbox noStyle name="autoLogin">
               <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
-            </ProFormCheckbox>
+            </ProFormCheckbox> */}
           </div>
         </LoginForm>
       </div>
-      <Footer />
+
     </div>
   );
 };

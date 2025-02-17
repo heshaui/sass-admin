@@ -1,7 +1,8 @@
 ﻿import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
-
+const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
 
 // 错误处理方案： 错误类型
 enum ErrorShowType {
@@ -90,15 +91,24 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      const url = config?.url
+
       const token = localStorage.getItem('token');
-      const newHeaders = {
-        ...config.headers,
-        
-        'sa-token-admin': token ? `${token}` : '', // 添加 Authorization 头
-        // 可以根据需要添加更多自定义的请求头
-      };
-      return { ...config, url,newHeaders };
+      let newHeaders = {};
+      console.log('token',token)
+      if (isAdmin) {
+        config.headers = {
+          ...config.headers,
+          'sa-token-admin': `${token}`,
+        };
+      } else if (isMerchant) {
+        config.headers = {
+          ...config.headers,
+          'sa-token-tenant': `${token}`,
+        };
+      }
+      console.log('newHeaders',newHeaders)
+   
+      return config
     },
   ],
 

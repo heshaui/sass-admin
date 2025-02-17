@@ -12,6 +12,15 @@ export async function currentUser(options?: { [key: string]: any }) {
   });
 }
 
+export async function merchantCurrentUser(options?: { [key: string]: any }) {
+  return request<{
+    data: API.CurrentUser;
+  }>('/tenant/v1/getLoginInfo', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
   return request<Record<string, any>>('/tenant-admin/v1/login', {
