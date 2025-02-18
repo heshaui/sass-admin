@@ -57,4 +57,8 @@ export default {
   'menu.merchant.free': '免费商户',
   'menu.merchant.charge': '付费商户',
   'menu.merchant.root': 'Root管理',
+  'menu.merchant.allocation': '功能分配',
+  'menu.merchant.permissions': '商户权限',
+  'menu.webConfig': '网站配置',
+  'menu.webConfig.header': 'Header配置',
 };

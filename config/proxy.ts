@@ -23,7 +23,10 @@ export default {
           '/tenant-admin/': {
             target: 'http://10.233.29.13:8064',
             changeOrigin: true,
-          },
+          }
+          // '/tenantRole-admin/': {
+          //   target: 'http://10.233.29.13:8064',
+          //   changeOrigin: true,}
         }
       : {
           '/tenant/': {

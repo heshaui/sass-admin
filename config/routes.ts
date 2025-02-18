@@ -74,8 +74,31 @@ export default [
         name: 'root',
         component: './Merchant/Root',
       },
+      {
+        path: '/merchant/allocation',
+        name: 'allocation',
+        component: './Merchant/Allocation',
+      },
+      {
+        path: '/merchant/permissions',
+        name: 'permissions',
+        component: './Merchant/Permissions',
+      },
      
     ],
+  },
+  {
+    path: '/webConfig',
+    name: 'webConfig',
+    icon: 'crown',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/webConfig/header',
+        name: 'header',
+        component: './WebConfig/Header',
+      }
+    ]
   },
 
   {

@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
 import { Button, Space, message } from "antd";
 import RootModal from "./component/RootModal";
-import { tenantRootList,updatePasswordById, updateGoogleById,updateTenantRootById} from "@/services/ant-design-pro/merchant";
-import { get } from "lodash";
+import { tenantRootList,updatePasswordById, updateGoogleById,updateTenantRootById,updateRoleById} from "@/services/ant-design-pro/merchant";
+
 
 
 
 const Root: React.FC = () => {
   const [dataSource, setDataSource] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState<any>(null); // 选中的用户信息
 
 
   const getList=async()=>{
@@ -63,7 +65,32 @@ const Root: React.FC = () => {
       message.error("修改状态失败")
     }
   }
+    // **角色分配**
+    const handleRoleAssign = (record: any) => {
+      setCurrentRecord(record);
+      setModalVisible(true);
+    };
   
+    // **提交角色分配**
+    const handleRoleSubmit = async (roleId: string) => {
+
+      try {
+        const data = { id: currentRecord.id, roleIds:roleId };
+        const res = await updateRoleById(data);
+        console.log(res)
+        if (res.code === "0") {
+          message.success("角色分配成功");
+          getList();
+        } else {
+          message.error("角色分配失败");
+        }
+      } catch (error) {
+        console.error( error);
+        message.error("角色分配异常");
+      } finally {
+        setModalVisible(false);
+      }
+    };
 
  
 
@@ -130,10 +157,9 @@ const Root: React.FC = () => {
           ) : (
              <a style={{ color: "green" }} onClick={()=>changeStatus(record.id,1)}>允许登录</a>
           )} 
-        
-         
           <a onClick={()=>resetPassword(record.id)}>重置密码</a>
           <a onClick={()=>resetGoogle(record.id)}>重置谷歌</a>
+          <a onClick={() => handleRoleAssign(record)}>角色分配</a>
         </Space>
       ),
     },
@@ -153,8 +179,9 @@ const Root: React.FC = () => {
         ]}
       />
 
-      {/* 新建 / 编辑商户弹窗组件 */}
-     
+
+      <RootModal visible={modalVisible} onCancel={() => setModalVisible(false)} onSubmit={handleRoleSubmit} />
+
     </PageContainer>
   );
 };
