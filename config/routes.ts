@@ -100,6 +100,12 @@ export default [
       }
     ]
   },
+  {
+    path: '/language',
+    name: 'language',
+    icon: 'smile',
+    component: './Language',
+  },
 
   {
     path: '/',
