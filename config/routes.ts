@@ -79,11 +79,11 @@ export default [
         name: 'allocation',
         component: './Merchant/Allocation',
       },
-      {
-        path: '/merchant/permissions',
-        name: 'permissions',
-        component: './Merchant/Permissions',
-      },
+      // {
+      //   path: '/merchant/permissions',
+      //   name: 'permissions',
+      //   component: './Merchant/Permissions',
+      // },
      
     ],
   },

@@ -285,3 +285,21 @@ export async function saveTenant(
     });
   }
 
+
+  // /tenant-admin/v1/tenantPermissions/saveList
+  export async function saveList(
+    body:API.TenantPermissionsVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantPermissions>('/tenant-admin/v1/tenantPermissions/saveList', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+
+  

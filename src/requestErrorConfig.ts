@@ -92,18 +92,20 @@ export const errorConfig: RequestConfig = {
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
 
-      const token = localStorage.getItem('token');
+     
       let newHeaders = {};
-      console.log('token',token)
+
       if (isAdmin) {
+        const token = localStorage.getItem('sa-token-admin');
         config.headers = {
           ...config.headers,
-          'sa-token-admin': `${token}`,
+          'sa-token-admin': token?`${token}`:'',
         };
       } else if (isMerchant) {
+        const token = localStorage.getItem('sa-token-tenant');
         config.headers = {
           ...config.headers,
-          'sa-token-tenant': `${token}`,
+          'sa-token-tenant':token?`${token}`:'',
         };
       }
       console.log('newHeaders',newHeaders)

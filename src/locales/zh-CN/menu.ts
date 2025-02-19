@@ -61,4 +61,5 @@ export default {
   'menu.merchant.permissions': '商户权限',
   'menu.webConfig': '网站配置',
   'menu.webConfig.header': 'Header配置',
+  'menu.language': '多语言配置',
 };

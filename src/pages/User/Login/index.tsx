@@ -94,7 +94,12 @@ const Login: React.FC = () => {
 
       
       if (msg.code === '0') {
-        localStorage.setItem('token', msg.data.token);
+        if(isAdmin){
+          localStorage.setItem('sa-token-admin', msg.data.token);
+        }else{
+          localStorage.setItem('sa-token-tenant', msg.data.token);
+        }
+        
         const defaultLoginSuccessMessage = intl.formatMessage({
           id: 'pages.login.success',
           defaultMessage: '登录成功！',
@@ -135,7 +140,8 @@ const Login: React.FC = () => {
       }
       console.log(result);
       if (!result) {
-        throw new Error('未能获取验证码');
+
+        message.error(`验证码获取失败`);
       }
 
       if (result.code === '0') {
