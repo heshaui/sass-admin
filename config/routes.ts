@@ -79,12 +79,6 @@ export default [
         name: 'allocation',
         component: './Merchant/Allocation',
       },
-      // {
-      //   path: '/merchant/permissions',
-      //   name: 'permissions',
-      //   component: './Merchant/Permissions',
-      // },
-     
     ],
   },
   {
@@ -97,8 +91,8 @@ export default [
         path: '/webConfig/header',
         name: 'header',
         component: './WebConfig/Header',
-      }
-    ]
+      },
+    ],
   },
   {
     path: '/language',

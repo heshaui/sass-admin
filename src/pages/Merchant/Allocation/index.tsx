@@ -1,23 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { Button, Space, message } from "antd";
-import AddCategoryModal from "./component/AddCategoryModal"; // 模态框组件
-import Dispense from "./component/Dispense"; // 权限分配组件
-import { tenantRoleList, saveTenantRole, updateTenantRoleById,saveList,tenantPermissionsList } from "@/services/ant-design-pro/merchant"; // 角色API
-import { AuthorityList, permissionsParams, updateRoleById } from "@/services/ant-design-pro/authAdmin"; // 权限API
+import { AuthorityList } from '@/services/ant-design-pro/authAdmin'; // 权限API
+import {
+  saveList,
+  saveTenantRole,
+  tenantPermissionsList,
+  tenantRoleList,
+  updateTenantRoleById,
+} from '@/services/ant-design-pro/merchant'; // 角色API
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { Button, Space, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import AddCategoryModal from './component/AddCategoryModal'; // 模态框组件
+import Dispense from './component/Dispense'; // 权限分配组件
 
 // **表格列定义**
 const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: any) => void) => [
-  { title: "ID", dataIndex: "roleId", key: "roleId" },
-  { title: "分类名称", dataIndex: "roleName", key: "roleName" },
-  { title: "分类描述", dataIndex: "describe", key: "describe" },
+  { title: 'ID', dataIndex: 'roleId', key: 'roleId' },
+  { title: '分类名称', dataIndex: 'roleName', key: 'roleName' },
+  { title: '分类描述', dataIndex: 'describe', key: 'describe' },
   {
-    title: "操作",
-    key: "action",
-    render: (_, record) => (
+    title: '操作',
+    key: 'action',
+    render: (_, record: any) => (
       <Space>
-        <Button type="link" onClick={() => handleEdit(record)}>修改</Button>
-        <Button type="primary" onClick={() => handleDispense(record)}>权限分配</Button>
+        <Button type="link" onClick={() => handleEdit(record)}>
+          修改
+        </Button>
+        <Button type="primary" onClick={() => handleDispense(record)}>
+          权限分配
+        </Button>
       </Space>
     ),
   },
@@ -40,7 +50,7 @@ const Allocation: React.FC = () => {
       const response = await tenantRoleList(data);
       if (response?.data) setDataSource(response.data.list);
     } catch (error) {
-      console.error("获取列表失败:", error);
+      console.error('获取列表失败:', error);
     } finally {
       setLoading(false);
     }
@@ -52,7 +62,7 @@ const Allocation: React.FC = () => {
       const res = await AuthorityList({ pageNo: 1, pageSize: 1000 });
       if (res?.data) setAllPermissions(res.data.list || []);
     } catch (error) {
-      console.error("获取权限失败:", error);
+      console.error('获取权限失败:', error);
     }
   };
 
@@ -84,62 +94,60 @@ const Allocation: React.FC = () => {
       if (editingRecord) {
         // 调用更新 API
         let resp = await updateTenantRoleById({ roleId: editingRecord.roleId, ...formData });
-        if (resp.code === "0") message.success("修改成功");
+        if (resp.code === '0') message.success('修改成功');
       } else {
         // 调用新增 API
         let res = await saveTenantRole(formData);
-        if (res.code === "0") message.success("新增成功");
+        if (res.code === '0') message.success('新增成功');
       }
 
       fetchRoleList(); // 重新加载数据
       handleCancel();
     } catch (error) {
-      message.error("操作失败");
+      message.error('操作失败');
+    }
+  };
+
+  // **获取角色已分配的权限**
+  const getRolePermissions = async (record: any) => {
+    try {
+      const res = await tenantPermissionsList({ roleId: record.roleId, pageNo: 1, pageSize: 1000 });
+      if (res?.data) {
+        const checkedKeys = res.data.list.map((item: any) => item.permissionsId);
+        setRolePermissions(checkedKeys);
+      }
+    } catch (error) {
+      console.error('获取角色权限失败:', error);
     }
   };
 
   // **打开权限分配弹窗**
-  const handleDispense = async (record) => {
+  const handleDispense = async (record: any) => {
     setEditingRecord(record);
     await getRolePermissions(record);
     setDisVisible(true);
   };
 
-  // **获取角色已分配的权限**
-  const getRolePermissions = async (record) => {
-    try {
-      const res = await tenantPermissionsList({ roleId: record.roleId, pageNo: 1, pageSize: 1000 });
-      if (res?.data) {
-        const checkedKeys = res.data.list.map((item) => item.permissionsId);
-        setRolePermissions(checkedKeys);
-      }
-    } catch (error) {
-      console.error("获取角色权限失败:", error);
-    }
-  };
-
   // **提交角色权限分配**
-  const handleSubmitDis = async (values) => {
+  const handleSubmitDis = async (values: any) => {
     try {
-     
-      let data=[]
-      values.permissions.forEach(async (item) => {
-       data.push({
-          roleId: editingRecord.roleId,
+      let data: any[] = [];
+      values.permissions.forEach(async (item: any) => {
+        data.push({
+          roleId: editingRecord ? editingRecord.roleId : '',
           permissionsId: item,
-        })
-        
-      })
-      
+        });
+      });
+
       const res = await saveList(data);
-      if (res.code === "0") {
-        message.success("权限分配成功");
+      if (res.code === '0') {
+        message.success('权限分配成功');
         setDisVisible(false);
       } else {
-        message.error("权限分配失败");
+        message.error('权限分配失败');
       }
     } catch (error) {
-      message.error("权限分配请求失败");
+      message.error('权限分配请求失败');
     }
   };
 
@@ -172,7 +180,7 @@ const Allocation: React.FC = () => {
         visible={disVisible}
         onClose={() => setDisVisible(false)}
         onSubmit={handleSubmitDis}
-        initialValues={{ ...editingRecord, permissions: rolePermissions }}
+        initialValues={{ ...(editingRecord || {}), permissions: rolePermissions }}
         allPermissions={allPermissions}
       />
     </PageContainer>
