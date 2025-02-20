@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { Button, Space, Tag, message } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
+import AddModal  from "./component/AddModal";
 
-// **模拟API请求**
 const fetchLanguages = async () => {
   return [
     {
@@ -151,11 +151,10 @@ const Language: React.FC = () => {
         }}
         search={false}
         toolBarRender={() => [
-          <Button type="primary" icon={<PlusOutlined />} key="add">
-            添加语言
-          </Button>,
+          <AddModal key="add" />,
         ]}
       />
+
     </PageContainer>
   );
 };

@@ -24,9 +24,6 @@ export default {
             target: 'http://10.233.29.13:8064',
             changeOrigin: true,
           }
-          // '/tenantRole-admin/': {
-          //   target: 'http://10.233.29.13:8064',
-          //   changeOrigin: true,}
         }
       : {
           '/tenant/': {
@@ -35,6 +32,10 @@ export default {
           },
         }),
         '/oss/': {
+          target: 'http://oss.imsaas.work',
+          changeOrigin: true,
+        },
+        '/admin/': {
           target: 'http://oss.imsaas.work',
           changeOrigin: true,
         }

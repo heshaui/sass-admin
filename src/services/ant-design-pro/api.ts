@@ -125,5 +125,14 @@ export async function ossImgFile(file: File, options?: { [key: string]: any }) {
   });
 }
 
+//文件上传
+export async function uploadFile(file: File, options?: { [key: string]: any }) {
+  return request<API.OssImgFile>('/admin/upload/file', {
+    method: 'POST',
+    data: file, // 直接发送 FormData
+
+  });
+}
+
 
 
