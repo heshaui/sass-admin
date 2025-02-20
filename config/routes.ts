@@ -85,7 +85,7 @@ export default [
     path: '/webConfig',
     name: 'webConfig',
     icon: 'crown',
-    access: 'canAdmin',
+    // access: 'canAdmin',
     routes: [
       {
         path: '/webConfig/header',

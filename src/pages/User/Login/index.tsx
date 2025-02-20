@@ -91,8 +91,6 @@ const Login: React.FC = () => {
          msg = await tenantLogin({ ...values });
       }
       
-
-      
       if (msg.code === '0') {
         if(isAdmin){
           localStorage.setItem('sa-token-admin', msg.data.token);

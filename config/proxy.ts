@@ -34,6 +34,13 @@ export default {
             changeOrigin: true,
           },
         }),
+        '/oss/': {
+          target: 'http://oss.imsaas.work',
+          changeOrigin: true,
+        }
+
+
+
   },
 
   /**

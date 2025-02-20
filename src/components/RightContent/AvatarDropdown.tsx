@@ -30,6 +30,7 @@ const useStyles = createStyles(({ token }) => {
       alignItems: 'center',
       padding: '0 8px',
       cursor: 'pointer',
+      color: 'rgba(0, 0, 0, 0)',
       borderRadius: token.borderRadius,
       '&:hover': {
         backgroundColor: token.colorBgTextHover,
