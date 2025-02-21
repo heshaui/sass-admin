@@ -31,7 +31,7 @@ export async function saveHomeMenu(body: API.FackeParams, options?: { [key: stri
 
 // /tenant/v1/HomeMenuTranslationList
 export async function HomeMenuTranslationList(body: API.FackeParams, options?: { [key: string]: any }) {
-  return request<API.FackeResult>('/tenant/v1/HomeMenuTranslationList', {
+  return request<API.FackeResult>('/tenant/v1/homeMenuTranslationRespList', {
     method: 'POST',
     data: body,
     headers: {

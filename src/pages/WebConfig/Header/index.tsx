@@ -24,7 +24,7 @@ const Header: React.FC = () => {
   const [modalType, setModalType] = useState<boolean>(false);
   const [parentId, setParentId] = useState<any>({});
   const getMenu = async () => {
-    let data = { pageNo: 1, pageSize: 1000 };
+    let data = { languageCode: currentLanguage };
     const res = await HomeMenuTranslationList(data);
     console.log(res);
     setMenuData(res?.data?.list || []);
