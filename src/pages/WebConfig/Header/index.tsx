@@ -1,12 +1,9 @@
-import { PageContainer } from '@ant-design/pro-components';
-import {  Button,message } from 'antd';
-import React, { useEffect, useState, } from 'react';
-import { HomeMenuTranslationList} from "@/services/ant-design-pro/WebConfig";
+import { PageContainer } from "@ant-design/pro-components";
+import { Button, message } from "antd";
+import React, { useEffect, useState } from "react";
+import { HomeMenuTranslationList, saveHomeMenu } from "@/services/ant-design-pro/WebConfig";
 import { PlusOutlined } from "@ant-design/icons";
-
-import { saveHomeMenu } from "@/services/ant-design-pro/WebConfig";
-import AddMenuModals from './component/AddMenuModals';
-
+import AddMenuModals from "./component/AddMenuModals";
 
 const languageOptions = [
   { key: "en", label: "English" },
@@ -16,84 +13,161 @@ const languageOptions = [
   { key: "ko", label: "한국어" },
 ];
 
-
-
 const Header: React.FC = () => {
-  const [currentLanguage, setCurrentLanguage] = useState("en"); // 默认英文
+  const [currentLanguage, setCurrentLanguage] = useState("en");
   const [menuData, setMenuData] = useState<any[]>([]);
   const [modalType, setModalType] = useState<boolean>(false);
-  const [parentId, setParentId] = useState<any>({});
+  const [parentId, setParentId] = useState<any>(null);
+
+  // 获取菜单数据
   const getMenu = async () => {
-    let data = { languageCode: currentLanguage };
-    const res = await HomeMenuTranslationList(data);
-    console.log(res);
-    setMenuData(res?.data || []);
+    try {
+      const res = await HomeMenuTranslationList({ languageCode: currentLanguage });
+      setMenuData(res?.data || []);
+    } catch (error) {
+      message.error("获取菜单数据失败");
+    }
   };
 
   useEffect(() => {
     getMenu();
   }, [currentLanguage]);
 
-  // 切换语言
-  const changeLanguage = (lang: string) => {
-    setCurrentLanguage(lang);
-    // getMenu();
-  };
-
-  const handleMoal=(item:any)=>{
-    
+  // 打开弹窗
+  const handleModal = (item: any = null) => {
     setParentId(item);
     setModalType(true);
-  }
+  };
 
+  // 关闭弹窗
   const handleCancel = () => {
     setModalType(false);
   };
 
-  const handelSubmit = async (values: any) => {
-    console.log("homevalues",values);
+  // 处理表单提交
+  const handleSubmit = async (values: any) => {
+    let displayStatus
+    if(values.values.displayStatus){
+      displayStatus=1
+    }else{
+      displayStatus=0
+    }
     try {
       const data = {
-          homeMenu: {
-              "menuDescription": values.values.menuDescription,
-              "parentId": parentId?.menuId,
-              "typeId": values.values.typeId,
-              "orderIndex": 1,
-              "iconUrlDay": values.iconUrlDay,
-              "iconUrlNight":values.iconUrlNight,
-              "cornerMarkOne": values.uploadedImageUrl,
-              "cornerMarkTwo": "",
-              "displayStatus": values.values.displayStatus,
-              "spreadPattern": values.values.spreadPattern,
-              "accessType": values.values.accessType,
-              "accessPath": values.values.accessPath,
-          },
-          homeMenuTranslation: {
-              "languageCode": currentLanguage,
-              "languagePath": "/home/zh_CN",
-              "menuName": values.values.menuName,
-              "menuViceName": values.values.menuViceName,
-              "languageIcon": values.values.uploadedImageUrl,
-
-          }
-
+        homeMenu: {
+          menuDescription: values.values.menuDescription,
+          parentId: parentId?.id || 0,
+          typeId: values.values.typeId,
+          orderIndex: 1,
+          iconUrlDay: values.iconUrlDay,
+          iconUrlNight: values.iconUrlNight,
+          cornerMarkOne: values.uploadedImageUrl,
+          cornerMarkTwo: "",
+          displayStatus: displayStatus,
+          spreadPattern: values.values.spreadPattern,
+          accessType: values.values.accessType,
+          accessPath: values.values.accessPath,
+        },
+        homeMenuTranslation: {
+          languageCode: currentLanguage,
+          languagePath: "/home/zh_CN",
+          menuName: values.values.menuName,
+          menuViceName: values.values.menuViceName,
+          languageIcon: values.values.uploadedImageUrl,
+        },
       };
 
-      // 调用 saveHomeMenu 接口
       const response = await saveHomeMenu(data);
-      if (response.code==='0') { // 假设接口返回 { success: true } 表示成功
-          message.success("菜单添加成功");
-          handleCancel();
-          
+      if (response.code === "0") {
+        message.success("菜单添加成功");
+        handleCancel();
+        getMenu(); // 重新获取菜单数据
       } else {
-          message.error("菜单添加失败: " + (response.message || "未知错误"));
+        message.error("菜单添加失败: " + (response.message || "未知错误"));
       }
-  } catch (error) {
+    } catch (error) {
       message.error("提交失败: " + (error || "网络错误"));
-  }
-  }
+    }
+  };
 
+  // 递归渲染菜单（子菜单也有 `+` 按钮）
+  const renderMenu = (menuList: any[]) => {
+    return menuList.map((item) =>
+      item.languageCode === currentLanguage ? (
+        <div key={item.id} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {/* 父级菜单 */}
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Button
+              style={{
+                background: "#F5F5F5",
+                color: "#000",
+                fontSize: 16,
+                fontWeight: "bold",
+                padding: "6px 12px",
+                borderRadius: 8,
+                minWidth: 100,
+              }}
+            >
+              {item.menuName}
+            </Button>
+            <Button
+              onClick={() => handleModal(item)}
+              style={{
+                background: "#FF6A00",
+                color: "#FFF",
+                borderRadius: 8,
+                height: 32,
+                width: 32,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <PlusOutlined />
+            </Button>
+          </div>
 
+          {/* 子级菜单（带 `+` 按钮） */}
+          {item.children && item.children.length > 0 && (
+            <div style={{ display: "flex", flexDirection: "column",  gap: 6 }}>
+              {item.children.map((child) => (
+                <div key={child.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <Button
+                    style={{
+                      background: "#F5F5F5",
+                      color: "#000",
+                      fontSize: 14,
+                      padding: "6px 12px",
+                      borderRadius: 8,
+                      minWidth: 80,
+                      textAlign: "left",
+                    }}
+                  >
+                    • {child.menuName}
+                  </Button>
+                  <Button
+                    onClick={() => handleModal(child)}
+                    style={{
+                      background: "#FF6A00",
+                      color: "#FFF",
+                      borderRadius: 8,
+                      height: 32,
+                      width: 32,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <PlusOutlined />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : null
+    );
+  };
 
   return (
     <PageContainer>
@@ -103,32 +177,32 @@ const Header: React.FC = () => {
           <Button
             key={lang.key}
             type={currentLanguage === lang.key ? "primary" : "default"}
-            onClick={() => changeLanguage(lang.key)}
+            onClick={() => setCurrentLanguage(lang.key)}
+            style={{
+              background: currentLanguage === lang.key ? "#FF6A00" : "#F5F5F5",
+              color: currentLanguage === lang.key ? "#FFF" : "#000",
+              borderRadius: 8,
+              fontWeight: "bold",
+            }}
           >
             {lang.label}
-
           </Button>
         ))}
       </div>
 
       {/* 导航菜单 */}
-      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-        <Button style={{ background: "#F5F5F5", color: "#000" }}>logo</Button>
-
-       {menuData.map((item) =>
-          item.languageCode === currentLanguage ? (
-            <Button  key={item.id} onClick={() => handleMoal(item)}>{item.menuName}<PlusOutlined/></Button>
-          ) : null
-        )}
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16, paddingBottom: 10, borderBottom: "2px solid #ddd" }}>
+          <Button style={{ background: "#F5F5F5", color: "#000", fontWeight: "bold" }}>Logo</Button>
+          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginLeft: 20 }}>{renderMenu(menuData)}</div>
+        </div>
 
 
 
-        
-        <Button type="primary"   onClick={() => handleMoal()}><PlusOutlined/>添加</Button>
       </div>
-      <AddMenuModals visible={modalType} onCancel={() => handleCancel()}
-        onSubmit={handelSubmit} parentId={parentId}/>
 
+      {/* 添加菜单弹窗 */}
+      <AddMenuModals visible={modalType} onCancel={handleCancel} onSubmit={handleSubmit} parentId={parentId} />
     </PageContainer>
   );
 };
