@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { Modal, Select, Button } from "antd";
+import React, { useState,useEffect } from "react";
+import { Modal, Select, Button,message } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import FileUpload from"@/components/FileUpload"
+import { saveLang,addLangList} from "@/services/ant-design-pro/WebConfig";
 const { Option } = Select;
 
 const AddModal: React.FC = () => {
@@ -19,12 +20,30 @@ const AddModal: React.FC = () => {
     setLanguage("");
   };
 
+
+  const getLangList = async () => {
+    try {
+        let data={
+            tenantId:1007
+        }
+        const response = await addLangList(data);
+        if (response.code === "0") {
+            setDataSource(response.data || []);
+        } else {
+            message.error(`获取语言列表失败: ${response.message}`);
+        }
+        } catch (error) {
+            message.error("请求失败，请检查网络连接");
+        }
+    };
+
   // Handle form submission
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (language) {
-      console.log("Added language:", language);
-      setIsModalVisible(false);
-      setLanguage("");
+    //   console.log("Added language:", language);
+    //   setIsModalVisible(false);
+    //   setLanguage("");
+    const res=await saveLang()
     } else {
       alert("请选择语言!");
     }
@@ -34,6 +53,11 @@ const AddModal: React.FC = () => {
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
   };
+
+  useEffect(() => {
+    getLangList();
+  }
+  , []);
 
   return (
     <>

@@ -3,7 +3,7 @@ import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { Button, Space, Tag, message } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import AddModal from "./component/AddModal";
-import { addLangList } from "@/services/ant-design-pro/WebConfig";
+import { tenantLangList } from "@/services/ant-design-pro/WebConfig";
 
 // **主组件**
 const Language: React.FC = () => {
@@ -16,11 +16,11 @@ const Language: React.FC = () => {
       let data={
         tenantId:1007
       }
-      const response = await addLangList(data);
+      const response = await tenantLangList(data);
       if (response.code === "0") {
-        setDataSource(response.data || []);
+        setDataSource(response.data);
       } else {
-        message.error(`获取语言列表失败: ${response.message}`);
+        message.error(`获取语言列表失败`);
       }
     } catch (error) {
       message.error("请求失败，请检查网络连接");

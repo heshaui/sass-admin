@@ -142,6 +142,21 @@ export async function saveTenant(
     });
   }
 
+  export async function updatePaymentStatusById(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/tenantRoot/updatePaymentStatusById', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+
 
 
   export async function tenantRoleList(
