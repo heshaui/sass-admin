@@ -38,11 +38,11 @@ export async function getInitialState(): Promise<{
         skipErrorHandler: true,
       });
     }
-      // const menuTree = generateMenuTree(msg.data.tenantAuthorityList);
-      // localStorage.setItem('menuTree', JSON.stringify(menuTree));
+      const menuTree = generateMenuTree(msg.data.tenantAuthorityList);
+      localStorage.setItem('menuTree', JSON.stringify(menuTree));
 
-      // return { ...msg.data, menuTree };
-      return { ...msg.data };
+      return { ...msg.data, menuTree };
+      // return { ...msg.data };
     } catch (error) {
       history.push(loginPath);
     }
