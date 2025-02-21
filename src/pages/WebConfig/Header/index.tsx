@@ -27,17 +27,17 @@ const Header: React.FC = () => {
     let data = { languageCode: currentLanguage };
     const res = await HomeMenuTranslationList(data);
     console.log(res);
-    setMenuData(res?.data?.list || []);
+    setMenuData(res?.data || []);
   };
 
   useEffect(() => {
     getMenu();
-  }, []);
+  }, [currentLanguage]);
 
   // 切换语言
   const changeLanguage = (lang: string) => {
     setCurrentLanguage(lang);
-    getMenu();
+    // getMenu();
   };
 
   const handleMoal=(item:any)=>{
