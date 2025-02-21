@@ -131,13 +131,24 @@ const Allocation: React.FC = () => {
   // **提交角色权限分配**
   const handleSubmitDis = async (values: any) => {
     try {
-      let data: any[] = [];
-      values.permissions.forEach(async (item: any) => {
-        data.push({
-          roleId: editingRecord ? editingRecord.roleId : '',
-          permissionsId: item,
-        });
-      });
+          // **计算新增的权限 (去掉已分配的)**
+    const newPermissions = values.permissions.filter(
+      (item: string) => !rolePermissions.includes(item)
+    );
+
+    if (newPermissions.length === 0) {
+      message.info("没有新的权限需要分配");
+      setDisVisible(false);
+      return;
+    }
+
+    // **组装提交数据**
+    let data = newPermissions.map((item: string) => ({
+      roleId: editingRecord ? editingRecord.roleId : '',
+      permissionsId: item,
+    }));
+
+  
 
       const res = await saveList(data);
       if (res.code === '0') {

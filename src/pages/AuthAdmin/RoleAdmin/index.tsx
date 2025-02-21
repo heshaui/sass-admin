@@ -148,8 +148,25 @@ const handleDispense = async (record) => {
 // 📌 提交权限分配
 const handleSubmitDis = async (values) => {
   try {
-    await savePermissionsList({ roleId: editingRecord.roleId, permissionsIds: values.permissions });
-    message.success('权限分配成功');
+    const newPermissions = values.permissions.filter(
+      (permId) => !rolePermissions.includes(permId)
+    );
+
+    if (newPermissions.length === 0) {
+      message.info("没有新的权限需要分配");
+      setDisVisible(false);
+      return;
+    }
+   const res= await savePermissionsList({
+    roleId: editingRecord.roleId,
+    permissionsIds: newPermissions,
+  });
+    if(res.code==='0'){
+      message.success('权限分配成功');
+    }else{
+      message.error('权限分配失败');
+    }
+    
     setDisVisible(false);
     await getRoleList(); // ✅ 刷新角色列表，确保权限生效
   } catch (error) {

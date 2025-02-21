@@ -2,50 +2,33 @@ import React, { useState, useEffect } from "react";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { Button, Space, Tag, message } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
-import AddModal  from "./component/AddModal";
-
-const fetchLanguages = async () => {
-  return [
-    {
-      id: 1,
-      language: "English",
-      code: "en-US",
-      status: "enabled",
-      translations: [
-        { platform: "PC", file: "PC_en-US", completeness: "100%" },
-        { platform: "Server", file: "Server_en-US", completeness: "100%" },
-      ],
-    },
-    {
-      id: 2,
-      language: "简体中文",
-      code: "zh_CN",
-      status: "disabled",
-      translations: [
-        { platform: "PC", file: "PC_zh_CN", completeness: "100%" },
-        { platform: "Server", file: "Server_zh_CN", completeness: "100%" },
-      ],
-    },
-    {
-      id: 3,
-      language: "繁体中文",
-      code: "zh_HK",
-      status: "enabled",
-      translations: [
-        { platform: "PC", file: "PC_zh_HK", completeness: "100%" },
-        { platform: "Server", file: "Server_zh_HK", completeness: "100%" },
-      ],
-    },
-  ];
-};
+import AddModal from "./component/AddModal";
+import { addLangList } from "@/services/ant-design-pro/WebConfig";
 
 // **主组件**
 const Language: React.FC = () => {
   const [dataSource, setDataSource] = useState([]);
   const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
 
+  // **获取语言列表数据**
+  const fetchLanguages = async () => {
+    try {
+      let data={
+        tenantId:1007
+      }
+      const response = await addLangList(data);
+      if (response.code === "0") {
+        setDataSource(response.data || []);
+      } else {
+        message.error(`获取语言列表失败: ${response.message}`);
+      }
+    } catch (error) {
+      message.error("请求失败，请检查网络连接");
+    }
+  };
+
   useEffect(() => {
-    fetchLanguages().then(setDataSource);
+    fetchLanguages();
   }, []);
 
   // **切换语言状态**
@@ -82,12 +65,12 @@ const Language: React.FC = () => {
         </span>
       ),
     },
-    { title: "语言代码", dataIndex: "code" },
+    { title: "语言代码", dataIndex: "langEncode" },
     {
       title: "状态",
       dataIndex: "status",
       render: (text: string) =>
-        text === "enabled" ? <Tag color="green">启用</Tag> : <Tag color="red">禁用</Tag>,
+        text === 1 ? <Tag color="green">启用</Tag> : <Tag color="red">禁用</Tag>,
     },
     {
       title: "操作",
@@ -154,7 +137,6 @@ const Language: React.FC = () => {
           <AddModal key="add" />,
         ]}
       />
-
     </PageContainer>
   );
 };

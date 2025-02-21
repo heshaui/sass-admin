@@ -42,3 +42,16 @@ export async function HomeMenuTranslationList(body: API.FackeParams, options?: {
 }
 
 
+
+
+
+export async function addLangList(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/addLangList?tenantId='+body.tenantId, {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
