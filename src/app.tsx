@@ -33,14 +33,20 @@ export async function getInitialState(): Promise<{
         skipErrorHandler: true,
       });
     }else if(isMerchant){
-
          msg=await queryCurrentUserMecharnt({
         skipErrorHandler: true,
       });
     }
-      const menuTree = generateMenuTree(msg.data.tenantAuthorityList);
+    let menuTree;
+    if(isAdmin){
+       menuTree = generateMenuTree(msg.data.tenantAuthorityList);
+    }else{
+       menuTree = generateMenuTree(msg.data.tenantPermissionsRespList);
+      
+    }
+     
       localStorage.setItem('menuTree', JSON.stringify(menuTree));
-
+    console.log('msg',menuTree)
       return { ...msg.data, menuTree };
       // return { ...msg.data };
     } catch (error) {
@@ -92,6 +98,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
+
 
      menuDataRender: () => initialState?.currentUser?.menuTree || [],
     childrenRender: (children) => {
