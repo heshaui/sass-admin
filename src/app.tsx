@@ -1,18 +1,18 @@
-import {  Question, SelectLang, AvatarDropdown, AvatarName } from '@/components';
+import { AvatarDropdown, AvatarName, Question, SelectLang } from '@/components';
+import {
+  currentUser as queryCurrentUser,
+  merchantCurrentUser as queryCurrentUserMecharnt,
+} from '@/services/ant-design-pro/api';
 import type { Settings as LayoutSettings } from '@ant-design/pro-components';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { currentUser as queryCurrentUser } from '@/services/ant-design-pro/api';
-import { merchantCurrentUser as queryCurrentUserMecharnt } from '@/services/ant-design-pro/api';
 
 import { generateMenuTree } from '@/utils/index';
-import React from 'react';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -27,26 +27,25 @@ export async function getInitialState(): Promise<{
   const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
   const fetchUserInfo = async () => {
     try {
-      let msg:any;
-      if(isAdmin){
+      let msg: any;
+      if (isAdmin) {
         msg = await queryCurrentUser({
-        skipErrorHandler: true,
-      });
-    }else if(isMerchant){
-         msg=await queryCurrentUserMecharnt({
-        skipErrorHandler: true,
-      });
-    }
-    let menuTree;
-    if(isAdmin){
-       menuTree = generateMenuTree(msg.data.tenantAuthorityList);
-    }else{
-       menuTree = generateMenuTree(msg.data.tenantPermissionsRespList);
-      
-    }
-     
+          skipErrorHandler: true,
+        });
+      } else if (isMerchant) {
+        msg = await queryCurrentUserMecharnt({
+          skipErrorHandler: true,
+        });
+      }
+      let menuTree;
+      if (isAdmin) {
+        menuTree = generateMenuTree(msg.data.tenantAuthorityList);
+      } else {
+        menuTree = generateMenuTree(msg.data.tenantPermissionsRespList);
+      }
+
       localStorage.setItem('menuTree', JSON.stringify(menuTree));
-    console.log('msg',menuTree)
+      console.log('msg', menuTree);
       return { ...msg.data, menuTree };
       // return { ...msg.data };
     } catch (error) {
@@ -76,7 +75,9 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {
-      src: initialState?.currentUser?.avatar||'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
+      src:
+        initialState?.currentUser?.avatar ||
+        'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
       title: <AvatarName />,
       render: (_, avatarChildren) => {
         return <AvatarDropdown>{avatarChildren}</AvatarDropdown>;
@@ -85,7 +86,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     waterMarkProps: {
       content: initialState?.currentUser?.employeeResp?.nickname,
     },
-    
+
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
@@ -99,8 +100,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
 
-
-    //  menuDataRender: () => initialState?.currentUser?.menuTree || [],
+    menuDataRender: () => initialState?.currentUser?.menuTree || [],
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return (
