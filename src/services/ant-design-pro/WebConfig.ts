@@ -83,7 +83,7 @@ export async function addLangList(body: API.FackeParams, options?: { [key: strin
 
 // /tenant/v1/enablePackage
 export async function enablePackage(body: API.FackeParams, options?: { [key: string]: any }) {
-  return request<API.FackeResult>('/tenant/v1/enablePackage?packageId='+body.tenantLangId, {
+  return request<API.FackeResult>('/tenant/v1/enablePackage', {
     method: 'POST',
     data: body,
     headers: {
@@ -96,7 +96,7 @@ export async function enablePackage(body: API.FackeParams, options?: { [key: str
 
 // /tenant/v1/disablePackage
 export async function disablePackage(body: API.FackeParams, options?: { [key: string]: any }) {
-  return request<API.FackeResult>('/tenant/v1/disablePackage?packageId='+body.tenantLangId, {
+  return request<API.FackeResult>('/tenant/v1/disablePackage', {
     method: 'POST',
     data: body,
     headers: {
@@ -118,3 +118,31 @@ export async function updateEndpointInfo(body: API.FackeParams, options?: { [key
     ...(options || {}),
   });
 }
+
+
+// /tenant/v1/deleteTenantLangPackage
+export async function deleteTenantLangPackage(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/deleteTenantLangPackage', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+// /tenant/v1/checkUpdate
+export async function checkUpdate(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/checkUpdate', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json', 
+    },
+    ...(options || {}),
+  });
+}
+
+
+

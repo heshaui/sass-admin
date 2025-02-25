@@ -3,7 +3,7 @@ import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { Button, Space, Tag, message,Modal } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import AddModal from "./component/AddModal";
-import { tenantLangList,updateEndpointInfo } from "@/services/ant-design-pro/WebConfig";
+import { tenantLangList,updateEndpointInfo,deleteTenantLangPackage,checkUpdate,enablePackage,disablePackage } from "@/services/ant-design-pro/WebConfig";
 import UploadModal from './component/UploadModal';
 // **主组件**
 const Language: React.FC = () => {
@@ -54,14 +54,26 @@ const Language: React.FC = () => {
   }
 
   // **切换语言状态**
-  const toggleStatus = (record: any) => {
-    const updatedData = dataSource.map((item) =>
-      item.id === record.id
-        ? { ...item, status: item.status === "enabled" ? "disabled" : "enabled" }
-        : item
-    );
-    setDataSource(updatedData);
-    message.success(`已${record.status === "enabled" ? "禁用" : "启用"} ${record.language}`);
+  const toggleStatus = async (record: any) => {
+    try {
+      let response;
+      if (record.status === 1) {
+        // 当前是启用状态，点击后禁用
+        response = await disablePackage({ tenantLangId: record.id });
+      } else {
+        // 当前是禁用状态，点击后启用
+        response = await enablePackage({ tenantLangId: record.id });
+      }
+
+      if (response.code === '0') {
+        message.success(`已${record.status === 1 ? '禁用' : '启用'} ${record.lang}`);
+        fetchLanguages(); // 刷新列表
+      } else {
+        message.error(`操作失败: ${response.message}`);
+      }
+    } catch (error) {
+      message.error('操作失败，请重试');
+    }
   };
 
   // **展开/折叠详情**
@@ -72,14 +84,67 @@ const Language: React.FC = () => {
   };
 
   const handleUploadClick = (record: { id: number; langEncode: string }) => {
+    console.log(record)
     setSelectedRecord(record);
     setIsUploadModalVisible(true);
   };
+
+  const handleDownload = (fileUrl: string | null, endpointName: string) => {
+    if (!fileUrl) {
+      message.warning('暂无可下载的文件');
+      return;
+    }
+
+    // 创建一个隐藏的 a 标签来下载文件
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = `${endpointName}_language.xlsx`; // 设置下载文件名
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleDelete = async (id: number, fileName: string) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: `确定要删除"${fileName}"的语言包吗？`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          const response = await deleteTenantLangPackage({ tenantLangId: id });
+          if (response.code === '0') {
+            message.success('删除成功');
+            fetchLanguages(); // 刷新列表
+          } else {
+            message.error(`删除失败: ${response.message}`);
+          }
+        } catch (error) {
+          message.error('操作失败，请重试');
+        }
+      }
+    });
+  };
+
+  const handleUpdate = async (record: any) => {
+    try {
+      const response = await checkUpdate({ tenantLangId: record.id });
+      if (response.code === '0') {
+        message.success('更新成功');
+        fetchLanguages(); // 刷新列表
+      } else {
+        message.error(`更新失败: ${response.message}`);
+      }
+    } catch (error) {
+      message.error('操作失败，请重试');
+    }
+  };
+
   // **主表格列**
   const columns = [
     {
       title: "语言",
-      dataIndex: "language",
+      dataIndex: "lang",
       render: (text: string, record: any) => (
         <span>
           <Button
@@ -95,27 +160,21 @@ const Language: React.FC = () => {
     {
       title: "状态",
       dataIndex: "status",
-      render: (text: string) =>
+      render: (text: number) =>
         text === 1 ? <Tag color="green">启用</Tag> : <Tag color="red">禁用</Tag>,
     },
     {
       title: "操作",
-      render: (_: any, record: any) => (
+      render: (_, record: any) => (
         <Space>
-          <Button type="link" onClick={() => message.info(`更新 ${record.language}`)}>
+          <Button type="link" onClick={() => handleUpdate(record)}>
             更新
           </Button>
           <Button type="link" onClick={() => toggleStatus(record)}>
-            {record.status === "enabled" ? "禁用" : "启用"}
+            {record.status === 1 ? "禁用" : "启用"}
           </Button>
-          <Button type="link" danger onClick={() => message.warning(`移除 ${record.language}`)}>
+          <Button type="link" danger onClick={() => message.warning(`移除 ${record.lang}`)}>
             移除
-          </Button>
-          <Button type="link" onClick={() => message.info(`查看 ${record.language}`)}>
-            查看
-          </Button>
-          <Button type="link" onClick={() => handleUploadClick(record)}>
-            上传
           </Button>
         </Space>
       ),
@@ -124,28 +183,53 @@ const Language: React.FC = () => {
 
   // **子表格（翻译文件）**
   const expandedRowRender = (record: any) => {
+    const endpointColumns = [
+      { title: "端", dataIndex: "endpointName" },
+      { title: "文件名称", dataIndex: "fileName" },
+      { 
+        title: "完整度", 
+        dataIndex: "cmpPercentage",
+        render: (text: string) => `${text}%`
+      },
+      {
+        title: "操作",
+        render: (_, endpoint) => (
+          <Space>
+            <Button 
+              type="link" 
+              onClick={() => handleDownload(endpoint.fileUrl, endpoint.endpointName)}
+            >
+              下载
+            </Button>
+            <Button 
+              type="link" 
+              onClick={() => handleUploadClick({
+                id: endpoint.id,
+                langEncode: record.langEncode
+              })}
+            >
+              上传
+            </Button>
+            <Button 
+              type="link" 
+              danger
+              onClick={() => handleDelete(endpoint.id, endpoint.fileName)}
+            >
+              删除
+            </Button>
+          </Space>
+        ),
+      },
+    ];
+
     return (
       <ProTable
-        columns={[
-          { title: "端", dataIndex: "platform" },
-          { title: "文件名称", dataIndex: "file" },
-          { title: "完整度", dataIndex: "completeness" },
-          {
-            title: "操作",
-            render: () => (
-              <Space>
-                <Button type="link">编辑</Button>
-                <Button type="link">下载</Button>
-                <Button type="link">上传</Button>
-              </Space>
-            ),
-          },
-        ]}
-        rowKey="file"
+        columns={endpointColumns}
+        dataSource={record.endpoints}
+        rowKey="id"
         search={false}
         options={false}
         pagination={false}
-        dataSource={record.translations}
       />
     );
   };

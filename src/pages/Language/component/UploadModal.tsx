@@ -19,9 +19,10 @@ const UploadModal: React.FC<UploadModalProps> = ({ visible, onCancel, record, on
 
 
         const data = {
-          tenantLangId: record.id,
+          tenantLangEndpointId: record.id,
           langEncode: record.langEncode,
-          fileUrl: response.data,
+          fileUrl: response.data.filePath,
+          fileName:response.data.fileName
         };
         
         const updateRes = await updateEndpointInfo(data);
