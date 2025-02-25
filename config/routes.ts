@@ -85,7 +85,7 @@ export default [
     path: '/webConfig',
     name: 'webConfig',
     icon: 'crown',
-    // access: 'canAdmin',
+     access: 'canAdmin',
     routes: [
       {
         path: '/webConfig/header',
@@ -95,12 +95,37 @@ export default [
     ],
   },
   {
+    path: '/kvSetting',
+    name: 'kvSetting',
+    icon: 'setting',
+    access: 'canAdmin',
+    component: './KvSetting',
+  },
+  {
     path: '/language',
     name: 'language',
     icon: 'smile',
+    access: 'canAdmin',
     component: './Language',
   },
-
+  {
+    path: '/langPackage',
+    name: 'langPackage',
+    icon: 'smile',
+    access: 'canAdmin',
+    routes: [
+      {
+        path: '/langPackage/language',
+        name: 'language',
+        component: './LangPackage/Language',
+      },
+      {
+        path: '/langPackage/package',
+        name: 'package',
+        component: './LangPackage/Package',
+      },
+    ],
+  },
   {
     path: '/',
     redirect: '/welcome',

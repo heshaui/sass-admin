@@ -9,7 +9,6 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-
 import { generateMenuTree } from '@/utils/index';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -100,7 +99,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // unAccessible: <div>unAccessible</div>,
     // 增加一个 loading 的状态
 
-    menuDataRender: () => initialState?.currentUser?.menuTree || [],
+    // menuDataRender: () => initialState?.currentUser?.menuTree || [],
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return (

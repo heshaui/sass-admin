@@ -61,5 +61,9 @@ export default {
   'menu.merchant.permissions': '商户权限',
   'menu.webConfig': '网站配置',
   'menu.webConfig.header': 'Header配置',
+  'menu.kvSetting': 'KV配置管理',
   'menu.language': '多语言配置',
+  'menu.langPackage': '语言包管理',
+  'menu.langPackage.language': '语言列表',
+  'menu.langPackage.package': '语言包套餐列表',
 };
