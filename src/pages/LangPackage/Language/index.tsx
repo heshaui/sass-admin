@@ -33,16 +33,30 @@ const Language: React.FC = () => {
   const [searchValue, setSearchValue] = useState("");
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0
+  });
 
   // 获取语言列表数据
-  const fetchLanguageList = async () => {
+  const fetchLanguageList = async (pageNo = 1, pageSize = 10) => {
     setLoading(true);
     try {
       const response = await languageList({
-        keyword: searchValue
+        keyword: searchValue,
+        pageNo,
+        pageSize
       });
-      if (response && response.data) {
-        setDataSource(response.data);
+      if (response && response.code === '0') {
+        setDataSource(response.data.list || []);
+        setPagination({
+          current: pageNo,
+          pageSize,
+          total: response.data.count || 0
+        });
+      } else {
+        message.error(response?.message || "获取语言列表失败");
       }
     } catch (error) {
       console.error("获取语言列表失败:", error);
@@ -59,7 +73,12 @@ const Language: React.FC = () => {
 
   // 处理查询
   const handleSearch = () => {
-    fetchLanguageList();
+    fetchLanguageList(1, pagination.pageSize); // 搜索时重置到第一页
+  };
+
+  // 处理分页变化
+  const handleTableChange = (page: number, pageSize?: number) => {
+    fetchLanguageList(page, pageSize || pagination.pageSize);
   };
 
   return (
@@ -84,7 +103,7 @@ const Language: React.FC = () => {
         columns={[
           {
             title: "序号",
-            dataIndex: "key",
+            dataIndex: "id",
             width: 80,
             align: "center",
           },
@@ -105,15 +124,19 @@ const Language: React.FC = () => {
           },
           {
             title: "创建时间",
-            dataIndex: "createdAt",
+            dataIndex: "createTime",
             align: "center",
+            render: (time) => new Date(time).toLocaleString(),
           },
         ]}
         dataSource={dataSource}
-        rowKey="key"
+        rowKey="id"
         search={false} // 禁用 ProTable 自带的搜索
         pagination={{
-          pageSize: 5,
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          total: pagination.total,
+          onChange: handleTableChange,
         }}
         bordered
       />
