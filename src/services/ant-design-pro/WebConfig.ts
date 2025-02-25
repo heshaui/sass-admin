@@ -46,7 +46,7 @@ export async function HomeMenuTranslationList(body: API.FackeParams, options?: {
 
 
 export async function tenantLangList(body: API.FackeParams, options?: { [key: string]: any }) {
-  return request<API.FackeResult>('/tenant/v1/tenantLangList?tenantId='+body.tenantId, {
+  return request<API.FackeResult>('/tenant/v1/tenantLangList', {
     method: 'POST',
     data: body,
     headers: {
@@ -71,7 +71,45 @@ export async function saveLang(body: API.FackeParams, options?: { [key: string]:
 
 
 export async function addLangList(body: API.FackeParams, options?: { [key: string]: any }) {
-  return request<API.FackeResult>('/tenant/v1/addLangList?tenantId='+body.tenantId, {
+  return request<API.FackeResult>('/tenant/v1/addLangList', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+// /tenant/v1/enablePackage
+export async function enablePackage(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/enablePackage?packageId='+body.tenantLangId, {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
+// /tenant/v1/disablePackage
+export async function disablePackage(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/disablePackage?packageId='+body.tenantLangId, {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+
+// /tenant/v1/updateEndpointInfo
+export async function updateEndpointInfo(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/updateEndpointInfo', {
     method: 'POST',
     data: body,
     headers: {

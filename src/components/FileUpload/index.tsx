@@ -41,7 +41,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onChange }) => {
       const uploadedUrl = response.data.data; // Assuming the file URL is in response.data.data
       setFileUrl(uploadedUrl);
       setFileName(file.name); // Store original file name
-      onChange?.(uploadedUrl); // Pass URL to parent component
+      onChange?.(response); // Pass URL to parent component
       onSuccess(response);
       message.success("文件上传成功");
     } catch (error) {

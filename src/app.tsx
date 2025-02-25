@@ -100,7 +100,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
     // 增加一个 loading 的状态
 
 
-     menuDataRender: () => initialState?.currentUser?.menuTree || [],
+    //  menuDataRender: () => initialState?.currentUser?.menuTree || [],
     childrenRender: (children) => {
       // if (initialState?.loading) return <PageLoading />;
       return (

@@ -8,6 +8,7 @@ const { Option } = Select;
 const AddModal: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [language, setLanguage] = useState<string>("");
+  const [dataSource, setDataSource] = useState<any[]>([]); // 添加新的state
 
   // Show modal
   const showModal = () => {
@@ -23,10 +24,8 @@ const AddModal: React.FC = () => {
 
   const getLangList = async () => {
     try {
-        let data={
-            tenantId:1007
-        }
-        const response = await addLangList(data);
+          
+        const response = await addLangList();
         if (response.code === "0") {
             setDataSource(response.data || []);
         } else {
@@ -37,17 +36,35 @@ const AddModal: React.FC = () => {
         }
     };
 
+
+
   // Handle form submission
   const handleAdd = async () => {
     if (language) {
-    //   console.log("Added language:", language);
-    //   setIsModalVisible(false);
-    //   setLanguage("");
-    const res=await saveLang()
+      try {
+
+
+        const data = {
+          langId:language
+        }
+        const res = await saveLang(data);
+        if (res.code === '0') {
+          message.success('添加语言成功');
+          setIsModalVisible(false);
+          setLanguage("");
+        } else {
+          message.error(`添加失败: ${res.message}`);
+        }
+      } catch (error) {
+        console.log(error)
+        message.error('请求失败，请检查网络连接');
+      }
     } else {
-      alert("请选择语言!");
+      message.warning("请选择语言!");
     }
   };
+
+// ... existing code ...
 
   // Handle language selection
   const handleLanguageChange = (value: string) => {
@@ -90,11 +107,17 @@ const AddModal: React.FC = () => {
               onChange={handleLanguageChange}
               style={{ width: "100%" }}
             >
-              <Option value="中文">中文</Option>
-              <Option value="English">English</Option>
-              <Option value="日本語">日本語</Option>
-              <Option value="Español">Español</Option>
+              {
+
+             
+             dataSource.map((item) => (
+              <Option key={item.id} value={item.id}>
+                {item.lang}
+              </Option>
+            ))
+              }
             </Select>
+          
           </div>
           {/* <FileUpload/> */}
 

@@ -23,7 +23,11 @@ const Header: React.FC = () => {
   const getMenu = async () => {
     try {
       const res = await HomeMenuTranslationList({ languageCode: currentLanguage });
-      setMenuData(res?.data || []);
+      if(res.code === "0"){
+        setMenuData(res?.data);
+      }else{
+        message.error("获取菜单数据失败");
+      }
     } catch (error) {
       message.error("获取菜单数据失败");
     }
@@ -129,9 +133,9 @@ const Header: React.FC = () => {
 
           {/* 子级菜单（带 `+` 按钮） */}
           {item.children && item.children.length > 0 && (
-            <div style={{ display: "flex", flexDirection: "column",  gap: 6 }}>
+            <div style={{ display: "flex", flexDirection: "column",  gap: 4 }}>
               {item.children.map((child) => (
-                <div key={child.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <div key={child.id} style={{ display: "flex", alignItems: "center", gap: 4 }}>
                   <Button
                     style={{
                       background: "#F5F5F5",
@@ -194,11 +198,25 @@ const Header: React.FC = () => {
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16, paddingBottom: 10, borderBottom: "2px solid #ddd" }}>
           <Button style={{ background: "#F5F5F5", color: "#000", fontWeight: "bold" }}>Logo</Button>
-          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginLeft: 20 }}>{renderMenu(menuData)}</div>
+          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginLeft: 20 }}>
+            
+           
+            
+            {menuData && menuData.length > 0 && renderMenu(menuData)}
+
+            <Button 
+                type="text"
+                style={{
+                  background: "#FF6A00" ,
+                  color: "#fff",
+                  borderRadius: 8,
+                  fontWeight: "bold",
+                  marginLeft: 20,
+                }}
+                onClick={() => handleModal()}
+              >添加一级菜单<PlusOutlined /></Button>
+          </div>
         </div>
-
-
-
       </div>
 
       {/* 添加菜单弹窗 */}

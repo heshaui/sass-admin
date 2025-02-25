@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { Button, Space, Tag, message } from "antd";
+import { Button, Space, Tag, message,Modal } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import AddModal from "./component/AddModal";
-import { tenantLangList } from "@/services/ant-design-pro/WebConfig";
-
+import { tenantLangList,updateEndpointInfo } from "@/services/ant-design-pro/WebConfig";
+import UploadModal from './component/UploadModal';
 // **主组件**
 const Language: React.FC = () => {
   const [dataSource, setDataSource] = useState([]);
   const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
+  const [isUploadModalVisible, setIsUploadModalVisible] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<{ id: number; langEncode: string } | null>(null);
 
   // **获取语言列表数据**
   const fetchLanguages = async () => {
     try {
+     
       let data={
-        tenantId:1007
+        pageNo:1,
+        pageSize:10000
       }
       const response = await tenantLangList(data);
       if (response.code === "0") {
@@ -30,6 +34,24 @@ const Language: React.FC = () => {
   useEffect(() => {
     fetchLanguages();
   }, []);
+
+  const updateInfo=async ()=>{
+    try {
+      let data={
+        id:'',
+        fileUrl:'',
+        langEncode:''
+      }
+      const response = await updateEndpointInfo(data);
+      if (response.code === "0") {
+        message.success(`更新成功`);
+      } else {
+        message.error(`更新失败`);
+      }
+    } catch (error) {
+      message.error("请求失败，请检查网络连接");
+    }
+  }
 
   // **切换语言状态**
   const toggleStatus = (record: any) => {
@@ -49,6 +71,10 @@ const Language: React.FC = () => {
     );
   };
 
+  const handleUploadClick = (record: { id: number; langEncode: string }) => {
+    setSelectedRecord(record);
+    setIsUploadModalVisible(true);
+  };
   // **主表格列**
   const columns = [
     {
@@ -87,6 +113,9 @@ const Language: React.FC = () => {
           </Button>
           <Button type="link" onClick={() => message.info(`查看 ${record.language}`)}>
             查看
+          </Button>
+          <Button type="link" onClick={() => handleUploadClick(record)}>
+            上传
           </Button>
         </Space>
       ),
@@ -137,7 +166,19 @@ const Language: React.FC = () => {
           <AddModal key="add" />,
         ]}
       />
+
+      {selectedRecord && (
+        <UploadModal
+          visible={isUploadModalVisible}
+          onCancel={() => setIsUploadModalVisible(false)}
+          record={selectedRecord}
+          onSuccess={() => {
+            fetchLanguages(); // 上传成功后刷新列表
+          }}
+        />
+      )}
     </PageContainer>
+    
   );
 };
 
