@@ -49,11 +49,11 @@ const Language: React.FC = () => {
         pageSize
       });
       if (response && response.code === '0') {
-        setDataSource(response.data.list || []);
+        setDataSource(response.data || []);
         setPagination({
           current: pageNo,
           pageSize,
-          total: response.data.count || 0
+          total: response.total || 0
         });
       } else {
         message.error(response?.message || "获取语言列表失败");
@@ -109,7 +109,7 @@ const Language: React.FC = () => {
           },
           {
             title: "语言",
-            dataIndex: "language",
+            dataIndex: "lang",
             align: "center",
           },
           {
@@ -119,7 +119,7 @@ const Language: React.FC = () => {
           },
           {
             title: "语言编码",
-            dataIndex: "code",
+            dataIndex: "langEncode",
             align: "center",
           },
           {

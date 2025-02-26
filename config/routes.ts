@@ -95,11 +95,62 @@ export default [
     ],
   },
   {
-    path: '/kvSetting',
-    name: 'kvSetting',
-    icon: 'setting',
-    access: 'canAdmin',
-    component: './KvSetting',
+    path: '/common-config',
+    name: 'commonConfig',
+    icon: 'SettingOutlined',
+    routes: [
+      {
+        path: '/common-config/kv-setting',
+        name: 'kvSetting',
+        component: './KvSetting',
+      },
+      {
+        path: '/common-config/basic',
+        name: 'basic',
+        component: './CommonConfig/Basic',
+      },
+      {
+        path: '/common-config',
+        redirect: '/common-config/kv-setting',
+      },
+    ],
+  },
+  {
+    path: '/operation',
+    name: 'operation',
+    icon: 'SettingOutlined',
+    routes: [
+      {
+        path: '/operation/pc-login',
+        name: 'pcLogin',
+        component: './Operation/PCLogin',
+      },
+      {
+        path: '/operation',
+        redirect: '/operation/pc-login',
+      },
+    ],
+  },
+  {
+    path: '/lang-package',
+    name: 'langPackage',
+    icon: 'GlobalOutlined',
+    routes: [
+      {
+        path: '/lang-package/language',
+        name: 'language',
+        component: './LangPackage/Language',
+      },
+      {
+        path: '/lang-package/package',
+        name: 'package',
+        component: './LangPackage/Package',
+      },
+      {
+        path: '/lang-package',
+        redirect: '/lang-package/language',
+      },
+    ],
   },
   {
     path: '/language',
@@ -107,24 +158,6 @@ export default [
     icon: 'smile',
     access: 'canAdmin',
     component: './Language',
-  },
-  {
-    path: '/langPackage',
-    name: 'langPackage',
-    icon: 'smile',
-    access: 'canAdmin',
-    routes: [
-      {
-        path: '/langPackage/language',
-        name: 'language',
-        component: './LangPackage/Language',
-      },
-      {
-        path: '/langPackage/package',
-        name: 'package',
-        component: './LangPackage/Package',
-      },
-    ],
   },
   {
     path: '/',
