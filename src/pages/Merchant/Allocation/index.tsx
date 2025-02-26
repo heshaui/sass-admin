@@ -5,6 +5,7 @@ import {
   tenantPermissionsList,
   tenantRoleList,
   updateTenantRoleById,
+  deleteByIds
 } from '@/services/ant-design-pro/merchant'; // 角色API
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message } from 'antd';
@@ -41,7 +42,7 @@ const Allocation: React.FC = () => {
   const [disVisible, setDisVisible] = useState(false); // 权限分配模态框
   const [rolePermissions, setRolePermissions] = useState<string[]>([]); // 角色已分配权限
   const [allPermissions, setAllPermissions] = useState<string[]>([]); // 所有权限数据
-
+  const [roleId, setRoleId] = useState<string[]>([]); 
   // **获取角色列表**
   const fetchRoleList = async () => {
     try {
@@ -112,7 +113,8 @@ const Allocation: React.FC = () => {
   const getRolePermissions = async (record: any) => {
     try {
       const res = await tenantPermissionsList({ roleId: record.roleId, pageNo: 1, pageSize: 1000 });
-      if (res?.data) {
+      if (res.code === '0') {
+        setRoleId(res.data.list)
         const checkedKeys = res.data.list.map((item: any) => item.permissionsId);
         setRolePermissions(checkedKeys);
       }
@@ -131,32 +133,49 @@ const Allocation: React.FC = () => {
   // **提交角色权限分配**
   const handleSubmitDis = async (values: any) => {
     try {
-          // **计算新增的权限 (去掉已分配的)**
-    const newPermissions = values.permissions.filter(
-      (item: string) => !rolePermissions.includes(item)
-    );
+      // **计算新增的权限 (去掉已分配的)**
+      const newPermissions = values.permissions.filter(
+        (item: string) => !rolePermissions.includes(item)
+      );
 
-    if (newPermissions.length === 0) {
-      message.info("没有新的权限需要分配");
-      setDisVisible(false);
-      return;
-    }
+      // 获取移除的权限
+      const removedPermissions = rolePermissions.filter(
+        (permId) => !values.permissions.includes(permId)
+      );
 
-    // **组装提交数据**
-    let data = newPermissions.map((item: string) => ({
-      roleId: editingRecord ? editingRecord.roleId : '',
-      permissionsId: item,
-    }));
-
-  
-
-      const res = await saveList(data);
-      if (res.code === '0') {
-        message.success('权限分配成功');
+      if (newPermissions.length === 0 && removedPermissions.length === 0) {
+        message.info("没有新的权限需要分配或移除");
         setDisVisible(false);
-      } else {
-        message.error('权限分配失败');
+        return;
       }
+
+      // **组装新增权限提交数据**
+      let data = newPermissions.map((item: string) => ({
+        roleId: editingRecord ? editingRecord.roleId : '',
+        permissionsId: item,
+      }));
+
+      // 调用保存接口
+      if (newPermissions.length > 0) {
+        const res = await saveList(data);
+        if (res.code !== '0') {
+          message.error('权限分配失败');
+          return;
+        }
+      }
+
+      // 调用删除接口
+      if (removedPermissions.length > 0) {
+        const allID = roleId.filter(item => removedPermissions.includes(item.permissionsId));
+        const deleteRes = await deleteByIds(allID.map(item => item.id));
+        if (deleteRes.code !== '0') {
+          message.error('权限移除失败');
+          return;
+        }
+      }
+
+      message.success('权限更新成功');
+      setDisVisible(false);
     } catch (error) {
       message.error('权限分配请求失败');
     }

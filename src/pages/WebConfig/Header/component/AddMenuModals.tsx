@@ -15,7 +15,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
   const [formModal3] = Form.useForm();
   const [selectedStyle, setSelectedStyle] = useState("new");
   const [displayType, setDisplayType] = useState("vertical"); // 默认选中“竖排”
-    const [typeId, setTypeId] = useState<number>(1);
+    const [typeId, setTypeId] = useState<number>(2);
 
   const tops = selectedStyle === "custom" ? 80 : 20;
   const iconNew = "https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/02/20/c667acb2-89a1-407c-9e03-3017eb222f7f.png";
@@ -76,13 +76,16 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
     <Modal title="添加菜单" visible={visible} onCancel={onCancel} footer={null}>
       <Form form={formModal3} layout="vertical" onFinish={onFinish}>
         {/* 标签/菜单选择 */}
-        <Form.Item label="标签/菜单" name="typeId" rules={[{ required: true, message: "请选择类型" }]}>
-          <Radio.Group value={typeId} defaultValue={1}
-            onChange={(e) => setTypeId(e.target.value)}>
-            <Radio value={1}>标签</Radio>
-            <Radio value={2}>菜单</Radio>
-          </Radio.Group>
-        </Form.Item>
+        {
+           parentId&& <Form.Item label="标签/菜单" name="typeId" rules={[{ required: true, message: "请选择类型" }]}>
+            <Radio.Group value={typeId} defaultValue={1}
+              onChange={(e) => setTypeId(e.target.value)}>
+              <Radio value={1}>标签</Radio>
+              <Radio value={2}>菜单</Radio>
+            </Radio.Group>
+          </Form.Item>
+        }
+      
         {
             typeId === 2&&parentId&&<Form.Item
             label="父级菜单"

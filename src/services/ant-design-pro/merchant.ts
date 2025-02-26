@@ -318,3 +318,22 @@ export async function saveTenant(
 
 
   
+  // /tenant-admin/v1/tenantPermissions/deleteByIds
+  export async function deleteByIds(
+    body:API.TenantPermissionsVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantPermissions>('/tenant-admin/v1/tenantPermissions/deleteByIds', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+
+
+
+  

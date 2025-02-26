@@ -310,3 +310,20 @@ export async function updateEmployeeById(
     ...(options || {}),
   });
 }
+
+
+export async function deleteTenantByIdList(
+  body:API.PermissionsVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.Permissions>('/tenant-admin/v1/permissions/deleteTenantByIdList?ids='+body, {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+} 
+
+

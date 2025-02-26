@@ -3,7 +3,7 @@ import { Button, Space, message } from 'antd';
 import { useIntl } from '@umijs/max';
 import { useState, useEffect } from 'react';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import { roleList,saveRole,deleteRoleById,updateRoleById,AuthorityList,savePermissionsList,permissionsParams} from '@/services/ant-design-pro/authAdmin';
+import { roleList,saveRole,deleteRoleById,updateRoleById,AuthorityList,savePermissionsList,permissionsParams,deleteTenantByIdList} from '@/services/ant-design-pro/authAdmin';
 import RoleModal from './component/RoleModal';  // 引入RoleModal
 import Dispense from './component/Dispense'
 const RoleAdmin: React.FC = () => {
@@ -15,6 +15,7 @@ const RoleAdmin: React.FC = () => {
   const [allPermissions, setAllPermissions] = useState<string[]>([]); 
   const [disVisible, setDisVisible] = useState(false);
   const [rolePermissions, setRolePermissions] = useState<string[]>([]); // ✅ 角色已分配的权限
+  const [roleId, setRoleId] = useState<string[]>([]); // ✅ 角色ID
   // 表格的列配置
   const columns = [
     {
@@ -92,8 +93,10 @@ const fetchPermissions = async () => {
 const getRoleInfo = async (record) => {
   try {
     const res = await permissionsParams({ roleId: record.roleId, pageNo: 1, pageSize: 10000 });
-    if (res?.data) {
-      // ✅ 提取 permissionsId
+    if (res.code==='0') {
+     
+      setRoleId(res.data.list)
+       // ✅ 提取 permissionsId
       const checkedKeys = res.data.list.map((item) => item.permissionsId);
       console.log(checkedKeys)
       setRolePermissions(checkedKeys);
@@ -148,29 +151,57 @@ const handleDispense = async (record) => {
 // 📌 提交权限分配
 const handleSubmitDis = async (values) => {
   try {
+    // 获取新增的权限
     const newPermissions = values.permissions.filter(
       (permId) => !rolePermissions.includes(permId)
     );
+    
+    // 获取移除的权限
+    const removedPermissions = rolePermissions.filter(
+      (permId) => !values.permissions.includes(permId)
+    );
 
-    if (newPermissions.length === 0) {
-      message.info("没有新的权限需要分配");
+    const allID=roleId.filter(item=>removedPermissions.includes(item.permissionsId)) 
+
+    
+    // 如果没有变化，直接返回
+    if (newPermissions.length === 0 && removedPermissions.length === 0) {
+      message.info("权限配置没有变化");
       setDisVisible(false);
       return;
     }
-   const res= await savePermissionsList({
-    roleId: editingRecord.roleId,
-    permissionsIds: newPermissions,
-  });
-    if(res.code==='0'){
-      message.success('权限分配成功');
-    }else{
-      message.error('权限分配失败');
+    
+    // 处理新增权限
+    if (newPermissions.length > 0) {
+      const addRes = await savePermissionsList({
+        roleId: editingRecord.roleId,
+        permissionsIds: newPermissions,
+      });
+      
+      if (addRes.code !== '0') {
+        message.error('新增权限失败');
+        return;
+      }
     }
     
+    // 处理移除权限
+    if (removedPermissions.length > 0) {
+      const ids= allID.map(item => item.id).join(',');
+
+      const deleteRes = await deleteTenantByIdList(ids);
+      
+      if (deleteRes.code !== '0') {
+        message.error('移除权限失败');
+        return;
+      }
+    }
+    
+    message.success('权限分配成功');
     setDisVisible(false);
     await getRoleList(); // ✅ 刷新角色列表，确保权限生效
   } catch (error) {
     message.error('操作失败');
+    console.error(error);
   }
 };
 

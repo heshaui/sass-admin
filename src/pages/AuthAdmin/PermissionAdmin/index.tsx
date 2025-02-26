@@ -2,7 +2,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space,message } from 'antd';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { AuthorityList,saveTenantAuthority,deleteTenantById,updateTenantById,permissionsParams} from '@/services/ant-design-pro/authAdmin';
+import { AuthorityList,saveTenantAuthority,deleteTenantById,updateTenantById,permissionsParams,deleteTenantByIdList} from '@/services/ant-design-pro/authAdmin';
 import PermissionModal from './component/PermissionModal'; // 引入PermissionModal
 
 const PermissionAdmin: React.FC = () => {

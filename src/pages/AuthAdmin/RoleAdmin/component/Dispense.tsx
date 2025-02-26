@@ -28,6 +28,7 @@ const Dispense: React.FC<RoleModalProps> = ({
 
   // ✅ 加载树形数据
   useEffect(() => {
+    console
     if (allPermissions.length) {
       setTreeData(generateTreeData(allPermissions)); // 生成树结构
     }
@@ -41,7 +42,8 @@ const Dispense: React.FC<RoleModalProps> = ({
   }, [initialValues]);
 
   // ✅ 处理权限勾选（支持父子级联选中）
-  const handleSelect = (checkedKeys: React.Key[]) => {
+  const handleSelect = (checkedKeys: React.Key[], info: any) => {
+    // 使用 checkedKeys 参数，它是一个数组，包含所有选中的节点的 key
     setSelectedPermissions(checkedKeys as string[]);
   };
 
@@ -50,6 +52,7 @@ const Dispense: React.FC<RoleModalProps> = ({
     form
       .validateFields()
       .then((values) => {
+        console.log(values) 
         onSubmit({
           roleId: initialValues?.roleId, // ✅ 返回角色 ID
           ...values,

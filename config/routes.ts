@@ -33,7 +33,6 @@ export default [
     path: '/authAdmin',
     name: 'authAdmin',
     icon: 'crown',
-    access: 'canAdmin',
     routes: [
       {
         path: '/authAdmin/role',
@@ -57,7 +56,6 @@ export default [
     path: '/merchant',
     name: 'merchant',
     icon: 'crown',
-    access: 'canAdmin',
     routes: [
       {
         path: '/merchant/free',
@@ -85,7 +83,6 @@ export default [
     path: '/webConfig',
     name: 'webConfig',
     icon: 'crown',
-     access: 'canAdmin',
     routes: [
       {
         path: '/webConfig/header',
@@ -153,10 +150,16 @@ export default [
     ],
   },
   {
+    path: '/kvSetting',
+    name: 'kvSetting',
+    icon: 'smile',
+    component: './KvSetting',
+  },
+  {
     path: '/language',
     name: 'language',
     icon: 'smile',
-    access: 'canAdmin',
+
     component: './Language',
   },
   {
