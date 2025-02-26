@@ -11,6 +11,7 @@ const PermissionAdmin: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null); // 编辑时的记录
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 }); // 添加分页状态
 
   // 表格列配置
   const columns = [
@@ -105,6 +106,12 @@ const PermissionAdmin: React.FC = () => {
       const res = await AuthorityList(params); // 调用 API
       if (res?.data) {
         setData(res.data.list || []); // 更新数据
+        setPagination({
+          ...pagination,
+          current: params.pageNo,
+          pageSize: params.pageSize,
+          total: res.data.count || 0, // 设置总数
+        });
       }
     } catch (error) {
       console.error('Failed to fetch authority list:', error);
@@ -169,7 +176,13 @@ const PermissionAdmin: React.FC = () => {
           await getAuthorityList({
             pageNo: params.current,
             pageSize: params.pageSize,
+            ...params, // 添加其他查询参数
           });
+          return {
+            data: data,
+            success: true,
+            total: pagination.total,
+          };
         }}
         search={{
           labelWidth: 'auto',
@@ -181,9 +194,12 @@ const PermissionAdmin: React.FC = () => {
           setting: false,
         }}
         pagination={{
+          ...pagination,
           showQuickJumper: true,
-          defaultPageSize: 10,
           showSizeChanger: true,
+          onChange: (page, pageSize) => {
+            getAuthorityList({ pageNo: page, pageSize });
+          },
         }}
         toolBarRender={() => [
           <Button key="search" type="primary" onClick={() => getAuthorityList({ pageNo: 1, pageSize: 10 })}>
