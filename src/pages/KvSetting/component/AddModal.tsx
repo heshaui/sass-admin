@@ -14,6 +14,8 @@ interface AddModalProps {
 const AddModal: React.FC<AddModalProps> = ({ visible, onCancel, onSuccess }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+  const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
 
   const handleSubmit = async () => {
     try {
@@ -75,8 +77,20 @@ const AddModal: React.FC<AddModalProps> = ({ visible, onCancel, onSuccess }) => 
           </Select>
         </Form.Item>
         
-
-        <Form.Item
+      {
+        isAdmin && (
+          <Form.Item
+            name="show"
+            label="是否对商户显示"
+          >
+            <Radio.Group>
+              <Radio value="1">是</Radio>
+              <Radio value="0">否</Radio>
+            </Radio.Group>
+          </Form.Item>
+        )
+      }
+        {/* <Form.Item
           name="show"
           label="是否对商户显示"
         >
@@ -84,7 +98,7 @@ const AddModal: React.FC<AddModalProps> = ({ visible, onCancel, onSuccess }) => 
             <Radio value="1">是</Radio>
             <Radio value="0">否</Radio>
           </Radio.Group>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           name="describe"
