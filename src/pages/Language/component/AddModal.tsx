@@ -50,6 +50,7 @@ const AddModal: React.FC = () => {
         const res = await saveLang(data);
         if (res.code === '0') {
           message.success('添加语言成功');
+          onSuccess();
           setIsModalVisible(false);
           setLanguage("");
         } else {

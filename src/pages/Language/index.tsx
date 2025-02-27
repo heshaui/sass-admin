@@ -3,7 +3,7 @@ import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { Button, Space, Tag, message,Modal } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import AddModal from "./component/AddModal";
-import { tenantLangList,updateEndpointInfo,deleteTenantLangPackage,checkUpdate,enablePackage,disablePackage } from "@/services/ant-design-pro/WebConfig";
+import { tenantLangList,updateEndpointInfo,deleteTenantLangPackage,checkUpdate,enablePackage,disablePackage,readJsonFromAliyun } from "@/services/ant-design-pro/WebConfig";
 import UploadModal from './component/UploadModal';
 // **主组件**
 const Language: React.FC = () => {
@@ -11,18 +11,19 @@ const Language: React.FC = () => {
   const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
   const [isUploadModalVisible, setIsUploadModalVisible] = useState(false);
   const [selectedRecord, setSelectedRecord] = useState<{ id: number; langEncode: string } | null>(null);
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
+  const [viewData, setViewData] = useState(null);
+  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
+
 
   // **获取语言列表数据**
-  const fetchLanguages = async () => {
+  const fetchLanguages = async (pageNo = 1, pageSize = 10) => {
     try {
-     
-      let data={
-        pageNo:1,
-        pageSize:10000
-      }
+      const data = { pageNo, pageSize };
       const response = await tenantLangList(data);
       if (response.code === "0") {
-        setDataSource(response.data);
+        setDataSource(response.data.list);
+        setPagination({ current: pageNo, pageSize, total: response.count });
       } else {
         message.error(`获取语言列表失败`);
       }
@@ -140,6 +141,21 @@ const Language: React.FC = () => {
     }
   };
 
+  const handleView = async (fileUrl: string) => {
+    try {
+      const response = await readJsonFromAliyun({ fileUrl });
+      if (response.code === '0') {
+        setViewData(response.data);
+        setIsViewModalVisible(true);
+      } else {
+        message.error(`查看失败: ${response.message}`);
+      }
+    } catch (error) {
+      message.error('操作失败，请重试');
+    }
+  };
+
+
   // **主表格列**
   const columns = [
     {
@@ -173,7 +189,7 @@ const Language: React.FC = () => {
           <Button type="link" onClick={() => toggleStatus(record)}>
             {record.status === 1 ? "禁用" : "启用"}
           </Button>
-          <Button type="link" danger onClick={() => message.warning(`移除 ${record.lang}`)}>
+          <Button type="link" danger onClick={() => handleDelete(record.id, record.lang)}>
             移除
           </Button>
         </Space>
@@ -194,30 +210,43 @@ const Language: React.FC = () => {
       {
         title: "操作",
         render: (_, endpoint) => (
-          <Space>
-            <Button 
-              type="link" 
-              onClick={() => handleDownload(endpoint.fileUrl, endpoint.endpointName)}
-            >
-              下载
-            </Button>
-            <Button 
-              type="link" 
-              onClick={() => handleUploadClick({
-                id: endpoint.id,
-                langEncode: record.langEncode
-              })}
-            >
-              上传
-            </Button>
-            <Button 
-              type="link" 
-              danger
-              onClick={() => handleDelete(endpoint.id, endpoint.fileName)}
-            >
-              删除
-            </Button>
-          </Space>
+          // 检查文件名称是否为空
+            <Space>
+              {endpoint.fileName ? ( <Button 
+                type="link" 
+                onClick={() => handleDownload(endpoint.fileUrl, endpoint.endpointName)}
+              >
+                下载
+              </Button>
+            ) : '' }
+              <Button 
+                type="link" 
+                onClick={() => handleUploadClick({
+                  id: endpoint.id,
+                  langEncode: record.langEncode
+                })}
+              >
+                上传
+              </Button>
+              {endpoint.fileName ?  (  <Button 
+                type="link" 
+                danger
+                onClick={() => handleDelete(endpoint.id, endpoint.fileName)}
+              >
+                删除
+              </Button>
+               ) : '' }
+
+               {endpoint.fileName ?  ( 
+
+<Button 
+type="link" 
+onClick={() => handleView(endpoint.fileUrl)}
+>
+查看
+</Button> ) : '' }
+            </Space>
+         
         ),
       },
     ];
@@ -240,6 +269,7 @@ const Language: React.FC = () => {
         rowKey="id"
         columns={columns}
         dataSource={dataSource}
+        pagination={pagination}
         expandable={{
           expandedRowKeys,
           expandedRowRender,
@@ -247,7 +277,7 @@ const Language: React.FC = () => {
         }}
         search={false}
         toolBarRender={() => [
-          <AddModal key="add" />,
+          <AddModal key="add" onSuccess={() => fetchLanguages(pagination.current, pagination.pageSize)} />,
         ]}
       />
 
@@ -257,10 +287,19 @@ const Language: React.FC = () => {
           onCancel={() => setIsUploadModalVisible(false)}
           record={selectedRecord}
           onSuccess={() => {
-            fetchLanguages(); // 上传成功后刷新列表
+            fetchLanguages(pagination.current, pagination.pageSize);
           }}
         />
       )}
+
+<Modal
+        visible={isViewModalVisible}
+        onCancel={() => setIsViewModalVisible(false)}
+        footer={null}
+        title="查看数据"
+      >
+        <pre>{JSON.stringify(viewData, null, 2)}</pre>
+      </Modal>
     </PageContainer>
     
   );

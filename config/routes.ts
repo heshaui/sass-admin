@@ -94,6 +94,11 @@ export default [
         name: 'footer',
         component: './WebConfig/Footer',
       },
+      {
+        path: '/webConfig/logo',
+        name: 'logo',
+        component: './WebConfig/Logo',
+      },
     ],
   },
   {

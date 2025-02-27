@@ -145,4 +145,12 @@ export async function checkUpdate(body: API.FackeParams, options?: { [key: strin
 }
 
 
+// /tenant/v1/readJsonFromAliyun
+export async function readJsonFromAliyun(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/readJsonFromAliyun', {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
 
