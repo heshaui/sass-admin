@@ -89,6 +89,11 @@ export default [
         name: 'header',
         component: './WebConfig/Header',
       },
+      {
+        path: '/webConfig/footer',
+        name: 'footer',
+        component: './WebConfig/Footer',
+      },
     ],
   },
   {
