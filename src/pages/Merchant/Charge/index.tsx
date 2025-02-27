@@ -14,28 +14,45 @@ const Charge: React.FC = () => {
     const [detailVisible, setDetailVisible] = useState(false);
     const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
     const [showDetail, setShowDetail] = useState(false); // 控制详情显示
-
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0
+    });
 
     // 获取商户列表数据
-    const getList = async () => {
+    const getList = async (params: any = {}) => {
         setLoading(true);
         const requestData = {
-            pageNo: 1, 
-            pageSize: 10,
-            paymentStatus:1
-            // tenantId: "",
-            // tenantName: "",
-            // tenantContact: "",
-            // tenantPhone: "",
-            // tenantEmail: "",
-
+            pageNo: params.current || 1,
+            pageSize: params.pageSize || 10,
+            paymentStatus: 1,
+            // 其他查询参数
+            ...(params.tenantId && { tenantId: params.tenantId }),
+            ...(params.tenantName && { tenantName: params.tenantName })
         };
+        
         const res = await tenantList(requestData);
         if (res.code === "0") {
-            const listData= res.data.list.filter(item => item.paymentStatus === 1);
+            const listData = res.data.list.filter(item => item.paymentStatus === 1);
             setMerchantData(listData || []);
+            // 更新分页信息
+            setPagination({
+                ...pagination,
+                current: params.current || 1,
+                total: res.data.count || 0
+            });
+            return {
+                data: listData,
+                success: true,
+                total: res.data.count
+            };
         }
         setLoading(false);
+        return {
+            data: [],
+            success: false
+        };
     };
     // 处理编辑按钮点击
     const handleEdit = (record: any) => {
@@ -182,13 +199,14 @@ const Charge: React.FC = () => {
                     rowKey="tenantId"
                     columns={activeTab === "basic" ? basicColumns : logColumns}
                     dataSource={activeTab === "basic" ? merchantData : logData}
-                    request={async (params) => {
-                        if (activeTab === "logs") return { data: logData, success: true };
-                        await getList();
-                        return { data: merchantData, success: true };
-                    }}
+                    request={getList}
                     loading={loading}
-                    pagination={{ pageSize: 10 }}
+                    pagination={{
+                        ...pagination,
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        showTotal: (total) => `共 ${total} 条记录`
+                    }}
                     search={{ labelWidth: "auto" }}
                     toolBarRender={() => []}
                     options={{ density: false, fullScreen: false, reload: false, setting: false }}

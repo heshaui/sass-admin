@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { PageContainer, ProTable } from "@ant-design/pro-components";
-import { Button, Space, Tag, message,Modal } from "antd";
+import { Button, Space, Tag, message, Modal } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import AddModal from "./component/AddModal";
-import { tenantLangList,updateEndpointInfo,deleteTenantLangPackage,checkUpdate,enablePackage,disablePackage,readJsonFromAliyun } from "@/services/ant-design-pro/WebConfig";
+import { tenantLangList, updateEndpointInfo, deleteTenantLangPackage, checkUpdate, enablePackage, disablePackage, readJsonFromAliyun } from "@/services/ant-design-pro/WebConfig";
 import UploadModal from './component/UploadModal';
 // **主组件**
 const Language: React.FC = () => {
@@ -36,12 +36,12 @@ const Language: React.FC = () => {
     fetchLanguages();
   }, []);
 
-  const updateInfo=async ()=>{
+  const updateInfo = async () => {
     try {
-      let data={
-        id:'',
-        fileUrl:'',
-        langEncode:''
+      let data = {
+        id: '',
+        fileUrl: '',
+        langEncode: ''
       }
       const response = await updateEndpointInfo(data);
       if (response.code === "0") {
@@ -202,8 +202,8 @@ const Language: React.FC = () => {
     const endpointColumns = [
       { title: "端", dataIndex: "endpointName" },
       { title: "文件名称", dataIndex: "fileName" },
-      { 
-        title: "完整度", 
+      {
+        title: "完整度",
         dataIndex: "cmpPercentage",
         render: (text: string) => `${text}%`
       },
@@ -211,42 +211,42 @@ const Language: React.FC = () => {
         title: "操作",
         render: (_, endpoint) => (
           // 检查文件名称是否为空
-            <Space>
-              {endpoint.fileName ? ( <Button 
-                type="link" 
-                onClick={() => handleDownload(endpoint.fileUrl, endpoint.endpointName)}
-              >
-                下载
-              </Button>
-            ) : '' }
-              <Button 
-                type="link" 
-                onClick={() => handleUploadClick({
-                  id: endpoint.id,
-                  langEncode: record.langEncode
-                })}
-              >
-                上传
-              </Button>
-              {endpoint.fileName ?  (  <Button 
-                type="link" 
-                danger
-                onClick={() => handleDelete(endpoint.id, endpoint.fileName)}
-              >
-                删除
-              </Button>
-               ) : '' }
+          <Space>
+            {endpoint.fileName ? (<Button
+              type="link"
+              onClick={() => handleDownload(endpoint.fileUrl, endpoint.endpointName)}
+            >
+              下载
+            </Button>
+            ) : ''}
+            <Button
+              type="link"
+              onClick={() => handleUploadClick({
+                id: endpoint.id,
+                langEncode: record.langEncode
+              })}
+            >
+              上传
+            </Button>
+            {endpoint.fileName ? (<Button
+              type="link"
+              danger
+              onClick={() => handleDelete(endpoint.id, endpoint.fileName)}
+            >
+              删除
+            </Button>
+            ) : ''}
 
-               {endpoint.fileName ?  ( 
+            {endpoint.fileName ? (
 
-<Button 
-type="link" 
-onClick={() => handleView(endpoint.fileUrl)}
->
-查看
-</Button> ) : '' }
-            </Space>
-         
+              <Button
+                type="link"
+                onClick={() => handleView(endpoint.fileUrl)}
+              >
+                查看
+              </Button>) : ''}
+          </Space>
+
         ),
       },
     ];
@@ -292,7 +292,7 @@ onClick={() => handleView(endpoint.fileUrl)}
         />
       )}
 
-<Modal
+      <Modal
         visible={isViewModalVisible}
         onCancel={() => setIsViewModalVisible(false)}
         footer={null}
@@ -301,7 +301,7 @@ onClick={() => handleView(endpoint.fileUrl)}
         <pre>{JSON.stringify(viewData, null, 2)}</pre>
       </Modal>
     </PageContainer>
-    
+
   );
 };
 
