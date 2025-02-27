@@ -67,7 +67,7 @@ const KvSetting: React.FC = () => {
     try {
       const data = {
         id: record.id,
-        status: record.status === 0 ? 1 : 0 // 切换状态：0-发布上线，1-禁用
+        status: record.status === 1 ? 0 : 1 // 切换状态：0-禁用，1-发布上线
       };
       
       const response = isAdmin
@@ -75,7 +75,7 @@ const KvSetting: React.FC = () => {
         : await updateTenantKv(data);
 
       if (response.code === '0') {
-        message.success(`${record.status === 0 ? '禁用' : '发布上线'}成功`);
+        message.success(`${record.status === 1 ? '下线' : '发布上线'}成功`);
         fetchKvList(); // 刷新列表
       } else {
         message.error(`操作失败: ${response.message}`);
@@ -151,7 +151,7 @@ const KvSetting: React.FC = () => {
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>修改</a>
           <a onClick={() => handlePublish(record)}>
-            {record.status === 0 ? '禁用' : '发布上线'}
+            {record.status === 0 ? '发布上线' : '下线'}
           </a>
         </Space>
       ),

@@ -22,7 +22,7 @@ const Free: React.FC = () => {
   const fetchMerchantList = async () => {
     setLoading(true);
     try {
-      const res = await tenantList({ pageNo: 1, pageSize: 10, paymentStatus: 0 });
+      const res = await tenantList({ pageNo: 1, pageSize: 10});
       if (res.code === "0") {
         setMerchantData(res.data.list || []);
       } else {
