@@ -201,13 +201,13 @@ const KvSetting: React.FC = () => {
             查询
           </Button>
           
-          <Button
+          {/* <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={handleAdd}
           >
             新增
-          </Button>
+          </Button> */}
         </Space>
       </div>
 
