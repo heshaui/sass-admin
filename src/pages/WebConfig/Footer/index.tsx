@@ -4,6 +4,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import AddMenuModals from './component/AddMenuModals';
+import { homeBottomList, homeBottomTranslationList, saveHomeBottom, updateHomeBottomTranslationById, updateHomeBottomById } from '@/services/ant-design-pro/WebConfig';
 
 const languageOptions = [
   { key: 'en', label: 'English' },
@@ -18,6 +19,7 @@ const Footer: React.FC = () => {
   const [menuData, setMenuData] = useState<any[]>([]);
   const [modalType, setModalType] = useState<boolean>(false);
   const [parentId, setParentId] = useState<any>(null);
+  const [data, setData] = useState([]);
 
   // 获取菜单数据
   const getMenu = async () => {
@@ -36,6 +38,23 @@ const Footer: React.FC = () => {
   useEffect(() => {
     getMenu();
   }, [currentLanguage]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await homeBottomList({ /* 请求参数 */ });
+        if (response.code === '0') {
+          setData(response.data);
+        } else {
+          message.error('获取数据失败');
+        }
+      } catch (error) {
+        message.error('请求失败，请检查网络连接');
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // 打开弹窗
   const handleModal = (item: any = null) => {
