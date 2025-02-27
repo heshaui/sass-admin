@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Select, Radio, message } from 'antd';
-import { updateKv } from '@/services/ant-design-pro/kv';
+import { updateKv,updateTenantKv } from '@/services/ant-design-pro/kv';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -15,14 +15,14 @@ interface EditModalProps {
 const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, record }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   useEffect(() => {
     if (visible && record) {
       form.setFieldsValue({
         theme: record.theme,
         type: record.type,
-        show: record.show.toString(),
-        describe: record.describe,
+        show: isAdmin? record.show.toString():'1',
+        describe:record.describe,
         keyProperty: record.keyProperty,
         keyValue: record.keyValue,
       });
@@ -40,7 +40,9 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, rec
         ...values
       };
       
-      const response = await updateKv(data);
+      const response = isAdmin
+      ? await updateKv(data)
+      : await updateTenantKv(data);
       if (response.code === '0') {
         message.success('修改成功');
         onSuccess();
@@ -89,8 +91,21 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, rec
             <Option value="系统配置">系统配置</Option>
           </Select>
         </Form.Item>
+        {
+        isAdmin && (
+          <Form.Item
+            name="show"
+            label="是否对商户显示"
+          >
+            <Radio.Group>
+              <Radio value="1">是</Radio>
+              <Radio value="0">否</Radio>
+            </Radio.Group>
+          </Form.Item>
+        )
+      }
 
-        <Form.Item
+        {/* <Form.Item
           name="show"
           label="是否对商户显示"
         >
@@ -98,7 +113,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, rec
             <Radio value="1">是</Radio>
             <Radio value="0">否</Radio>
           </Radio.Group>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           name="describe"

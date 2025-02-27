@@ -47,4 +47,44 @@ export async function deleteKv(data: { id: string }) {
     method: 'POST',
     data,
   });
+}
+
+// 获取租户KV配置列表
+export async function getTenantKvList(params: any) {
+  return request('/tenant/v1/tenantKeyValueList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 新增租户KV配置
+export async function addTenantKv(data: any) {
+  return request('/tenant/v1/saveTenantKeyValue', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 删除租户KV配置
+export async function deleteTenantKv(data: { id: string }) {
+  return request('/tenant/v1/deleteTenantKeyValueById', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 更新租户KV配置
+export async function updateTenantKv(data: any) {
+  return request('/tenant/v1/updateTenantKeyValueById', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 获取租户KV配置参数
+export async function getTenantKvParams(params: any) {
+  return request('/tenant/v1/tenantKeyValueParams', {
+    method: 'POST',
+    data: params,
+  });
 } 

@@ -2,13 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { Input, Button, Table, Space, Select, message } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import { getKvList, updateKv } from '@/services/ant-design-pro/kv';
+import { 
+  getKvList, 
+  updateKv, 
+  getTenantKvList, 
+  updateTenantKv, 
+} from '@/services/ant-design-pro/kv';
 import AddModal from './component/AddModal';
 import EditModal from './component/EditModal';
 
 const { Option } = Select;
 
 const KvSetting: React.FC = () => {
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [loading, setLoading] = useState<boolean>(false);
   const [keyValue, setKeyValue] = useState<string>('');
   const [title, setTitle] = useState<string>('');
@@ -22,10 +28,14 @@ const KvSetting: React.FC = () => {
   const fetchKvList = async () => {
     setLoading(true);
     try {
-      const response = await getKvList({
+      const params = {
         pageNo: 1,
         pageSize: 10
-      });
+      };
+      const response = isAdmin 
+        ? await getKvList(params)
+        : await getTenantKvList(params);
+
       if (response.code === '0') {
         setDataSource(response.data.list);
       }
@@ -60,7 +70,10 @@ const KvSetting: React.FC = () => {
         status: record.status === 0 ? 1 : 0 // 切换状态：0-发布上线，1-禁用
       };
       
-      const response = await updateKv(data);
+      const response = isAdmin
+        ? await updateKv(data)
+        : await updateTenantKv(data);
+
       if (response.code === '0') {
         message.success(`${record.status === 0 ? '禁用' : '发布上线'}成功`);
         fetchKvList(); // 刷新列表

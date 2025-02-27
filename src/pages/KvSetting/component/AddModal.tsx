@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Select, Radio, message } from 'antd';
-import { addKv } from '@/services/ant-design-pro/kv';
+import { addKv,addTenantKv,  } from '@/services/ant-design-pro/kv';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -15,7 +15,6 @@ const AddModal: React.FC<AddModalProps> = ({ visible, onCancel, onSuccess }) => 
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
-  const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
 
   const handleSubmit = async () => {
     try {
@@ -25,7 +24,8 @@ const AddModal: React.FC<AddModalProps> = ({ visible, onCancel, onSuccess }) => 
       status:0,
       ...values
     }
-      const response = await addKv(data);
+      const response = isAdmin
+      ?await addKv(data):await addTenantKv(data)
       if (response.code === '0') {
         message.success('添加成功');
         form.resetFields();
