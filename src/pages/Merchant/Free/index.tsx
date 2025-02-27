@@ -17,14 +17,27 @@ const Free: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [convertModalVisible, setConvertModalVisible] = useState(false);
   const [merchantData, setMerchantData] = useState<any[]>([]);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   // **获取商户列表**
-  const fetchMerchantList = async () => {
+  const fetchMerchantList = async (params = {}) => {
     setLoading(true);
     try {
-      const res = await tenantList({ pageNo: 1, pageSize: 10});
+      const res = await tenantList({ 
+        pageNo: params.current || 1, 
+        pageSize: params.pageSize || 10
+      });
       if (res.code === "0") {
         setMerchantData(res.data.list || []);
+        setPagination({
+          ...pagination,
+          current: params.current || 1,
+          total: res.data.count || 0,
+        });
       } else {
         message.error("获取商户数据失败");
       }
@@ -183,9 +196,14 @@ const Free: React.FC = () => {
       <ProTable
         rowKey="tenantId"
         columns={columns}
-        dataSource={merchantData.filter(item => item.paymentStatus === 0)}
+        dataSource={merchantData}
         loading={loading}
-        pagination={{ pageSize: 10 }}
+        pagination={{
+          ...pagination,
+          onChange: (page, pageSize) => {
+            fetchMerchantList({ current: page, pageSize });
+          },
+        }}
         search={{ labelWidth: "auto" }}
         toolBarRender={() => [
           <Button type="primary" key="new" onClick={handleCreate}>
