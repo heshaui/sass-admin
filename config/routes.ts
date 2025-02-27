@@ -154,14 +154,12 @@ export default [
     name: 'kvSetting',
     icon: 'smile',
     component: './KvSetting',
-    redirect: '/kvSetting',
   },
   {
     path: '/language',
     name: 'language',
     icon: 'smile',
     component: './Language',
-    redirect: '/language',
   
 
   },
