@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
-import { Input, Button, Table, Space, Select, message } from 'antd';
+import { Input, Button, Table, Space, Select, message, Tooltip } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { 
   getKvList, 
@@ -28,6 +28,7 @@ const KvSetting: React.FC = () => {
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [total, setTotal] = useState<number>(0);
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
 
   // 获取KV配置列表
   const fetchKvList = async (page = current, size = pageSize) => {
@@ -109,56 +110,75 @@ const KvSetting: React.FC = () => {
     fetchKvList(pagination.current, pagination.pageSize);
   };
 
+  const toggleExpand = (id: string) => {
+    setExpandedRows(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   // 表格列定义
   const columns = [
     {
       title: '序号',
       dataIndex: 'id',
       key: 'id',
-      width: 80,
     },
     {
       title: '类型',
       dataIndex: 'type',
       key: 'type',
-      width: 120,
     },
     {
       title: '唯一Key',
       dataIndex: 'keyProperty',
       key: 'keyProperty',
-      width: 180,
     },
     {
       title: '配置值',
       dataIndex: 'keyValue',
       key: 'keyValue',
-      width: 100,
+      render: (text: string, record: any) => {
+        const isExpanded = expandedRows[record.id];
+        return (
+          <div>
+            <div style={{ 
+              maxWidth: isExpanded ? 'none' : 100,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: isExpanded ? 'normal' : 'nowrap'
+            }}>
+              {text}
+            </div>
+            {text.length > 20 && (
+              <a onClick={() => toggleExpand(record.id)}>
+                {isExpanded ? '收起' : '展开'}
+              </a>
+            )}
+          </div>
+        );
+      },
     },
     {
       title: '标题',
       dataIndex: 'theme',
       key: 'theme',
-      width: 150,
     },
     {
       title: '描述',
       dataIndex: 'describe',
       key: 'describe',
-      width: 180,
     },
     {
       title: '是否显示',
       dataIndex: 'show',
       key: 'show',
-      width: 100,
       render: (show: number) => (show === 1 ? '是' : '否'),
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      width: 180,
       render: (time: number) => new Date(time).toLocaleString(),
     },
     {

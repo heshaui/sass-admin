@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Card, Tabs, Tag, Typography, Image, Space } from 'antd';
 import type { TabsProps } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
-
+import { 
+  getTenantKeyParams,
+  updateTenantKv, 
+} from '@/services/ant-design-pro/kv';
+import EditModal  from './components/EditModal';
 const { Text } = Typography;
 
 interface TableItem {
@@ -22,6 +26,29 @@ interface LanguageItem {
 const PCLogin: React.FC = () => {
   const [activeTab, setActiveTab] = useState('login');
   const [activeLanguage, setActiveLanguage] = useState('en');
+  const [pcLoginData, setPcLoginData] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<TableItem | null>(null);
+
+  // 获取 pcLogin 数据
+  const fetchPcLoginData = async () => {
+    try {
+      setLoading(true);
+      const result = await getTenantKeyParams({key: 'pcLogin'});
+      if (result.code==='0' && result.data) {
+        setPcLoginData(JSON.parse(result.data.keyValue));
+      }
+    } catch (error) {
+      console.error('获取pcLogin数据失败:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPcLoginData();
+  }, []);
 
   // 提示信息
   const tips = [
@@ -36,13 +63,34 @@ const PCLogin: React.FC = () => {
     { key: 'zh_CN', label: '简体中文' },
     { key: 'zh_TW', label: '繁體中文' },
     { key: 'ja', label: '日本語' },
-    { key: 'ko', label: '한국어', tag: '2' },
+    { key: 'ko', label: '한국어'},
   ];
+
+
 
   // 处理语言切换
   const handleLanguageChange = (langKey: string) => {
     setActiveLanguage(langKey);
     // 这里可以添加加载对应语言数据的逻辑
+  };
+
+  // 处理编辑操作
+  const handleEdit = (record: TableItem) => {
+    setEditingRecord(record);
+    setIsModalVisible(true);
+  };
+
+  // 处理模态框关闭
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+    setEditingRecord(null);
+  };
+
+  // 处理保存成功
+  const handleSaveSuccess = () => {
+    setIsModalVisible(false);
+    setEditingRecord(null);
+    fetchPcLoginData();
   };
 
   // 表格列定义
@@ -77,22 +125,25 @@ const PCLogin: React.FC = () => {
       valueType: 'option',
       key: 'option',
       render: (_, record) => [
-        <a key="edit">编辑</a>,
+        <a key="edit" onClick={() => handleEdit(record)}>编辑</a>,
       ],
     },
   ];
 
-  // 表格数据 - 根据当前选中的语言可以加载不同的数据
-  const loginData: TableItem[] = [
+  // 修改表格数据获取逻辑
+  const loginData: TableItem[] = pcLoginData?.[activeLanguage]?.login ? [
     {
       key: '1',
-      title: '这是一个标题',
-      image: 'https://via.placeholder.com/80',
-      url: 'http.ww.mbti.com',
-    },
-  ];
+      ...pcLoginData[activeLanguage].login
+    }
+  ] : [];
 
-  const registerData: TableItem[] = [];
+  const registerData: TableItem[] = pcLoginData?.[activeLanguage]?.register ? [
+    {
+      key: '1',
+      ...pcLoginData[activeLanguage].register
+    }
+  ] : [];
 
   // 标签页配置
   const tabItems: TabsProps['items'] = [
@@ -108,6 +159,7 @@ const PCLogin: React.FC = () => {
           options={false}
           pagination={false}
           toolBarRender={false}
+          loading={loading}
         />
       ),
     },
@@ -123,6 +175,7 @@ const PCLogin: React.FC = () => {
           options={false}
           pagination={false}
           toolBarRender={false}
+          loading={loading}
         />
       ),
     },
@@ -151,8 +204,8 @@ const PCLogin: React.FC = () => {
                   position: 'relative',
                   cursor: 'pointer',
                   padding: '4px 8px',
-                  borderBottom: activeLanguage === lang.key ? '2px solid #1890ff' : 'none',
-                  color: activeLanguage === lang.key ? '#1890ff' : 'inherit',
+                  borderBottom: activeLanguage === lang.key ? '2px solid #FF5F1F' : 'none',
+                  color: activeLanguage === lang.key ? '#FF5F1F' : 'inherit',
                   fontWeight: activeLanguage === lang.key ? 'bold' : 'normal',
                 }}
                 onClick={() => handleLanguageChange(lang.key)}
@@ -183,10 +236,21 @@ const PCLogin: React.FC = () => {
           activeKey={activeTab} 
           onChange={setActiveTab}
           items={tabItems}
+          loading={loading}
           tabBarStyle={{ 
             borderBottom: '2px solid #f0f0f0',
             marginBottom: 16
           }}
+        />
+
+        <EditModal
+          visible={isModalVisible}
+          onCancel={handleModalCancel}
+          onSuccess={handleSaveSuccess}
+          record={editingRecord}
+          activeLanguage={activeLanguage}
+          activeTab={activeTab}
+          pcLoginData={pcLoginData}
         />
       </Card>
     </PageContainer>

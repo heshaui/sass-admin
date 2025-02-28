@@ -99,6 +99,16 @@ export default [
         name: 'logo',
         component: './WebConfig/Logo',
       },
+      {
+        path: '/webConfig/style',
+        name: 'style',
+        component: './WebConfig/WebStyle',
+      },
+      {
+        path: '/webConfig/background',
+        name: 'background',
+        component: './WebConfig/Background',
+      },
     ],
   },
   {

@@ -63,6 +63,8 @@ export default {
   'menu.webConfig.header': 'Header配置',
   'menu.webConfig.footer': '底部导航栏配置',
   'menu.webConfig.logo': 'logo管理',
+  'menu.webConfig.style': '网站风格',
+  'menu.webConfig.background': '背景图配置',
   'menu.language': '多语言配置',
   'menu.langPackage': '语言包管理',
   'menu.langPackage.language': '语言列表',
