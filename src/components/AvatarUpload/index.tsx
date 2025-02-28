@@ -36,12 +36,17 @@ const AvatarUploader: React.FC<AvatarUploaderProps> = ({ onChange }) => {
       const response = await ossImgFile(formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
-      const uploadedUrl = response.data.data; // 假设返回的图片 URL 在 response.data.data 中
-      setImageUrl(uploadedUrl);
-      onChange?.(uploadedUrl); // 将 URL 传递给父组件
-      onSuccess(response);
-      message.success("图片上传成功");
+      if (response.code === '0') {
+        const uploadedUrl = response.data.data; // 假设返回的图片 URL 在 response.data.data 中
+        setImageUrl(uploadedUrl);
+        onChange?.(uploadedUrl); // 将 URL 传递给父组件
+        onSuccess(response);
+        message.success("图片上传成功");
+      } else {
+        message.error("图片上传失败");
+      }
+    
+      
     } catch (error) {
       onError(error);
       message.error("图片上传失败");

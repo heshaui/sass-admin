@@ -83,8 +83,32 @@ export async function updateTenantKv(data: any) {
 
 // 获取租户KV配置参数
 export async function getTenantKvParams(params: any) {
-  return request('/tenant/v1/tenantKeyValueParams', {
+  return request('/tenant/v1/tenantKeyValueParams?idString='+params.keyValue, {
     method: 'POST',
     data: params,
   });
 } 
+
+// 发布KV配置
+export async function releaseKv(data: { id: string }) {
+  return request(`/tenant-admin/v1/keyValue/releaseKv/${data.id}`, {
+    method: 'POST',
+    data,
+  });
+}
+
+// 取消发布KV配置
+export async function cancelKv(data: { id: string }) {
+  return request(`/tenant-admin/v1/keyValue/cancelKv/${data.id}`, {
+    method: 'POST',
+    data,
+  });
+}
+
+
+export async function getTenantKeyParams(params: any) {
+  return request('/tenant/v1/tenantKeyParams?key='+params.key, {
+    method: 'POST',
+    data: params,
+  });
+}

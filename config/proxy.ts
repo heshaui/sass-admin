@@ -34,11 +34,11 @@ export default {
         '/oss/': {
           target: 'http://oss.imsaas.work',
           changeOrigin: true,
-        },
-        '/admin/': {
-          target: 'http://oss.imsaas.work',
-          changeOrigin: true,
         }
+        // '/admin/': {
+        //   target: 'http://static.imgtest.work',
+        //   changeOrigin: true,
+        // }
 
 
 

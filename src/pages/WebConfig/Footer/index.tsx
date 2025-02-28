@@ -193,60 +193,8 @@ const Footer: React.FC = () => {
     );
   };
 
-  // 定义表格列
-  const columns = [
-    {
-      title: '名称',
-      dataIndex: 'name',
-    },
-    // ... 其他列定义
-    {
-      title: '操作',
-      render: (_, record) => (
-        <Space>
-          <Button type="link">编辑</Button>
-          <Button type="link" danger>删除</Button>
-        </Space>
-      ),
-    },
-  ];
 
-  // 获取表格数据
-  const getTableData = async (params: any) => {
-    setLoading(true);
-    try {
-      const { current, pageSize, ...restParams } = params;
-      const response = await homeBottomList({
-        pageNo: current,
-        pageSize,
-        ...restParams,
-      });
 
-      if (response.code === '0') {
-        return {
-          data: response.data.list,
-          success: true,
-          total: response.data.total,
-        };
-      } else {
-        message.error(response.message || '获取数据失败');
-        return {
-          data: [],
-          success: false,
-          total: 0,
-        };
-      }
-    } catch (error) {
-      message.error('请求失败，请检查网络连接');
-      return {
-        data: [],
-        success: false,
-        total: 0,
-      };
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <PageContainer>
@@ -310,23 +258,7 @@ const Footer: React.FC = () => {
         parentId={parentId}
       />
 
-      <ProTable
-        rowKey="id"
-        columns={columns}
-        request={getTableData}
-        pagination={{
-          defaultPageSize: 10,
-          showQuickJumper: true,
-          showSizeChanger: true,
-        }}
-        search={false}
-        dateFormatter="string"
-        toolBarRender={() => [
-          <Button type="primary" key="add">
-            新增
-          </Button>,
-        ]}
-      />
+    
     </PageContainer>
   );
 };

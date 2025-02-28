@@ -7,6 +7,8 @@ import {
   updateKv, 
   getTenantKvList, 
   updateTenantKv, 
+  releaseKv,
+  cancelKv
 } from '@/services/ant-design-pro/kv';
 import AddModal from './component/AddModal';
 import EditModal from './component/EditModal';
@@ -23,14 +25,20 @@ const KvSetting: React.FC = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] = useState<any>(null);
+  const [current, setCurrent] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [total, setTotal] = useState<number>(0);
 
   // 获取KV配置列表
-  const fetchKvList = async () => {
+  const fetchKvList = async (page = current, size = pageSize) => {
     setLoading(true);
     try {
       const params = {
-        pageNo: 1,
-        pageSize: 10
+        pageNo: page,
+        pageSize: size,
+        keyValue,        // 添加搜索条件
+        title,
+        category: category === '全部' ? undefined : category
       };
       const response = isAdmin 
         ? await getKvList(params)
@@ -38,6 +46,7 @@ const KvSetting: React.FC = () => {
 
       if (response.code === '0') {
         setDataSource(response.data.list);
+        setTotal(response.data.count); // 设置总数
       }
     } catch (error) {
       console.error('获取KV配置列表失败:', error);
@@ -62,17 +71,19 @@ const KvSetting: React.FC = () => {
     setIsEditModalVisible(true);
   };
 
-  // 处理发布上线
+  // 处理发布上线和下线
   const handlePublish = async (record: any) => {
     try {
-      const data = {
-        id: record.id,
-        status: record.status === 1 ? 0 : 1 // 切换状态：0-禁用，1-发布上线
-      };
-      
-      const response = isAdmin
-        ? await updateKv(data)
-        : await updateTenantKv(data);
+      let response;
+      if (record.status === 1) {
+        // 当前是已上线状态，执行下线操作
+        response = await cancelKv({ id: record.id });
+      } else {
+        // 当前是未上线状态，执行上线操作
+        response = await releaseKv({
+          id: record.id,
+        });
+      }
 
       if (response.code === '0') {
         message.success(`${record.status === 1 ? '下线' : '发布上线'}成功`);
@@ -89,6 +100,13 @@ const KvSetting: React.FC = () => {
   // 处理新增按钮点击
   const handleAdd = () => {
     setIsAddModalVisible(true);
+  };
+
+  // 处理页码变化
+  const handleTableChange = (pagination: any) => {
+    setCurrent(pagination.current);
+    setPageSize(pagination.pageSize);
+    fetchKvList(pagination.current, pagination.pageSize);
   };
 
   // 表格列定义
@@ -150,9 +168,11 @@ const KvSetting: React.FC = () => {
       render: (_: any, record: any) => (
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>修改</a>
-          <a onClick={() => handlePublish(record)}>
-            {record.status === 0 ? '发布上线' : '下线'}
-          </a>
+          {isAdmin && (
+            <a onClick={() => handlePublish(record)}>
+              {record.status === 0 ? '发布上线' : '下线'}
+            </a>
+          )}
         </Space>
       ),
     },
@@ -201,13 +221,15 @@ const KvSetting: React.FC = () => {
             查询
           </Button>
           
-          {/* <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAdd}
-          >
-            新增
-          </Button> */}
+          {isAdmin && (
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={handleAdd}
+            >
+              新增
+            </Button>
+          )}
         </Space>
       </div>
 
@@ -215,8 +237,17 @@ const KvSetting: React.FC = () => {
         loading={loading}
         columns={columns}
         dataSource={dataSource}
-        rowKey="index"
-        pagination={{ pageSize: 10 }}
+        rowKey="id"
+        pagination={{
+          current,
+          pageSize,
+          total,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total) => `共 ${total} 条记录`,
+          pageSizeOptions: ['10', '20', '50', '100']
+        }}
+        onChange={handleTableChange}
         bordered
       />
       

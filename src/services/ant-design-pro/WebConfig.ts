@@ -214,3 +214,63 @@ export async function updateHomeBottomById(body: API.FackeParams, options?: { [k
   });
 }
 
+// 获取首页图片列表
+export async function homeImageList(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/homeImageList', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+// 保存首页图片
+export async function saveHomeImage(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/saveHomeImage', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+// 更新首页图片信息
+export async function updateHomeImageById(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/updateHomeImageById', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+// 更新首页图片内容
+export async function updateHomeImageContentById(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/updateHomeImageContentById', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+// 获取首页图片内容列表
+export async function homeImageContentList(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/HomeImageContentList', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
