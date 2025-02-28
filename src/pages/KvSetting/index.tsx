@@ -86,7 +86,7 @@ const KvSetting: React.FC = () => {
         });
       }
 
-      if (response.code === '0') {
+      if (response.code === '0'&&response.data) {
         message.success(`${record.status === 1 ? '下线' : '发布上线'}成功`);
         fetchKvList(); // 刷新列表
       } else {

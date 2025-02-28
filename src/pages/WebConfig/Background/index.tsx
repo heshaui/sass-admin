@@ -17,18 +17,25 @@ const Background: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [backgroundData, setBackgroundData] = useState<any>(null);
   const [activeLanguage, setActiveLanguage] = useState('English');
-  const [activeMode, setActiveMode] = useState('夜间版');
-  const [activeStatus, setActiveStatus] = useState('登录前');
+  const [activeMode, setActiveMode] = useState('dark');
+  const [activeStatus, setActiveStatus] = useState('before_login');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<TableItem | null>(null);
+  const [dataSource, setDataSource] = useState<TableItem[]>([]);
 
   // 获取背景图数据
   const fetchBackgroundData = async () => {
     try {
       setLoading(true);
-      const result = await getTenantKeyParams('background');
-      if (result.success && result.data) {
-        setBackgroundData(JSON.parse(result.data));
+      const result = await getTenantKeyParams({ key: 'HomeBanner' });
+      if (result.code === '0' && result.data) {
+        const parsedData = JSON.parse(result.data.keyValue);
+        // 获取当前选择条件下的数据对象
+        const currentData = parsedData?.[activeLanguage]?.[activeMode]?.[activeStatus];
+        // 确保数据是数组形式
+        const filteredData = currentData ? [currentData] : [];
+        setDataSource(filteredData);
+        setBackgroundData(parsedData);
       }
     } catch (error) {
       console.error('获取背景图数据失败:', error);
@@ -38,9 +45,19 @@ const Background: React.FC = () => {
     }
   };
 
+  // 确保在组件挂载时获取数据
   useEffect(() => {
     fetchBackgroundData();
-  }, []);
+  }, []); // 空依赖数组，只在组件挂载时执行一次
+
+  // 在语言、模式或状态改变时更新显示的数据
+  useEffect(() => {
+    if (backgroundData) {
+      const currentData = backgroundData?.[activeLanguage]?.[activeMode]?.[activeStatus];
+      const filteredData = currentData ? [currentData] : [];
+      setDataSource(filteredData);
+    }
+  }, [activeLanguage, activeMode, activeStatus, backgroundData]);
 
   const columns: ProColumns<TableItem>[] = [
     {
@@ -113,10 +130,10 @@ const Background: React.FC = () => {
               onChange={(e) => setActiveLanguage(e.target.value)}
             >
               <Radio.Button value="English">English</Radio.Button>
-              <Radio.Button value="简体中文">简体中文</Radio.Button>
-              <Radio.Button value="繁體中文">繁體中文</Radio.Button>
-              <Radio.Button value="日本語">日本語</Radio.Button>
-              <Radio.Button value="한국인">한국인</Radio.Button>
+              <Radio.Button value="zh_CN">简体中文</Radio.Button>
+              <Radio.Button value="zh_TW">繁體中文</Radio.Button>
+              <Radio.Button value="ja_JP">日本語</Radio.Button>
+              <Radio.Button value="ko_KR">한국인</Radio.Button>
             </Radio.Group>
           </div>
 
@@ -125,8 +142,8 @@ const Background: React.FC = () => {
               value={activeMode} 
               onChange={(e) => setActiveMode(e.target.value)}
             >
-              <Radio.Button value="夜间版">夜间版</Radio.Button>
-              <Radio.Button value="日间版">日间版</Radio.Button>
+              <Radio.Button value="dark">夜间版</Radio.Button>
+              <Radio.Button value="light">日间版</Radio.Button>
             </Radio.Group>
           </div>
 
@@ -135,8 +152,8 @@ const Background: React.FC = () => {
               value={activeStatus} 
               onChange={(e) => setActiveStatus(e.target.value)}
             >
-              <Radio.Button value="登录前">登录前</Radio.Button>
-              <Radio.Button value="登录后">登录后</Radio.Button>
+              <Radio.Button value="before_login">登录前</Radio.Button>
+              <Radio.Button value="after_login">登录后</Radio.Button>
             </Radio.Group>
           </div>
         </div>
@@ -147,7 +164,7 @@ const Background: React.FC = () => {
 
         <ProTable<TableItem>
           columns={columns}
-          dataSource={[]}
+          dataSource={dataSource}
           rowKey="key"
           search={false}
           options={false}
