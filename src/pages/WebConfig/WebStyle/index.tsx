@@ -44,18 +44,21 @@ const WebStyle: React.FC = () => {
   const handleSave = async () => {
     try {
       // 保存主题色配置
-      await updateValue({
+     const result = await updateValue({
         keyProperty: 'theme',
         keyValue: JSON.stringify({ color: primaryColor })
       });
 
       // 保存模板配置
-      await updateValue({
+     const templateResult = await updateValue({
         keyProperty: 'template',
         keyValue: JSON.stringify({ type: selectedTemplate })
       });
-
-      message.success('配置保存成功');
+      if(result.code === '0'&&templateResult.code === '0'&&result.data&&templateResult.data){
+        message.success('配置保存成功');
+      }else{
+        message.error('配置保存失败');
+      }
     } catch (error) {
       console.error('保存配置失败:', error);
       message.error('保存配置失败');
