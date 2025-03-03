@@ -11,11 +11,15 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
 }) => {
   const [form] = Form.useForm();
 
+  // 监听 record 变化，重置表单
+  React.useEffect(() => {
+    form.resetFields();
+  }, [form, record]);
+
   // 提交表单
   const onFinish = (values: any) => {
     console.log(isCreating ? "新建商户数据：" : "更新商户数据：", values);
     onSubmit(values);
-
   };
 
   return (
@@ -24,15 +28,18 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
       layout="vertical"
       onFinish={onFinish}
       initialValues={{
-        exchangeName: record?.exchange || "",
-        merchantId: record?.id || "",
-        contact: record?.contact || "",
-        countryCode: "+86 中国",
-        phone: "",
-        email: "",
+        tenantId: record?.tenantId || "",
+        tenantName: record?.tenantName || "",
+        tenantContact: record?.tenantContact || "",
+        tenantPhone: record?.tenantPhone || "",
+        tenantEmail: record?.tenantEmail || "",
       }}
     >
-
+      {!isCreating && (
+        <Form.Item label="商户ID" name="tenantId">
+          <Input disabled style={{ background: "#f5f5f5" }} />
+        </Form.Item>
+      )}
 
       <Form.Item label="交易所名称" name="tenantName" rules={[{ required: true, message: "请输入交易所名称" }]}>
         <Input />
@@ -57,7 +64,7 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
         <Input />
       </Form.Item>
 
-      <Form.Item label="邮箱" name="tenantEmail">
+      <Form.Item label="邮箱" name="tenantEmail" rules={[{ required: true, type: "email", message: "请输入有效的邮箱地址" }]}>
         <Input />
       </Form.Item>
 

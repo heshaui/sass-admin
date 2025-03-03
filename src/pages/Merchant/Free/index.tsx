@@ -29,7 +29,10 @@ const Free: React.FC = () => {
     try {
       const res = await tenantList({ 
         pageNo: params.current || 1, 
-        pageSize: params.pageSize || 10
+        pageSize: params.pageSize || 10,
+        tenantId: params.tenantId,
+        tenantName: params.tenantName,
+        tenantStatus: params.tenantStatus,
       });
       if (res.code === "0") {
         setMerchantData(res.data.list || []);
@@ -49,7 +52,7 @@ const Free: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchMerchantList();
+
   }, []);
 
   // **打开编辑弹窗**
@@ -66,6 +69,12 @@ const Free: React.FC = () => {
     setEditModalVisible(true);
   };
 
+  // **关闭模态框时清除表单内容**
+  const handleCloseModal = () => {
+    setEditModalVisible(false);
+    setCurrentRecord(null);  // 清除当前记录
+  };
+
   // **打开服务器管理弹窗**
   const handleServerConfig = (record: any) => {
     setCurrentRecord(record);
@@ -79,7 +88,7 @@ const Free: React.FC = () => {
       const res = await saveTenant(values);
       if (res.code === "0") {
         message.success(isCreating ? "新增商户成功" : "更新商户成功");
-        setEditModalVisible(false);
+        handleCloseModal();  // 使用新的关闭函数
         fetchMerchantList();
       } else {
         message.error(res.message || "操作失败");
@@ -152,12 +161,17 @@ const Free: React.FC = () => {
 
   // **表格列配置**
   const columns: ProColumns<any>[] = [
-    { title: "商户ID", dataIndex: "tenantId", width: 100 },
-    { title: "交易所名称", dataIndex: "tenantName", width: 150 },
-    { title: "联系人", dataIndex: "tenantContact", width: 100 },
+    { title: "商户ID", dataIndex: "tenantId" },
+    { title: "交易所名称", dataIndex: "tenantName" },
+    { 
+      title: "联系人", 
+      dataIndex: "tenantContact",
+      search: false  // 禁用搜索
+    },
     {
       title: "服务时间",
       dataIndex: "serviceTime",
+      search: false,  // 禁用搜索
       render: (_, record) => (
         <div>
           <div>注册时间：{record.createTime ? dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
@@ -169,6 +183,11 @@ const Free: React.FC = () => {
     {
       title: "服务状态",
       dataIndex: "tenantStatus",
+      valueType: 'select',
+      valueEnum: {
+        1: { text: '正常' },
+        0: { text: '禁用' }
+      },
       render: (_, record) => <div>{record.tenantStatus === 1 ? "正常" : "禁用"}</div>,
     },
     // {
@@ -178,6 +197,7 @@ const Free: React.FC = () => {
     // },
     {
       title: "操作",
+      search: false,
       dataIndex: "action",
       render: (_, record) => (
         <Space>
@@ -205,6 +225,14 @@ const Free: React.FC = () => {
           },
         }}
         search={{ labelWidth: "auto" }}
+        request={async (params) => {
+          await fetchMerchantList(params);
+          return {
+            data: merchantData,
+            success: true,
+            total: pagination.total
+          };
+        }}
         toolBarRender={() => [
           <Button type="primary" key="new" onClick={handleCreate}>
             + 新建
@@ -216,11 +244,16 @@ const Free: React.FC = () => {
       <Modal
         title={isCreating ? "新增商户" : "编辑商户"}
         open={editModalVisible}
-        onCancel={() => setEditModalVisible(false)}
+        onCancel={handleCloseModal}  // 使用新的关闭函数
         footer={null}
         width={600}
       >
-        <MerchantEdit record={currentRecord} isCreating={isCreating} onSubmit={handleSubmit} onCancel={() => setEditModalVisible(false)} />
+        <MerchantEdit 
+          record={currentRecord} 
+          isCreating={isCreating} 
+          onSubmit={handleSubmit} 
+          onCancel={handleCloseModal}  // 使用新的关闭函数
+        />
       </Modal>
 
       {/* 服务器管理弹窗 */}

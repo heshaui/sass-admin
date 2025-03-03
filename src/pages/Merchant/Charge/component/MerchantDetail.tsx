@@ -99,7 +99,7 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
       <ProDescriptions.Item label="联系人">{merchant.tenantContact}</ProDescriptions.Item>
       <ProDescriptions.Item label="手机号">{merchant.tenantPhone || "无"}</ProDescriptions.Item>
       <ProDescriptions.Item label="邮箱">{merchant.tenantEmail || "无"}</ProDescriptions.Item>
-      <ProDescriptions.Item label="商户域名">{merchant.tenantDomain || "无"}</ProDescriptions.Item>
+      <ProDescriptions.Item label="商户域名">{merchant.tenantHost || "无"}</ProDescriptions.Item>
       <ProDescriptions.Item label="注册时间">
         {merchant.createTime ? dayjs(merchant.createTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
       </ProDescriptions.Item>

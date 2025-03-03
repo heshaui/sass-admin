@@ -23,36 +23,37 @@ const Charge: React.FC = () => {
     // 获取商户列表数据
     const getList = async (params: any = {}) => {
         setLoading(true);
-        const requestData = {
-            pageNo: params.current || 1,
-            pageSize: params.pageSize || 10,
-            paymentStatus: 1,
-            // 其他查询参数
-            ...(params.tenantId && { tenantId: params.tenantId }),
-            ...(params.tenantName && { tenantName: params.tenantName })
-        };
-        
-        const res = await tenantList(requestData);
-        if (res.code === "0") {
-            const listData = res.data.list.filter(item => item.paymentStatus === 1);
-            setMerchantData(listData || []);
-            // 更新分页信息
-            setPagination({
-                ...pagination,
-                current: params.current || 1,
-                total: res.data.count || 0
-            });
-            return {
-                data: listData,
-                success: true,
-                total: res.data.count
+        try {
+            const requestData = {
+                pageNo: params.current || 1,
+                pageSize: params.pageSize || 10,
+                paymentStatus: 1,
+                ...(params.tenantId && { tenantId: params.tenantId }),
+                ...(params.tenantName && { tenantName: params.tenantName })
             };
+            
+            const res = await tenantList(requestData);
+            if (res.code === "0") {
+                const listData = res.data.list.filter(item => item.paymentStatus === 1);
+                setMerchantData(listData || []);
+                setPagination({
+                    ...pagination,
+                    current: params.current || 1,
+                    total: res.data.count || 0
+                });
+                return {
+                    data: listData,
+                    success: true,
+                    total: res.data.count
+                };
+            }
+            return {
+                data: [],
+                success: false
+            };
+        } finally {
+            setLoading(false); // 确保无论成功失败都会关闭loading
         }
-        setLoading(false);
-        return {
-            data: [],
-            success: false
-        };
     };
     // 处理编辑按钮点击
     const handleEdit = (record: any) => {
