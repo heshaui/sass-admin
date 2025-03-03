@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Image, message } from 'antd';
 import type { TableItem } from '../index';
-import { updateTenantKv } from '@/services/ant-design-pro/kv';
+import { updateValue } from '@/services/ant-design-pro/kv';
 import AvatarUpload from '@/components/AvatarUpload'
 interface EditModalProps {
   visible: boolean;
@@ -42,12 +42,12 @@ const EditModal: React.FC<EditModalProps> = ({
       };
       
       setLoading(true);
-      const result = await updateTenantKv({
-        key: 'pcLogin',
+      const result = await updateValue({
+        keyProperty: 'pcLogin',
         keyValue: JSON.stringify(newData)
       });
       
-      if (result.code === '0') {
+      if (result.code === '0'&&result.data) {
         message.success('保存成功');
         onSuccess();
       } else {
