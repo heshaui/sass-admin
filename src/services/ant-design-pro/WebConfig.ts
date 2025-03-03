@@ -2,6 +2,9 @@
 /* eslint-disable */
 import { request } from '@umijs/max';
 
+
+
+
 /** 发送验证码 POST /api/login/captcha */
 export async function homeMenu(body: API.FackeParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/homeMenuList', {
@@ -178,17 +181,7 @@ export async function homeBottomTranslationList(body: API.FackeParams, options?:
   });
 }
 
-// 保存首页底部
-export async function saveHomeBottom(body: API.FackeParams, options?: { [key: string]: any }) {
-  return request<API.FackeResult>('/tenant/v1/saveHomeBottom', {
-    method: 'POST',
-    data: body,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    ...(options || {}),
-  });
-}
+
 
 // 更新首页底部翻译
 export async function updateHomeBottomTranslationById(body: API.FackeParams, options?: { [key: string]: any }) {
@@ -214,6 +207,17 @@ export async function updateHomeBottomById(body: API.FackeParams, options?: { [k
   });
 }
 
+// /tenant/v1/saveHomeBottom
+export async function saveHomeBottom(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/saveHomeBottom', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
 // 获取首页图片列表
 export async function homeImageList(body: API.FackeParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/homeImageList', {
@@ -274,3 +278,29 @@ export async function homeImageContentList(body: API.FackeParams, options?: { [k
   });
 }
 
+// /tenant/v1/saveHomeBottomFooter
+export async function saveHomeBottomFooter(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/saveHomeBottomFooter', {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+// /tenant/v1/homeBottomFooterList
+export async function homeBottomFooterList(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/homeBottomFooterList', {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
+// /tenant/v1/updateHomeBottomFooterById
+export async function updateHomeBottomFooterById(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/updateHomeBottomFooterById', {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}

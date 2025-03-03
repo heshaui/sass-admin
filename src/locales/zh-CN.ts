@@ -21,4 +21,5 @@ export default {
   ...settings,
   ...pwa,
   ...component,
+
 };

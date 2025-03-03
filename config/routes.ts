@@ -143,6 +143,11 @@ export default [
         component: './Operation/PCLogin',
       },
       {
+        path: '/operation/media',
+        name: 'media',
+        component: './Operation/Media',
+      },
+      {
         path: '/operation',
         redirect: '/operation/pc-login',
       },

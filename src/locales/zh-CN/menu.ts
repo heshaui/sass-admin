@@ -71,6 +71,7 @@ export default {
   'menu.langPackage.package': '语言包套餐列表',
   'menu.operation': '运营配置',
   'menu.operation.pcLogin': 'PC登录配置',
+  'menu.operation.media': '社交媒体管理',
   'menu.kvSetting': 'KV配置管理',
   'menu.commonConfig': '通用配置',
   'menu.commonConfig.kvSetting': 'KV配置管理',
