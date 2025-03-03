@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Card, message, Tabs, Radio } from 'antd';
-import { getTenantKeyParams } from '@/services/ant-design-pro/kv';
+import { getTenantKeyParams,updateValue } from '@/services/ant-design-pro/kv';
 import EditModal from './components/EditModal';
 
 interface TableItem {

@@ -4,7 +4,7 @@ import { Card, Radio, Space, Button, ColorPicker,Image } from 'antd';
 import type { Color } from 'antd/es/color-picker';
 import { 
     getTenantKeyParams,
-    updateTenantKv, 
+    updateValue, 
   } from '@/services/ant-design-pro/kv';
 import { message } from 'antd';
 
@@ -44,14 +44,14 @@ const WebStyle: React.FC = () => {
   const handleSave = async () => {
     try {
       // 保存主题色配置
-      await updateTenantKv({
-        key: 'theme',
+      await updateValue({
+        keyProperty: 'theme',
         keyValue: JSON.stringify({ color: primaryColor })
       });
 
       // 保存模板配置
-      await updateTenantKv({
-        key: 'template',
+      await updateValue({
+        keyProperty: 'template',
         keyValue: JSON.stringify({ type: selectedTemplate })
       });
 

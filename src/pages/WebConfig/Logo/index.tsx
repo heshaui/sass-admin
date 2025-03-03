@@ -4,8 +4,9 @@ import { Tabs, Button, message } from "antd";
 import AvatarUpload from '@/components/AvatarUpload';
 import { 
   getTenantKvParams,
+  updateValue,
   getTenantKeyParams,
-  updateTenantKv, 
+  // updateTenantKv, 
 } from '@/services/ant-design-pro/kv';
 
 const { TabPane } = Tabs;
@@ -91,7 +92,7 @@ const Logo: React.FC = () => {
         };
       }
 
-      const res = await updateTenantKv(submitData);
+      const res = await updateValue(submitData);
       if (res.code === '0') {
         message.success('更新成功');
       } else {

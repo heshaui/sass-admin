@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, message } from 'antd';
 import AvatarUpload from '@/components/AvatarUpload';
-import { updateTenantKv } from '@/services/ant-design-pro/kv';
+import { updateValue } from '@/services/ant-design-pro/kv';
 
 interface EditModalProps {
   visible: boolean;
@@ -39,6 +39,9 @@ const EditModal: React.FC<EditModalProps> = ({
     }
   }, [visible, record, form]);
 
+  const changeImge = (url: string) => {
+    console.log(url);
+  }
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
@@ -54,12 +57,12 @@ const EditModal: React.FC<EditModalProps> = ({
       newData[activeLanguage][activeMode][activeStatus] = values;
 
       setLoading(true);
-      const result = await updateTenantKv({
-        key: 'background',
+      const result = await updateValue({
+        keyProperty: 'HomeBanner',
         keyValue: JSON.stringify(newData)
       });
 
-      if (result.code === '0') {
+      if (result.code === '0'&&result.data) {
         message.success('保存成功');
         onSuccess();
       } else {

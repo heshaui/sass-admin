@@ -112,3 +112,17 @@ export async function getTenantKeyParams(params: any) {
     data: params,
   });
 }
+
+// 更新值接口
+interface UpdateValueParams {
+  keyProperty?: string;
+  keyValue: string;
+}
+
+// 更新KV值
+export async function updateValue(data: UpdateValueParams) {
+  return request('/tenant/v1/updateValue', {
+    method: 'POST',
+    data,
+  });
+}
