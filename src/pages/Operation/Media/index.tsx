@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { Button, Space, message, Modal, Form, Input } from 'antd';
+import { Button, Space, message, Modal, Form, Input,Image } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { 
   getMediaList, 
@@ -14,26 +14,43 @@ import AvatarUpload from '@/components/AvatarUpload';
 
 
 const MediaPage: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalTitle, setModalTitle] = useState<string>('添加媒体');
+  const [visible, setVisible] = useState<boolean>(false);
   const [currentItem, setCurrentItem] = useState<MediaItem | null>(null);
   const [form] = Form.useForm();
   const actionRef = React.useRef<ActionType>();
 
-  // 打开添加媒体表单
+  // 处理新增按钮点击
   const handleAdd = () => {
-    setModalTitle('添加媒体');
-    setCurrentItem(null);
-    form.resetFields();
-    setModalVisible(true);
+    // 先关闭模态框，确保之前的状态被清除
+    setVisible(false);
+    
+    // 使用setTimeout确保在下一个事件循环中执行，让模态框有时间完全关闭
+    setTimeout(() => {
+      form.resetFields(); // 重置表单
+      setCurrentItem(undefined); // 清除当前项
+      setVisible(true); // 重新打开模态框
+    }, 100);
   };
 
-  // 打开编辑媒体表单
+  // 处理编辑按钮点击
   const handleEdit = (record: MediaItem) => {
-    setModalTitle('编辑媒体');
-    setCurrentItem(record);
-    form.setFieldsValue(record);
-    setModalVisible(true);
+    // 先关闭模态框，确保之前的状态被清除
+    setVisible(false);
+    
+    // 使用setTimeout确保在下一个事件循环中执行
+    setTimeout(() => {
+      form.resetFields(); // 重置表单
+      setCurrentItem(record); // 设置当前项
+      setVisible(true); // 打开模态框
+      
+      // 再次使用setTimeout确保表单已经渲染
+      setTimeout(() => {
+        form.setFieldsValue({
+          ...record,
+        });
+        console.log('设置表单值:', record); // 添加日志
+      }, 100);
+    }, 100);
   };
 
   // 处理表单提交
@@ -45,23 +62,28 @@ const MediaPage: React.FC = () => {
         // 更新媒体
         const res = await updateMedia({
           ...values,
+          status:1,
           id: currentItem.id,
         });
         
-        if (res.success) {
+        if (res.code==='0') {
           message.success('更新成功');
-          setModalVisible(false);
+          setVisible(false);
           actionRef.current?.reload();
         } else {
           message.error('更新失败');
         }
       } else {
         // 添加媒体
-        const res = await addMedia(values);
+        const data = {
+          ...values,
+          status:1,
+        };
+        const res = await addMedia(data);
         
-        if (res.success) {
+        if (res.code==='0') {
           message.success('添加成功');
-          setModalVisible(false);
+          setVisible(false);
           actionRef.current?.reload();
         } else {
           message.error('添加失败');
@@ -97,20 +119,25 @@ const MediaPage: React.FC = () => {
 
   const columns: ProColumns<MediaItem>[] = [
     {
+      title: 'id',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
       title: '名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'nameText',
+      key: 'nameText',
     },
     {
       title: '图标',
-      dataIndex: 'icon',
-      key: 'icon',
-      render: (text: string) => <img src={text} alt="图标" style={{ width: 32, height: 32 }} />
+      dataIndex: 'imgUrl',
+      key: 'imgUrl',
+      render: (text: string) => <Image src={text} alt="图标" width={32} height={32} />
     },
     {
       title: '跳转链接',
-      dataIndex: 'link',
-      key: 'link',
+      dataIndex: 'linkUrl',
+      key: 'linkUrl',
     },
     {
       title: '操作',
@@ -124,6 +151,16 @@ const MediaPage: React.FC = () => {
       ),
     },
   ];
+
+  // 在模态框打开时设置表单值
+  useEffect(() => {
+    if (visible && currentItem) {
+      form.setFieldsValue({
+        ...currentItem,
+      });
+      console.log('设置表单值:', currentItem); // 添加日志检查
+    }
+  }, [visible, currentItem, form]);
 
   return (
     <PageContainer>
@@ -144,13 +181,13 @@ const MediaPage: React.FC = () => {
         ]}
         request={async (params) => {
           const res = await getMediaList({
-            current: params.current,
+            pageNo: params.current,
             pageSize: params.pageSize,
           });
           return {
-            data: res.data,
+            data: res.data.list,
             success: res.success,
-            total: res.total,
+            total: res.count,
           };
         }}
         columns={columns}
@@ -158,33 +195,37 @@ const MediaPage: React.FC = () => {
       
       {/* 添加/编辑表单模态框 */}
       <Modal
-        title={modalTitle}
-        open={modalVisible}
+        title={currentItem ? '编辑社交媒体' : '新增社交媒体'}
+        visible={visible}
         onOk={handleSubmit}
-        onCancel={() => setModalVisible(false)}
-        destroyOnClose
+        onCancel={() => {
+          form.resetFields();
+          setVisible(false);
+        }}
+        destroyOnClose={true}
+        maskClosable={false} // 防止点击蒙层关闭
       >
         <Form
           form={form}
           layout="vertical"
-          initialValues={currentItem || {}}
+          preserve={false} // 不保留表单数据
         >
           <Form.Item
-            name="name"
+            name="nameText"
             label="名称"
             rules={[{ required: true, message: '请输入媒体名称' }]}
           >
             <Input placeholder="请输入媒体名称" />
           </Form.Item>
           <Form.Item
-            name="icon"
+            name="imgUrl"
             label="图标"
             rules={[{ required: true, message: '请上传图标' }]}
           >
-            <AvatarUpload />
+            <AvatarUpload onChange={(url) => form.setFieldsValue({ imgUrl: url })} />
           </Form.Item>
           <Form.Item
-            name="link"
+            name="linkUrl"
             label="跳转链接"
             rules={[{ required: true, message: '请输入跳转链接' }]}
           >

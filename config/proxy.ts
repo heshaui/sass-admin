@@ -31,8 +31,8 @@ export default {
             changeOrigin: true,
           },
         }),
-        '/oss/': {
-          target: 'http://oss.imsaas.work',
+        '/api/ambit-oss/': {
+          target: 'https://www.imsaas.work',
           changeOrigin: true,
         }
         // '/admin/': {

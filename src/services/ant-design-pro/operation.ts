@@ -9,12 +9,13 @@ export interface MediaItem {
 }
 
 // 获取媒体列表
-export async function getMediaList() {
+export async function getMediaList(data: any) {
   return request<{
     data: MediaItem[];
     success: boolean;
   }>('/tenant/v1/homeSocialMediaList', {
     method: 'POST',
+    data,
   });
 }
 
