@@ -1,6 +1,7 @@
 // src/components/UserModal.tsx
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Modal, Form, Input, Select, message } from 'antd';
+import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
 
 interface UserModalProps {
   visible: boolean;
@@ -17,6 +18,28 @@ const UserModal: React.FC<UserModalProps> = ({
 }) => {
   const [form] = Form.useForm();
 
+
+
+  const [roleList, setRoleList] = useState<API.RoleListItem[]>([]);
+  
+  useEffect(() => {
+    const fetchRoleList = async () => {
+      try {
+          let data={
+            pageNo:1,
+            pageSize:10000
+          }
+        const result = await fetchRoleListApi(data);
+        if (result.code==='0') {
+          setRoleList(result.data.list|| []);
+        }
+      } catch (error) {
+        console.error('获取角色列表失败', error);
+      }
+    };
+    
+    fetchRoleList();
+  }, []);
   // 编辑时填充初始值
   useEffect(() => {
     if (initialValues) {
@@ -79,9 +102,15 @@ const UserModal: React.FC<UserModalProps> = ({
         <Form.Item
           name="role"
           label="权限"
-          rules={[{  message: '请输入权限' }]}
+          rules={[{ required: true, message: '请选择权限' }]}
         >
-          <Input />
+           <Select>
+            {roleList.map(role => (
+              <Select.Option key={role.roleId} value={role.roleId}>
+                {role.roleName}
+              </Select.Option>
+            ))}
+          </Select>
         </Form.Item>
 
         <Form.Item

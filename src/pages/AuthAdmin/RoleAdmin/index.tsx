@@ -110,11 +110,19 @@ const getRoleInfo = async (record) => {
 const handleSubmit = async (values) => {
   try {
     if (editingRecord) {
-      await updateRoleById({ ...editingRecord, ...values });
-      message.success('角色编辑成功');
+      const res= await updateRoleById({ ...editingRecord, ...values });
+      if(res.code==='0'){
+        message.success('角色编辑成功');
+      }else{
+        message.error('角色编辑失败');
+      }
     } else {
-      await saveRole(values);
-      message.success('角色新建成功');
+     const res= await saveRole(values);
+      if(res.code==='0'){
+        message.success('角色新建成功');
+      }else{
+        message.error('角色新建失败');
+      }
     }
     setModalVisible(false);
     setEditingRecord(null);

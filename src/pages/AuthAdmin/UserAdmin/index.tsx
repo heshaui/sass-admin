@@ -6,6 +6,7 @@ import { employeeList,saveEmployee,deleteEmployeeById,enableEmployee,offEmployee
 import UserModal from './component/UserModal'; // 引入UserModal
 import ResetPasswordModal from './component/ResetPasswordModal';
 import ResetGoogleModal from './component/ResetGoogleModal';
+import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
 
 const UserAdmin: React.FC = () => {
    const [data, setData] = useState([]);
@@ -14,8 +15,23 @@ const UserAdmin: React.FC = () => {
    const [resetPasswordVisible, setResetPasswordVisible] = useState(false); // 控制重置密码弹框
    const [resetGoogleVisible, setResetGoogleVisible] = useState(false); // 控制重置谷歌弹框
    const [editingRecord, setEditingRecord] = useState(null); // 当前操作的记录
+   const [roleOptions, setRoleOptions] = useState([]); // 添加角色选项状态
  
+   // 获取角色列表
+   const getRoleList = async () => {
+     try {
+       const res = await fetchRoleListApi();
+       if (res?.data) {
+         setRoleOptions(res.data || []);
+       }
+     } catch (error) {
+       console.error('获取角色列表失败:', error);
+     }
+   };
 
+   useEffect(() => {
+     getRoleList(); // 获取角色列表
+   }, []);
     
   // 表格的列配置
   const columns = [
@@ -40,7 +56,13 @@ const UserAdmin: React.FC = () => {
       title: '角色',
       dataIndex: 'role',
       key: 'role',
-      search:false
+      search:false,
+      filters: roleOptions.map(role => ({ text: role.roleName, value: role.roleId })),
+      onFilter: (value, record) => record.role === value,
+      render: (roleId) => {
+        const role = roleOptions.find(r => r.roleId === roleId);
+        return role ? role.roleName : roleId;
+      },
     },
     {
       title: '手机号',
@@ -126,6 +148,7 @@ const UserAdmin: React.FC = () => {
 
     // 新建/编辑用户提交
     const handleSubmit = async (values) => {
+      console.log('values',values);
       try {
         if (editingRecord) {
           // 编辑用户
@@ -234,6 +257,7 @@ const handleResetGoogleAuth = async () => {
         onClose={() => setModalVisible(false)}
         onSubmit={handleSubmit}
         initialValues={editingRecord}
+        roleOptions={roleOptions}
       />
 
       {/* 重置密码弹框 */}
