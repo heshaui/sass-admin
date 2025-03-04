@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Radio, Space, Button, ColorPicker,Image } from 'antd';
+import { Card, Radio, Space, Button, ColorPicker, Image } from 'antd';
 import type { Color } from 'antd/es/color-picker';
 import { 
     getTenantKeyParams,
     updateValue, 
   } from '@/services/ant-design-pro/kv';
 import { message } from 'antd';
+import { history } from 'umi';
 
 const WebStyle: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState('1');
@@ -65,6 +66,10 @@ const WebStyle: React.FC = () => {
     }
   };
 
+  const handleGoToBackground = () => {
+    history.push('/webConfig/background');
+  };
+
   return (
     <PageContainer>
       <Card>
@@ -88,6 +93,13 @@ const WebStyle: React.FC = () => {
               </Radio>
               <Button type="primary" style={{width:'100px',marginTop:'10px'}} >
                 使用中
+              </Button>
+              <Button 
+                type="primary" 
+                style={{width:'100px',marginTop:'10px'}}
+                onClick={handleGoToBackground}
+              >
+               背景图设置
               </Button>
             </div>
           </div>

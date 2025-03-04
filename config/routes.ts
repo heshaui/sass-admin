@@ -108,6 +108,7 @@ export default [
         path: '/webConfig/background',
         name: 'background',
         component: './WebConfig/Background',
+        hideInMenu: true,
       },
     ],
   },

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
-import { Card, message, Tabs, Radio } from 'antd';
+import { Card, message, Tabs, Radio,Button,Image} from 'antd';
 import { getTenantKeyParams,updateValue } from '@/services/ant-design-pro/kv';
 import EditModal from './components/EditModal';
 
@@ -22,7 +22,7 @@ const Background: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState<TableItem | null>(null);
   const [dataSource, setDataSource] = useState<TableItem[]>([]);
-
+  const [selectedTemplate, setSelectedTemplate] = useState('1');
   // 获取背景图数据
   const fetchBackgroundData = async () => {
     try {
@@ -120,8 +120,36 @@ const Background: React.FC = () => {
     fetchBackgroundData();
   };
 
+  // 添加查看按钮点击处理函数
+  const handleViewWebsite = () => {
+    window.open('https://www.imsaas.work/zh', '_blank');
+  };
+
   return (
     <PageContainer>
+    <Card>
+    <div style={{display:'flex',flexDirection:'column',textAlign:'center'}}    >
+              <Image 
+                src="/home.png" 
+                alt="模板1"
+                width={100}
+                height={100}
+              />
+              <Radio 
+                checked={selectedTemplate === '1'}
+                onChange={() => setSelectedTemplate('1')}
+              >
+                模板1
+              </Radio>
+              <Button 
+                type="primary" 
+                style={{width:'100px',marginTop:'10px'}} 
+                onClick={handleViewWebsite}
+              >
+                查看
+              </Button>
+            </div>
+    </Card>
       <Card>
         <div style={{ marginBottom: 24 }}>
           <div style={{ marginBottom: 16 }}>
@@ -188,4 +216,4 @@ const Background: React.FC = () => {
   );
 };
 
-export default Background; 
+export default Background;

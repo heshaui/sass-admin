@@ -25,8 +25,9 @@ export const generateMenuTree = (menuList) => {
       if (item.type === 1) {
         menuMap.set(item.id, {
           ...item,
-          name: item.titleKey, // 确保 titleKey 作为 name
-          icon: getIcon(item.icon), // 预处理 icon
+          name: item.titleKey,
+          icon: getIcon(item.icon),
+          hideInMenu: item.titleKey === 'background' ? true : item.hideInMenu, // 当 titleKey 为 background 时设置 hideInMenu 为 true
           children: [],
         });
       }
