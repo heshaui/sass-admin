@@ -13,16 +13,28 @@ const Root: React.FC = () => {
   const [currentRecord, setCurrentRecord] = useState<any>(null); // 选中的用户信息
 
 
-  const getList=async()=>{
-    let data={
-      pageNo:1,
-      pageSize:10
+  const getList = async (params: any = {}) => {
+    const { current, pageSize, ...restParams } = params;
+    let data = {
+      pageNo: current || 1,
+      pageSize: pageSize || 10,
+      ...restParams
     }
-    const res=await tenantRootList(data);
-    if(res.code==='0'){
-      setDataSource(res.data.list)
-    }else{
-      message.error("获取商户列表失败")
+    const res = await tenantRootList(data);
+    if (res.code === '0') {
+      setDataSource(res.data.list);
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.count,
+      };
+    } else {
+      message.error("获取商户列表失败");
+      return {
+        data: [],
+        success: false,
+        total: 0,
+      };
     }
   }
 
@@ -196,6 +208,7 @@ const Root: React.FC = () => {
         dataSource={dataSource}
         pagination={{ pageSize: 10 }}
         search={{ labelWidth: "auto" }}
+        request={getList}
         toolBarRender={() => [
           
         ]}

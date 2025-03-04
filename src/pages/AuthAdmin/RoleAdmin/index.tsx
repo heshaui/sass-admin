@@ -227,7 +227,15 @@ return (
       scroll={{ x: 'max-content' }}
       loading={loading}
       request={async (params) => {
-        await getRoleList({ pageNo: params.current, pageSize: params.pageSize });
+        await getRoleList({ 
+          pageNo: params.current, 
+          pageSize: params.pageSize,
+          roleName: params.roleName // 添加roleName参数 
+        });
+        return {
+          data: [],
+          success: true,
+        };
       }}
       options={{
         density: false,
@@ -241,12 +249,6 @@ return (
         showSizeChanger: true,
       }}
       toolBarRender={() => [
-        <Button key="search" type="primary">
-          查询
-        </Button>,
-        <Button key="reset" icon={<ReloadOutlined />}>
-          重置
-        </Button>,
         <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
           新建
         </Button>,
