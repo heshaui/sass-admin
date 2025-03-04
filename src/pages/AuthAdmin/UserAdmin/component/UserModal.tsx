@@ -119,8 +119,8 @@ const UserModal: React.FC<UserModalProps> = ({
           rules={[{ required: true, message: '请选择用户状态' }]}
         >
           <Select>
-            <Select.Option value="1">正常</Select.Option>
-            <Select.Option value="0">禁用</Select.Option>
+            <Select.Option value={1}>正常</Select.Option>
+            <Select.Option value={0}>禁用</Select.Option>
           </Select>
         </Form.Item>
       </Form>

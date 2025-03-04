@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Form, Input, message, Tree } from 'antd';
+import { Modal, Form, Input, message, Tree, Select } from 'antd';
 
 interface RoleModalProps {
   visible: boolean;
@@ -82,7 +82,10 @@ const RoleModal: React.FC<RoleModalProps> = ({
           label="状态"
           rules={[{ required: true, message: '请选择角色状态' }]}
         >
-          <Input />
+          <Select placeholder="请选择状态">
+            <Select.Option value={1}>启用</Select.Option>
+            <Select.Option value={0}>禁用</Select.Option>
+          </Select>
         </Form.Item>
 
         {/* 权限选择（树形结构） */}

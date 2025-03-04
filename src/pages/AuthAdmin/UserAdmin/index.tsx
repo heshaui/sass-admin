@@ -58,9 +58,9 @@ const UserAdmin: React.FC = () => {
       key: 'role',
       search:false,
       filters: roleOptions.map(role => ({ text: role.roleName, value: role.roleId })),
-      onFilter: (value, record) => record.role === value,
+      onFilter: (value, record) => record.role === Number(value),
       render: (roleId) => {
-        const role = roleOptions.find(r => r.roleId === roleId);
+        const role = roleOptions.find(r => r.roleId === Number(roleId));
         return role ? role.roleName : roleId;
       },
     },
@@ -85,13 +85,19 @@ const UserAdmin: React.FC = () => {
     {
       title: '状态',
       dataIndex: 'status',
-      key: 'status',
-      render: (text) =>
-        text === 1 ? <Tag color="green">正常</Tag> : <Tag color="red">禁用</Tag>,
+      valueType: 'select',
+      valueEnum: {
+        0: { text: '禁用', status: 'Error' },
+        1: { text: '正常', status: 'Success' }
+      },
+      filters: true,
+      onFilter: true,
+      width: 100,
     },
     {
       title: '操作',
       key: 'action',
+      search:false,
       render: (_, record) => (
         <Dropdown
           overlay={
@@ -133,15 +139,32 @@ const UserAdmin: React.FC = () => {
   ];
 
   const getUserList = async (params = { pageNo: 1, pageSize: 10 }) => {
+    setLoading(true);
     try {
-      const res = await employeeList(params);
+      const queryParams = { ...params };
+      
+      const res = await employeeList(queryParams);
       if (res?.data) {
-        setData(res.data.list || []); // 更新数据
+        setData(res.data.list || []);
+        return {
+          data: res.data.list || [],
+          total: res.data.total || 0,
+          success: true,
+        };
       }
+      return {
+        data: [],
+        total: 0,
+        success: false,
+      };
     } catch (error) {
-      console.error('Failed to fetch user list:', error);
-      return [];
-    }finally {
+      console.error('获取用户列表失败:', error);
+      return {
+        data: [],
+        total: 0,
+        success: false,
+      };
+    } finally {
       setLoading(false);
     }
   }
@@ -225,11 +248,18 @@ const handleResetGoogleAuth = async () => {
         scroll={{ x: 'max-content' }}
         dataSource={data}
         loading={loading}
-        request={async (params) => {
-          await getUserList({
-            pageNo: params.current,
-            pageSize: params.pageSize,
-          });
+        request={async (params, sorter, filter) => {
+          // 转换参数格式，适配后端API
+          const queryParams = {
+            pageNo: params.current || 1,
+            pageSize: params.pageSize || 10,
+            nickname: params.nickname,
+            phone: params.phone,
+            email: params.email,
+            status: params.status, // 确保状态参数正确传递
+            // 可以添加其他需要的搜索参数
+          };
+          return await getUserList(queryParams);
         }}
         search={{
           labelWidth: 'auto',
