@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
-import { Button, Space, message } from "antd";
+import { Button, Space, message, Modal } from "antd";
 import RootModal from "./component/RootModal";
 import { tenantRootList,updatePasswordById, updateGoogleById,updateTenantRootById,updateRoleById} from "@/services/ant-design-pro/merchant";
 
@@ -27,43 +27,64 @@ const Root: React.FC = () => {
   }
 
   const resetPassword=async(id:string)=>{
-    
-    const res=await updatePasswordById(id);
-    if(res.code==='0'){
-      message.success("重置密码成功")
-    }else{
-      message.error("重置密码失败")
-    }
+    Modal.confirm({
+      title: '确认重置密码',
+      content: '确定要重置该用户的密码吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        const res=await updatePasswordById(id);
+        if(res.code==='0'){
+          message.success("重置密码成功")
+        }else{
+          message.error("重置密码失败")
+        }
+      }
+    });
   }
 
   const resetGoogle=async(id:string)=>{
-    
-    const res=await updateGoogleById(id);
-    if(res.code==='0'){
-      message.success("重置谷歌成功")
-    }else{
-      message.error("重置谷歌失败")
-    }
+    Modal.confirm({
+      title: '确认重置谷歌',
+      content: '确定要重置该用户的谷歌验证吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        const res=await updateGoogleById(id);
+        if(res.code==='0'){
+          message.success("重置谷歌成功")
+        }else{
+          message.error("重置谷歌失败")
+        }
+      }
+    });
   }
 
   const changeStatus=async(id:string,status:number)=>{
-    let data={
-      id:id,
-      status:status
-    }
-    const res=await updateTenantRootById(data);
-    if
-    (res.code==='0'){
-      if(status===1){
-        message.success("允许登录成功")
-      }else{
-        message.success("禁止登录成功")
+    Modal.confirm({
+      title: status === 1 ? '确认允许登录' : '确认禁止登录',
+      content: status === 1 ? '确定要允许该用户登录吗？' : '确定要禁止该用户登录吗？',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        let data={
+          id:id,
+          status:status
+        }
+        const res=await updateTenantRootById(data);
+        if(res.code==='0'){
+          if(status===1){
+            message.success("允许登录成功")
+          }else{
+            message.success("禁止登录成功")
+          }
+         await getList()
+        }
+        else{
+          message.error("修改状态失败")
+        }
       }
-     await getList()
-    }
-    else{
-      message.error("修改状态失败")
-    }
+    });
   }
     // **角色分配**
     const handleRoleAssign = (record: any) => {
@@ -105,16 +126,14 @@ const Root: React.FC = () => {
       dataIndex: "id",
     },
     {
-      title:'nickname',
-      dataIndex:'nickname'
-    },
-    {
       title: "交易所名称",
-      dataIndex: "tenantName",
+      dataIndex: "nickname",
+      search:false, 
     },
     {
       title: "状态",
       dataIndex: "status",
+      search:false, 
       render:(_,record)=>{
         return record.status===1?'正常':'冻结'
       }
@@ -122,7 +141,8 @@ const Root: React.FC = () => {
     },
     {
       title: "联系人",
-      dataIndex: "contact",
+      dataIndex: "tenantContact",
+      search:false, 
     },
     {
       title: "邮箱",
@@ -134,21 +154,23 @@ const Root: React.FC = () => {
     },
     {
       title: "状态",
-      dataIndex: "accountStatus",
+      dataIndex: "status",
       valueType: "select",
       valueEnum: {
-        正常: { text: "正常", status: "Success" },
-        冻结: { text: "冻结", status: "Error" },
+        正常: { text: "正常", status: "1" },
+        冻结: { text: "冻结", status: "0" },
       },
     },
     {
       title: "创建时间",
-      dataIndex: "createdAt",
+      dataIndex: "createTime",
       valueType: "dateTime",
+      search:false, 
     },
     {
       title: "操作",
       dataIndex: "action",
+      search:false, 
       render: (_, record) => (
         <Space>
 

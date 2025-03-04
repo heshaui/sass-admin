@@ -4,14 +4,12 @@ import { Button, Space, Modal, message } from "antd";
 import MerchantEdit from "./component/MerchantEdit";
 import ServerAdmin from "./component/ServerAdmin";
 import ConvertToPaid from "./component/ConvertToPaid"; 
-import RootModal from "./component/RootModal";
 import { saveTenant, tenantList,updateTenantById,saveTenantRoot } from "@/services/ant-design-pro/merchant";
 import dayjs from "dayjs";
 
 const Free: React.FC = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [serverModalVisible, setServerModalVisible] = useState(false)
-    const [modalVisible, setModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<any>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -140,23 +138,25 @@ const Free: React.FC = () => {
    
   };
 
-
-  const handleSave=async (values:any)=>{
-    let data={
-      tenantId:currentRecord.tenantId,
-      ...values
-    }
-    const res=await saveTenantRoot(data);
-    if(res.code==='0'){
-      message.success("root账户创建成功");
-    }
-    setModalVisible(false);
-  }
-
-
-  const handleOpenModal = (record?: any) => {
-    setCurrentRecord(record || null);
-    setModalVisible(true);
+  const handleSave = async (record: any) => {
+    Modal.confirm({
+      title: '创建Root账号',
+      content: '确认创建后，系统将根据企业信息自动生成Root管理员信息。您可以前往Root管理查看！',
+      onOk: async () => {
+        let data = {
+          tenantId: record.tenantId,
+        }
+        const res = await saveTenantRoot(data);
+        if(res.code === '0'){
+          message.success("root账户创建成功");
+        }else{
+          message.error("root账户创建失败");
+        }
+      },
+      onCancel() {
+        // 用户取消操作
+      },
+    });
   }
 
   // **表格列配置**
@@ -204,7 +204,7 @@ const Free: React.FC = () => {
           <a onClick={() => handleEdit(record)}>修改</a>
           {record.paymentStatus !== 1 ? <a onClick={() => handleConvertToPaid(record)}>转为正式商户</a> : ""}
           <a onClick={() => handleServerConfig(record)}>服务器配置</a>
-          <a onClick={() => handleOpenModal(record)}>创建Root账号</a>
+          <a onClick={() => handleSave(record)}>创建Root账号</a>
         </Space>
       ),
     },
@@ -244,7 +244,7 @@ const Free: React.FC = () => {
       <Modal
         title={isCreating ? "新增商户" : "编辑商户"}
         open={editModalVisible}
-        onCancel={handleCloseModal}  // 使用新的关闭函数
+        onCancel={handleCloseModal}
         footer={null}
         width={600}
       >
@@ -252,7 +252,7 @@ const Free: React.FC = () => {
           record={currentRecord} 
           isCreating={isCreating} 
           onSubmit={handleSubmit} 
-          onCancel={handleCloseModal}  // 使用新的关闭函数
+          onCancel={handleCloseModal}
         />
       </Modal>
 
@@ -264,12 +264,6 @@ const Free: React.FC = () => {
         onSubmit={handleConvertSubmit}
         initialValues={currentRecord}
       />
-       <RootModal
-              visible={modalVisible}
-              onCancel={() => setModalVisible(false)}
-              onSave={handleSave}
-              initialValues={currentRecord}
-            />
     </PageContainer>
   );
 };

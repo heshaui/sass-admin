@@ -1,5 +1,5 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Dropdown, Menu, Button, Tag, Space, message, Select } from 'antd';
+import { Dropdown, Menu, Button, Tag, Space, message, Select, Modal } from 'antd';
 import { PlusOutlined, ReloadOutlined,DownOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import { employeeList,saveEmployee,deleteEmployeeById,enableEmployee,offEmployee,resetPassword,updateEmployeeById} from '@/services/ant-design-pro/authAdmin';
@@ -109,7 +109,18 @@ const UserAdmin: React.FC = () => {
                 key="resetPassword"
                 onClick={() => {
                   setEditingRecord(record);
-                  setResetPasswordVisible(true);
+                  Modal.confirm({
+                    title: '确认重置密码',
+                    content: '您确定要重置该用户的密码吗？',
+                    onOk: async () => {
+                      try {
+                        await resetPassword({ id: record.id });
+                        message.success('密码重置成功');
+                      } catch (error) {
+                        message.error('密码重置失败');
+                      }
+                    },
+                  });
                 }}
               >
                 重置密码
@@ -217,7 +228,7 @@ const UserAdmin: React.FC = () => {
 // 重置密码
 const handleResetPassword = async (values) => {
   try {
-     await resetPassword({ id: editingRecord.id});
+    await resetPassword({ id: editingRecord.id });
     message.success('密码重置成功');
     setResetPasswordVisible(false);
   } catch (error) {

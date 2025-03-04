@@ -285,7 +285,7 @@ export async function resetPassword(
   body:API.EmployeeVo,
   options?: { [key: string]: any },
 ) {
-  return request<API.Employee>('/tenant-admin/v1/employee/resetPassword/'+body, {
+  return request<API.Employee>('/tenant-admin/v1/employee/resetPassword/'+body.id, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

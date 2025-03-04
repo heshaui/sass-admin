@@ -124,6 +124,12 @@ const KvSetting: React.FC = () => {
       dataIndex: 'id',
       key: 'id',
     },
+    ...(isAdmin ? [] : [{
+      title: '商户id',
+      dataIndex: 'tenantId',
+      key: 'tenantId',
+      search:false, 
+    }]),
     {
       title: '类型',
       dataIndex: 'type',
@@ -169,12 +175,12 @@ const KvSetting: React.FC = () => {
       dataIndex: 'describe',
       key: 'describe',
     },
-    {
+    ...(isAdmin ? [{
       title: '是否显示',
       dataIndex: 'show',
       key: 'show',
       render: (show: number) => (show === 1 ? '是' : '否'),
-    },
+    }] : []),
     {
       title: '创建时间',
       dataIndex: 'createTime',

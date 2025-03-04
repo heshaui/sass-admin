@@ -27,13 +27,22 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
       form={form}
       layout="vertical"
       onFinish={onFinish}
-      initialValues={{
-        tenantId: record?.tenantId || "",
-        tenantName: record?.tenantName || "",
-        tenantContact: record?.tenantContact || "",
-        tenantPhone: record?.tenantPhone || "",
-        tenantEmail: record?.tenantEmail || "",
-      }}
+      initialValues={
+        isCreating 
+          ? {
+              tenantName: "",
+              tenantContact: "",
+              tenantPhone: "",
+              tenantEmail: "",
+            }
+          : {
+              tenantId: record?.tenantId || "",
+              tenantName: record?.tenantName || "",
+              tenantContact: record?.tenantContact || "",
+              tenantPhone: record?.tenantPhone || "",
+              tenantEmail: record?.tenantEmail || "",
+            }
+      }
     >
       {!isCreating && (
         <Form.Item label="商户ID" name="tenantId">
