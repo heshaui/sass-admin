@@ -143,7 +143,7 @@ const KvSetting: React.FC = () => {
         return (
           <div>
             <div style={{ 
-              maxWidth: isExpanded ? 'none' : 100,
+              maxWidth: isExpanded ? 'none' : 150,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: isExpanded ? 'normal' : 'nowrap'
