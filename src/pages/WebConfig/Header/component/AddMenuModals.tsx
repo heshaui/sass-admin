@@ -14,7 +14,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
   const [accessType, setAccessType] = useState("1");
   const [formModal3] = Form.useForm();
   const [selectedStyle, setSelectedStyle] = useState("new");
-  const [displayType, setDisplayType] = useState("vertical"); // 默认选中“竖排”
+  const [displayType, setDisplayType] = useState("vertical"); // 默认选中"竖排"
     const [typeId, setTypeId] = useState<number>(2);
 
   const tops = selectedStyle === "custom" ? 80 : 20;
@@ -38,6 +38,16 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
 
   const handleNightChange = (url: string | null) => {
     setIconUrlNight(url);
+  };
+
+  const handleCancelAndReset = () => {
+    // 重置所有状态
+    setIconUrlDay(null);
+    setIconUrlNight(null);
+    setUploadedImageUrl(null);
+    formModal3.resetFields();
+    // 调用传入的onCancel函数
+    onCancel();
   };
 
   const onFinish = async (values: any) => {
@@ -73,7 +83,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
   };
 
   return (
-    <Modal title="添加菜单" visible={visible} onCancel={onCancel} footer={null}>
+    <Modal title="添加菜单" visible={visible} onCancel={handleCancelAndReset} footer={null}>
       <Form form={formModal3} layout="vertical" onFinish={onFinish}>
         {/* 标签/菜单选择 */}
         {
@@ -197,7 +207,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
         )}
 
         <Form.Item style={{ textAlign: "center" }}>
-          <Button onClick={onCancel}>取消</Button>
+          <Button onClick={handleCancelAndReset}>取消</Button>
           <Button type="primary" htmlType="submit" style={{ marginLeft: 10 }}>
             提交
           </Button>

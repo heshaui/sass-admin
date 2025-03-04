@@ -11,6 +11,7 @@ interface AvatarUploadProps {
 
 const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
   const [imageUrl, setImageUrl] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   
   // 当外部value变化时更新内部状态
   useEffect(() => {
@@ -20,6 +21,36 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
     }
   }, [value]);
 
+  // 自定义文件上传方法
+  const customUpload = async (options: any) => {
+    const { file, onSuccess, onError } = options;
+    setLoading(true);
+    
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await ossImgFile(formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (res.code === '0') {
+        const url = res.data.data || '';
+        setImageUrl(url);
+        if (onChange) {
+          onChange(url);
+        }
+        onSuccess(res, file);
+      } else {
+        message.error('上传失败');
+        onError(new Error('上传失败'));
+      }
+    } catch (error) {
+      message.error('上传出错');
+      onError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 处理上传成功后的回调
   const handleChange = (info: any) => {
     console.log('Upload status:', info.file.status);
@@ -27,13 +58,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
       return;
     }
     if (info.file.status === 'done') {
-      // 获取上传后的URL
-      const url = info.file.response?.data || '';
-      console.log('Upload success, new URL:', url);
-      setImageUrl(url);
-      if (onChange) {
-        onChange(url);
-      }
+      console.log('Upload success, new URL:', info.file.response?.data || '');
     }
   };
 
@@ -45,10 +70,12 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}
-      action="/tenant/v1/upload"
+      customRequest={customUpload}
       onChange={handleChange}
     >
-      {imageUrl ? (
+      {loading ? (
+        <Spin />
+      ) : imageUrl ? (
         <Image 
           src={imageUrl} 
           alt="avatar" 
