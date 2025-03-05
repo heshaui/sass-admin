@@ -23,7 +23,23 @@ export async function merchantCurrentUser(options?: { [key: string]: any }) {
 
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/tenant-admin/v1/login', {
+  return request<Record<string, any>>('/tenant-admin/v1/logout', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}
+
+// /tenant-admin/v1/login/check
+export async function loginCheck(account: any, options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/tenant-admin/v1/login/check?account=' + account, {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+// /tenant/v1/login/check
+export async function tenantLoginCheck(account: any, options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/tenant/v1/login/check?account=' + account, {
     method: 'POST',
     ...(options || {}),
   });
@@ -115,17 +131,14 @@ export async function removeRule(options?: { [key: string]: any }) {
   });
 }
 
-
 // 图片上传
 export async function ossImgFile(file: File, options?: { [key: string]: any }) {
   return request<API.OssImgFile>('/api/ambit-oss/oss/img/file ', {
     // return request<API.OssImgFile>('/oss/img/file ', {
     method: 'POST',
     data: file, // 直接发送 FormData
-
   });
 }
-
 
 //文件上传
 export async function uploadFile(file: File, options?: { [key: string]: any }) {
@@ -133,17 +146,5 @@ export async function uploadFile(file: File, options?: { [key: string]: any }) {
     // return request<API.OssImgFile>('/oss/upload/file', {
     method: 'POST',
     data: file, // 直接发送 FormData
-
   });
 }
-
-
-
-
-
-
-
-
-
-
-
