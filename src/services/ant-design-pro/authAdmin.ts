@@ -324,6 +324,49 @@ export async function deleteTenantByIdList(
     },
     ...(options || {}),
   });
-} 
+}
+
+//获取谷歌验证码
+export async function sendGoogleKey(
+  options?: { [key: string]: any },
+) {
+  return request<API.GoogleAuthResponse>('/tenant-admin/v1/google/sendGoogleKey', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+//绑定谷歌验证码
+export async function bindGoogleKey(
+  body: API.GoogleAuthVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.GoogleAuthResponse>('/tenant-admin/v1/google/bindGoogleKey?code='+body.googleCode, {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
+
+//解除谷歌验证码绑定
+export async function relieveGoogleKey(
+  body: API.GoogleAuthVo,
+  options?: { [key: string]: any },
+) {
+  return request<API.GoogleAuthResponse>('/tenant-admin/v1/google/relieveGoogleKey', {
+    method: 'POST',
+    data: body,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...(options || {}),
+  });
+}
 
 

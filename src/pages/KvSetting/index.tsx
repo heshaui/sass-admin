@@ -124,7 +124,7 @@ const KvSetting: React.FC = () => {
       dataIndex: 'id',
       key: 'id',
     },
-    ...(isAdmin ? [] : [{
+    ...(!isAdmin ? [] : [{
       title: '商户id',
       dataIndex: 'tenantId',
       key: 'tenantId',

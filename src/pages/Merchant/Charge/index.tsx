@@ -29,7 +29,8 @@ const Charge: React.FC = () => {
                 pageSize: params.pageSize || 10,
                 paymentStatus: 1,
                 ...(params.tenantId && { tenantId: params.tenantId }),
-                ...(params.tenantName && { tenantName: params.tenantName })
+                ...(params.tenantName && { tenantName: params.tenantName }),
+                ...(params.packageId && { packageId: params.packageId })
             };
             
             const res = await tenantList(requestData);
@@ -108,6 +109,23 @@ const Charge: React.FC = () => {
             dataIndex: "tenantStartTime",
             valueType: "dateTime",
             search: false,
+        },
+        {
+            title: "多语言套餐",
+            dataIndex: "packageId",
+            valueEnum: {
+                1: { text: '基础版' },
+                2: { text: '进阶版' },
+                3: { text: '高级版' }
+            },
+            render: (_, record) => {
+                const packageMap = {
+                    1: "基础版",
+                    2: "进阶版",
+                    3: "高级版"
+                };
+                return packageMap[record.packageId] || record.packageId;
+            },
         },
         {
             title: "状态",

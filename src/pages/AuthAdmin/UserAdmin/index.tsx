@@ -2,10 +2,11 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Dropdown, Menu, Button, Tag, Space, message, Select, Modal } from 'antd';
 import { PlusOutlined, ReloadOutlined,DownOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import { employeeList,saveEmployee,deleteEmployeeById,enableEmployee,offEmployee,resetPassword,updateEmployeeById} from '@/services/ant-design-pro/authAdmin';
+import { employeeList,saveEmployee,deleteEmployeeById,enableEmployee,offEmployee,resetPassword,updateEmployeeById,sendGoogleKey,bindGoogleKey,relieveGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import UserModal from './component/UserModal'; // 引入UserModal
 import ResetPasswordModal from './component/ResetPasswordModal';
 import ResetGoogleModal from './component/ResetGoogleModal';
+import BindGoogleModal from './component/BindGoogleModal'; // 引入绑定谷歌验证弹框
 import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
 
 const UserAdmin: React.FC = () => {
@@ -14,6 +15,7 @@ const UserAdmin: React.FC = () => {
    const [modalVisible, setModalVisible] = useState(false); // 控制用户弹框
    const [resetPasswordVisible, setResetPasswordVisible] = useState(false); // 控制重置密码弹框
    const [resetGoogleVisible, setResetGoogleVisible] = useState(false); // 控制重置谷歌弹框
+   const [bindGoogleVisible, setBindGoogleVisible] = useState(false); // 控制绑定谷歌弹框
    const [editingRecord, setEditingRecord] = useState(null); // 当前操作的记录
    const [roleOptions, setRoleOptions] = useState([]); // 添加角色选项状态
  
@@ -75,13 +77,28 @@ const UserAdmin: React.FC = () => {
       key: 'email',
       render: (text) => (text ? text : '--'),
     },
-    // {
-    //   title: '2FA',
-    //   dataIndex: 'twoFactorAuth',
-    //   key: 'twoFactorAuth',
-    //   render: (text) =>
-    //     text === '已开启' ? <Tag color="green">已开启</Tag> : <Tag color="red">未开启</Tag>,
-    // },
+    {
+      title: '2FA',
+      dataIndex: 'googleCode',
+      key: 'googleCode',
+      render: (text) => {
+        return text && text !== '-' ? (
+          <Tag color="green">已开启</Tag>
+        ) : (
+          <Tag color="red">未开启</Tag>
+        );
+      },
+      filters: [
+        { text: '已开启', value: 'enabled' },
+        { text: '未开启', value: 'disabled' },
+      ],
+      onFilter: (value, record) => {
+        if (value === 'enabled') {
+          return record.googleCode && record.googleCode !== '';
+        }
+        return !record.googleCode || record.googleCode === '';
+      },
+    },
     {
       title: '状态',
       dataIndex: 'status',
@@ -125,15 +142,28 @@ const UserAdmin: React.FC = () => {
               >
                 重置密码
               </Menu.Item>
-              <Menu.Item
-                key="resetGoogle"
-                onClick={() => {
-                  setEditingRecord(record);
-                  setResetGoogleVisible(true);
-                }}
-              >
-                重置谷歌
-              </Menu.Item>
+              {(!record.googleCode || record.googleCode === '-') && (
+                <Menu.Item
+                  key="bindGoogle"
+                  onClick={() => {
+                    setEditingRecord(record);
+                    setBindGoogleVisible(true);
+                  }}
+                >
+                  绑定谷歌
+                </Menu.Item>
+              )}
+              {record.googleCode && record.googleCode !== '-' && (
+                <Menu.Item
+                  key="resetGoogle"
+                  onClick={() => {
+                    setEditingRecord(record);
+                    setResetGoogleVisible(true);
+                  }}
+                >
+                  重置谷歌
+                </Menu.Item>
+              )}
               <Menu.Item key="delete" onClick={() => handleDelete(record.id)} danger>
                 删除
               </Menu.Item>
@@ -186,8 +216,12 @@ const UserAdmin: React.FC = () => {
       try {
         if (editingRecord) {
           // 编辑用户
-          await updateEmployeeById({ ...editingRecord, ...values });
-          message.success('用户编辑成功');
+         const res= await updateEmployeeById({ ...editingRecord, ...values });
+          if(res.code==='0'){
+            message.success('用户编辑成功');
+          }else{
+            message.error('用户编辑失败');
+          }
         } else {
           // 新建用户
         const res=  await saveEmployee(values);
@@ -228,8 +262,12 @@ const UserAdmin: React.FC = () => {
 // 重置密码
 const handleResetPassword = async (values) => {
   try {
-    await resetPassword({ id: editingRecord.id });
-    message.success('密码重置成功');
+   const res= await resetPassword({ id: editingRecord.id });
+    if(res.code==='0'){
+      message.success('密码重置成功');
+    }else{
+      message.error('密码重置失败');
+    }
     setResetPasswordVisible(false);
   } catch (error) {
     message.error('密码重置失败');
@@ -239,8 +277,12 @@ const handleResetPassword = async (values) => {
 // 重置谷歌
 const handleResetGoogleAuth = async () => {
   try {
-    // await resetGoogleAuth({ userId: editingRecord.id });
-    message.success('谷歌身份验证重置成功');
+    const res=await relieveGoogleKey({ code: editingRecord.googleCode});
+    if(res.code==='0'){
+      message.success('谷歌身份验证重置成功');
+    }else{
+      message.error('谷歌身份验证重置失败');
+    }
     setResetGoogleVisible(false);
   } catch (error) {
     message.error('谷歌身份验证重置失败');
@@ -250,6 +292,29 @@ const handleResetGoogleAuth = async () => {
     useEffect(() => {
       getUserList();  // 获取用户列表
     }, []);
+
+  // 处理绑定谷歌验证
+  const handleBindGoogleAuth = async (values) => {
+    try {
+      if (!editingRecord) return;
+      
+      const params = {
+        googleCode: values.googleCode,
+      };
+      
+      const res = await bindGoogleKey(params);
+      if (res.code === '0') {
+        message.success('谷歌验证绑定成功');
+        setBindGoogleVisible(false);
+        getUserList(); // 刷新列表
+      } else {
+        message.error(res.msg || '谷歌验证绑定失败');
+      }
+    } catch (error) {
+      console.error('绑定谷歌验证失败:', error);
+      message.error('谷歌验证绑定失败');
+    }
+  };
 
   return (
     <PageContainer>
@@ -313,6 +378,14 @@ const handleResetGoogleAuth = async () => {
         visible={resetGoogleVisible}
         onClose={() => setResetGoogleVisible(false)}
         onSubmit={handleResetGoogleAuth}
+      />
+      
+      {/* 绑定谷歌弹框 */}
+      <BindGoogleModal
+        visible={bindGoogleVisible}
+        onClose={() => setBindGoogleVisible(false)}
+        onSubmit={handleBindGoogleAuth}
+        userId={editingRecord?.id}
       />
     </PageContainer>
   );

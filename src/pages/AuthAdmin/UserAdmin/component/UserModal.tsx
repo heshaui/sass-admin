@@ -92,13 +92,13 @@ const UserModal: React.FC<UserModalProps> = ({
         >
           <Input />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="googleCode"
           label="googleCode"
           rules={[{ message: '请输入googleCode' }]}
         >
           <Input />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item
           name="role"
           label="权限"

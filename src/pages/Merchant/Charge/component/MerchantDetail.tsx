@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ProDescriptions, ProTable } from "@ant-design/pro-components";
-import { Card, Spin, message, Button,Modal,Form,DatePicker} from "antd";
+import { Card, Spin, message, Button,Modal,Form,DatePicker,Radio,Space} from "antd";
 import { tenantParams,updateTenantById } from "@/services/ant-design-pro/merchant";
 import MerchantEdit from "./MerchantEdit";
 import ConvertToPaid from "./ConvertToPaid"
@@ -20,7 +20,9 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
   const [accountData, setAccountData] = useState<any[]>([]);
   const [showEdit, setShowEdit] = useState(false); // 控制详情显示
   const [loading, setLoading] = useState(false);
-    const [convertModalVisible, setConvertModalVisible] = useState(false);
+  const [convertModalVisible, setConvertModalVisible] = useState(false);
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [languagePackage, setLanguagePackage] = useState('');
   
 
   // 账户表格列配置
@@ -71,7 +73,34 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
     
   };
 
-
+  const handleLanguageModalOpen = () => {
+    setLanguagePackage(merchant.packageId || 'basic');
+    setLanguageModalVisible(true);
+  };
+  
+  const handleLanguageModalClose = () => {
+    setLanguageModalVisible(false);
+  };
+  
+  const handleLanguageSubmit = async () => {
+    // 处理多语言套餐提交逻辑
+    try {
+      const data = {
+        tenantId: tenantId,
+        packageId: languagePackage
+      };
+      const res = await updateTenantById(data);
+      if (res.code === '0') {
+        message.success('多语言服务套餐已更新');
+        setLanguageModalVisible(false);
+        await fetchMerchant(); // 刷新商户信息
+      } else {
+        message.error('更新失败：' + (res.message || '未知错误'));
+      }
+    } catch (error) {
+      message.error('请求出错，请稍后重试');
+    }
+  };
 
   useEffect(() => {
     
@@ -114,8 +143,11 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
       <Button type="primary" onClick={() => setShowEdit(true)} style={{ marginRight: 10 }}>
         修改
       </Button>
-      <Button type="primary" onClick={() => handleConvertToPaid(true)}>
+      <Button type="primary" onClick={() => handleConvertToPaid(true)} style={{ marginRight: 10 }}>
         延期
+      </Button>
+      <Button type="primary" onClick={handleLanguageModalOpen}>
+        多语言套餐
       </Button>
     </div>
     {/* 账户信息 */}
@@ -133,6 +165,54 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
         onSubmit={handleConvertSubmit}
         initialValues={merchant}
       />
+    {/* 多语言套餐Modal */}
+    <Modal
+      title="修改"
+      open={languageModalVisible}
+      onCancel={handleLanguageModalClose}
+      footer={[
+        <Button key="cancel" onClick={handleLanguageModalClose}>
+          取消
+        </Button>,
+        <Button key="submit" type="primary" onClick={handleLanguageSubmit}>
+          提交
+        </Button>,
+      ]}
+    >
+      <div style={{ textAlign: 'center', marginBottom: 20 }}>
+        <h3>多语言服务调整</h3>
+      </div>
+      
+      <Form layout="vertical">
+        <Form.Item>
+          <Radio.Group value={languagePackage} onChange={e => setLanguagePackage(e.target.value)}>
+            <Space direction="horizontal">
+              <Radio value={1}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 80, height: 40, border: '1px solid #d9d9d9', borderRadius: 2 }}>
+                  基础版
+                </div>
+              </Radio>
+              <Radio value={2}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 80, height: 40, border: '1px solid #d9d9d9', borderRadius: 2 }}>
+                  进阶版
+                </div>
+              </Radio>
+              <Radio value={3}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 80, height: 40, border: '1px solid #d9d9d9', borderRadius: 2 }}>
+                  高级版
+                </div>
+              </Radio>
+            </Space>
+          </Radio.Group>
+        </Form.Item>
+        
+        <div style={{ marginTop: 20 }}>
+          <p>基础版: 中英日韩</p>
+          <p>进阶版: 中英日韩、繁体中文、俄语、越南语、印地语、孟加拉语</p>
+          <p>高级版: 中英日韩、繁体中文、俄语、越南语、印地语、孟加拉语、葡萄牙语、德语、爪哇语、土耳其语、意大利语、泰语</p>
+        </div>
+      </Form>
+    </Modal>
   </Card>
  
   )
