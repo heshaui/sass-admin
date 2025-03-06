@@ -37,11 +37,11 @@ const BasicConfig: React.FC = () => {
         
         // 设置对应的状态
         if (loginLimitResponse && loginLimitResponse.data) {
-          setLoginEnabled(loginLimitResponse.data.keyValue !== '1');
+          setLoginEnabled(loginLimitResponse.data.keyValue === '1');
         }
         
         if (registerLimitResponse && registerLimitResponse.data) {
-          setRegisterEnabled(registerLimitResponse.data.keyValue !== '1');
+          setRegisterEnabled(registerLimitResponse.data.keyValue === '1');
         }
         
         if (loginNotificationResponse && loginNotificationResponse.data) {
@@ -78,7 +78,7 @@ const BasicConfig: React.FC = () => {
     
     // 然后调用接口更新服务器
     try {
-      const loginLimitValue = checked ? '0' : '1';  // 禁止登录，1表示禁止
+      const loginLimitValue = checked ? '1' : '0';  // 启用登录，1表示允许
       
       const loginUpdateResult = await updateValue({
         keyProperty: 'login_limit_user',
@@ -107,7 +107,7 @@ const BasicConfig: React.FC = () => {
     
     // 然后调用接口更新服务器
     try {
-      const registerLimitValue = checked ? '0' : '1';  // 禁止注册，1表示禁止
+      const registerLimitValue = checked ? '1' : '0';  // 启用注册，1表示允许
       
       const registerUpdateResult = await updateValue({
         keyProperty: 'register_limit_user',
