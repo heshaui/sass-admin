@@ -104,7 +104,7 @@ const Login: React.FC = () => {
       }
 
       if (!checkResult.data.googleCode) {
-        // 需要手机验证码验证，显示弹框
+        // 需要邮箱验证码验证，显示弹框
         setPhoneNumber(account);
         setSmsModalVisible(true);
       } else {
@@ -121,11 +121,11 @@ const Login: React.FC = () => {
     }
   };
 
-  // 发送手机验证码
+  // 发送邮箱验证码
   const sendPhoneCode = async () => {
     try {
       if (!phoneNumber) {
-        message.error('手机号不能为空');
+        message.error('邮箱不能为空');
         return;
       }
 
@@ -316,13 +316,13 @@ const Login: React.FC = () => {
 
       {/* 短信验证码弹框 */}
       <Modal
-        title="手机验证"
+        title="邮箱验证"
         open={smsModalVisible}
         onOk={handleSmsModalOk}
         onCancel={() => setSmsModalVisible(false)}
       >
         <div style={{ marginBottom: 16 }}>
-          <p>请输入手机验证码</p>
+          <p>请输入邮箱验证码</p>
           <div style={{ display: 'flex' }}>
             <Input
               placeholder="验证码"
