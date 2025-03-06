@@ -186,8 +186,11 @@ export default [
     name: 'language',
     icon: 'smile',
     component: './Language',
-  
-
+  },
+  {
+    path: '/pc',
+    name: 'pc',
+    component: './PC/Index',
   },
   {
     path: '/',

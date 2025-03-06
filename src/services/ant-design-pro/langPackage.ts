@@ -46,3 +46,33 @@ export async function languageList(
       ...(options || {}),
     });
   } 
+
+  // /tenant-admin/v1/language/updateLangPackage
+  export async function updateLangPackage(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/language/updateLangPackage', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+  
+  // /tenant-admin/v1/language/deleteLangPackage
+  export async function deleteLangPackage(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/language/deleteLangPackage', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import { Card, Tag, Button, Space, Row, Col, Modal, Select, Typography, message, Form, Input, Spin } from "antd";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
-import { langPackageList,saveLangPackage,languageList} from "@/services/ant-design-pro/langPackage";
+import { langPackageList,saveLangPackage,languageList,deleteLangPackage} from "@/services/ant-design-pro/langPackage";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -139,13 +139,35 @@ const Package: React.FC = () => {
   }, []);
 
   // 移除语言标签
-  const removeLanguage = (packageType: string, id: number) => {
-    if (packageType === 'basic') {
-      setBasicLanguages(basicLanguages.filter(lang => lang.id !== id));
-    } else if (packageType === 'advanced') {
-      setAdvancedLanguages(advancedLanguages.filter(lang => lang.id !== id));
-    } else if (packageType === 'premium') {
-      setPremiumLanguages(premiumLanguages.filter(lang => lang.id !== id));
+  const removeLanguage = async (packageType: string, id: number) => {
+    try {
+      const packageId = packageType === 'basic' ? 1 : packageType === 'advanced' ? 2 : 3;
+      
+      // 调用删除接口
+      const data = {
+        packageId: packageId,
+        langId: id
+      };
+      
+      const response = await deleteLangPackage(data);
+      
+      if (response.code === '0') {
+        message.success('语言已从包中移除');
+        
+        // 从本地状态中移除语言
+        if (packageType === 'basic') {
+          setBasicLanguages(basicLanguages.filter(lang => lang.id !== id));
+        } else if (packageType === 'advanced') {
+          setAdvancedLanguages(advancedLanguages.filter(lang => lang.id !== id));
+        } else if (packageType === 'premium') {
+          setPremiumLanguages(premiumLanguages.filter(lang => lang.id !== id));
+        }
+      } else {
+        message.error(response?.message || '删除失败');
+      }
+    } catch (error) {
+      console.error('删除语言出错:', error);
+      message.error('删除语言失败，请重试');
     }
   };
 
@@ -367,22 +389,9 @@ const Package: React.FC = () => {
         </Button>}
         loading={loading}
       >
-        <Row>
-          <Col span={24}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: 16, gap: '8px', backgroundColor: 'white' }}>
-              {renderLanguageTags('premium', premiumLanguages.slice(0, 8))}
-            </div>
-          </Col>
-          <Col span={24}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', backgroundColor: 'white' }}>
-              {premiumLanguages.slice(8).map(lang => (
-                <Tag key={lang.id} style={{ margin: '5px' }}>
-                  {lang.name}
-                </Tag>
-              ))}
-            </div>
-          </Col>
-        </Row>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', backgroundColor: 'white' }}>
+          {renderLanguageTags('premium', premiumLanguages)}
+        </div>
       </Card>
 
       {/* 添加语言模态框 */}

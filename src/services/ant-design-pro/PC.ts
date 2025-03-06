@@ -19,7 +19,7 @@ export async function savePcAccessPath(body: API.PcAccessPathParams, options?: {
 /** 更新PC访问路径 PUT /tenant-admin/v1/pcAccessPath/updatePcAccessPathById */
 export async function updatePcAccessPathById(body: API.PcAccessPathParams, options?: { [key: string]: any }) {
   return request<API.ResponseResult>('/tenant-admin/v1/pcAccessPath/updatePcAccessPathById', {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -31,16 +31,16 @@ export async function updatePcAccessPathById(body: API.PcAccessPathParams, optio
 /** 获取PC访问路径列表 GET /tenant-admin/v1/pcAccessPath/pcAccessPathList */
 export async function getPcAccessPathList(params?: { [key: string]: any }, options?: { [key: string]: any }) {
   return request<API.PcAccessPathListResult>('/tenant-admin/v1/pcAccessPath/pcAccessPathList', {
-    method: 'GET',
-    params: { ...params },
+    method: 'POST',
+    data: params,
     ...(options || {}),
   });
 }
 
 /** 删除PC访问路径 DELETE /tenant-admin/v1/pcAccessPath/deletePcAccessPathById */
 export async function deletePcAccessPathById(id: string | number, options?: { [key: string]: any }) {
-  return request<API.ResponseResult>('/tenant-admin/v1/pcAccessPath/deletePcAccessPathById', {
-    method: 'DELETE',
+  return request<API.ResponseResult>('/tenant-admin/v1/pcAccessPath/deletePcAccessPathById?idString='+id, {
+    method: 'POST',
     params: { id },
     ...(options || {}),
   });
