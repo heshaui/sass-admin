@@ -146,7 +146,7 @@ export async function saveTenant(
     body:API.TenantAuthorityVo,
     options?: { [key: string]: any },
   ) {
-    return request<API.TenantAuthority>('/tenant-admin/v1/tenantRoot/updatePaymentStatusById', {
+    return request<API.TenantAuthority>('/tenant-admin/v1/tenant/updatePaymentStatusById', {
       method: 'POST',
       data: body,
       headers: {
@@ -332,6 +332,23 @@ export async function saveTenant(
       ...(options || {}),
     });
   }
+
+
+  // /tenant-admin/v1/tenant/updateDelayById
+  export async function updateDelayById(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/tenant/updateDelayById', {
+      method: 'POST', 
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
 
 
 

@@ -11,10 +11,19 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
 }) => {
   const [form] = Form.useForm();
 
-  // 监听 record 变化，重置表单
+  // 监听 record 和 isCreating 变化，重置表单
   React.useEffect(() => {
-    form.resetFields();
-  }, [form, record]);
+    if (isCreating) {
+      form.setFieldsValue({
+        tenantName: "",
+        tenantContact: "",
+        tenantPhone: "",
+        tenantEmail: "",
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [form, record, isCreating]);
 
   // 提交表单
   const onFinish = (values: any) => {

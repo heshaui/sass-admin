@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
 import { Button, Space, Modal, message } from "antd";
 import MerchantEdit from "./component/MerchantEdit";
 import ServerAdmin from "./component/ServerAdmin";
 import ConvertToPaid from "./component/ConvertToPaid"; 
-import { saveTenant, tenantList,updateTenantById,saveTenantRoot } from "@/services/ant-design-pro/merchant";
+import { saveTenant, tenantList,updateTenantById,saveTenantRoot,updatePaymentStatusById } from "@/services/ant-design-pro/merchant";
 import dayjs from "dayjs";
 
 const Free: React.FC = () => {
@@ -20,6 +20,9 @@ const Free: React.FC = () => {
     pageSize: 10,
     total: 0,
   });
+  const merchantEditRef = useRef(null);
+  const [resetFlag, setResetFlag] = useState(false);
+  const formRef = useRef(null);
 
   // **获取商户列表**
   const fetchMerchantList = async (params = {}) => {
@@ -70,7 +73,8 @@ const Free: React.FC = () => {
   // **关闭模态框时清除表单内容**
   const handleCloseModal = () => {
     setEditModalVisible(false);
-    setCurrentRecord(null);  // 清除当前记录
+    setCurrentRecord(null);
+    setResetFlag(true);
   };
 
   // **打开服务器管理弹窗**
@@ -83,24 +87,26 @@ const Free: React.FC = () => {
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
-      let res;
       if (isCreating) {
-        // 创建新商户时使用 saveTenant
-        res = await saveTenant(values);
+        await saveTenant(values);
+        message.success('新增商户成功');
       } else {
-        // 更新商户时使用 updateTenantById
-        res = await updateTenantById(values);
+        await updateTenantById(values);
+        message.success('更新商户成功');
       }
       
-      if (res.code === "0") {
-        message.success(isCreating ? "新增商户成功" : "更新商户成功");
-        handleCloseModal();  // 使用新的关闭函数
-        fetchMerchantList();
-      } else {
-        message.error(res.message || "操作失败");
+      // 重新获取列表数据
+      fetchMerchantList();
+      
+      // 关闭弹窗
+      handleCloseModal();
+      
+      // 如果是新建模式，直接重置表单
+      if (isCreating && formRef.current) {
+        formRef.current.resetFields();
       }
     } catch (error) {
-      message.error("请求出错，请稍后重试");
+      message.error('操作失败：' + error.message);
     } finally {
       setLoading(false);
     }
@@ -116,7 +122,9 @@ const Free: React.FC = () => {
    if(res.code==='0'){
     message.success("服务器配置已更新");
     setServerModalVisible(false);
-   }
+   }else{
+    message.error(res.message);
+   }  
     
   };
 
@@ -134,13 +142,14 @@ const Free: React.FC = () => {
       paymentStatus:1,
       tenantEndTime:dayjs(values.tenantEndTime).valueOf()
       
-
     } 
-   let res=await updateTenantById(data);
+   let res=await updatePaymentStatusById(data);
    if(res.code==='0'){
     message.success("商户已转为正式商户！");
     setConvertModalVisible(false);
     fetchMerchantList();
+   }else{
+    message.error(res.message);
    }
     
    
@@ -257,8 +266,10 @@ const Free: React.FC = () => {
         onCancel={handleCloseModal}
         footer={null}
         width={600}
+        destroyOnClose={true}
       >
         <MerchantEdit 
+          ref={formRef}
           record={currentRecord} 
           isCreating={isCreating} 
           onSubmit={handleSubmit} 

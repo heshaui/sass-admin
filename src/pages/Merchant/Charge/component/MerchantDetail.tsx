@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ProDescriptions, ProTable } from "@ant-design/pro-components";
-import { Card, Spin, message, Button,Modal,Form,DatePicker,Radio,Space} from "antd";
-import { tenantParams,updateTenantById } from "@/services/ant-design-pro/merchant";
+import { Card, message, Button,Modal,Form,Radio,Space} from "antd";
+import { tenantParams,updateTenantById,updateDelayById } from "@/services/ant-design-pro/merchant";
 import MerchantEdit from "./MerchantEdit";
 import ConvertToPaid from "./ConvertToPaid"
 import dayjs from "dayjs";
@@ -58,7 +58,7 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
       
 
     } 
-   let res=await updateTenantById(data);
+   let res=await updateDelayById(data);
    if(res.code==='0'){
     setConvertModalVisible(false);  
    await fetchMerchant();
