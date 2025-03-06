@@ -168,9 +168,12 @@ const Root: React.FC = () => {
       title: "状态",
       dataIndex: "status",
       valueType: "select",
+      render: (_,record)=>{
+        return record.status===1?'正常':'禁止'
+      },
       valueEnum: {
         正常: { text: "正常", status: "1" },
-        冻结: { text: "冻结", status: "0" },
+        冻结: { text: "禁止", status: "0" },
       },
     },
     {
