@@ -60,9 +60,9 @@ const UserAdmin: React.FC = () => {
       key: 'role',
       search:false,
       filters: roleOptions.map(role => ({ text: role.roleName, value: role.roleId })),
-      onFilter: (value, record) => record.role === Number(value),
+      onFilter: (value, record) => Number(record.role) === Number(value),
       render: (roleId) => {
-        const role = roleOptions.find(r => r.roleId === Number(roleId));
+        const role = roleOptions.find(r => Number(r.roleId)=== Number(roleId));
         return role ? role.roleName : roleId;
       },
     },

@@ -106,7 +106,7 @@ const UserModal: React.FC<UserModalProps> = ({
         >
            <Select>
             {roleList.map(role => (
-              <Select.Option key={role.roleId} value={role.roleId}>
+              <Select.Option key={role.roleId} value={String(role.roleId)}>
                 {role.roleName}
               </Select.Option>
             ))}

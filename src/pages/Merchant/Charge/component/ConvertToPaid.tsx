@@ -24,6 +24,16 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
+      
+      // 检查所选日期是否在当前时间的10天内
+      const selectedDate = values.tenantEndTime;
+      const tenDaysLater = dayjs().add(10, 'day');
+      
+      if (selectedDate.isAfter(tenDaysLater)) {
+        message.error("服务到期时间不能超过10天！");
+        return;
+      }
+      
       onSubmit({ ...initialValues, tenantEndTime: values.tenantEndTime.format("YYYY-MM-DD HH:mm:ss") });
       form.resetFields();
     } catch (error) {
@@ -41,8 +51,8 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
         >
           <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请选择到期时间" style={{ width: "100%" }} />
         </Form.Item>
-        <p>
-
+        <p style={{ color: "#999" }}>
+          注意：服务到期时间必须在当前时间10天内才可提交
         </p>
       </Form>
     </Modal>
