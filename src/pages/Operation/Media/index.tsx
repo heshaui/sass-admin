@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { Button, Space, message, Modal, Form, Input,Image } from 'antd';
+import { Button, Space, message, Modal, Form, Input, Image, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { 
   getMediaList, 
@@ -62,7 +62,6 @@ const MediaPage: React.FC = () => {
         // 更新媒体
         const res = await updateMedia({
           ...values,
-          status:1,
           id: currentItem.id,
         });
         
@@ -75,11 +74,7 @@ const MediaPage: React.FC = () => {
         }
       } else {
         // 添加媒体
-        const data = {
-          ...values,
-          status:1,
-        };
-        const res = await addMedia(data);
+        const res = await addMedia(values);
         
         if (res.code==='0') {
           message.success('添加成功');
@@ -138,6 +133,14 @@ const MediaPage: React.FC = () => {
       title: '跳转链接',
       dataIndex: 'linkUrl',
       key: 'linkUrl',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      render: (text: number) => (
+        text === 1 ? '显示' : '隐藏'
+      )
     },
     {
       title: '操作',
@@ -230,6 +233,16 @@ const MediaPage: React.FC = () => {
             rules={[{ required: true, message: '请输入跳转链接' }]}
           >
             <Input placeholder="请输入跳转链接" />
+          </Form.Item>
+          <Form.Item
+            name="status"
+            label="是否显示"
+            valuePropName="checked"
+            getValueFromEvent={(checked) => checked ? 1 : 0}
+            getValueProps={(value) => ({ checked: value === 1 })}
+            initialValue={1}
+          >
+            <Switch checkedChildren="显示" unCheckedChildren="隐藏" />
           </Form.Item>
         </Form>
       </Modal>

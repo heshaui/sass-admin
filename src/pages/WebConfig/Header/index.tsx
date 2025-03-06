@@ -4,17 +4,11 @@ import React, { useEffect, useState } from "react";
 import { HomeMenuTranslationList, saveHomeMenu } from "@/services/ant-design-pro/WebConfig";
 import { PlusOutlined } from "@ant-design/icons";
 import AddMenuModals from "./component/AddMenuModals";
-
-const languageOptions = [
-  { key: "en", label: "English" },
-  { key: "zh_CN", label: "简体中文" },
-  { key: "zh_TW", label: "繁體中文" },
-  { key: "ja", label: "日本語" },
-  { key: "ko", label: "한국어" },
-];
+import { languages } from '@/config/language';
+const languageOptions = languages
 
 const Header: React.FC = () => {
-  const [currentLanguage, setCurrentLanguage] = useState("en");
+  const [currentLanguage, setCurrentLanguage] = useState("en_US");
   const [menuData, setMenuData] = useState<any[]>([]);
   const [modalType, setModalType] = useState<boolean>(false);
   const [parentId, setParentId] = useState<any>(null);

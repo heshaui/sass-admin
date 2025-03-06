@@ -8,6 +8,7 @@ import {
   updateTenantKv, 
 } from '@/services/ant-design-pro/kv';
 import EditModal  from './components/EditModal';
+import { languages } from '@/config/language';
 const { Text } = Typography;
 
 interface TableItem {
@@ -17,15 +18,11 @@ interface TableItem {
   url: string;
 }
 
-interface LanguageItem {
-  key: string;
-  label: string;
-  tag?: string;
-}
+
 
 const PCLogin: React.FC = () => {
   const [activeTab, setActiveTab] = useState('login');
-  const [activeLanguage, setActiveLanguage] = useState('en');
+  const [activeLanguage, setActiveLanguage] = useState('en_US');
   const [pcLoginData, setPcLoginData] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -58,13 +55,7 @@ const PCLogin: React.FC = () => {
   ];
 
   // 语言选项
-  const languages: LanguageItem[] = [
-    { key: 'en', label: 'English' },
-    { key: 'zh_CN', label: '简体中文' },
-    { key: 'zh_TW', label: '繁體中文' },
-    { key: 'ja', label: '日本語' },
-    { key: 'ko', label: '한국어'},
-  ];
+  const languageOptions: LanguageItem[] = languages
 
 
 
@@ -197,7 +188,7 @@ const PCLogin: React.FC = () => {
 
         <div style={{ marginBottom: 20 }}>
           <Space size="middle">
-            {languages.map(lang => (
+            {languageOptions.map(lang => (
               <span 
                 key={lang.key} 
                 style={{ 

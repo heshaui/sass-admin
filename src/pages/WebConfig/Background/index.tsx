@@ -16,7 +16,7 @@ interface TableItem {
 const Background: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [backgroundData, setBackgroundData] = useState<any>(null);
-  const [activeLanguage, setActiveLanguage] = useState('English');
+  const [activeLanguage, setActiveLanguage] = useState('en_US');
   const [activeMode, setActiveMode] = useState('dark');
   const [activeStatus, setActiveStatus] = useState('before_login');
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -157,7 +157,7 @@ const Background: React.FC = () => {
               value={activeLanguage} 
               onChange={(e) => setActiveLanguage(e.target.value)}
             >
-              <Radio.Button value="English">English</Radio.Button>
+              <Radio.Button value="en_US">English</Radio.Button>
               <Radio.Button value="zh_CN">简体中文</Radio.Button>
               <Radio.Button value="zh_TW">繁體中文</Radio.Button>
               <Radio.Button value="ja_JP">日本語</Radio.Button>

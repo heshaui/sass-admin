@@ -24,6 +24,7 @@ const EditModal: React.FC<EditModalProps> = ({
 }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (visible && record) {
@@ -33,21 +34,29 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const handleSave = async () => {
     try {
-      const values = await form.validateFields();
-      const newData = { ...pcLoginData };
-      newData[activeLanguage][activeTab] = {
-        title: values.title,
-        image: values.image,
-        url: values.url
+      setSubmitting(true);
+      // 创建一个深拷贝，避免直接修改原始数据
+      const newPcLoginData = JSON.parse(JSON.stringify(pcLoginData || {}));
+      
+      // 确保当前语言数据结构存在
+      if (!newPcLoginData[activeLanguage]) {
+        newPcLoginData[activeLanguage] = {};
+      }
+      
+      // 只更新当前语言和当前标签页的数据
+      newPcLoginData[activeLanguage][activeTab] = {
+        title: form.getFieldValue('title'),
+        image: form.getFieldValue('image'),
+        url: form.getFieldValue('url')
       };
       
-      setLoading(true);
+      // 保存到服务器
       const result = await updateValue({
         keyProperty: 'pcLogin',
-        keyValue: JSON.stringify(newData)
+        keyValue: JSON.stringify(newPcLoginData)
       });
       
-      if (result.code === '0'&&result.data) {
+      if (result.code === '0') {
         message.success('保存成功');
         onSuccess();
       } else {
@@ -57,7 +66,7 @@ const EditModal: React.FC<EditModalProps> = ({
       console.error('保存数据失败:', error);
       message.error('保存失败');
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 

@@ -3,7 +3,7 @@ import { PageContainer, ProTable } from "@ant-design/pro-components";
 import { Button, Space, Tag, message, Modal } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import AddModal from "./component/AddModal";
-import { tenantLangList, updateEndpointInfo, deleteTenantLangPackage, checkUpdate, enablePackage, disablePackage, readJsonFromAliyun } from "@/services/ant-design-pro/WebConfig";
+import { tenantLangList, updateEndpointInfo, deleteTenantLangPackage, checkUpdate, enablePackage, disablePackage, readJsonFromAliyun,deleteTenantLangEndpoint } from "@/services/ant-design-pro/WebConfig";
 import UploadModal from './component/UploadModal';
 // **主组件**
 const Language: React.FC = () => {
@@ -127,6 +127,29 @@ const Language: React.FC = () => {
     });
   };
 
+
+  const handleTenantDelete = async (id: number, fileName: string) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: `确定要删除"${fileName}"的语言端吗？`,
+      okText: '确认',
+      cancelText: '取消',
+      onOk: async () => {
+        try {
+          const response = await deleteTenantLangEndpoint({ tenantLangEndPointId: id });
+          if (response.code === '0') {
+            message.success('删除成功');
+            fetchLanguages(); // 刷新列表
+          } else {
+            message.error(`删除失败: ${response.message}`);
+          }
+        } catch (error) {
+          message.error('操作失败，请重试');
+        }
+      }
+    })
+  }
+
   const handleUpdate = async (record: any) => {
     try {
       const response = await checkUpdate({ tenantLangId: record.id });
@@ -231,7 +254,7 @@ const Language: React.FC = () => {
             {endpoint.fileName ? (<Button
               type="link"
               danger
-              onClick={() => handleDelete(endpoint.id, endpoint.fileName)}
+              onClick={() => handleTenantDelete(endpoint.id, endpoint.fileName)}
             >
               删除
             </Button>

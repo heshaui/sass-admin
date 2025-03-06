@@ -83,7 +83,15 @@ const Free: React.FC = () => {
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
-      const res = await saveTenant(values);
+      let res;
+      if (isCreating) {
+        // 创建新商户时使用 saveTenant
+        res = await saveTenant(values);
+      } else {
+        // 更新商户时使用 updateTenantById
+        res = await updateTenantById(values);
+      }
+      
       if (res.code === "0") {
         message.success(isCreating ? "新增商户成功" : "更新商户成功");
         handleCloseModal();  // 使用新的关闭函数

@@ -122,7 +122,8 @@ export async function deleteRoleById(
   body:API.RoleVo,
   options?: { [key: string]: any },
 ) {
-  return request<API.Role>('/tenant-admin/v1/role/deleteTenantById', {
+  console.log(body);
+  return request<API.Role>('/tenant-admin/v1/role/deleteTenantById?idString='+body.roleId, {
     method: 'POST',
     data: body,
     headers: {

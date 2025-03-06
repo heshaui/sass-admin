@@ -4,21 +4,14 @@ import { Button, message, Space, Switch, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { homeBottomList, saveHomeBottom,homeBottomTranslationList, updateHomeBottomTranslationById, updateHomeBottomById,saveHomeBottomFooter,homeBottomFooterList,updateHomeBottomFooterById} from '@/services/ant-design-pro/WebConfig';
 import { updateValue,getTenantKeyParams} from '@/services/ant-design-pro/kv';
-
 import AddMenuModal from './components/AddMenuModal';
-
-const languageOptions = [
-  { key: 'en_us', label: 'English' },
-  { key: 'zh_CN', label: '简体中文' },
-  { key: 'zh_TW', label: '繁體中文' },
-  { key: 'ja_JP', label: '日本語' },
-  { key: 'ko_KR', label: '한국어' },
-];
+import { languages } from '@/config/language';
+const languageOptions = languages
 
 const { TextArea } = Input;
 
 const Footer: React.FC = () => {
-  const [currentLanguage, setCurrentLanguage] = useState('en');
+  const [currentLanguage, setCurrentLanguage] = useState('en_US');
   const [menuData, setMenuData] = useState<any[]>([]);
   const [modalType, setModalType] = useState<boolean>(false);
   const [parentId, setParentId] = useState<any>(null);

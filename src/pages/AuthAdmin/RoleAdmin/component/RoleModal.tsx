@@ -14,18 +14,17 @@ const RoleModal: React.FC<RoleModalProps> = ({
   onClose,
   onSubmit,
   initialValues,
+
 }) => {
   const [form] = Form.useForm();
-  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+
 
   // 设置初始权限选择，编辑时填充用户已分配的权限
   useEffect(() => {
-    if (initialValues) {
 
-      console.log('initialValues.permissions',initialValues.permissions)
-      setSelectedPermissions(initialValues.permissions || []);
-    }
-  }, [initialValues]);
+    // 重置表单，确保每次打开都是新的状态
+    form.resetFields();
+  }, [visible, initialValues, form]);
 
   // 提交表单
   const handleSubmit = () => {
@@ -34,7 +33,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
       .then((values) => {
         onSubmit({
           ...values,
-          permissions: selectedPermissions, // 添加选中的权限
+
         });
         form.resetFields();
       })
@@ -44,10 +43,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
       });
   };
 
-  // 处理树形结构的选择
-  const handleSelect = (selectedKeys: React.Key[]) => {
-    setSelectedPermissions(selectedKeys as string[]);
-  };
+ 
 
   return (
     <Modal
@@ -88,19 +84,6 @@ const RoleModal: React.FC<RoleModalProps> = ({
           </Select>
         </Form.Item>
 
-        {/* 权限选择（树形结构） */}
-        {/* <Form.Item
-          label="权限分配"
-          required
-        >
-          <Tree
-            checkable
-            treeData={allPermissions}
-            defaultCheckedKeys={selectedPermissions}
-            onCheck={handleSelect}
-            checkStrictly
-          />
-        </Form.Item> */}
       </Form>
     </Modal>
   );

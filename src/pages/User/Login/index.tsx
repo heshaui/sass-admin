@@ -103,7 +103,7 @@ const Login: React.FC = () => {
         return;
       }
 
-      if (!checkResult.data) {
+      if (!checkResult.data.googleCode) {
         // 需要手机验证码验证，显示弹框
         setPhoneNumber(account);
         setSmsModalVisible(true);

@@ -141,9 +141,13 @@ const handleEdit = (record) => {
 // 📌 删除角色
 const handleDelete = async (roleId) => {
   try {
-    await deleteRoleById({ roleId });
-    message.success('角色删除成功');
-    await getRoleList();
+  const res= await deleteRoleById({ roleId });
+    if(res.code==='0'){
+      message.success('角色删除成功');
+      await getRoleList();
+    }else{
+      message.error('删除失败');
+    }
   } catch (error) {
     message.error('删除失败');
   }
@@ -249,12 +253,21 @@ return (
         showSizeChanger: true,
       }}
       toolBarRender={() => [
-        <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
+        <Button 
+          key="create" 
+          icon={<PlusOutlined />} 
+          type="primary" 
+          onClick={() => {
+            setEditingRecord(null); // 清空编辑记录，确保打开新建表单时不带入之前的数据
+            setModalVisible(true);
+          }}
+        >
           新建
         </Button>,
       ]}
     />
     <RoleModal
+      key={editingRecord ? `edit-${editingRecord.roleId}` : 'create-new'}
       visible={modalVisible}
       onClose={() => setModalVisible(false)}
       onSubmit={handleSubmit}

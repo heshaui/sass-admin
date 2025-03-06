@@ -84,6 +84,16 @@ export async function addLangList(body: API.FackeParams, options?: { [key: strin
   });
 }
 
+
+// 删除语言端:传tenantLangEndPointId
+export async function deleteTenantLangEndpoint(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/deleteTenantLangEndpoint', {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
 // /tenant/v1/enablePackage
 export async function enablePackage(body: API.FackeParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/enablePackage', {
