@@ -1,5 +1,5 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Space, message } from 'antd';
+import { Button, Space, message, Popconfirm, Modal } from 'antd';
 import { useIntl } from '@umijs/max';
 import { useState, useEffect } from 'react';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
@@ -139,18 +139,26 @@ const handleEdit = (record) => {
 };
 
 // 📌 删除角色
-const handleDelete = async (roleId) => {
-  try {
-  const res= await deleteRoleById({ roleId });
-    if(res.code==='0'){
-      message.success('角色删除成功');
-      await getRoleList();
-    }else{
-      message.error('删除失败');
+const handleDelete = (roleId) => {
+  Modal.confirm({
+    title: '删除确认',
+    content: '确定要删除该角色吗？此操作不可恢复。',
+    okText: '确定',
+    cancelText: '取消',
+    onOk: async () => {
+      try {
+        const res = await deleteRoleById({ roleId });
+        if(res.code === '0'){
+          message.success('角色删除成功');
+          await getRoleList();
+        } else {
+          message.error('删除失败');
+        }
+      } catch (error) {
+        message.error('删除失败');
+      }
     }
-  } catch (error) {
-    message.error('删除失败');
-  }
+  });
 };
 
 // 📌 角色权限分配（打开弹框 + 获取角色权限）
