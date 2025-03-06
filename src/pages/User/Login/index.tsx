@@ -90,9 +90,10 @@ const Login: React.FC = () => {
       let checkResult = null;
       const account = values.account;
       if (isAdmin) {
-        checkResult = await loginCheck(account);
+
+        checkResult = await loginCheck(values);
       } else {
-        checkResult = await tenantLoginCheck(account);
+        checkResult = await tenantLoginCheck(values);
       }
 
       // 保存登录信息，以便后续使用

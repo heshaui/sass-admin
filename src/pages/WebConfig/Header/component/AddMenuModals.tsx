@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
 import { Modal, Form, Input, Button, Radio, Switch, Select, Image, Flex } from "antd";
 import AvatarUpload from "@/components/AvatarUpload/index";
+import { pcAccessPathAll } from "@/services/ant-design-pro/WebConfig";
 const { Option } = Select;
 
 interface AddMenuModalsProps {
@@ -16,6 +17,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
   const [selectedStyle, setSelectedStyle] = useState("new");
   const [displayType, setDisplayType] = useState("vertical"); // 默认选中"竖排"
     const [typeId, setTypeId] = useState<number>(2);
+  const [accessPaths, setAccessPaths] = useState<any[]>([]);
 
   const tops = selectedStyle === "custom" ? 80 : 20;
   const iconNew = "https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/02/20/c667acb2-89a1-407c-9e03-3017eb222f7f.png";
@@ -23,11 +25,27 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [iconUrlDay, setIconUrlDay] = useState<string | null>(null);
   const [iconUrlNight, setIconUrlNight] = useState<string | null>(null);
+
   useEffect(() => {
     formModal3.setFieldsValue({ parentId: parentId?.menuName });
-  }
-  ,[parentId])
- 
+  },[parentId]);
+
+  // 获取访问路径数据
+  useEffect(() => {
+    const fetchAccessPaths = async () => {
+      try {
+        const result = await pcAccessPathAll();
+        if (result && result.data) {
+          setAccessPaths(result.data);
+        }
+      } catch (error) {
+        console.error('获取访问路径失败:', error);
+      }
+    };
+    
+    fetchAccessPaths();
+  }, []);
+
   const handleImageChange = (url: string | null) => {
     setUploadedImageUrl(url);
   };
@@ -165,9 +183,11 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
               {accessType === "1" ? (
                 <Form.Item name="accessPath" style={{ marginTop: 10 }}>
                   <Select placeholder="请选择">
-                    <Option value="0">选项0</Option>
-                    <Option value="1">选项1</Option>
-                    <Option value="2">选项2</Option>
+                    {accessPaths.map((item) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.name}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               ) : (

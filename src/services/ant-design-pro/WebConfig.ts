@@ -314,3 +314,12 @@ export async function updateHomeBottomFooterById(body: API.FackeParams, options?
     ...(options || {}),
   });
 }
+
+
+
+export async function pcAccessPathAll(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/pcAccessPathAll', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

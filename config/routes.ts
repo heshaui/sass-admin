@@ -188,6 +188,12 @@ export default [
     component: './Language',
   },
   {
+    path: '/rate',
+    name: 'rate',
+    icon: 'smile',
+    component: './Rate',
+  },
+  {
     path: '/pc',
     name: 'PC',
     component: './PC/Index',

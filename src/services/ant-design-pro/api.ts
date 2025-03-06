@@ -30,9 +30,10 @@ export async function outLogin(options?: { [key: string]: any }) {
 }
 
 // /tenant-admin/v1/login/check
-export async function loginCheck(account: any, options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/tenant-admin/v1/login/check?account=' + account, {
+export async function loginCheck(body: any, options?: { [key: string]: any }) {
+  return request<Record<string, any>>('/tenant-admin/v1/login/check', {
     method: 'POST',
+    data:body ,
     ...(options || {}),
   });
 }
