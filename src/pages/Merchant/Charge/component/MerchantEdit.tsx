@@ -87,15 +87,15 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
           <Input disabled />
         </Form.Item>
 
-        <Form.Item label="联系人" name="contact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
+        <Form.Item label="联系人" name="tenantContact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label="手机号" name="phone" rules={[{ required: true, message: "请输入手机号" }]}>
+        <Form.Item label="手机号" name="tenantPhone" rules={[{ required: true, message: "请输入手机号" }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item label="邮箱" name="email" rules={[{ required: true, type: "email", message: "请输入有效的邮箱地址" }]}>
+        <Form.Item label="邮箱" name="tenantEmail" rules={[{ required: true, type: "email", message: "请输入有效的邮箱地址" }]}>
           <Input />
         </Form.Item>
 
