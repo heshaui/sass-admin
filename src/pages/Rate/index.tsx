@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer,ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { Button, message, Popconfirm, Space, Typography } from 'antd';
+import { Button, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormText, ProFormDigit, ProFormSelect, ProFormSwitch } from '@ant-design/pro-form';
+import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch } from '@ant-design/pro-form';
 import { queryRateList, addRate, updateRate, deleteRate } from '../../services/ant-design-pro/Rate';
 import AvatarUpload from "@/components/AvatarUpload/index";
 
