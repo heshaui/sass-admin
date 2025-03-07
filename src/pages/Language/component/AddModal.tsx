@@ -5,9 +5,13 @@ import FileUpload from"@/components/FileUpload"
 import { saveLang,addLangList} from "@/services/ant-design-pro/WebConfig";
 const { Option } = Select;
 
-const AddModal: React.FC = () => {
+interface AddModalProps {
+  onSuccess?: () => void; // 添加成功后的回调函数
+}
+
+const AddModal: React.FC<AddModalProps> = ({ onSuccess }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [language, setLanguage] = useState<string>("");
+  const [language, setLanguage] = useState<string[]>([]);
   const [dataSource, setDataSource] = useState<any[]>([]); // 添加新的state
 
   // Show modal
@@ -18,7 +22,7 @@ const AddModal: React.FC = () => {
   // Handle modal close
   const handleCancel = () => {
     setIsModalVisible(false);
-    setLanguage("");
+    setLanguage([]);
   };
 
 
@@ -40,19 +44,26 @@ const AddModal: React.FC = () => {
 
   // Handle form submission
   const handleAdd = async () => {
-    if (language) {
+    if (language && language.length > 0) {
       try {
-
-
+        // 将选择的ID数组转换为后端需要的数据格式
+        const tenantLangs = language.map(langId => ({
+          langId: langId
+        }));
+        
         const data = {
-          langId:language
+          tenantLangs: tenantLangs
         }
+        
         const res = await saveLang(data);
         if (res.code === '0') {
           message.success('添加语言成功');
-          onSuccess();
+          // 调用成功回调函数
+          if (onSuccess) {
+            onSuccess();
+          }
           setIsModalVisible(false);
-          setLanguage("");
+          setLanguage([]);
         } else {
           message.error(`添加失败: ${res.message}`);
         }
@@ -61,14 +72,14 @@ const AddModal: React.FC = () => {
         message.error('请求失败，请检查网络连接');
       }
     } else {
-      message.warning("请选择语言!");
+      message.warning("请选择至少一种语言!");
     }
   };
 
 // ... existing code ...
 
   // Handle language selection
-  const handleLanguageChange = (value: string) => {
+  const handleLanguageChange = (value: string[]) => {
     setLanguage(value);
   };
 
@@ -103,19 +114,18 @@ const AddModal: React.FC = () => {
               选择语言
             </label>
             <Select
+              mode="multiple"
               placeholder="请选择"
-              value={language || undefined}
+              value={language}
               onChange={handleLanguageChange}
               style={{ width: "100%" }}
             >
               {
-
-             
-             dataSource.map((item) => (
-              <Option key={item.id} value={item.id}>
-                {item.lang}
-              </Option>
-            ))
+                dataSource.map((item) => (
+                  <Option key={item.id} value={item.id}>
+                    {item.lang}
+                  </Option>
+                ))
               }
             </Select>
           

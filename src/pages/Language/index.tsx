@@ -23,7 +23,7 @@ const Language: React.FC = () => {
       const response = await tenantLangList(data);
       if (response.code === "0") {
         setDataSource(response.data.list);
-        setPagination({ current: pageNo, pageSize, total: response.count });
+        setPagination({ current: pageNo, pageSize, total: response.data.count });
       } else {
         message.error(`获取语言列表失败`);
       }
@@ -302,6 +302,9 @@ const Language: React.FC = () => {
         toolBarRender={() => [
           <AddModal key="add" onSuccess={() => fetchLanguages(pagination.current, pagination.pageSize)} />,
         ]}
+        onChange={(newPagination) => {
+          fetchLanguages(newPagination.current, newPagination.pageSize);
+        }}
       />
 
       {selectedRecord && (
