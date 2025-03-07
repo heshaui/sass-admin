@@ -196,7 +196,8 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
                 </Form.Item>
               )}
             </Form.Item>
-            <Form.Item label="icon">
+            {
+            parentId&&  <Form.Item label="icon">
               <Flex gap="middle" wrap>
                 <div>
                   <div style={{ textAlign: "center" }}>夜间</div>
@@ -208,6 +209,8 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
                 </div>
               </Flex>
             </Form.Item>
+            }
+            
             <Form.Item label="角标">
               <Radio.Group value={selectedStyle} onChange={(e) => setSelectedStyle(e.target.value)}>
                 <Radio value="new">样式一</Radio>

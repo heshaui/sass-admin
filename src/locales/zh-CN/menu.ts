@@ -72,12 +72,14 @@ export default {
   'menu.operation': '运营配置',
   'menu.operation.pcLogin': 'PC登录配置',
   'menu.operation.media': '社交媒体管理',
+  'menu.operation.announcement':'公告管理',
   'menu.kvSetting': 'KV配置管理',
   'menu.commonConfig': '通用配置',
   'menu.commonConfig.kvSetting': 'KV配置管理',
   'menu.commonConfig.basic': '基础配置',
   'menu.pc':'pc功能路径配置',
   'menu.rate':'汇率配置',
+  
 
 
 };

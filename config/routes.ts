@@ -149,6 +149,11 @@ export default [
         component: './Operation/Media',
       },
       {
+        path: '/operation/announcement',
+        name: 'announcement',
+        component: './Operation/Announcement',
+      },
+      {
         path: '/operation',
         redirect: '/operation/pc-login',
       },
