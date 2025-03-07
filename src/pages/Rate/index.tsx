@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch } from '@ant-design/pro-form';
