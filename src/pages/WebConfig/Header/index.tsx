@@ -1,8 +1,8 @@
 import { PageContainer } from "@ant-design/pro-components";
-import { Button, message } from "antd";
+import { Button, message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
-import { HomeMenuTranslationList, saveHomeMenu } from "@/services/ant-design-pro/WebConfig";
-import { PlusOutlined } from "@ant-design/icons";
+import { HomeMenuTranslationList, saveHomeMenu, homeMenuParams,updateHomeMenuById } from "@/services/ant-design-pro/WebConfig";
+import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import AddMenuModals from "./component/AddMenuModals";
 import { languages } from '@/config/language';
 const languageOptions = languages
@@ -12,6 +12,7 @@ const Header: React.FC = () => {
   const [menuData, setMenuData] = useState<any[]>([]);
   const [modalType, setModalType] = useState<boolean>(false);
   const [parentId, setParentId] = useState<any>(null);
+  const [editingMenu, setEditingMenu] = useState<any>(null);
 
   // 获取菜单数据
   const getMenu = async () => {
@@ -31,15 +32,47 @@ const Header: React.FC = () => {
     getMenu();
   }, [currentLanguage]);
 
+  // 处理编辑功能
+  const handleEdit = async (item: any) => {
+    try {
+      const res = await homeMenuParams({ menuId: item.id });
+      if (res.code === "0") {
+        setEditingMenu(res.data);
+        setModalType(true);
+      } else {
+        message.error("获取菜单详情失败");
+      }
+    } catch (error) {
+      message.error("获取菜单详情失败");
+    }
+  };
+  
+  // 处理删除功能
+  const handleDelete = async (itemId: number) => {
+    try {
+      // const res = await deleteHomeMenu({ id: itemId });
+      // if (res.code === "0") {
+      //   message.success("菜单删除成功");
+      //   getMenu(); // 重新获取菜单数据
+      // } else {
+      //   message.error("删除失败: " + (res.message || "未知错误"));
+      // }
+    } catch (error) {
+      message.error("删除失败: " + (error || "网络错误"));
+    }
+  };
+
   // 打开弹窗
   const handleModal = (item: any = null) => {
     setParentId(item);
+    setEditingMenu(null); // 重置编辑状态
     setModalType(true);
   };
 
   // 关闭弹窗
   const handleCancel = () => {
     setModalType(false);
+    setEditingMenu(null);
   };
 
   // 处理表单提交
@@ -53,6 +86,7 @@ const Header: React.FC = () => {
     if(!values.values.typeId){
       values.values.typeId=2
     }
+    
     try {
       const data = {
         homeMenu: {
@@ -78,13 +112,23 @@ const Header: React.FC = () => {
         },
       };
 
-      const response = await saveHomeMenu(data);
+      let response;
+      if (editingMenu) {
+        // 编辑模式 - 使用更新接口
+        data.homeMenu.id = editingMenu.id; // 添加菜单ID
+        data.homeMenuTranslation.menuId = editingMenu.id; // 添加菜单ID到翻译对象
+        response = await updateHomeMenuById(data);
+      } else {
+        // 新增模式 - 使用保存接口
+        response = await saveHomeMenu(data);
+      }
+
       if (response.code === "0") {
-        message.success("菜单添加成功");
+        message.success(editingMenu ? "菜单更新成功" : "菜单添加成功");
         handleCancel();
         getMenu(); // 重新获取菜单数据
       } else {
-        message.error("菜单添加失败: " + (response.message || "未知错误"));
+        message.error((editingMenu ? "菜单更新失败: " : "菜单添加失败: ") + (response.message || "未知错误"));
       }
     } catch (error) {
       message.error("提交失败: " + (error || "网络错误"));
@@ -107,9 +151,24 @@ const Header: React.FC = () => {
                 padding: "6px 12px",
                 borderRadius: 8,
                 minWidth: 100,
+                position: "relative",
+                paddingRight: 60,
               }}
             >
-              {item.menuName}
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Popconfirm
+                  title="确定要删除这个菜单吗？"
+                  onConfirm={(e) => { e?.stopPropagation(); handleDelete(item.id); }}
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  {/* <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} /> */}
+                </Popconfirm>
+                {item.menuName}
+              </div>
+              <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
+                <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(item); }} style={{ color: "#1890ff" }} />
+              </div>
             </Button>
             <Button
               onClick={() => handleModal(item)}
@@ -142,9 +201,24 @@ const Header: React.FC = () => {
                       borderRadius: 8,
                       minWidth: 80,
                       textAlign: "left",
+                      position: "relative",
+                      paddingRight: 60,
                     }}
                   >
-                    • {child.menuName}
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <Popconfirm
+                        title="确定要删除这个菜单吗？"
+                        onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.id); }}
+                        okText="确定"
+                        cancelText="取消"
+                      >
+                        {/* <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} /> */}
+                      </Popconfirm>
+                      • {child.menuName}
+                    </div>
+                    <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
+                      <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(child); }} style={{ color: "#1890ff" }} />
+                    </div>
                   </Button>
                   <Button
                     onClick={() => handleModal(child)}
@@ -217,7 +291,13 @@ const Header: React.FC = () => {
       </div>
 
       {/* 添加菜单弹窗 */}
-      <AddMenuModals visible={modalType} onCancel={handleCancel} onSubmit={handleSubmit} parentId={parentId} />
+      <AddMenuModals 
+        visible={modalType} 
+        onCancel={handleCancel} 
+        onSubmit={handleSubmit} 
+        parentId={parentId}
+        editingMenu={editingMenu} 
+      />
     </PageContainer>
   );
 };

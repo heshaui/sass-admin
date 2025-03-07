@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Upload, message, Image, Spin } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Upload, message, Image, Spin, Button } from "antd";
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { ossImgFile } from "@/services/ant-design-pro/api";
 
 // 定义组件 props 接口
@@ -12,6 +12,7 @@ interface AvatarUploadProps {
 const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
   const [imageUrl, setImageUrl] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
   
   // 当外部value变化时更新内部状态
   useEffect(() => {
@@ -62,6 +63,15 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
     }
   };
 
+  // 处理删除图片
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 阻止事件冒泡，避免触发Upload点击事件
+    setImageUrl('');
+    if (onChange) {
+      onChange('');
+    }
+  };
+
   console.log('Current imageUrl in render:', imageUrl);
 
   return (
@@ -76,12 +86,34 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
       {loading ? (
         <Spin />
       ) : imageUrl ? (
-        <Image 
-          src={imageUrl} 
-          alt="avatar" 
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-          preview={false}
-        />
+        <div 
+          className="avatar-wrapper" 
+          style={{ position: 'relative', width: '100%', height: '100%' }}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          <Image 
+            src={imageUrl} 
+            alt="avatar" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+            preview={false}
+          />
+          {isHovering && (
+            <Button 
+              type="primary" 
+              danger
+              icon={<DeleteOutlined />}
+              size="small"
+              onClick={handleDelete}
+              style={{
+                position: 'absolute',
+                top: '5px',
+                right: '5px',
+                opacity: 0.8,
+              }}
+            />
+          )}
+        </div>
       ) : (
         <div>
           <PlusOutlined />

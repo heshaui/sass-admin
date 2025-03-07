@@ -323,3 +323,22 @@ export async function pcAccessPathAll(body: API.FackeParams, options?: { [key: s
     ...(options || {}),
   });
 }
+
+
+// /tenant/v1/homeMenuParams
+export async function homeMenuParams(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/homeMenuParams?idString='+body.menuId, {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
+
+// /tenant/v1/updateHomeMenuById
+export async function updateHomeMenuById(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/updateHomeMenuById', {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
