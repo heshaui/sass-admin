@@ -1,13 +1,14 @@
 import React, { useRef, useState } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, message } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch } from '@ant-design/pro-form';
+import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch } from '@ant-design/pro-components';
 import { queryRateList, addRate, updateRate, deleteRate } from '../../services/ant-design-pro/Rate';
 import AvatarUpload from "@/components/AvatarUpload/index";
 
 const Rate: React.FC = () => {
-  const actionRef = useRef();
+  const actionRef = useRef<ActionType>();
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<any>();
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -41,7 +42,7 @@ const Rate: React.FC = () => {
     setCreateModalVisible(true);
   };
 
-  const columns = [
+  const columns: ProColumns[] = [
     {
       title: '序号',
       dataIndex: 'id',
