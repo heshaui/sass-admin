@@ -76,6 +76,8 @@ export default {
   'menu.commonConfig': '通用配置',
   'menu.commonConfig.kvSetting': 'KV配置管理',
   'menu.commonConfig.basic': '基础配置',
-  'menu.pc':'pc功能路径配置'
+  'menu.pc':'pc功能路径配置',
+  'menu.rate':'汇率配置',
+
 
 };

@@ -195,7 +195,7 @@ export default [
   },
   {
     path: '/pc',
-    name: 'PC',
+    name: 'pc',
     component: './PC/Index',
   },
   {

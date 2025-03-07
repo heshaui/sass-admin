@@ -300,7 +300,11 @@ const Language: React.FC = () => {
         }}
         search={false}
         toolBarRender={() => [
-          <AddModal key="add" onSuccess={() => fetchLanguages(pagination.current, pagination.pageSize)} />,
+          <AddModal 
+            key="add" 
+            onSuccess={() => fetchLanguages(pagination.current, pagination.pageSize)} 
+            existingLanguages={dataSource.map(item => item.langEncode)}
+          />,
         ]}
         onChange={(newPagination) => {
           fetchLanguages(newPagination.current, newPagination.pageSize);

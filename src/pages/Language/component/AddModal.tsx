@@ -7,9 +7,10 @@ const { Option } = Select;
 
 interface AddModalProps {
   onSuccess?: () => void; // 添加成功后的回调函数
+  existingLanguages: string[];
 }
 
-const AddModal: React.FC<AddModalProps> = ({ onSuccess }) => {
+const AddModal: React.FC<AddModalProps> = ({ onSuccess, existingLanguages = [] }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [language, setLanguage] = useState<string[]>([]);
   const [dataSource, setDataSource] = useState<any[]>([]); // 添加新的state
@@ -120,9 +121,15 @@ const AddModal: React.FC<AddModalProps> = ({ onSuccess }) => {
               onChange={handleLanguageChange}
               style={{ width: "100%" }}
             >
+               {existingLanguages.length}
               {
-                dataSource.map((item) => (
-                  <Option key={item.id} value={item.id}>
+               
+                dataSource.map((item:any) => (
+                  <Option 
+                    key={item.id} 
+                    value={item.id}
+                    disabled={existingLanguages.includes(item.langEncode)}
+                  >
                     {item.lang}
                   </Option>
                 ))
