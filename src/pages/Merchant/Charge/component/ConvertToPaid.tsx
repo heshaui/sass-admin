@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Form, DatePicker, Button, message } from "antd";
 import dayjs from "dayjs";
 
@@ -11,12 +11,20 @@ interface ConvertToPaidProps {
 
 const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubmit, initialValues }) => {
   const [form] = Form.useForm();
+  const [selectedTime, setSelectedTime] = useState<string>("");
 
   useEffect(() => {
     if (initialValues) {
+      const endTime = initialValues.tenantEndTime ? dayjs(initialValues.tenantEndTime) : null;
       form.setFieldsValue({
-        tenantEndTime: initialValues.tenantEndTime ? dayjs(initialValues.tenantEndTime) : null,
+        tenantEndTime: endTime,
       });
+      
+      if (endTime) {
+        setSelectedTime(endTime.format("YYYY-MM-DD HH:mm:ss"));
+      } else {
+        setSelectedTime("");
+      }
     }
   }, [initialValues, visible]);
 
@@ -49,10 +57,25 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
           label={<span style={{ fontWeight: "bold", fontSize: 16 }}>延期时长</span>}
           rules={[{ required: true, message: "请选择服务到期时间！" }]}
         >
-          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请选择到期时间" style={{ width: "100%" }} />
+          <DatePicker 
+            showTime 
+            format="YYYY-MM-DD HH:mm:ss" 
+            placeholder="请选择到期时间" 
+            style={{ width: "100%" }} 
+            onChange={(date) => {
+              if (date) {
+                setSelectedTime(date.format("YYYY-MM-DD HH:mm:ss"));
+              } else {
+                setSelectedTime("");
+              }
+            }}
+          />
         </Form.Item>
-        <p style={{ color: "#999" }}>
-          注意：服务到期时间必须在当前时间10天内才可提交
+        <p style={{ color: "#999",marginBottom:0 }}>
+          注意：仅支持交易所到期前10天进行操作
+        </p>
+        <p style={{ color: "#999",margin:0}}>
+          时间为：{selectedTime || initialValues.tenantEndTime || ""}
         </p>
       </Form>
     </Modal>
