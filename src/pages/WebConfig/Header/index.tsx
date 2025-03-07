@@ -50,6 +50,9 @@ const Header: React.FC = () => {
     }else{
       displayStatus=0
     }
+    if(!values.values.typeId){
+      values.values.typeId=2
+    }
     try {
       const data = {
         homeMenu: {

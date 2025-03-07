@@ -35,8 +35,8 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
     const fetchAccessPaths = async () => {
       try {
         const result = await pcAccessPathAll();
-        if (result && result.data) {
-          setAccessPaths(result.data);
+        if (result.code==="0" && result.data) {
+          setAccessPaths(JSON.parse(result.data));
         }
       } catch (error) {
         console.error('获取访问路径失败:', error);
@@ -184,8 +184,8 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
                 <Form.Item name="accessPath" style={{ marginTop: 10 }}>
                   <Select placeholder="请选择">
                     {accessPaths.map((item) => (
-                      <Option key={item.id} value={item.id}>
-                        {item.name}
+                      <Option key={item.accessPath} value={item.accessPath}>
+                        {item.functionName}
                       </Option>
                     ))}
                   </Select>
