@@ -103,7 +103,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         </Form.Item>
         
         <Form.Item
-          name="description"
+          name="describeText"
           label="描述"
           rules={[{ required: true, message: '请输入描述' }]}
         >
@@ -116,8 +116,8 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           rules={[{ required: true, message: '请选择分类' }]}
         >
           <Select>
-            <Option value="新功能">新功能</Option>
-            <Option value="APP优化">APP优化</Option>
+            <Option value="1">新功能</Option>
+            <Option value="2">APP优化</Option>
           </Select>
         </Form.Item>
         
@@ -129,12 +129,12 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         </Form.Item>
         
         <Form.Item
-          name="sendStatus"
+          name="status"
           label="发送状态"
         >
           <Radio.Group>
-            <Radio value="待发布">待发布</Radio>
-            <Radio value="已发送">已发送</Radio>
+            <Radio value={1}>发放</Radio>
+            <Radio value={2}>待发送</Radio>
           </Radio.Group>
         </Form.Item>
       </Form>

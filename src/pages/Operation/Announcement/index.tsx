@@ -67,9 +67,9 @@ const AnnouncementList: React.FC = () => {
       });
       
       return {
-        data: response.data || [],
+        data: response.data.list || [],
         success: response.success,
-        total: response.total || 0,
+        total: response.count || 0,
       };
     } catch (error) {
       message.error('获取公告列表失败');
