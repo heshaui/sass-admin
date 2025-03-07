@@ -107,18 +107,18 @@ const Language: React.FC = () => {
 
   const handleDelete = async (id: number, fileName: string) => {
     Modal.confirm({
-      title: '确认删除',
-      content: `确定要删除"${fileName}"的语言包吗？`,
+      title: '移除语言包',
+      content: `移除后，列表将不显示该语言，如有需要可以重新添加至列表！`,
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
         try {
           const response = await deleteTenantLangPackage({ tenantLangId: id });
           if (response.code === '0') {
-            message.success('删除成功');
+            message.success('移除成功');
             fetchLanguages(); // 刷新列表
           } else {
-            message.error(`删除失败: ${response.message}`);
+            message.error(`移除失败: ${response.message}`);
           }
         } catch (error) {
           message.error('操作失败，请重试');
