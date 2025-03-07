@@ -23,49 +23,30 @@ const Footer: React.FC = () => {
 
   // 获取菜单数据
   const getMenu = async () => {
+    setLoading(true);
     try {
       let data={
         pageNo:1,
         pageSize:1000,
-
+        languageCode:currentLanguage
       }
       const res = await homeBottomList(data);
-      console.log(res);
       if (res.code === '0') {
         setMenuData(res?.data.list);
+        setData(res?.data.list); // 同时更新data状态
       } else {
         message.error('获取菜单数据失败');
       }
     } catch (error) {
       message.error('获取菜单数据失败');
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     getMenu();
   }, [currentLanguage]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        let data={
-          pageNo:1,
-          pageSize:1000,
-
-        }
-        const response = await homeBottomList(data);
-        if (response.code === '0') {
-          setData(response.data.list);
-        } else {
-          message.error('获取数据失败');
-        }
-      } catch (error) {
-        message.error('请求失败，请检查网络连接');
-      }
-    };
-
-    fetchData();
-  }, []);
 
   // 获取自定义Footer状态
   useEffect(() => {

@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Switch, Button, Radio, Select } from 'antd';
-import { saveHomeBottom } from '@/services/ant-design-pro/WebConfig';
+import { saveHomeBottom, pcAccessPathAll } from '@/services/ant-design-pro/WebConfig';
 
 const { Option } = Select;
 
@@ -14,6 +14,23 @@ interface AddMenuModalProps {
 const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, parentId }) => {
   const [form] = Form.useForm();
   const [accessType, setAccessType] = useState("1");
+  const [pcOptions, setPcOptions] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchPcOptions = async () => {
+      try {
+        const result = await pcAccessPathAll();
+        if (result.code === '0' && result.data) {
+          const options = JSON.parse(result.data);
+          setPcOptions(options);
+        }
+      } catch (error) {
+        console.error('获取PC功能列表失败:', error);
+      }
+    };
+    
+    fetchPcOptions();
+  }, []);
 
   const handleCancel = () => {
     form.resetFields();
@@ -69,9 +86,11 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
               style={{ marginTop: 10 }}
             >
               <Select placeholder="请选择">
-                <Option value="0">选项0</Option>
-                <Option value="1">选项1</Option>
-                <Option value="2">选项2</Option>
+                {Array.isArray(pcOptions) && pcOptions.map(option => (
+                  <Option key={option.accessPath} value={option.accessPath}>
+                    {option.functionName}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
           ) : (
