@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
+import { PageContainer,ProTable } from '@ant-design/pro-components';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { Button, message, Tabs, Select, DatePicker } from 'antd';
-import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-layout';
+import {  PlusOutlined } from '@ant-design/icons';
 import { 
   getAnnouncementList, 
 } from '@/services/ant-design-pro/operation';
@@ -11,8 +10,7 @@ import AnnouncementForm from './components/AnnouncementForm';
 import CategoryForm from './components/CategoryForm';
 
 const { TabPane } = Tabs;
-const { RangePicker } = DatePicker;
-const { Option } = Select;
+
 
 type AnnouncementItem = {
   id: string;
