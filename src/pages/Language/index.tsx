@@ -77,8 +77,14 @@ const Language: React.FC = () => {
     }
   };
 
-  // **展开/折叠详情**
-  const toggleExpand = (id: number) => {
+  // **修改展开/折叠详情函数，增加状态检查**
+  const toggleExpand = (id: number, status: number) => {
+    // 只有启用状态(status === 1)才允许展开
+    if (status !== 1) {
+      message.info('禁用状态的语言无法查看详情');
+      return;
+    }
+    
     setExpandedRowKeys((prev) =>
       prev.includes(id) ? prev.filter((key) => key !== id) : [...prev, id]
     );
@@ -179,7 +185,7 @@ const Language: React.FC = () => {
   };
 
 
-  // **主表格列**
+  // **修改主表格列定义**
   const columns = [
     {
       title: "语言",
@@ -189,7 +195,8 @@ const Language: React.FC = () => {
           <Button
             type="link"
             icon={expandedRowKeys.includes(record.id) ? <UpOutlined /> : <DownOutlined />}
-            onClick={() => toggleExpand(record.id)}
+            onClick={() => toggleExpand(record.id, record.status)}
+            disabled={record.status !== 1} // 禁用状态下按钮不可点击
           />
           {text}
         </span>
@@ -296,7 +303,10 @@ const Language: React.FC = () => {
         expandable={{
           expandedRowKeys,
           expandedRowRender,
-          onExpand: (expanded, record) => toggleExpand(record.id),
+          onExpand: (expanded, record) => toggleExpand(record.id, record.status),
+          expandRowByClick: false,
+          // 只有启用状态才能展开
+          rowExpandable: (record) => record.status === 1,
         }}
         search={false}
         toolBarRender={() => [
