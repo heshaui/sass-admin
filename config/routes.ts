@@ -154,6 +154,11 @@ export default [
         component: './Operation/Announcement',
       },
       {
+        path: '/operation/help-center',
+        name: 'helpCenter',
+        component: './Operation/HelpCenter',
+      },
+      {
         path: '/operation',
         redirect: '/operation/pc-login',
       },
@@ -179,6 +184,33 @@ export default [
         redirect: '/lang-package/language',
       },
     ],
+  },
+  {
+    path: '/identity-verification',
+    name: 'identityVerification',
+    icon: 'IdcardOutlined',
+    routes: [
+      {
+        path: '/identity-verification/basic-config',
+        name: 'basicConfig',
+        component: './IdentityVerification/BasicConfig',
+      },
+      {
+        path: '/identity-verification/audit-list',
+        name: 'auditList',
+        component: './IdentityVerification/AuditList',
+      },
+      {
+        path: '/identity-verification',
+        redirect: '/identity-verification/basic-config',
+      },
+    ],
+  },
+  {
+    path: '/user-management',
+    name: 'userManagement',
+    icon: 'UserOutlined',
+    component: './UserManagement',
   },
   {
     path: '/kvSetting',
