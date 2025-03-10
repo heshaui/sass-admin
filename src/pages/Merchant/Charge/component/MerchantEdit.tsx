@@ -20,13 +20,14 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
         const res = await tenantParams(tenantId);
         if (res.code === "0") {
           const merchantData = res.data || {};
+
           // **填充表单数据**
           form.setFieldsValue({
             tenantName: merchantData.tenantName,
             tenantId: merchantData.tenantId,
-            contact: merchantData.tenantContact,
-            phone: merchantData.tenantPhone,
-            email: merchantData.tenantEmail,
+            tenantContact: merchantData.tenantContact,
+            tenantPhone: merchantData.tenantPhone,
+            tenantEmail: merchantData.tenantEmail,
             // **时间格式转换** - 从时间戳转换成 dayjs
             tenantStartTime: merchantData.tenantStartTime ? dayjs(merchantData.tenantStartTime) : null,
             tenantEndTime: merchantData.tenantEndTime ? dayjs(merchantData.tenantEndTime) : null,
