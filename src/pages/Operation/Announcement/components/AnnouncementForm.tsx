@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Select, DatePicker, Modal, Radio, Button, message } from 'antd';
+import { Form, Input, Select, DatePicker, Modal, Radio, Button, message, Checkbox, Tabs } from 'antd';
 import { 
   addAnnouncement, 
-  updateAnnouncement 
+  updateAnnouncement,
+  getAnnouncementParams
 } from '@/services/ant-design-pro/operation';
-
+import SeedEditor from '@/components/SeedEditor';
+import { languages } from '@/config/language';
+import moment from 'moment';
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -25,26 +28,103 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
 }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  
+  const [sendType, setSendType] = useState(1);
+  const [activeLanguage, setActiveLanguage] = useState('en_US');
+  const [contents, setContents] = useState<Record<string, string>>({});
+  const [titles, setTitles] = useState<Record<string, string>>({});
+
+  // 获取并回显数据
   useEffect(() => {
-    if (visible && type === 'update' && values) {
-      form.setFieldsValue({
-        ...values,
-        sendTime: values.sendTime ? new Date(values.sendTime) : undefined,
-      });
-    } else {
-      form.resetFields();
+    if (type === 'update' && values?.id && visible) {
+      const fetchAnnouncementDetail = async () => {
+        try {
+          setLoading(true);
+          const response = await getAnnouncementParams(values.id);
+          if (response.code === '0' && response.data) {
+            const { informAnnouncement, informAnnouncementContents = [] } = response.data;
+            
+            // 设置基本表单数据
+            form.setFieldsValue({
+              classMenu: informAnnouncement.classMenu,
+              describeText: informAnnouncement.describeText,
+              releaseType: informAnnouncement.releaseType,
+              releaseTime: informAnnouncement.releaseTime ? moment(Number(informAnnouncement.releaseTime)) : undefined,
+            });
+            
+            // 设置发送类型状态
+            setSendType(informAnnouncement.releaseType);
+            
+            // 处理多语言内容和标题
+            const newContents: Record<string, string> = {};
+            const newTitles: Record<string, string> = {};
+            
+            informAnnouncementContents.forEach((item: any) => {
+              newContents[item.languageCode] = item.content || '';
+              newTitles[item.languageCode] = item.title || '';
+            });
+            
+            setContents(newContents);
+            setTitles(newTitles);
+          } else {
+            message.error('获取公告详情失败');
+          }
+        } catch (error) {
+          console.error('获取公告详情出错:', error);
+          message.error('获取公告详情出错');
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      fetchAnnouncementDetail();
     }
-  }, [visible, form, values, type]);
+  }, [type, values, visible, form]);
+
+  const handleContentChange = (lang: string, content: string) => {
+    setContents((prev) => ({
+      ...prev,
+      [lang]: content,
+    }));
+  };
+
+  const handleTitleChange = (lang: string, title: string) => {
+    setTitles((prev) => ({
+      ...prev,
+      [lang]: title,
+    }));
+  };
 
   const handleSubmit = async () => {
     try {
       const fieldsValue = await form.validateFields();
+      
+      if (!contents.en_US) {
+        message.error('请填写英语内容');
+        return;
+      }
+
+      if (!titles.en_US) {
+        message.error('请填写英语标题');
+        return;
+      }
+      
       setLoading(true);
       
+      const contentsList = Object.entries(contents).map(([languageCode, content]) => ({
+        languageCode,
+        title: titles[languageCode] || titles.en_US, // 如果没有对应语言的标题，使用英文标题
+        content,
+        isAdd: true
+      }));
+      
       const submitData = {
-        ...fieldsValue,
-        sendTime: fieldsValue.sendTime ? fieldsValue.sendTime.format('YYYY-MM-DD HH:mm:ss') : undefined,
+        "informAnnouncement": {
+          "describeText": fieldsValue.describeText,
+          "classMenu": '1',
+          "releaseType": fieldsValue.releaseType,
+          "releaseTime": fieldsValue.releaseType === 2 ? fieldsValue.releaseTime?.valueOf() : '',
+        },
+        "informAnnouncementContents": contentsList
       };
       
       let response;
@@ -58,7 +138,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
       }
       
       setLoading(false);
-      if (response && response.success) {
+      if (response.code==='0' && response.data) {
         message.success(type === 'create' ? '创建成功' : '更新成功');
         onSuccess();
       } else {
@@ -91,51 +171,102 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         layout="vertical"
         initialValues={{
           sendStatus: '待发布',
-          category: '新功能',
+          category: '1',
+          sendType: 1,
         }}
       >
+      
+        
         <Form.Item
-          name="title"
-          label="标题"
-          rules={[{ required: true, message: '请输入标题' }]}
+          name="classMenu"
+          label="分类"
+          rules={[{ required: true, message: '请选择分类' }]}
+          required
         >
-          <Input placeholder="请输入标题" />
+          <Select>
+            <Option value="1">最新动态</Option>
+            <Option value="2">APP优化</Option>
+          </Select>
         </Form.Item>
         
         <Form.Item
           name="describeText"
           label="描述"
           rules={[{ required: true, message: '请输入描述' }]}
+          required
         >
-          <TextArea rows={4} placeholder="请输入描述" />
+        <Input placeholder="请输入描述" />
         </Form.Item>
         
         <Form.Item
-          name="category"
-          label="分类"
-          rules={[{ required: true, message: '请选择分类' }]}
-        >
-          <Select>
-            <Option value="1">新功能</Option>
-            <Option value="2">APP优化</Option>
-          </Select>
-        </Form.Item>
-        
-        <Form.Item
-          name="sendTime"
+          name="releaseType"
           label="发送时间"
+          required
         >
-          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" style={{ width: '100%' }} />
+          <Radio.Group onChange={(e) => setSendType(e.target.value)}>
+            <Radio value={1}>立即发送</Radio>
+            <Radio value={2}>定时发送</Radio>
+          </Radio.Group>
+        </Form.Item>
+        
+        {sendType === 2 && (
+          <Form.Item
+            name="releaseTime"
+            label=""
+          >
+            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" style={{ width: '100%' }} />
+          </Form.Item>
+        )}
+        
+        <Form.Item
+          label="语言"
+          required
+        >
+          <Radio.Group 
+            value={activeLanguage} 
+            onChange={(e) => setActiveLanguage(e.target.value)}
+          >
+            {languages.map(lang => (
+              <Radio.Button key={lang.key} value={lang.key}>{lang.label}</Radio.Button>
+            ))}
+          </Radio.Group>
+          <div style={{ color: '#999', marginBottom: '15px' }}>
+            *支持多个语言同时编辑，英文为必填，其他语言配置则显示，不配置不显示
+          </div>
+        </Form.Item>
+        <Form.Item
+          name="title"
+          label="标题"
+          hidden={true}
+        >
+          <Input />
         </Form.Item>
         
         <Form.Item
-          name="status"
-          label="发送状态"
+          label="标题"
+          required={activeLanguage === 'en_US'}
         >
-          <Radio.Group>
-            <Radio value={1}>发放</Radio>
-            <Radio value={2}>待发送</Radio>
-          </Radio.Group>
+          <Input 
+            placeholder="请输入标题" 
+            value={titles[activeLanguage] || ''}
+            onChange={(e) => handleTitleChange(activeLanguage, e.target.value)}
+          />
+          {activeLanguage === 'en_US' && !titles.en_US && (
+            <div style={{ color: 'red' }}>英文标题为必填项</div>
+          )}
+        </Form.Item>
+        
+        <Form.Item
+          label="内容"
+          required={activeLanguage === 'en_US'}
+        >
+          <SeedEditor 
+            initialContent={contents[activeLanguage] || ''}
+            onChange={(content) => handleContentChange(activeLanguage, content)}
+          />
+          {activeLanguage === 'en_US' && !contents.en_US && (
+            <div style={{ color: 'red' }}>英文内容为必填项</div>
+          )}
         </Form.Item>
       </Form>
     </Modal>

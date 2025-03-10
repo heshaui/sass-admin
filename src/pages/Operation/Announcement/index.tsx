@@ -1,13 +1,15 @@
 import React, { useState, useRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { Button, message, Tabs, Select, DatePicker } from 'antd';
+import { Button, message, Tabs, Select, DatePicker, Modal } from 'antd';
 import {  PlusOutlined } from '@ant-design/icons';
 import { 
-  getAnnouncementList, 
+  getAnnouncementList,getAnnouncementContentList,updateAnnouncement
 } from '@/services/ant-design-pro/operation';
 import AnnouncementForm from './components/AnnouncementForm';
 import CategoryForm from './components/CategoryForm';
+import { languages } from '@/config/language';
+
 
 const { TabPane } = Tabs;
 
@@ -21,6 +23,7 @@ type AnnouncementItem = {
   createTime: string;
   sendStatus: string;
   isTop?: boolean;
+  languageCode: string;
 };
 
 type CategoryItem = {
@@ -38,9 +41,10 @@ const AnnouncementList: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
   const [formType, setFormType] = useState<'create' | 'update'>('create');
   const [activeTab, setActiveTab] = useState<string>('announcement');
-  const [description, setDescription] = useState<string>('');
+  const [describeText, setDescribeText] = useState<string>('');
   const [sendStatus, setSendStatus] = useState<string>('all');
   const [sendTimeRange, setSendTimeRange] = useState<[string, string]>(['', '']);
+  const [languageCode, setLanguageCode] = useState<string>('zh_CN');
   
   const announcementActionRef = useRef<ActionType>();
   const categoryActionRef = useRef<ActionType>();
@@ -48,7 +52,7 @@ const AnnouncementList: React.FC = () => {
   // 获取公告列表
   const fetchAnnouncementList = async (params: any) => {
     try {
-      const { current, pageSize, description, sendStatus, sendTime } = params;
+      const { current, pageSize, description, status, sendTime, languageCode } = params;
       
       // 处理时间范围
       let startTime, endTime;
@@ -57,19 +61,59 @@ const AnnouncementList: React.FC = () => {
         endTime = sendTime[1];
       }
       
-      const response = await getAnnouncementList({
+      // 获取内容列表（包含标题）
+      const contentResponse = await getAnnouncementContentList({
         current,
         pageSize,
-        description,
-        sendStatus: sendStatus === 'all' ? undefined : sendStatus,
+        describeText: description,
+        languageCode: languageCode || 'en_US',
+        status: status,
         startTime,
         endTime,
       });
       
+      // 获取公告基础信息
+      const announcementResponse = await getAnnouncementList({
+        current,
+        pageSize,
+        describeText: description,
+        languageCode: languageCode || 'en_US',
+        status: status,
+        startTime,
+        endTime,
+      });
+      
+      // 确保基础列表存在
+      if (!announcementResponse.data || !announcementResponse.data.list) {
+        return {
+          data: [],
+          success: false,
+          total: 0,
+        };
+      }
+      
+      // 创建内容ID到标题的映射
+      const contentTitleMap = {};
+      if (contentResponse.data && contentResponse.data.list) {
+        contentResponse.data.list.forEach(item => {
+          if (item.announcementId && item.title) {
+            contentTitleMap[item.announcementId] = item.title;
+          }
+        });
+      }
+      
+      // 合并数据，使用内容接口的标题
+      const mergedList = announcementResponse.data.list.map(announcement => {
+        return {
+          ...announcement,
+          title: contentTitleMap[announcement.id] || announcement.title || '-',
+        };
+      });
+      
       return {
-        data: response.data.list || [],
-        success: response.success,
-        total: response.count || 0,
+        data: mergedList || [],
+        success: announcementResponse.success,
+        total: announcementResponse.count || 0,
       };
     } catch (error) {
       message.error('获取公告列表失败');
@@ -103,14 +147,16 @@ const AnnouncementList: React.FC = () => {
   // 删除公告
   const handleRemoveAnnouncement = async (id: string) => {
     try {
-      // const response = await deleteAnnouncement(id);
-      // if (response.success) {
-      //   message.success('删除成功');
-      //   announcementActionRef.current?.reload();
-      //   return true;
-      // }
-      // message.error('删除失败');
-      // return false;
+      let data={
+        id:id,
+        remove:1
+      }
+      const response = await updateAnnouncement(data);
+      if (response.code==='0'&&response.data) {
+        message.success('删除成功');
+        announcementActionRef.current?.reload();
+        return true;
+      }
     } catch (error) {
       message.error('删除失败');
       return false;
@@ -120,14 +166,18 @@ const AnnouncementList: React.FC = () => {
   // 删除分类
   const handleRemoveCategory = async (id: string) => {
     try {
-      // const response = await deleteCategory(id);
-      // if (response.success) {
-      //   message.success('删除成功');
-      //   categoryActionRef.current?.reload();
-      //   return true;
-      // }
-      // message.error('删除失败');
-      // return false;
+      let data={
+        id:id,
+        remove:1
+      }
+      const response = await updateAnnouncement(data);
+      if (response.code==='0') {
+        message.success('删除成功');
+        categoryActionRef.current?.reload();
+        return true;
+      }
+
+
     } catch (error) {
       message.error('删除失败');
       return false;
@@ -135,16 +185,20 @@ const AnnouncementList: React.FC = () => {
   };
 
   // 置顶公告
-  const handleTop = async (id: string) => {
+  const handleTop = async (id: number,handleTop:number) => {
     try {
-      // const response = await topAnnouncement(id);
-      // if (response.success) {
-      //   message.success('置顶成功');
-      //   announcementActionRef.current?.reload();
-      //   return true;
-      // }
-      // message.error('置顶失败');
-      // return false;
+      let data={
+        id:id,
+        onTop:handleTop===1?0:1
+      }
+      const response = await updateAnnouncement(data);
+      if (response.code==='0'&&response.data) {
+        // message.success('置顶成功');
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        handleTop===1?message.success('取消置顶成功'):message.success('置顶成功');
+        announcementActionRef.current?.reload();
+        return true;
+      }
     } catch (error) {
       message.error('置顶失败');
       return false;
@@ -178,7 +232,7 @@ const AnnouncementList: React.FC = () => {
     },
     {
       title: '描述',
-      dataIndex: 'description',
+      dataIndex: 'describeText',
       formItemProps: {
         rules: [
           {
@@ -186,6 +240,13 @@ const AnnouncementList: React.FC = () => {
             message: '请输入描述关键词',
           },
         ],
+      },
+      search: {
+        transform: (value) => {
+          return {
+            description: value,
+          };
+        },
       },
     },
     {
@@ -195,18 +256,22 @@ const AnnouncementList: React.FC = () => {
     },
     {
       title: '分类',
-      dataIndex: 'category',
+      dataIndex: 'classMenu',
       search: false,
     },
     {
       title: '发送时间',
-      dataIndex: 'sendTime',
-      valueType: 'dateTimeRange',
+      dataIndex: 'releaseTime',
+      valueType: 'dateTime',
       search: {
         transform: (value) => {
-          return {
-            sendTime: value,
-          };
+          // 确保日期值是有效的
+          if (Array.isArray(value) && value.length === 2) {
+            return {
+              sendTime: value.filter(v => v),
+            };
+          }
+          return { sendTime: value };
         },
       },
     },
@@ -218,11 +283,21 @@ const AnnouncementList: React.FC = () => {
     },
     {
       title: '发送状态',
-      dataIndex: 'sendStatus',
+      dataIndex: 'status',
       valueEnum: {
         all: { text: '全部' },
         published: { text: '已发送', status: 'Success' },
         pending: { text: '待发布', status: 'Default' },
+      },
+      renderText: (text) => {
+        return text === 0 ? '待发布' : text === 1 ? '已发送' : '待发布';
+      },
+      search: {
+        transform: (value) => {
+          return {
+            sendStatus: value === 'all' ? undefined : value,
+          };
+        },
       },
     },
     {
@@ -234,9 +309,7 @@ const AnnouncementList: React.FC = () => {
         <a
           key="edit"
           onClick={() => {
-            setCurrentAnnouncement(record);
-            setFormType('update');
-            setAnnouncementFormVisible(true);
+            handleEditAnnouncement(record);
           }}
         >
           编辑
@@ -244,17 +317,23 @@ const AnnouncementList: React.FC = () => {
         <a
           key="delete"
           onClick={() => {
-            handleRemoveAnnouncement(record.id);
+            Modal.confirm({
+              title: '确认删除',
+              content: '确认删除后，前台将不显示该公告',
+              okText: '确认',
+              cancelText: '取消',
+              onOk: () => handleRemoveAnnouncement(record.id),
+            });
           }}
         >
           删除
         </a>,
-        record.isTop ? (
-          <a key="untop" onClick={() => handleCancelTop(record.id)}>
+        record.onTop===1 ? (
+          <a key="untop" onClick={() => handleTop(record.id,record.onTop)}>
             置顶取消
           </a>
         ) : (
-          <a key="top" onClick={() => handleTop(record.id)}>
+          <a key="top" onClick={() => handleTop(record.id,record.onTop)}>
             置顶
           </a>
         ),
@@ -303,7 +382,13 @@ const AnnouncementList: React.FC = () => {
         <a
           key="delete"
           onClick={() => {
-            handleRemoveCategory(record.id);
+            Modal.confirm({
+              title: '确认删除',
+              content: '您确定要删除这个分类吗？',
+              okText: '确认',
+              cancelText: '取消',
+              onOk: () => handleRemoveCategory(record.id),
+            });
           }}
         >
           删除
@@ -315,6 +400,21 @@ const AnnouncementList: React.FC = () => {
   // 切换标签页
   const handleTabChange = (key: string) => {
     setActiveTab(key);
+  };
+
+  // 编辑公告前的处理
+  const handleEditAnnouncement = (record: AnnouncementItem) => {
+    // 确保日期字段是有效的，防止传递无效日期到表单组件
+    const processedRecord = {
+      ...record,
+      // 如果有日期相关字段，可以在这里预处理
+      releaseTime: record.releaseTime || undefined,
+      createTime: record.createTime || undefined
+    };
+    
+    setCurrentAnnouncement(processedRecord);
+    setFormType('update');
+    setAnnouncementFormVisible(true);
   };
 
   return (

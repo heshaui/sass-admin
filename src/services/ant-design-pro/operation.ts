@@ -93,11 +93,11 @@ export async function getAnnouncementList(data: any) {
 }
 
 // 获取公告参数
-export async function getAnnouncementParams() {
+export async function getAnnouncementParams(id: string) {
   return request<{
     data: any;
     success: boolean;
-  }>('/tenant/v1/informAnnouncementParams', {
+  }>('/tenant/v1/informAnnouncementParams?idString='+id, {
     method: 'POST',
   });
 }
