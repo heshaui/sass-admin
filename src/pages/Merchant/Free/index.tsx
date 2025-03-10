@@ -164,6 +164,7 @@ const Free: React.FC = () => {
           tenantId: record.tenantId,
           email:record.tenantEmail,
           phone:record.tenantPhone,
+          nickname:record.tenantContact,
         }
         const res = await saveTenantRoot(data);
         if(res.code === '0'){
