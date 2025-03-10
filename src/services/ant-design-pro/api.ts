@@ -29,7 +29,7 @@ export async function outLogin(options?: { [key: string]: any }) {
   });
 }
 
-// /tenant-admin/v1/login/check
+// 总后台登录
 export async function loginCheck(body: any, options?: { [key: string]: any }) {
   return request<Record<string, any>>('/tenant-admin/v1/login/check', {
     method: 'POST',
@@ -38,7 +38,7 @@ export async function loginCheck(body: any, options?: { [key: string]: any }) {
   });
 }
 
-// /tenant/v1/login/check
+// 商户登录
 export async function tenantLoginCheck(body: any, options?: { [key: string]: any }) {
   return request<Record<string, any>>('/tenant/v1/login/check', {
     method: 'POST',
