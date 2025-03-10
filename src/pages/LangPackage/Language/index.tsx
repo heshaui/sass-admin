@@ -44,7 +44,7 @@ const Language: React.FC = () => {
     setLoading(true);
     try {
       const response = await languageList({
-        keyword: searchValue,
+        lang: searchValue,
         pageNo,
         pageSize
       });
