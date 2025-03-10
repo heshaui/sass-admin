@@ -40,7 +40,7 @@ export async function loginCheck(body: any, options?: { [key: string]: any }) {
 
 // 商户登录
 export async function tenantLoginCheck(body: any, options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/tenant/v1/login/check', {
+  return request<Record<string, any>>('/tenant/v1/login/check?account=' + body.account, {
     method: 'POST',
     data: body,
     ...(options || {}),
@@ -60,7 +60,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 }
 
 export async function tenantLogin(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/tenant/v1/login', {
+  return request<API.LoginResult>('/tenant/v1/login?', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
