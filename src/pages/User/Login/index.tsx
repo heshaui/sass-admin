@@ -233,7 +233,7 @@ const Login: React.FC = () => {
     }
   };
 
-  const titles = isAdmin ? 'Sass总后台' : '商户后台-';
+  const titles = isAdmin ? 'Sass总后台' : '商户后台';
   console.log(isAdmin);
   return (
     <div className={styles.container}>
