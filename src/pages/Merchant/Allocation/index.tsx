@@ -132,16 +132,16 @@ const Allocation: React.FC = () => {
 
   // **提交角色权限分配**
   const handleSubmitDis = async (values: any) => {
-
+    console.log(values.permissions.checked)
     try {
       // **计算新增的权限 (去掉已分配的)**
-      const newPermissions = values.permissions.filter(
+      const newPermissions = values.permissions.checked.filter(
         (item: string) => !rolePermissions.includes(item)
       );
 
       // 获取移除的权限
       const removedPermissions = rolePermissions.filter(
-        (permId) => !values.permissions.includes(permId)
+        (permId) => !values.permissions.checked.includes(permId)
       );
 
       if (newPermissions.length === 0 && removedPermissions.length === 0) {
@@ -178,6 +178,7 @@ const Allocation: React.FC = () => {
       message.success('权限更新成功');
       setDisVisible(false);
     } catch (error) {
+      console.log(error)
       message.error('权限分配请求失败');
     }
   };
