@@ -132,6 +132,8 @@ const Allocation: React.FC = () => {
 
   // **提交角色权限分配**
   const handleSubmitDis = async (values: any) => {
+    console.log("权限分配",values)
+    return 
     try {
       // **计算新增的权限 (去掉已分配的)**
       const newPermissions = values.permissions.filter(

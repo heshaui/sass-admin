@@ -159,6 +159,16 @@ export default [
         component: './Operation/HelpCenter',
       },
       {
+        path: '/operation/famous-quotes',
+        name: 'famousQuotes',
+        component: './Operation/FamousQuotes',
+      },
+      {
+        path: '/operation/pc-images',
+        name: 'pcImages',
+        component: './Operation/PCImages',
+      },
+      {
         path: '/operation',
         redirect: '/operation/pc-login',
       },
@@ -210,7 +220,18 @@ export default [
     path: '/user-management',
     name: 'userManagement',
     icon: 'UserOutlined',
-    component: './UserManagement',
+    routes: [
+      {
+        path: '/user-management/user-list',
+        name: 'userList',
+        component: './UserManagement/UserList',
+      },
+      {
+        path: '/user-management',
+        redirect: '/user-management/user-list',
+      },
+    ],
+    // component: './UserManagement',
   },
   {
     path: '/kvSetting',

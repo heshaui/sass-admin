@@ -72,21 +72,20 @@ export default {
   'menu.operation': '运营配置',
   'menu.operation.pcLogin': 'PC登录配置',
   'menu.operation.media': '社交媒体管理',
-  'menu.operation.announcement':'公告管理',
-  'menu.operation.helpCenter':'帮助中心',
+  'menu.operation.announcement': '公告管理',
+  'menu.operation.announcement.category': '分类管理',
+  'menu.operation.helpCenter': '帮助中心',
+  'menu.operation.pcImages': 'PC图片管理',
+  'menu.operation.famousQuotes': '名言警句',
   'menu.kvSetting': 'KV配置管理',
   'menu.commonConfig': '通用配置',
   'menu.commonConfig.kvSetting': 'KV配置管理',
   'menu.commonConfig.basic': '基础配置',
-  'menu.pc':'pc功能路径配置',
-  'menu.rate':'汇率配置',
-  'menu.userManagement':'用户管理',
-  'menu.userManagement.userList':'用户列表',
-  'menu.identityVerification':'身份认证',
-  'menu.identityVerification.basicConfig':'基础配置',
-  'menu.identityVerification.auditList':'审核列表',
-
-  
-
-
+  'menu.pc': 'pc功能路径配置',
+  'menu.rate': '汇率配置',
+  'menu.userManagement': '用户管理',
+  'menu.userManagement.userList': '用户列表',
+  'menu.identityVerification': '身份认证',
+  'menu.identityVerification.basicConfig': '基础配置',
+  'menu.identityVerification.auditList': '审核列表',
 };

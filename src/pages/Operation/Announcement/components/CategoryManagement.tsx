@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { Button, message, Modal } from 'antd';
-import { updateAnnouncement,getClassMenuList } from '@/services/ant-design-pro/operation';
+import { Button, message, Modal, Card } from 'antd';
+import { updateAnnouncement,getClassMenuList,addClassMenu} from '@/services/ant-design-pro/operation';
 import CategoryForm from './CategoryForm';
+
 
 type CategoryItem = {
   id: string;
@@ -19,6 +20,7 @@ const CategoryManagement: React.FC = () => {
   const [formType, setFormType] = useState<'create' | 'update'>('create');
   
   const categoryActionRef = useRef<ActionType>();
+
 
   // 获取分类列表
   const fetchCategoryList = async () => {
@@ -121,26 +123,27 @@ const CategoryManagement: React.FC = () => {
   ];
 
   return (
-    <>
-      <ProTable<CategoryItem>
-        headerTitle={false}
-        actionRef={categoryActionRef}
-        rowKey="id"
-        request={fetchCategoryList}
-        columns={categoryColumns}
-        toolbar={[
-          <Button key="add" type="primary" onClick={() => {
-            setFormType('create');
-            setCurrentCategory(undefined);
-            setCategoryFormVisible(true);
-          }}>
-            添加分类
-          </Button>
-        ]}
-        pagination={{
-          pageSize: 10,
-        }}
-      />
+    <div>
+        <ProTable<CategoryItem>
+          headerTitle={false}
+          actionRef={categoryActionRef}
+          rowKey="id"
+          request={fetchCategoryList}
+          columns={categoryColumns}
+          toolBarRender={() => [
+            <Button key="add" type="primary" onClick={() => {
+              setCategoryFormVisible(true);
+              setCurrentCategory(undefined);
+              setFormType('create');
+            }}>
+              添加分类
+            </Button>
+          ]}
+          pagination={{
+            pageSize: 10,
+          }}
+        />
+      {/* </Card> */}
 
       {/* 分类表单 */}
       <CategoryForm
@@ -153,7 +156,7 @@ const CategoryManagement: React.FC = () => {
           categoryActionRef.current?.reload();
         }}
       />
-    </>
+   </div>
   );
 };
 

@@ -2,8 +2,9 @@ import React, { useRef, useState } from 'react';
 import { Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { getHelpCenterArticleList } from '@/services/ant-design-pro/operation';
+import { getHelpCenterArticleList,addHelpCenterArticle} from '@/services/ant-design-pro/operation';
 import ArticlePublishModal from './ArticlePublishModal';
+
 
 // 文章管理数据接口
 interface ArticleItem {
@@ -32,13 +33,30 @@ const ArticleManagement: React.FC = () => {
   // 处理文章发布
   const handlePublishArticle = async (values: any) => {
     try {
-      console.log('发布文章数据:', values);
-      // 这里应该调用发布文章的接口
-      message.success('文章发布成功');
-      // 刷新文章列表
-      articleActionRef.current?.reload();
-      // 关闭模态框
-      closePublishModal();
+      let data={
+          "homeHelpCenterArticle": {
+              "articleDescription": "前斗机该听王认采铁。现子今导要与级省效。",
+              "sort": 1,
+              "showType": 0,
+
+          },
+          "homeHelpCenterArticleContents": [
+              {
+                  "languageCode": "en_US",
+                  "articleTitle": "托一道关于全大方而背焚那",
+                  "articleContent": "nisi laboris exercitation aliqua",
+              },
+           
+          ]
+      
+      }
+      const res = await addHelpCenterArticle(data);
+      if (res.code === '0') {
+        message.success('文章发布成功');
+        closePublishModal();
+      } else {
+        message.error('文章发布失败');
+      }
     } catch (error) {
       message.error('文章发布失败');
     }

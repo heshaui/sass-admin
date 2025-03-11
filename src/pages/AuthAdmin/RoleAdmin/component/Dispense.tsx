@@ -77,6 +77,7 @@ const Dispense: React.FC<RoleModalProps> = ({
             onCheck={handleSelect}
             showLine
             defaultExpandAll
+            checkStrictly={true}
           />
         </Form.Item>
       </Form>

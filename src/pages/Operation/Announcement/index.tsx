@@ -7,10 +7,9 @@ import CategoryManagement from './components/CategoryManagement';
 
 const { TabPane } = Tabs;
 
-
-
-const AnnouncementList: React.FC = () => {
+const AnnouncementPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('announcement');
+
 
   // 切换标签页
   const handleTabChange = (key: string) => {
@@ -20,14 +19,21 @@ const AnnouncementList: React.FC = () => {
   return (
     <PageContainer>
       <Tabs activeKey={activeTab} onChange={handleTabChange}>
-        <TabPane tab="分类管理" key="category" />
-        <TabPane tab="公告管理" key="announcement" />
+        <TabPane
+          tab='分类管理'
+          key="category"
+        >
+          <CategoryManagement />
+        </TabPane>
+        <TabPane
+          tab='公告管理'
+          key="announcement"
+        >
+          <AnnouncementManagement />
+        </TabPane>
       </Tabs>
-      
-      {activeTab === 'category' && <CategoryManagement />}
-      {activeTab === 'announcement' && <AnnouncementManagement />}
     </PageContainer>
   );
 };
 
-export default AnnouncementList; 
+export default AnnouncementPage; 

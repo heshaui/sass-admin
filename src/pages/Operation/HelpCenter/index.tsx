@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Tabs } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
-import CategoryManagement from './components/CategoryManagement';
-import ArticleManagement from './components/ArticleManagement';
+import CategoryManagement from './components/Category/CategoryManagement';
+import ArticleManagement from './components/Article/ArticleManagement';
 import SelfService from './components/SelfService';
 
 const { TabPane } = Tabs;

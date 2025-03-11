@@ -20,6 +20,7 @@ const UserManagement: React.FC = () => {
       const response = await getUserList({
         pageNo: params.current,
         pageSize: params.pageSize,
+        tenantId: '1002',
         ...params
       });
       setLoading(false);
@@ -50,15 +51,15 @@ const UserManagement: React.FC = () => {
     },
     {
       title: '昵称',
-      dataIndex: 'nickname',
-      key: 'nickname',
+      dataIndex: 'account',
+      key: 'account',
       width: 150,
       search: false,
     },
     {
       title: '国家',
-      dataIndex: 'country',
-      key: 'country',
+      dataIndex: 'countryCode',
+      key: 'countryCode',
       width: 80,
       render: (text) => text || '--',
       search: false,
@@ -79,8 +80,8 @@ const UserManagement: React.FC = () => {
     },
     {
       title: '注册时间',
-      dataIndex: 'registerTime',
-      key: 'registerTime',
+      dataIndex: 'createTime',
+      key: 'createTime',
       width: 150,
       valueType: 'dateTime',
       
@@ -128,11 +129,6 @@ const UserManagement: React.FC = () => {
         }}
         dateFormatter="string"
         headerTitle="用户列表"
-        toolBarRender={() => [
-          <Button key="add" type="primary" icon={<PlusOutlined />}>
-            添加用户
-          </Button>,
-        ]}
         options={{
           setting: {
             draggable: true,
