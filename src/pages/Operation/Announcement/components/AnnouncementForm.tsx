@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Select, DatePicker, Modal, Radio, Button, message, Checkbox, Tabs } from 'antd';
+import { Form, Input, Select, DatePicker, Modal, Radio, Button, message } from 'antd';
 import { 
   addAnnouncement, 
   updateAnnouncement,
@@ -9,7 +9,6 @@ import SeedEditor from '@/components/SeedEditor';
 import { languages } from '@/config/language';
 import moment from 'moment';
 const { Option } = Select;
-const { TextArea } = Input;
 
 export type AnnouncementFormProps = {
   visible: boolean;

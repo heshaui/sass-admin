@@ -347,7 +347,7 @@ export async function getClassMenuParams(id?: string) {
 export async function deleteClassMenu(id: string) {
   return request<{
     success: boolean;
-  }>('/tenant/v1/deleteClassMenuById', {
+  }>('/tenant/v1/deleteClassMenuById?idString='+id, {
     method: 'POST',
     data: { id },
   });

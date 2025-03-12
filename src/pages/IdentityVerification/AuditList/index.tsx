@@ -51,39 +51,28 @@ const AuditList: React.FC = () => {
       title: '用户ID',
       dataIndex: 'userId',
       key: 'userId',
-      copyable: true,
     },
     {
       title: '用户名',
-      dataIndex: 'userName',
-      key: 'userName',
+      dataIndex: 'firstName',
+      key: 'firstName',
     },
     {
       title: '证件类型',
-      dataIndex: 'idType',
-      key: 'idType',
-      valueEnum: {
-        idcard: { text: '身份证' },
-        passport: { text: '护照' },
-        other: { text: '其他证件' },
-      },
+      dataIndex: 'cardType',
+      key: 'cardType',
     },
     {
       title: '提交时间',
-      dataIndex: 'submitTime',
-      key: 'submitTime',
+      dataIndex: 'currentCheckTime',
+      key: 'currentCheckTime',
       valueType: 'dateTime',
       sorter: true,
     },
     {
       title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      valueEnum: {
-        pending: { text: '待审核', status: 'warning' },
-        approved: { text: '已通过', status: 'success' },
-        rejected: { text: '已拒绝', status: 'error' },
-      },
+      dataIndex: 'authStatus',
+      key: 'authStatus',
     },
     {
       title: '操作',
@@ -146,12 +135,12 @@ const AuditList: React.FC = () => {
           
           const res = await getUserIdentityVerificationList(queryParams);
           return {
-            data: res.data.list || [],
+            data: res.data || [],
             // success 请返回 true，
             // 不然 table 会停止解析数据，即使有数据
-            success: res.success,
+            success: res.code==='0'?true:false,
             // 不传会使用 data 的长度，如果是分页一定要传
-            total: res.data.total,
+            total: res.data.length,
           };
         }}
         columns={columns}

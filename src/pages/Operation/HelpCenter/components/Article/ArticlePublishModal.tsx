@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Select, Button, InputNumber, Radio, message } from 'antd';
+import { Modal, Form, Input, Select, Button, InputNumber, message } from 'antd';
 import SeedEditor from '@/components/SeedEditor';
 import LanguageSelector from '@/components/Languages/Index';
+import { getHelpCenterClassList } from '@/services/ant-design-pro/operation';
 
 interface ArticlePublishModalProps {
   visible: boolean;
   onCancel: () => void;
   onSubmit: (values: any) => Promise<void>;
+}
+
+interface HelpCenterClassItem {
+  id: string | number;
+  helpDescription?: string;
+  name?: string;
+  description?: string;
 }
 
 const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
@@ -18,34 +26,50 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState('');
   const [language, setLanguage] = useState('en_US');
+  const [helpCenterClassList, setHelpCenterClassList] = useState<HelpCenterClassItem[]>([]);
   
-  // 初始化表单默认值
+  const getClassList = async() => {
+    const response = await getHelpCenterClassList({});
+    if(response.code==='0') {
+      if(Array.isArray(response.data.list)) {
+        setHelpCenterClassList(response.data.list);
+      } else {
+        console.error('API返回的数据结构不是预期的数组格式:', response.data);
+      }
+    }
+  }
+  
   useEffect(() => {
+    getClassList();
     form.setFieldsValue({ language: language });
   }, []);
   
-  // 处理语言变化
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
-    form.setFieldsValue({ language: value });
+    form.setFieldsValue({ 
+      language: value,
+    });
   };
   
-  // 提交表单
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
       setLoading(true);
       
-      // 提交表单数据
-      await onSubmit({
+      const articleData = {
         ...values,
-        content,
-      });
+        articles: [{
+          languageCode: language,
+          articleTitle: values.title,
+          articleContent: content
+        }]
+      };
       
-      // 重置表单
+      await onSubmit(articleData);
+      
       form.resetFields();
       setContent('');
-      message.success('文章发布成功');
+      // message.success('文章发布成功');
     } catch (error) {
       console.error('表单验证或提交失败:', error);
     } finally {
@@ -53,7 +77,6 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
     }
   };
 
-  // 处理编辑器内容变化
   const handleEditorChange = (value: string) => {
     setContent(value);
   };
@@ -94,11 +117,10 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
         >
           <Select
             placeholder="请选择分类"
-            options={[
-              { value: '1', label: '帮助中心' },
-              { value: '2', label: '账户安全' },
-              { value: '3', label: '交易指南' },
-            ]}
+            options={Array.isArray(helpCenterClassList) ? helpCenterClassList.map((item) => ({
+              value: item.id,
+              label: item.helpDescription,
+            })) : []}
           />
         </Form.Item>
 
@@ -120,21 +142,21 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
         <Form.Item
           name="title"
           label="标题"
-          rules={[{ required: true, message: '请输入标题' }]}
+          rules={[{ required: true, message: `请输入${language === 'zh_CN' ? '中文' : ''}标题` }]}
         >
-          <Input placeholder="请输入标题" />
+          <Input placeholder={`请输入${language === 'zh_CN' ? '中文' : language === 'en_US' ? '英文' : ''}标题`} />
         </Form.Item>
 
         <Form.Item
           label="内容"
           required
           validateStatus={!content ? 'error' : ''}
-          help={!content ? '请输入内容' : ''}
+          help={!content ? `请输入${language === 'zh_CN' ? '中文' : language === 'en_US' ? '英文' : ''}内容` : ''}
         >
           <SeedEditor
-            value={content}
+            defaultValue={content}
             onChange={handleEditorChange}
-            placeholder="请输入文章内容......"
+            placeholder={`请输入${language === 'zh_CN' ? '中文' : language === 'en_US' ? '英文' : ''}文章内容......`}
           />
         </Form.Item>
       </Form>

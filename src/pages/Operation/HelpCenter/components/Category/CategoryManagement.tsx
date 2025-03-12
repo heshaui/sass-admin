@@ -71,7 +71,7 @@ const CategoryManagement: React.FC = () => {
             helpSort: values.helpSort || 1,
             blackIcon: values.blackIcon || "",
             whiteIcon: values.whiteIcon || "",
-            parentId: values.parentId || 0,
+            parentId: 0,
             showType: values.showType || 1,
           },
           homeHelpCenterClassContents: languageContents.map((item: any) => ({
@@ -110,15 +110,37 @@ const CategoryManagement: React.FC = () => {
   // ProTable 的列定义
   const columns: ProColumns<HelpCenterClassItem>[] = [
     {
-      title: '分类名称',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'id',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
-      title: '排序',
+      title: '描述',
+      dataIndex: 'helpDescription',
+      key: 'helpDescription',
+    },
+    {
+      title: '上级分类',
+      dataIndex: 'parentId',
+      key: 'parentId',
+    },
+    {
+      title: '路径',
       dataIndex: 'sort',
       key: 'sort',
     },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      valueType:'dateTime'
+    },
+    {
+      title: '排序',
+      dataIndex: 'helpSort',
+      key: 'helpSort',
+    },
+    
     {
       title: '操作',
       key: 'action',

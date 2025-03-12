@@ -3,15 +3,14 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { useState } from 'react';
 import type { ProColumns } from '@ant-design/pro-components';
-import { getUserList } from '@/services/ant-design-pro/UserManagement';
+import { getUserList, getUserDetail } from '@/services/ant-design-pro/UserManagement';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
-
-
-
-
+import UserDetail from './components/UserDetail';
 
 const UserManagement: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<UserItem | null>(null);
 
   // 使用真实API获取用户数据
   const fetchUserList = async (params: any) => {
@@ -37,6 +36,19 @@ const UserManagement: React.FC = () => {
         success: false,
         total: 0,
       };
+    }
+  };
+
+  // 获取用户详情
+  const fetchUserDetail = async (userId: string) => {
+    try {
+      const response = await getUserDetail(userId);
+      if (response.code === '0') {
+        setCurrentUser(response.data);
+        setShowUserDetail(true);
+      }
+    } catch (error) {
+      console.error('获取用户详情失败', error);
     }
   };
 
@@ -99,7 +111,7 @@ const UserManagement: React.FC = () => {
       key: 'action',
       width: 80,
       search: false,
-      render: () => <a>查看</a>,
+      render: (_, record) => <a onClick={() => fetchUserDetail(record.userId)}>查看</a>,
     },
     {
       title: '账号',
@@ -109,6 +121,18 @@ const UserManagement: React.FC = () => {
     },
 
   ];
+
+  if (showUserDetail) {
+    return (
+      <PageContainer title="用户管理">
+        <UserDetail 
+          visible={showUserDetail} 
+          user={currentUser} 
+          onClose={() => setShowUserDetail(false)} 
+        />
+      </PageContainer>
+    );
+  }
 
   return (
     <PageContainer title="用户管理">

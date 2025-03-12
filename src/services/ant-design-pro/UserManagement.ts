@@ -64,7 +64,7 @@ export async function getUserList(params: UserListParams) {
  * 获取用户详情
  */
 export async function getUserDetail(params: UserDetailParams) {
-  return request('/tenant/v1/userDetail', {
+  return request(`/tenant/v1/userDetail?id=${params}`, {
     method: 'POST',
     data: params,
   });

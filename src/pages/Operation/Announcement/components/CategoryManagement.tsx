@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { Button, message, Modal, Card } from 'antd';
-import { updateAnnouncement,getClassMenuList,addClassMenu} from '@/services/ant-design-pro/operation';
+import { updateAnnouncement,getClassMenuList,addClassMenu,updateClassMenu,deleteClassMenu,getClassMenuParams,getAnnouncementContentList} from '@/services/ant-design-pro/operation';
 import CategoryForm from './CategoryForm';
 
 
@@ -18,10 +18,42 @@ const CategoryManagement: React.FC = () => {
   const [categoryFormVisible, setCategoryFormVisible] = useState<boolean>(false);
   const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
   const [formType, setFormType] = useState<'create' | 'update'>('create');
+  const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
   
   const categoryActionRef = useRef<ActionType>();
 
-
+  const handleCategoryFormSuccess = async (formValues: Record<string, any>) => {
+    setConfirmLoading(true);
+    console.log(formValues,'formValues');
+    try {
+      let response;
+      if (formType === 'create') {
+       
+        response = await addClassMenu(formValues);
+      } else {
+        let data={
+          id:formValues.id,
+          serialNum:formValues.serialNum,
+          describe:formValues.describe,
+          languageCodes:formValues.languageCodes
+        }
+        response = await updateClassMenu(data);
+      }
+      
+      if (response.code==='0'&& response.data) {
+        message.success(formType === 'create' ? '创建成功' : '更新成功');
+        setCategoryFormVisible(false);
+        // 刷新列表数据
+        categoryActionRef.current?.reload();
+      } else {
+        message.error(formType === 'create' ? '创建失败' : '更新失败');
+      }
+    } catch (error) {
+      message.error('操作失败');
+    } finally {
+      setConfirmLoading(false);
+    }
+  };
   // 获取分类列表
   const fetchCategoryList = async () => {
     try {
@@ -46,15 +78,38 @@ const CategoryManagement: React.FC = () => {
       };
     }
   };
+  const  getEditInfo=async(id:string)=>{
+    const response=await getClassMenuParams(id);
+    
+    if(response.code==='0'&& response.data){
+      setCurrentCategory(
+        {
+          ...response.data,
+          contentList:response.data.languageCodes
+        }
+      );
+      setFormType('update');
+      setCategoryFormVisible(true);
+
+      // if(contentList.code==='0'&& contentList.data){
+      //   setCurrentCategory({
+      //     ...response.data,
+      //     contentList:contentList.data
+      //   });
+      //   setFormType('update');
+      // setCategoryFormVisible(true);
+
+      
+    }else{
+      message.error('获取分类信息失败');
+    }
+  }
 
   // 删除分类
   const handleRemoveCategory = async (id: string) => {
     try {
-      let data={
-        id:id,
-        remove:1
-      }
-      const response = await updateAnnouncement(data);
+      
+      const response = await deleteClassMenu(id);
       if (response.code==='0') {
         message.success('删除成功');
         categoryActionRef.current?.reload();
@@ -76,11 +131,11 @@ const CategoryManagement: React.FC = () => {
     },
     {
       title: '描述',
-      dataIndex: 'description',
+      dataIndex: 'describe',
     },
     {
       title: '排序',
-      dataIndex: 'sort',
+      dataIndex: 'serialNum',
       search: false,
     },
     {
@@ -97,9 +152,8 @@ const CategoryManagement: React.FC = () => {
         <a
           key="edit"
           onClick={() => {
-            setCurrentCategory(record);
-            setFormType('update');
-            setCategoryFormVisible(true);
+            getEditInfo(record.id);
+           
           }}
         >
           编辑
@@ -151,10 +205,8 @@ const CategoryManagement: React.FC = () => {
         type={formType}
         values={currentCategory}
         onCancel={() => setCategoryFormVisible(false)}
-        onSuccess={() => {
-          setCategoryFormVisible(false);
-          categoryActionRef.current?.reload();
-        }}
+        onSuccess={handleCategoryFormSuccess}
+        confirmLoading={confirmLoading}
       />
    </div>
   );

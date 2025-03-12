@@ -32,28 +32,22 @@ const ArticleManagement: React.FC = () => {
 
   // 处理文章发布
   const handlePublishArticle = async (values: any) => {
+
     try {
       let data={
           "homeHelpCenterArticle": {
-              "articleDescription": "前斗机该听王认采铁。现子今导要与级省效。",
-              "sort": 1,
-              "showType": 0,
-
+              "articleDescription": values.description,
+              "sort": values.order,
+              "classId": values.categoryId,
           },
-          "homeHelpCenterArticleContents": [
-              {
-                  "languageCode": "en_US",
-                  "articleTitle": "托一道关于全大方而背焚那",
-                  "articleContent": "nisi laboris exercitation aliqua",
-              },
-           
-          ]
+          "homeHelpCenterArticleContents": values.articles
       
       }
       const res = await addHelpCenterArticle(data);
-      if (res.code === '0') {
+      if (res.code === '0'&&res.data) {
         message.success('文章发布成功');
         closePublishModal();
+        articleActionRef.current?.reload();
       } else {
         message.error('文章发布失败');
       }
