@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 import { Button, Table, Space, message, Modal, Form, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { request } from 'umi';
