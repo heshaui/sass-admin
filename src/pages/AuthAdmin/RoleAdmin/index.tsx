@@ -178,7 +178,7 @@ const handleSubmitDis = async (values) => {
       
     // 获取移除的权限
     const removedPermissions = rolePermissions.filter(
-      (permId) => !values.permissions.includes(permId)
+      (permId) => !values.permissions.checked.includes(permId)
     );
 
     const allID=roleId.filter(item=>removedPermissions.includes(item.permissionsId)) 
