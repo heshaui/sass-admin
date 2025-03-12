@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { Button, Space, message } from 'antd';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer,ProTable } from '@ant-design/pro-components';
 import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { 
   getUserIdentityVerificationList, 
   getUserIdentityVerificationDetail,

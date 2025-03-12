@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Form, Input, Button, Switch, message, Space, Select } from 'antd';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 
 const BasicConfig: React.FC = () => {
   const [form] = Form.useForm();
