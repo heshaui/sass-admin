@@ -172,13 +172,13 @@ const handleDispense = async (record) => {
 const handleSubmitDis = async (values) => {
   try {
     // 获取新增的权限
-    const newPermissions = values.permissions.checked.filter(
+    const newPermissions = values.permissions.filter(
       (permId) => !rolePermissions.includes(permId)
     );
       
     // 获取移除的权限
     const removedPermissions = rolePermissions.filter(
-      (permId) => !values.permissions.checked.includes(permId)
+      (permId) => !values.permissions.includes(permId)
     );
 
     const allID=roleId.filter(item=>removedPermissions.includes(item.permissionsId)) 

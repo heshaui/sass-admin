@@ -15,6 +15,40 @@ const extractCheckedKeys = (rolePermissions) => {
   return rolePermissions.map((item) => item);
 };
 
+// 添加一个辅助函数来获取所有选中的节点（包括父节点）
+const getAllCheckedKeys = (checkedKeys: React.Key[], treeData: any[]) => {
+  const allKeys = [...checkedKeys];
+  const parentMap = new Map();
+  
+  // 构建父子节点映射关系
+  const buildParentMap = (nodes: any[], parent: any = null) => {
+    nodes.forEach(node => {
+      if (parent) {
+        parentMap.set(node.key, parent.key);
+      }
+      if (node.children && node.children.length > 0) {
+        buildParentMap(node.children, node);
+      }
+    });
+  };
+  
+  buildParentMap(treeData);
+  
+  // 查找所有父节点
+  const findParents = (key: React.Key) => {
+    const parentKey = parentMap.get(key);
+    if (parentKey && !allKeys.includes(parentKey)) {
+      allKeys.push(parentKey);
+      findParents(parentKey);
+    }
+  };
+  
+  // 对每个选中的key查找其父节点
+  checkedKeys.forEach(key => findParents(key));
+  
+  return allKeys;
+};
+
 const Dispense: React.FC<RoleModalProps> = ({
   visible,
   onClose,
@@ -41,8 +75,17 @@ const Dispense: React.FC<RoleModalProps> = ({
   }, [initialValues]);
 
   // ✅ 处理权限勾选（支持父子级联选中）
-  const handleSelect = (checkedKeys: React.Key[]) => {
-    setSelectedPermissions(checkedKeys as string[]);
+  const handleSelect = (checkedKeys: React.Key[] | { checked: React.Key[]; halfChecked: React.Key[] }, info: any) => {
+    console.log("checkedKeys", checkedKeys);
+    console.log("info", info);
+    
+    // 获取选中的keys
+    const keys = Array.isArray(checkedKeys) ? checkedKeys : checkedKeys.checked;
+    
+    // 获取所有需要选中的keys（包括父节点）
+    const allCheckedKeys = getAllCheckedKeys(keys as React.Key[], treeData);
+    console.log(allCheckedKeys)
+    setSelectedPermissions(allCheckedKeys as string[]);
   };
 
   // ✅ 提交
