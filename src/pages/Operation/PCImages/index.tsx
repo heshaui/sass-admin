@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 import { Card, Upload, Button, message, Space, Modal, Form, Input, Row, Col } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
