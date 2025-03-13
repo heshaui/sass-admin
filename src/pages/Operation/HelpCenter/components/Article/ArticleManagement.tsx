@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { getHelpCenterArticleList,addHelpCenterArticle} from '@/services/ant-design-pro/operation';
+import { getHelpCenterArticleList, addHelpCenterArticle, updateHelpCenterArticle } from '@/services/ant-design-pro/operation';
 import ArticlePublishModal from './ArticlePublishModal';
 
 
@@ -19,40 +19,83 @@ interface ArticleItem {
 const ArticleManagement: React.FC = () => {
   const articleActionRef = useRef<ActionType>();
   const [publishModalVisible, setPublishModalVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentArticle, setCurrentArticle] = useState<ArticleItem | null>(null);
 
   // 显示发布文章模态框
   const showPublishModal = () => {
+    setIsEditing(false);
+    setCurrentArticle(null);
     setPublishModalVisible(true);
+  };
+
+  // 显示编辑文章模态框
+  const showEditModal = async (record: ArticleItem) => {
+    try {
+      // 获取文章详情数据
+      // 假设有一个获取文章详情的API，如果没有，需要添加
+      // const detailResponse = await getHelpCenterArticleDetail(record.id);
+      // const detailData = detailResponse.data;
+      
+      // 临时使用现有数据，实际应该从API获取完整数据
+      const articleDetail = {
+        ...record,
+        description: record.articleDescription,
+        categoryId: record.classId,
+        order: record.sort || 0,
+        articles: [] // 这里应该从API获取文章内容详情
+      };
+      
+      setIsEditing(true);
+      setCurrentArticle(articleDetail);
+      setPublishModalVisible(true);
+    } catch (error) {
+      message.error('获取文章详情失败');
+    }
   };
 
   // 关闭发布文章模态框
   const closePublishModal = () => {
     setPublishModalVisible(false);
+    setCurrentArticle(null);
   };
 
-  // 处理文章发布
+  // 处理文章发布或编辑
   const handlePublishArticle = async (values: any) => {
-
     try {
-      let data={
-          "homeHelpCenterArticle": {
-              "articleDescription": values.description,
-              "sort": values.order,
-              "classId": values.categoryId,
-          },
-          "homeHelpCenterArticleContents": values.articles
+      let data = {
+        "homeHelpCenterArticle": {
+          "articleDescription": values.description,
+          "sort": values.order,
+          "classId": values.categoryId,
+        },
+        "homeHelpCenterArticleContents": values.articles
+      }
       
-      }
-      const res = await addHelpCenterArticle(data);
-      if (res.code === '0'&&res.data) {
-        message.success('文章发布成功');
-        closePublishModal();
-        articleActionRef.current?.reload();
+      let res;
+      if (isEditing && currentArticle) {
+        // 编辑现有文章
+        data.homeHelpCenterArticle.id = currentArticle.id;
+        res = await updateHelpCenterArticle(data);
+        if (res.code === '0' && res.data) {
+          message.success('文章更新成功');
+        } else {
+          message.error('文章更新失败');
+        }
       } else {
-        message.error('文章发布失败');
+        // 新增文章
+        res = await addHelpCenterArticle(data);
+        if (res.code === '0' && res.data) {
+          message.success('文章发布成功');
+        } else {
+          message.error('文章发布失败');
+        }
       }
+      
+      closePublishModal();
+      articleActionRef.current?.reload();
     } catch (error) {
-      message.error('文章发布失败');
+      message.error(isEditing ? '文章更新失败' : '文章发布失败');
     }
   };
 
@@ -136,7 +179,13 @@ const ArticleManagement: React.FC = () => {
       key: 'action',
       valueType: 'option',
       render: (_, record) => [
-        <Button type="link" key="edit">编辑</Button>,
+        <Button 
+          type="link" 
+          key="edit" 
+          onClick={() => showEditModal(record)}
+        >
+          编辑
+        </Button>,
         <Button 
           type="link" 
           key="toggle"
@@ -170,11 +219,13 @@ const ArticleManagement: React.FC = () => {
         }}
       />
       
-      {/* 发布文章模态框 */}
+      {/* 发布/编辑文章模态框 */}
       <ArticlePublishModal
         visible={publishModalVisible}
         onCancel={closePublishModal}
         onSubmit={handlePublishArticle}
+        isEditing={isEditing}
+        article={currentArticle}
       />
     </>
   );

@@ -70,6 +70,30 @@ export interface ClassMenuItem {
   updateTime?: string;
 }
 
+// 名言接口定义
+export interface FamousAphorismsItem {
+  id: string;
+  content: string;
+  author?: string;
+  status: number;
+  sort?: number;
+  createTime?: string;
+  updateTime?: string;
+}
+
+// 轮播图接口定义
+export interface CarouselImageItem {
+  id: string;
+  imageUrl: string;
+  title?: string;
+  description?: string;
+  link?: string;
+  status: number;
+  sort?: number;
+  createTime?: string;
+  updateTime?: string;
+}
+
 // 获取媒体列表
 export async function getMediaList(data: any) {
   return request<{
@@ -358,6 +382,112 @@ export async function updateClassMenu(params: ClassMenuItem) {
   return request<{
     success: boolean;
   }>('/tenant/v1/updateClassMenuById', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 获取名言列表
+export async function getFamousAphorismsList(data: any) {
+  return request<{
+    data: FamousAphorismsItem[];
+    success: boolean;
+  }>('/tenant/v1/famousAphorismsList', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 获取名言详情
+export async function getFamousAphorismsDetail(id: string) {
+  return request<{
+    data: FamousAphorismsItem;
+    success: boolean;
+  }>('/tenant/v1/famousAphorismsDetail', {
+    method: 'POST',
+    data: { id },
+  });
+}
+
+// 删除名言
+export async function deleteFamousAphorisms(id: string) {
+  return request<{
+    success: boolean;
+  }>('/tenant/v1/deleteFamousAphorismsById', {
+    method: 'POST',
+    data: { id },
+  });
+}
+
+// 添加名言
+export async function addFamousAphorisms(params: Omit<FamousAphorismsItem, 'id'>) {
+  return request<{
+    success: boolean;
+    data: FamousAphorismsItem;
+  }>('/tenant/v1/saveFamousAphorisms', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 更新名言
+export async function updateFamousAphorisms(params: FamousAphorismsItem) {
+  return request<{
+    success: boolean;
+  }>('/tenant/v1/updateFamousAphorisms', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 获取轮播图列表
+export async function getCarouselImageList(data: any) {
+  return request<{
+    data: CarouselImageItem[];
+    success: boolean;
+  }>('/tenant/v1/carouselImageList', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 获取轮播图详情
+export async function getCarouselImageDetail(id: string) {
+  return request<{
+    data: CarouselImageItem;
+    success: boolean;
+  }>('/tenant/v1/CarouselImageDetail', {
+    method: 'POST',
+    data: { id },
+  });
+}
+
+// 删除轮播图
+export async function deleteCarouselImage(id: string) {
+  return request<{
+    success: boolean;
+  }>('/tenant/v1/deletecarouselImageById', {
+    method: 'POST',
+    data: { id },
+  });
+}
+
+// 添加轮播图
+export async function addCarouselImage(params: Omit<CarouselImageItem, 'id'>) {
+  return request<{
+    success: boolean;
+    data: CarouselImageItem;
+  }>('/tenant/v1/savecarouselImage', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 更新轮播图
+export async function updateCarouselImage(params: CarouselImageItem) {
+  return request<{
+    success: boolean;
+  }>('/tenant/v1/updatecarouselImage', {
     method: 'POST',
     data: params,
   });

@@ -3,7 +3,7 @@ import { Modal, Form, Input, InputNumber, Space, Radio, Button, message } from '
 import { PlusOutlined } from '@ant-design/icons';
 import type { HelpCenterClassItem } from '@/services/ant-design-pro/operation';
 import AvatarUpload from '@/components/AvatarUpload';
-import LanguageSelector from '@/components/Languages/Index'
+import LanguageSelector from '@/components/Languages'
 
 interface CategoryFormModalProps {
   visible: boolean;

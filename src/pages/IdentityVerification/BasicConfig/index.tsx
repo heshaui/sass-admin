@@ -1,92 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Form, Input, Button, Switch, message, Space, Select } from 'antd';
-import { PageContainer } from '@ant-design/pro-components';
+import React from 'react';
+import { Button } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { 
+  getUserLevelBenefitList
+} from '@/services/ant-design-pro/IdentityVerification';
+import EditModal from './components/EditModal';
 
-const BasicConfig: React.FC = () => {
-  const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+interface UserLevelItem {
+  key: string;
+  level: string;
+  requirements: React.ReactNode;
+  permissions: React.ReactNode;
+  updateTime: string;
+  operator: string;
+  action: React.ReactNode;
+}
 
-  useEffect(() => {
-    // 这里可以添加获取基础配置数据的逻辑
-    // fetchBasicConfig().then(data => form.setFieldsValue(data));
-  }, []);
+const UserLevel: React.FC = () => {
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [dataSource, setDataSource] = React.useState<UserLevelItem[]>([]);
+  const [pagination, setPagination] = React.useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const [isModalVisible, setIsModalVisible] = React.useState<boolean>(false);
+  const [editingRecord, setEditingRecord] = React.useState<any>(null);
 
-  const handleSubmit = async (values: any) => {
-    setLoading(true);
+  const fetchUserLevelList = async (params: {
+    current?: number;
+    pageSize?: number;
+  }) => {
     try {
-      // 这里可以添加保存配置的逻辑
-      // await saveBasicConfig(values);
-      message.success('配置保存成功');
+      setLoading(true);
+      const { current = 1, pageSize = 10 } = params;
+      const response = await getUserLevelBenefitList({
+        page: current,
+        pageSize,
+      });
+      
+      if (response && response.data) {
+        setDataSource(response.data.list || []);
+        setPagination({
+          ...pagination,
+          current,
+          pageSize,
+          total: response.data.total || 0,
+        });
+      }
     } catch (error) {
-      message.error('配置保存失败');
-      console.error(error);
+      console.error('获取用户等级列表失败:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <PageContainer title="身份认证基础配置">
-      <Card>
-        <Form 
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          initialValues={{
-            isEnabled: true,
-            verificationLevel: 'basic',
-            expirationDays: 30,
-          }}
+  React.useEffect(() => {
+    fetchUserLevelList({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    });
+  }, []);
+
+  const handleTableChange = (page: any) => {
+    fetchUserLevelList({
+      current: page.current,
+      pageSize: page.pageSize,
+    });
+  };
+
+  const showEditModal = (record: any) => {
+    setEditingRecord(record);
+    setIsModalVisible(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleSave = async (values: any) => {
+    try {
+      // 这里添加保存逻辑，发送请求到后端
+      // 示例：await updateUserLevel({...values});
+      console.log('保存的值:', values);
+      
+      // 关闭模态框
+      setIsModalVisible(false);
+      
+      // 刷新表格数据
+      fetchUserLevelList({
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+      });
+    } catch (error) {
+      console.error('更新失败:', error);
+    }
+  };
+
+  const columns = [
+    {
+      title: '等级',
+      dataIndex: 'levelName',
+      key: 'levelName',
+      search: false,
+    },
+    {
+      title: '要求',
+      dataIndex: 'demand',
+      key: 'demand',
+      search: false,
+    },
+    {
+      title: '权益',
+      dataIndex: 'benefitResps',
+      key: 'benefitResps',
+      search: false,
+    },
+    {
+      title: '修改时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      search: false,
+    },
+    {
+      title: '操作管理员',
+      dataIndex: 'tenantId',
+      key: 'tenantId',
+      search: false,
+    },
+    {
+      title: '操作',
+      dataIndex: 'action',
+      key: 'action',
+      render: (_, record) => (
+        <Button 
+          type="primary" 
+          icon={<EditOutlined />} 
+          onClick={() => showEditModal(record)}
         >
-          <Form.Item 
-            name="isEnabled" 
-            label="启用身份认证" 
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
-          
-          <Form.Item 
-            name="verificationLevel" 
-            label="认证级别" 
-            rules={[{ required: true, message: '请选择认证级别' }]}
-          >
-            <Select>
-              <Select.Option value="basic">基础认证</Select.Option>
-              <Select.Option value="advanced">高级认证</Select.Option>
-              <Select.Option value="enterprise">企业认证</Select.Option>
-            </Select>
-          </Form.Item>
-          
-          <Form.Item 
-            name="expirationDays" 
-            label="认证有效期(天)" 
-            rules={[{ required: true, message: '请输入认证有效期' }]}
-          >
-            <Input type="number" />
-          </Form.Item>
-          
-          <Form.Item 
-            name="requiredDocuments" 
-            label="所需文件说明"
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
-          
-          <Form.Item>
-            <Space>
-              <Button type="primary" htmlType="submit" loading={loading}>
-                保存配置
-              </Button>
-              <Button onClick={() => form.resetFields()}>
-                重置
-              </Button>
-            </Space>
-          </Form.Item>
-        </Form>
-      </Card>
+          编辑
+        </Button>
+      ),
+    },
+  ];
+
+  return (
+    <PageContainer>
+      <ProTable 
+        dataSource={dataSource} 
+        columns={columns} 
+        pagination={{
+          ...pagination,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total) => `共 ${total} 条记录`,
+        }}
+        loading={loading}
+        onChange={handleTableChange}
+      />
+      
+      <EditModal
+        visible={isModalVisible}
+        record={editingRecord}
+        onCancel={handleCancel}
+        onSave={handleSave}
+      />
     </PageContainer>
   );
 };
 
-export default BasicConfig; 
+export default UserLevel;

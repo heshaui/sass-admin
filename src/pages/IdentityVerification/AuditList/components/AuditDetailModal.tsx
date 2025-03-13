@@ -1,21 +1,30 @@
-import React, { useEffect } from 'react';
-import { Modal, Button, Form, Input, Select, message } from 'antd';
-import { updateUserIdentityVerificationById } from '@/services/ant-design-pro/IdentityVerification';
+import React, { useEffect, useState } from 'react';
+import { Card, Button, Form, Space, Descriptions, message, Row, Col, Image, Modal, Input } from 'antd';
+import { updateUserIdentityVerificationById,getUserIdentityVerificationDetail } from '@/services/ant-design-pro/IdentityVerification';
+import { ImagePlaceholder } from '@/components/ImagePlaceholder';
+import styles from './AuditDetailModal.module.less';
+import dayjs from 'dayjs';
 
 interface AuditDetailModalProps {
   visible: boolean;
-  onCancel: () => void;
+  onClose: () => void;
   onSuccess: () => void;
   record: any;
+  title?: React.ReactNode;
 }
 
-const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
+const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
   visible,
-  onCancel,
+  onClose,
   onSuccess,
   record,
+  title,
 }) => {
   const [form] = Form.useForm();
+  const [rejectModalVisible, setRejectModalVisible] = useState(false);
+  const [rejectReason, setRejectReason] = useState('');
+  const [rejectReasonCount, setRejectReasonCount] = useState(0);
+  const maxRejectReasonLength = 50;
 
   useEffect(() => {
     if (visible && record) {
@@ -31,32 +40,49 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
 
   const handleApprove = async () => {
     try {
-      await updateUserIdentityVerificationById({
+    const res = await updateUserIdentityVerificationById({
         id: record.id,
-        status: 'approved',
+        authStatus: '1',
       });
-      message.success('已通过审核');
-      onSuccess();
+      if(res.code === '0'){
+        message.success('已通过审核');
+        onSuccess();
+      }else{
+        message.error('操作失败');
+      }
     } catch (error) {
       message.error('操作失败');
       console.error(error);
     }
   };
 
-  const handleReject = async () => {
+  // 显示驳回原因的模态框
+  const showRejectModal = () => {
+    setRejectReason('');
+    setRejectReasonCount(0);
+    setRejectModalVisible(true);
+  };
+
+  // 处理取消驳回
+  const handleRejectCancel = () => {
+    setRejectModalVisible(false);
+  };
+
+  // 处理确认驳回
+  const handleRejectConfirm = async () => {
+    if (!rejectReason.trim()) {
+      message.error('请填写拒绝原因');
+      return;
+    }
+    
     try {
-      const values = await form.validateFields();
-      if (!values.rejectReason) {
-        message.error('请填写拒绝原因');
-        return;
-      }
-      
       await updateUserIdentityVerificationById({
         id: record.id,
         status: 'rejected',
-        rejectReason: values.rejectReason
+        rejectReason: rejectReason.trim()
       });
       
+      setRejectModalVisible(false);
       message.success('已拒绝审核');
       onSuccess();
     } catch (error) {
@@ -65,77 +91,135 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
     }
   };
 
-  const renderFooter = () => {
-    const buttons = [
-      <Button key="cancel" onClick={onCancel}>
-        关闭
-      </Button>
-    ];
-
-    if (record?.status === 'pending') {
-      buttons.push(
-        <Button 
-          key="approve" 
-          type="primary" 
-          onClick={handleApprove}
-        >
-          通过
-        </Button>,
-        <Button 
-          key="reject" 
-          danger 
-          onClick={handleReject}
-        >
-          拒绝
-        </Button>
-      );
+  // 处理驳回原因输入
+  const handleRejectReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    if (value.length <= maxRejectReasonLength) {
+      setRejectReason(value);
+      setRejectReasonCount(value.length);
     }
-
-    return buttons;
   };
 
+  if (!visible) {
+    return null;
+  }
+
   return (
-    <Modal
-      title="审核详情"
-      open={visible}
-      onCancel={onCancel}
-      footer={renderFooter()}
-      destroyOnClose
-    >
-      <Form form={form} layout="vertical">
-        <Form.Item name="userId" label="用户ID">
-          <Input disabled />
-        </Form.Item>
-        <Form.Item name="userName" label="用户名">
-          <Input disabled />
-        </Form.Item>
-        <Form.Item name="idType" label="证件类型">
-          <Select disabled>
-            <Select.Option value="idcard">身份证</Select.Option>
-            <Select.Option value="passport">护照</Select.Option>
-            <Select.Option value="other">其他证件</Select.Option>
-          </Select>
-        </Form.Item>
-        <Form.Item name="status" label="状态">
-          <Select disabled>
-            <Select.Option value="pending">待审核</Select.Option>
-            <Select.Option value="approved">已通过</Select.Option>
-            <Select.Option value="rejected">已拒绝</Select.Option>
-          </Select>
-        </Form.Item>
-        {(record?.status === 'pending') && (
-          <Form.Item name="rejectReason" label="拒绝原因" rules={[{ required: false, message: '请填写拒绝原因' }]}>
-            <Input.TextArea rows={4} placeholder="若选择拒绝，请填写拒绝原因" />
-          </Form.Item>
-        )}
-        {(record?.status === 'rejected') && (
-          <Form.Item name="rejectReason" label="拒绝原因">
-            <Input.TextArea rows={4} disabled />
-          </Form.Item>
-        )}
-      </Form>
-    </Modal>
+    <>
+      <Card
+        title="审核详情"
+        extra={<Button onClick={onClose}>关闭</Button>}
+      >
+        <div className={styles.statusBar}>
+          <div className={styles.statusLabel}>审核状态</div>
+          <div className={styles.statusValue} style={{color:record?.authStatus===0?'red':record?.authStatus===1?'green':'gray',}}>{record?.authStatus===0?'驳回':record?.authStatus===1?'通过':'未审核'}</div>
+        </div>
+        
+        <Descriptions bordered column={2}>
+          <Descriptions.Item label="用户ID" span={1}>{record?.userId }</Descriptions.Item>
+          <Descriptions.Item label="名" span={1}>{record?.firstName }</Descriptions.Item>
+          <Descriptions.Item label="国家或地区" span={1}>{record?.countryId }</Descriptions.Item>
+          <Descriptions.Item label="姓" span={1}>{record?.surname }</Descriptions.Item>
+          <Descriptions.Item label="出生日期" span={1}>{dayjs(record?.birthday).format('YYYY-MM-DD')}</Descriptions.Item>
+          <Descriptions.Item label="证件类型" span={1}>{record?.cardType }</Descriptions.Item>
+          <Descriptions.Item label="当前语言" span={1}>{record?.currentLanguage}</Descriptions.Item>
+          <Descriptions.Item label="证件号" span={2}>{record?.cardCode}</Descriptions.Item>
+        </Descriptions>
+        
+        <div className={styles.actionButtons}>
+          {record?.authStatus === 2 && <Space size="middle">
+            <Button type="primary" onClick={handleApprove}>通过</Button>
+            <Button danger onClick={showRejectModal}>驳回</Button>
+          </Space>
+          }
+          {record?.authStatus === 1 && <Space size="middle">
+           
+            <Button type='primary' danger>撤销</Button>
+          </Space>
+          }
+        </div>
+        
+        <div className={styles.documentSection}>
+          <h3>证件照</h3>
+          <Row gutter={16}>
+            <Col span={8}>
+              <div className={styles.imageBox}>
+                <div className={styles.imageLabel}>正面</div>
+                <div className={styles.imageContainer}>
+                  {record?.frontUrl ? (
+                    <Image 
+                      src={record.frontUrl} 
+                      alt="证件正面"
+                      className={styles.documentImage}
+                    />
+                  ) : (
+                    <ImagePlaceholder />
+                  )}
+                </div>
+              </div>
+            </Col>
+            <Col span={8}>
+              <div className={styles.imageBox}>
+                <div className={styles.imageLabel}>背面</div>
+                <div className={styles.imageContainer}>
+                  {record?.backUrl ? (
+                    <Image 
+                      src={record.backUrl} 
+                      alt="证件背面"
+                      className={styles.documentImage}
+                    />
+                  ) : (
+                    <ImagePlaceholder />
+                  )}
+                </div>
+              </div>
+            </Col>
+            <Col span={8}>
+              <div className={styles.imageBox}>
+                <div className={styles.imageLabel}>自拍照</div>
+                <div className={styles.imageContainer}>
+                  {record?.selfieUrl ? (
+                    <Image 
+                      src={record.selfieUrl} 
+                      alt="自拍照"
+                      className={styles.documentImage}
+                    />
+                  ) : (
+                    <ImagePlaceholder />
+                  )}
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </Card>
+
+      {/* 驳回原因模态框 */}
+      <Modal
+        title="驳回原因"
+        open={rejectModalVisible}
+        onCancel={handleRejectCancel}
+        footer={[
+          <Button key="cancel" onClick={handleRejectCancel}>
+            取消
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleRejectConfirm}>
+            确认
+          </Button>,
+        ]}
+      >
+        <Input.TextArea
+          placeholder="请输入"
+          value={rejectReason}
+          onChange={handleRejectReasonChange}
+          rows={4}
+        />
+        <div style={{ textAlign: 'right', marginTop: 4 }}>
+          {rejectReasonCount}/{maxRejectReasonLength}
+        </div>
+      </Modal>
+    </>
   );
 };
 
-export default AuditDetailModal; 
+export default AuditDetailCard; 

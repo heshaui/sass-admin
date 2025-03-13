@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Card, Descriptions, Badge, Space, Button, Modal, message, Input, Form, Select } from 'antd';
+import { Card, Descriptions, Badge, Space, Button, Modal, message, Input, Form, Select, Tabs } from 'antd';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
+import {  ProTable } from '@ant-design/pro-components';
+
 import { 
   freezeLogin, freezeTransaction, freezeWithdrawal,
   unfreezeLogin, unfreezeTransaction, unfreezeWithdrawal,
-  updatePhone, updateEmail
+  updatePhone, updateEmail,getUserOperationLogs
 } from '@/services/ant-design-pro/UserManagement';
 import TextArea from 'antd/es/input/TextArea';
 
@@ -43,6 +45,51 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
   const [phoneRemark, setPhoneRemark] = useState('');
   const [emailRemark, setEmailRemark] = useState('');
   const [countryCode, setCountryCode] = useState('86');
+
+  const columns: ProColumns<any>[] = [
+    {
+      title: '操作时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+    },
+    {
+      title: 'userId',
+      dataIndex: 'userId',
+      key: 'userId',
+    },
+    {
+      title: '操作管理员',
+      dataIndex: 'tenantId',
+      key: 'tenantId',
+    },
+    {
+      title: '操作行为',
+      dataIndex: 'operationType',
+      key: 'operationType',
+    },
+    {
+      title: '修改前',
+      dataIndex: 'beforeValue',
+      key: 'beforeValue',
+    },
+    {
+      title: '修改后',
+      dataIndex: 'afterValue',
+      key: 'afterValue',
+    },
+    {
+      title: '备注',
+      dataIndex: 'remarkMsg',
+      key: 'remarkMsg',
+    },
+  ];
+  const getLog=async()=>{
+    const res=await getUserOperationLogs({ userId: user.userId });
+    if(res.code==='0'){
+      return res.data.list;
+    }
+    return [];
+  }
 
   // 处理登录权限操作
   const handleLoginAction = async () => {
@@ -339,6 +386,18 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
             )}
           </Descriptions.Item>
         </Descriptions>
+        <Tabs>
+          <Tabs.TabPane tab="操作日志" key="1">
+            <ProTable
+              columns={columns}
+              rowKey="id"
+              search={false}
+              pagination={false}
+              request={getLog}
+
+            />
+          </Tabs.TabPane>
+        </Tabs>
       </Card>
 
       {/* 登录权限操作对话框 */}
