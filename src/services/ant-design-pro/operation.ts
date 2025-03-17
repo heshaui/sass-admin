@@ -413,7 +413,7 @@ export async function getFamousAphorismsDetail(id: string) {
 export async function deleteFamousAphorisms(id: string) {
   return request<{
     success: boolean;
-  }>('/tenant/v1/deleteFamousAphorismsById', {
+  }>('/tenant/v1/deleteFamousAphorismsById?id='+id, {
     method: 'POST',
     data: { id },
   });

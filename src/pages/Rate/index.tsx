@@ -1,10 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, createRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { Button, message } from 'antd';
+import { Button, message, Switch } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch } from '@ant-design/pro-components';
-import { queryRateList, addRate, updateRate, deleteRate } from '../../services/ant-design-pro/Rate';
+import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch, ProFormItem } from '@ant-design/pro-components';
+import { queryRateList, updateRate, queryTenantRateList,updateExchangeRateById } from '../../services/ant-design-pro/Rate';
 import AvatarUpload from "@/components/AvatarUpload/index";
 
 const Rate: React.FC = () => {
@@ -12,23 +12,38 @@ const Rate: React.FC = () => {
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<any>();
   const [editMode, setEditMode] = useState<boolean>(false);
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+  const [formRef] = useState(() => createRef<FormInstance>());
+
+  const merchantUpdateRate=async(id:string,status:number)=>{
+    const res= await updateRate({
+      id,
+      status,
+    });
+    if(res.code === '0'){
+      message.success('更新成功');
+    }else{
+      message.error(res.message);
+    }
+  }
 
   // 处理表单提交
   const handleSubmit = async (values: any) => {
     try {
-      if (editMode && currentRow) {
-        await updateRate({
+
+     const res= await updateExchangeRateById({
           ...values,
           id: currentRow.id,
         });
+        if(res.code === '0'){
         message.success('更新成功');
-      } else {
-        await addRate(values);
-        message.success('添加成功');
-      }
+        }else{
+          message.error(res.message);
+        }
+    
       setCreateModalVisible(false);
       actionRef.current?.reload();
-      return true;
+      return true;  
     } catch (error) {
       message.error('操作失败');
       return false;
@@ -81,12 +96,20 @@ const Rate: React.FC = () => {
     {
       title: '是否启用',
       dataIndex: 'status',
-      renderText: (text: string) => text === '1' ? '是' : '否',
+      renderText: (text: string) => text === 1 ? '是' : '否',
       valueEnum: {
         true: { text: '是', status: 'Success' },
         false: { text: '否', status: 'Default' },
       },
     },
+    ...(isAdmin ? [{
+      title: '是否显示',
+      dataIndex: 'status',
+      key: 'status',
+      render: (_: any, record: any) => [
+        <Switch key="switch" checked={record.status === 1} onChange={(checked: boolean) => merchantUpdateRate(record.id, checked ? 1 : 0)} />
+      ]
+    }] : []),
     {
       title: '操作',
       valueType: 'option',
@@ -128,8 +151,8 @@ const Rate: React.FC = () => {
             PageNo: current,
             PageSize: pageSize,
           };
-          
-          const response = await queryRateList(convertedParams);
+         
+          const response = isAdmin ? await queryRateList(convertedParams) : await queryTenantRateList(convertedParams);
           return {
             data: response.data.list || [],
             success: response.success,
@@ -151,25 +174,26 @@ const Rate: React.FC = () => {
         onVisibleChange={setCreateModalVisible}
         onFinish={handleSubmit}
         initialValues={currentRow}
+        formRef={formRef}
       >
         <ProFormText
-          name="简称"
-          label="币种代码"
+          name="shortName"
+          label="简称"
           placeholder="请输入币种代码，例如: USD"
           rules={[{ required: true, message: '请输入币种代码' }]}
         />
         <ProFormText
-          name="shortName"
+          name="symbol"
           label="符号"
           placeholder="请输入币种名称，例如: 美元"
           rules={[{ required: true, message: '请输入币种名称' }]}
         />
         <ProFormDigit
-          name="precision"
+          name="accuracy"
           label="精度"
           placeholder="请输入精度"
           min={0}
-          max={8}
+          max={18}
           fieldProps={{ precision: 0 }}
           rules={[{ required: true, message: '请输入精度' }]}
         />
@@ -182,11 +206,18 @@ const Rate: React.FC = () => {
           rules={[{ required: true, message: '请输入汇率' }]}
         />
         
-        <ProFormDigit name="iconUrl"  label="图标">
-        <AvatarUpload onChange={(url) => form.setFieldsValue({ iconUrl: url })} />
-        </ProFormDigit>
+        <ProFormItem
+          name="iconUrl"
+          label="图标"
+          rules={[{ required: true, message: '请上传图标' }]}
+        >
+          <AvatarUpload 
+            defaultValue={currentRow?.iconUrl} 
+            onChange={(url) => formRef.current?.setFieldsValue({ iconUrl: url })} 
+          />
+        </ProFormItem>
         <ProFormSwitch
-          name="isEnabled"
+          name="status"
           label="是否启用"
           checkedChildren="是"
           unCheckedChildren="否"

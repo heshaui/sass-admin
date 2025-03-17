@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Descriptions, Badge, Space, Button, Modal, message, Input, Form, Select, Tabs } from 'antd';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
 import {  ProTable } from '@ant-design/pro-components';
-
+import { useModel } from 'umi';
 import { 
   freezeLogin, freezeTransaction, freezeWithdrawal,
   unfreezeLogin, unfreezeTransaction, unfreezeWithdrawal,
@@ -20,7 +20,10 @@ interface UserDetailProps {
 
 const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
   if (!visible || !user) return null;
-  
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+  console.log(currentUser);
+
   // 模态框显示状态
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [transactionModalVisible, setTransactionModalVisible] = useState(false);
@@ -525,11 +528,20 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
             required
             style={{ marginBottom: '16px' }}
           >
-            <Input 
-              value={googleCode}
-              onChange={(e) => setGoogleCode(e.target.value)}
-              placeholder="请输入验证码"
-            />
+            {
+              currentUser?.employeeResp?.googleCode===false && (
+                <Button type="link" onClick={() => window.open('https://www.google.com/account/about/', '_blank')}>未绑定，点击前往绑定</Button>
+              )
+            }
+            {
+              currentUser?.employeeResp?.googleCode===true && (
+                <Input 
+                  value={googleCode}
+                  onChange={(e) => setGoogleCode(e.target.value)}
+                  placeholder="请输入验证码"
+                />
+              )
+            }
           </Form.Item>
           
           <Form.Item 
@@ -592,11 +604,20 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
             required
             style={{ marginBottom: '16px' }}
           >
-            <Input 
-              value={googleCode}
-              onChange={(e) => setGoogleCode(e.target.value)}
-              placeholder="请输入验证码"
-            />
+            {
+              currentUser?.employeeResp?.googleCode===false && (
+                <Button type="link" onClick={() => window.open('https://www.google.com/account/about/', '_blank')}>未绑定，点击前往绑定</Button>
+              )
+            }
+            {
+              currentUser?.employeeResp?.googleCode===true && (
+                <Input 
+                  value={googleCode}
+                  onChange={(e) => setGoogleCode(e.target.value)}
+                  placeholder="请输入验证码"
+                />
+              )
+            }
           </Form.Item>
           
           <Form.Item 

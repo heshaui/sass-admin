@@ -45,7 +45,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
         onError(new Error('上传失败'));
       }
     } catch (error) {
-      message.error('上传出错');
+
       onError(error);
     } finally {
       setLoading(false);

@@ -40,8 +40,8 @@ const UserLevel: React.FC = () => {
         pageSize,
       });
       
-      if (response && response.data) {
-        setDataSource(response.data.list || []);
+      if (response.code === '0' && response.data) {
+        setDataSource(response.data || []);
         setPagination({
           ...pagination,
           current,

@@ -7,22 +7,24 @@ export async function queryRateList(data?: any) {
   });
 }
 
-export async function addRate(params: any) {
-  return request('/api/currency/add', {
+export async function queryTenantRateList(data?: any) {
+  return request('/tenant/v1/tenantExchangeRateList', {
+    method: 'POST',
+    data,
+  });
+}
+
+
+export async function updateRate(params: any) {
+  return request('/tenant/v1/updateExchangeRate', {
     method: 'POST',
     data: params,
   });
 }
 
-export async function updateRate(params: any) {
-  return request('/api/currency/update', {
-    method: 'PUT',
+export async function updateExchangeRateById(params: any) {
+  return request('/tenant-admin/v1/exchangeRate/updateExchangeRateById', {
+    method: 'POST',
     data: params,
-  });
-}
-
-export async function deleteRate(id: string) {
-  return request(`/api/currency/delete/${id}`, {
-    method: 'DELETE',
   });
 }

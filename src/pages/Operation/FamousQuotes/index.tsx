@@ -3,7 +3,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { request } from 'umi';
-import { getFamousAphorismsList } from '@/services/ant-design-pro/operation';
+import { getFamousAphorismsList,deleteFamousAphorisms } from '@/services/ant-design-pro/operation';
 import LanguageSelector from '@/components/Languages';
 import FamousQuoteModal from './components/FamousQuoteModal';
 
@@ -21,6 +21,7 @@ const FamousQuotes: React.FC = () => {
 
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
+    actionRef.current?.reload();
   }
     
   const handleEdit = (record: any) => {
@@ -34,12 +35,16 @@ const FamousQuotes: React.FC = () => {
       title: '确认删除',
       content: '确定要删除这条名言吗？',
       onOk: async () => {
-        try {
-          await request(`/api/famous-quotes/${id}`, {
-            method: 'DELETE',
-          });
-          message.success('删除成功');
-          actionRef.current?.reload();
+          try {
+            const res = await deleteFamousAphorisms(id);
+            if(res.code==='0') {
+              message.success('删除成功');
+              actionRef.current?.reload();
+            } else {
+              message.error('删除失败');
+            }
+       
+
         } catch (error) {
           message.error('删除失败');
         }
@@ -63,8 +68,14 @@ const FamousQuotes: React.FC = () => {
     },
     {
       title: '文本',
-      dataIndex: 'content',
-      key: 'content',
+      dataIndex: 'languageContent',
+      key: 'languageContent',
+      render: (_, record: any) => {
+        const content = record.famousAphorismsContents?.find(
+          (item: any) => item.languageCode === language
+        )?.languageContent || '';
+        return content;
+      },
     },
     {
       title: '操作',
@@ -91,13 +102,14 @@ const FamousQuotes: React.FC = () => {
         request={async (params, sort, filter) => {
           try {
             const response = await getFamousAphorismsList({
-              language,
-              params,
+              languageCode: language,
+              pageNo: params.current,
+              pageSize: params.pageSize,
             });
             return {
               data: response.data || [],
               success: true,
-              total: response.total || response.data.length,
+              total: response.total || response.data?.length || 0,
             };
           } catch (error) {
             message.error('获取名言警句列表失败');
