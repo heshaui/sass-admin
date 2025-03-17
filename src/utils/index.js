@@ -67,3 +67,24 @@ export const generateMenuTree = (menuList) => {
   
     return tree;
   };
+
+
+  export const merchantTreeData = (permissions) => {
+    console.log("permissions", permissions);
+    const map = new Map();
+    const tree = [];
+  
+    permissions.forEach((perm) => {
+      map.set(perm.authorityId, { ...perm, key: perm.authorityId, title: perm.title, children: [] });
+    });
+  
+    permissions.forEach((perm) => {
+      if (perm.parentId && map.has(perm.parentId)) {
+        map.get(perm.parentId).children.push(map.get(perm.authorityId));
+      } else {
+        tree.push(map.get(perm.authorityId));
+      }
+    });
+    console.log("tree", tree);
+    return tree;
+  };

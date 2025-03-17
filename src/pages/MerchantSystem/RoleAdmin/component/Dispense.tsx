@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, message, Tree } from 'antd';
-import { generateTreeData } from '@/utils/index';
+import { merchantTreeData } from '@/utils/index';
 
 interface RoleModalProps {
   visible: boolean;
@@ -63,7 +63,7 @@ const Dispense: React.FC<RoleModalProps> = ({
   // ✅ 加载树形数据
   useEffect(() => {
     if (allPermissions.length) {
-      setTreeData(generateTreeData(allPermissions)); // 生成树结构
+      setTreeData(merchantTreeData(allPermissions)); // 生成树结构
     }
   }, [allPermissions]);
 

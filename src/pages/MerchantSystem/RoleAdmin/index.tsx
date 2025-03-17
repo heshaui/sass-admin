@@ -1,6 +1,6 @@
 import { AuthorityList } from '@/services/ant-design-pro/authAdmin'; // 权限API
 
-import { getTenantRoleList,saveTenantRole,updateTenantRoleById } from '@/services/ant-design-pro/merchantSystem'; // 权限API
+import { getTenantRoleList,saveTenantRole,updateTenantRoleById,getTenantAuthorityList,getTenantPermissionsList,deleteTenantPermissionsByIds,saveTenantPermissions} from '@/services/ant-design-pro/merchantSystem'; // 权限API
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message } from 'antd';
@@ -12,7 +12,7 @@ import Dispense from './component/Dispense'; // 权限分配组件
 const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: any) => void) => [
   { title: 'ID', dataIndex: 'roleId', key: 'roleId' },
   { title: '分类名称', dataIndex: 'roleName', key: 'roleName' },
-  { title: '分类描述', dataIndex: 'describe', key: 'describe' },
+  { title: '分类描述', dataIndex: 'describeText', key: 'describeText' },
   {
     title: '操作',
     key: 'action',
@@ -55,7 +55,7 @@ const Allocation: React.FC = () => {
   // **获取所有权限**
   const fetchPermissions = async () => {
     try {
-      const res = await AuthorityList({ pageNo: 1, pageSize: 1000 });
+      const res = await getTenantAuthorityList({ pageNo: 1, pageSize: 1000 });
       if (res?.data) setAllPermissions(res.data.list || []);
     } catch (error) {
       console.error('获取权限失败:', error);
@@ -64,7 +64,7 @@ const Allocation: React.FC = () => {
 
   useEffect(() => {
     fetchRoleList();
-    // fetchPermissions();
+    fetchPermissions();
   }, []);
 
   // **添加角色**
@@ -115,7 +115,7 @@ const Allocation: React.FC = () => {
   // **获取角色已分配的权限**
   const getRolePermissions = async (record: any) => {
     try {
-      const res = await tenantPermissionsList({ roleId: record.roleId, pageNo: 1, pageSize: 1000 });
+      const res = await getTenantPermissionsList({ roleId: record.roleId, pageNo: 1, pageSize: 1000 });
       if (res.code === '0') {
         setRoleId(res.data.list)
         const checkedKeys = res.data.list.map((item: any) => item.permissionsId);
@@ -161,7 +161,7 @@ const Allocation: React.FC = () => {
 
       // 调用保存接口
       if (newPermissions.length > 0) {
-        const res = await saveList(data);
+        const res = await saveTenantPermissions(data);
         if (res.code !== '0') {
           message.error('权限分配失败');
           return;
@@ -171,7 +171,7 @@ const Allocation: React.FC = () => {
       // 调用删除接口
       if (removedPermissions.length > 0) {
         const allID = roleId.filter(item => removedPermissions.includes(item.permissionsId));
-        const deleteRes = await deleteByIds(allID.map(item => item.id));
+        const deleteRes = await deleteTenantPermissionsByIds(allID.map(item => item.id));
         if (deleteRes.code !== '0') {
           message.error('权限移除失败');
           return;

@@ -9,7 +9,7 @@ import UserModal from './component/UserModal'; // 引入UserModal
 import ResetPasswordModal from './component/ResetPasswordModal';
 import ResetGoogleModal from './component/ResetGoogleModal';
 import BindGoogleModal from './component/BindGoogleModal'; // 引入绑定谷歌验证弹框
-import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
+import { getTenantRoleList } from '@/services/ant-design-pro/merchantSystem';
 
 const UserAdmin: React.FC = () => {
    const [data, setData] = useState([]);
@@ -23,14 +23,15 @@ const UserAdmin: React.FC = () => {
  
    // 获取角色列表
    const getRoleList = async () => {
-    //  try {
-    //    const res = await fetchRoleListApi();
-    //    if (res?.data) {
-    //      setRoleOptions(res.data || []);
-    //    }
-    //  } catch (error) {
-    //    console.error('获取角色列表失败:', error);
-    //  }
+     try {
+      let data = { pageNo: 1, pageSize: 1000 };
+       const res = await getTenantRoleList(data);
+       if (res.code==='0') {
+         setRoleOptions(res.data.list || []);
+       }
+     } catch (error) {
+       console.error('获取角色列表失败:', error);
+     }
    };
 
    useEffect(() => {

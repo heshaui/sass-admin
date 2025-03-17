@@ -118,3 +118,29 @@ export async function updateTenantRoleById(params?: Record<string, any>) {
     data: params,
   });
 }
+
+
+export async function getTenantPermissionsList(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-permissions/tenantPermissionsList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// 保存商户权限
+export async function saveTenantPermissions(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-permissions/saveList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 删除商户权限
+export async function deleteTenantPermissionsByIds(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-permissions/deleteByIds', {
+    method: 'POST',
+    data: params,
+  });
+}
+

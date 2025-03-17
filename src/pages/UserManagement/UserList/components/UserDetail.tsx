@@ -661,7 +661,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
           </Form.Item>
         </Form>
       </Modal>
-      <GoogleCode visible={googleCodeVisible} qrCodeUrl={googleCodeData?.qrCodeUrl} secretKey={googleCodeData?.secretKey} onSubmit={handleGoogleCodeSuccess}/>
+      <GoogleCode visible={googleCodeVisible} qrCodeUrl={googleCodeData?.codeUri} secretKey={googleCodeData?.secretKey} onSubmit={handleGoogleCodeSuccess}/>
     </>
   );
 };

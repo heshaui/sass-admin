@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form, Input, Select, message } from 'antd';
 import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
+import { getTenantRoleList } from '@/services/ant-design-pro/merchantSystem';
 
 interface UserModalProps {
   visible: boolean;
@@ -29,7 +30,7 @@ const UserModal: React.FC<UserModalProps> = ({
             pageNo:1,
             pageSize:10000
           }
-        const result = await fetchRoleListApi(data);
+        const result = await getTenantRoleList(data);
         if (result.code==='0') {
           setRoleList(result.data.list|| []);
         }
