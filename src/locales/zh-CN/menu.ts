@@ -91,4 +91,5 @@ export default {
   'menu.merchantSystem': '系统管理',
   'menu.merchantSystem.userAdmin': '用户管理',
   'menu.merchantSystem.roleAdmin': '角色管理',
+  'menu.merchantSystem.permissionAdmin': '权限列表',
 };

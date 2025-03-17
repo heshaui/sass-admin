@@ -23,14 +23,14 @@ const UserAdmin: React.FC = () => {
  
    // 获取角色列表
    const getRoleList = async () => {
-     try {
-       const res = await fetchRoleListApi();
-       if (res?.data) {
-         setRoleOptions(res.data || []);
-       }
-     } catch (error) {
-       console.error('获取角色列表失败:', error);
-     }
+    //  try {
+    //    const res = await fetchRoleListApi();
+    //    if (res?.data) {
+    //      setRoleOptions(res.data || []);
+    //    }
+    //  } catch (error) {
+    //    console.error('获取角色列表失败:', error);
+    //  }
    };
 
    useEffect(() => {

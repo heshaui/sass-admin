@@ -35,7 +35,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ visible, onCancel, 
 
   return (
     <Modal
-      title={editingRecord ? "修改分类" : "添加分类"}
+      title={editingRecord ? "修改角色" : "添加角色"}
       open={visible}
       onCancel={onCancel}
       destroyOnClose
@@ -50,16 +50,16 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ visible, onCancel, 
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label="分类名称"
+          label="角色名称"
           name="roleName"
-          rules={[{ required: true, message: "请输入分类名称" }]}
+          rules={[{ required: true, message: "请输入角色名称" }]}
         >
           <Input maxLength={20} placeholder="20字符" />
         </Form.Item>
         <Form.Item
-          label="分类描述"
-          name="describe"
-          rules={[{ required: true, message: "请输入分类描述" }]}
+          label="角色描述"
+          name="describeText"
+          rules={[{ required: true, message: "请输入角色描述" }]}
         >
           <Input maxLength={20} placeholder="20字符" />
         </Form.Item>

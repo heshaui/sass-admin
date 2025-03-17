@@ -249,6 +249,11 @@ export default [
         component: './MerchantSystem/RoleAdmin',
       },
       {
+        path: '/merchantSystem/PermissionAdmin',
+        name: 'permissionAdmin',
+        component: './MerchantSystem/PermissionAdmin',
+      },
+      {
         path: '/merchantSystem',
         redirect: '/merchantSystem/UserAdmin',
       },

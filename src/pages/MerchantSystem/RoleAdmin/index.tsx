@@ -1,12 +1,7 @@
 import { AuthorityList } from '@/services/ant-design-pro/authAdmin'; // 权限API
-import {
-  saveList,
-  saveTenantRole,
-  tenantPermissionsList,
-  tenantRoleList,
-  updateTenantRoleById,
-  deleteByIds
-} from '@/services/ant-design-pro/merchant'; // 角色API
+
+import { getTenantRoleList,saveTenantRole,updateTenantRoleById } from '@/services/ant-design-pro/merchantSystem'; // 权限API
+
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message } from 'antd';
 import React, { useEffect, useState } from 'react';
@@ -48,7 +43,7 @@ const Allocation: React.FC = () => {
     try {
       setLoading(true);
       let data = { pageNo: 1, pageSize: 10 };
-      const response = await tenantRoleList(data);
+      const response = await getTenantRoleList(data);
       if (response?.data) setDataSource(response.data.list);
     } catch (error) {
       console.error('获取列表失败:', error);
@@ -69,7 +64,7 @@ const Allocation: React.FC = () => {
 
   useEffect(() => {
     fetchRoleList();
-    fetchPermissions();
+    // fetchPermissions();
   }, []);
 
   // **添加角色**
@@ -95,11 +90,19 @@ const Allocation: React.FC = () => {
       if (editingRecord) {
         // 调用更新 API
         let resp = await updateTenantRoleById({ roleId: editingRecord.roleId, ...formData });
-        if (resp.code === '0') message.success('修改成功');
+        if (resp.code === '0') {
+          message.success('修改成功');
+        } else {
+          message.error(resp.message);
+        }
       } else {
         // 调用新增 API
         let res = await saveTenantRole(formData);
-        if (res.code === '0') message.success('新增成功');
+        if (res.code === '0'){
+          message.success('新增成功');
+        } else {
+          message.error(res.message);
+        }
       }
 
       fetchRoleList(); // 重新加载数据
