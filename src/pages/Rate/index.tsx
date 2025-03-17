@@ -61,6 +61,7 @@ const Rate: React.FC = () => {
     {
       title: '序号',
       dataIndex: 'id',
+      search: false,
     },
     {
       title: '图标',
@@ -93,16 +94,27 @@ const Rate: React.FC = () => {
       dataIndex: 'accuracy',
       search: false,
     },
-    {
-      title: '是否启用',
-      dataIndex: 'status',
-      renderText: (text: string) => text === 1 ? '是' : '否',
-      valueEnum: {
-        true: { text: '是', status: 'Success' },
-        false: { text: '否', status: 'Default' },
-      },
-    },
+    // {
+    //   title: '是否启用',
+    //   dataIndex: 'status',
+    //   renderText: (text: string) => text === 1 ? '是' : '否',
+    //   valueEnum: {
+    //     true: { text: '是', status: 'Success' },
+    //     false: { text: '否', status: 'Default' },
+    //   },
+    // },
     ...(isAdmin ? [{
+      title: '是否显示',
+      dataIndex: 'status',
+      key: 'status',
+      renderText: (text: number) => text === 1 ? '是' : '否',
+      valueEnum: {
+            1: { text: '是', status: 'Success' },
+            0: { text: '否', status: 'Default' },
+          },
+    }] : []),
+
+    ...(!isAdmin ? [{
       title: '是否显示',
       dataIndex: 'status',
       key: 'status',
@@ -127,21 +139,6 @@ const Rate: React.FC = () => {
         headerTitle={false}
         actionRef={actionRef}
         rowKey="id"
-        search={{
-          labelWidth: 80,
-          defaultCollapsed: false,
-          optionRender: (searchConfig, formProps, dom) => [
-            <Button 
-              key="search" 
-              type="primary" 
-              onClick={() => formProps.form?.submit()}
-              icon={<SearchOutlined />}
-            >
-              查询
-            </Button>,
-          ],
-        }}
-        options={false}
         columns={columns}
         request={async (params, sort, filter) => {
           // 转换分页参数名称
