@@ -135,7 +135,7 @@ export async function removeRule(options?: { [key: string]: any }) {
 
 // 图片上传
 export async function ossImgFile(file: File, options?: { [key: string]: any }) {
-  return request<API.OssImgFile>('/api/ambit-oss/oss/img/file ', {
+  return request<API.OssImgFile>('/api/ambit-oss/oss/img/file', {
     // return request<API.OssImgFile>('/oss/img/file ', {
     method: 'POST',
     data: file, // 直接发送 FormData

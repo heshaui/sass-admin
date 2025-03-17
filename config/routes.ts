@@ -234,6 +234,28 @@ export default [
     // component: './UserManagement',
   },
   {
+    path: '/merchantSystem',
+    name: 'merchantSystem',
+    icon: 'UserOutlined',
+    routes: [
+      {
+        path: '/merchantSystem/UserAdmin',
+        name: 'userAdmin',
+        component: './MerchantSystem/UserAdmin',
+      },
+      {
+        path: '/merchantSystem/role',
+        name: 'roleAdmin',
+        component: './MerchantSystem/RoleAdmin',
+      },
+      {
+        path: '/merchantSystem',
+        redirect: '/merchantSystem/UserAdmin',
+      },
+    ],
+    // component: './UserManagement',
+  },
+  {
     path: '/kvSetting',
     name: 'kvSetting',
     icon: 'smile',

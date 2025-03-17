@@ -8,7 +8,9 @@ import {
   unfreezeLogin, unfreezeTransaction, unfreezeWithdrawal,
   updatePhone, updateEmail,getUserOperationLogs
 } from '@/services/ant-design-pro/UserManagement';
+import { sendGoogleKey } from '@/services/ant-design-pro/authAdmin';
 import TextArea from 'antd/es/input/TextArea';
+import GoogleCode from '@/components/GoogleCode';
 
 const { Option } = Select;
 
@@ -48,6 +50,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
   const [phoneRemark, setPhoneRemark] = useState('');
   const [emailRemark, setEmailRemark] = useState('');
   const [countryCode, setCountryCode] = useState('86');
+  const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
+  const [googleCodeData, setGoogleCodeData] = useState<any>(null);
 
   const columns: ProColumns<any>[] = [
     {
@@ -92,6 +96,22 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
       return res.data.list;
     }
     return [];
+  }
+
+  const getGoogleCode=async()=>{
+    const res=await sendGoogleKey();
+    if(res.code==='0'){
+      setGoogleCodeVisible(true);
+      setGoogleCodeData(res.data);
+    }else{
+      message.error(res.message);
+    }
+    
+  }
+
+  const handleGoogleCodeSuccess = async (code: string) => {
+    setGoogleCode(code);
+    setGoogleCodeVisible(false);
   }
 
   // 处理登录权限操作
@@ -606,7 +626,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
           >
             {
               currentUser?.employeeResp?.googleCode===false && (
-                <Button type="link" onClick={() => window.open('https://www.google.com/account/about/', '_blank')}>未绑定，点击前往绑定</Button>
+                <Button type="link" onClick={getGoogleCode}>未绑定，点击前往绑定</Button>
               )
             }
             {
@@ -641,6 +661,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
           </Form.Item>
         </Form>
       </Modal>
+      <GoogleCode visible={googleCodeVisible} qrCodeUrl={googleCodeData?.qrCodeUrl} secretKey={googleCodeData?.secretKey} onSubmit={handleGoogleCodeSuccess}/>
     </>
   );
 };

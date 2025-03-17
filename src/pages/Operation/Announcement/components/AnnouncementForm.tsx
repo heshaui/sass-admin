@@ -3,7 +3,9 @@ import { Form, Input, Select, DatePicker, Modal, Radio, Button, message } from '
 import { 
   addAnnouncement, 
   updateAnnouncement,
-  getAnnouncementParams
+  getAnnouncementParams,
+  getClassMenuList,
+  getAnnouncementContentList
 } from '@/services/ant-design-pro/operation';
 import SeedEditor from '@/components/SeedEditor';
 import { languages } from '@/config/language';
@@ -31,7 +33,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   const [activeLanguage, setActiveLanguage] = useState('en_US');
   const [contents, setContents] = useState<Record<string, string>>({});
   const [titles, setTitles] = useState<Record<string, string>>({});
-
+  const [menuList, setMenuList] = useState<any[]>([]);
   // 获取并回显数据
   useEffect(() => {
     if (type === 'update' && values?.id && visible) {
@@ -78,6 +80,19 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
       fetchAnnouncementDetail();
     }
   }, [type, values, visible, form]);
+
+
+  const getMenu=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10000,
+    }
+    const response=await getClassMenuList(data);
+    if(response.code==='0' && response.data){
+      console.log(response.data,'response.data');
+      setMenuList(response.data.list);
+    }
+  }
 
   const handleContentChange = (lang: string, content: string) => {
     setContents((prev) => ({
@@ -149,6 +164,10 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
     }
   };
 
+  useEffect(()=>{
+    getMenu();
+  },[]);
+
   return (
     <Modal
       title={type === 'create' ? '发布公告' : '编辑公告'}
@@ -183,8 +202,9 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           required
         >
           <Select>
-            <Option value="1">最新动态</Option>
-            <Option value="2">APP优化</Option>
+            {menuList.map((item:any)=>(
+              <Option value={item.id}>{item.describe}</Option>
+            ))}
           </Select>
         </Form.Item>
         

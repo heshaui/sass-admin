@@ -1,0 +1,102 @@
+.container {
+  width: 100%;
+  max-width: 500px;
+  padding: 20px;
+  background-color: white;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.description {
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.qrCode {
+  margin: 20px auto;
+  border: 1px solid #eee;
+  padding: 10px;
+  display: inline-block;
+}
+
+.secretKeyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  background-color: #f5f5f5;
+  padding: 8px 12px;
+  border-radius: 4px;
+  width: 80%;
+}
+
+.secretKey {
+  font-family: monospace;
+  letter-spacing: 2px;
+  flex: 1;
+}
+
+.copyButton {
+  margin-left: 10px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  margin: 20px auto;
+  width: 80%;
+}
+
+.required {
+  color: red;
+  margin-right: 5px;
+}
+
+.label {
+  white-space: nowrap;
+  margin-right: 10px;
+}
+
+.errorInput {
+  border-color: #ff4d4f;
+}
+
+.errorMessage {
+  color: #ff4d4f;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+.buttonGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.countdown {
+  width: 35px;
+  height: 35px;
+  background-color: #FCDF88;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+.submitButton {
+  margin-right: 15px;
+  min-width: 100px;
+}
+
+.cancelButton {
+  min-width: 100px;
+} 

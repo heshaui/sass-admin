@@ -143,6 +143,11 @@ const AuditList: React.FC = () => {
       title: '认证状态',
       dataIndex: 'authStatus',
       key: 'authStatus',
+      valueEnum:{
+        0:'驳回',
+        1:'通过',
+        2:'未审核'
+      },
       renderText: (text: number) => {
         return text === 0 ? '驳回' : text === 1 ? '通过' : '未审核';
       },

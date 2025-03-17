@@ -88,4 +88,7 @@ export default {
   'menu.identityVerification': '身份认证',
   'menu.identityVerification.basicConfig': '基础配置',
   'menu.identityVerification.auditList': '审核列表',
+  'menu.merchantSystem': '系统管理',
+  'menu.merchantSystem.userAdmin': '用户管理',
+  'menu.merchantSystem.roleAdmin': '角色管理',
 };

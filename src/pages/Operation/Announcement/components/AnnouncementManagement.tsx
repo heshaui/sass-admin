@@ -7,6 +7,8 @@ import {
   getAnnouncementList, getAnnouncementContentList, updateAnnouncement
 } from '@/services/ant-design-pro/operation';
 import AnnouncementForm from './AnnouncementForm';
+import CategoryForm from './CategoryForm';
+
 
 type AnnouncementItem = {
   id: string;
@@ -312,7 +314,6 @@ const AnnouncementManagement: React.FC = () => {
           pageSize: 10,
         }}
       />
-
       {/* 公告表单 */}
       <AnnouncementForm
         visible={announcementFormVisible}

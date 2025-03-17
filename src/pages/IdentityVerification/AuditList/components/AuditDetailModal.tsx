@@ -4,7 +4,6 @@ import { updateUserIdentityVerificationById,getUserIdentityVerificationDetail } 
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
 import styles from './AuditDetailModal.module.less';
 import dayjs from 'dayjs';
-
 interface AuditDetailModalProps {
   visible: boolean;
   onClose: () => void;
@@ -25,7 +24,6 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
   const [rejectReason, setRejectReason] = useState('');
   const [rejectReasonCount, setRejectReasonCount] = useState(0);
   const maxRejectReasonLength = 50;
-
   useEffect(() => {
     if (visible && record) {
       form.setFieldsValue({
@@ -37,6 +35,10 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
       });
     }
   }, [visible, record, form]);
+
+  const handleGoogleCodeSuccess = async (code: string) => {
+    console.log(code,'code');
+  }
 
   const handleApprove = async () => {
     try {
@@ -100,6 +102,19 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
     }
   };
 
+  const handleRevoke=async()=>{
+    const res=await updateUserIdentityVerificationById({
+      id:record.id,
+      authStatus:'2'
+    });
+    if(res.code==='0'){
+      message.success('撤销成功');
+      onSuccess();
+    }else{
+      message.error('操作失败');
+    }
+  }
+
   if (!visible) {
     return null;
   }
@@ -134,7 +149,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
           }
           {record?.authStatus === 1 && <Space size="middle">
            
-            <Button type='primary' danger>撤销</Button>
+            <Button type='primary' danger onClick={handleRevoke}>撤销</Button>
           </Space>
           }
         </div>
@@ -193,6 +208,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
           </Row>
         </div>
       </Card>
+
 
       {/* 驳回原因模态框 */}
       <Modal

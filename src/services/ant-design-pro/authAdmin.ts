@@ -1,4 +1,5 @@
 import { request } from '@umijs/max';
+const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
 
 //权限列表
 export async function AuthorityList(
@@ -296,7 +297,7 @@ export async function resetPassword(
 }
 
 
-// /tenant-admin/v1/employee/updateEmployeeById
+
 //员工修改
 export async function updateEmployeeById(
   body:API.EmployeeVo,
@@ -331,7 +332,7 @@ export async function deleteTenantByIdList(
 export async function sendGoogleKey(
   options?: { [key: string]: any },
 ) {
-  return request<API.GoogleAuthResponse>('/tenant-admin/v1/google/sendGoogleKey', {
+  return request<API.GoogleAuthResponse>( isAdmin?'/tenant-admin/v1/google/sendGoogleKey':'/tenant/v1/google/sendGoogleKey', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
