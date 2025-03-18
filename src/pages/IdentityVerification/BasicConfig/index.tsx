@@ -8,13 +8,20 @@ import {
 import EditModal from './components/EditModal';
 
 interface UserLevelItem {
-  key: string;
-  level: string;
-  requirements: React.ReactNode;
-  permissions: React.ReactNode;
-  updateTime: string;
-  operator: string;
-  action: React.ReactNode;
+  levelId: number;
+  levelName: string;
+  demand: string | null;
+  benefitResps: {
+    levelBenefitId: number;
+    benefitId: number;
+    benefitName: string;
+    rule: string | null;
+    value: string | null;
+    params: any | null;
+    updateTime: string | null;
+  }[];
+  updateTime: string | null;
+  tenantId: string | null;
 }
 
 const UserLevel: React.FC = () => {
@@ -110,24 +117,48 @@ const UserLevel: React.FC = () => {
       dataIndex: 'demand',
       key: 'demand',
       search: false,
+      render: (text: string | null) => text || '-',
     },
     {
       title: '权益',
       dataIndex: 'benefitResps',
       key: 'benefitResps',
       search: false,
+      render: (benefitResps: UserLevelItem['benefitResps']) => {
+        if (!benefitResps || benefitResps.length === 0) {
+          return '-';
+        }
+        return (
+          <ul style={{ paddingLeft: 20, margin: 0 }}>
+            {benefitResps.map((item) => (
+              <li key={item.levelBenefitId}>
+                {item.benefitName}
+                {item.params && (
+                  <span style={{ color: '#999', marginLeft: 8 }}>
+                    {item.params.amountLimit ? `限额: ${item.params.amountLimit}` : ''}
+                    {item.params.coin ? ` 币种: ${item.params.coin}` : ''}
+                    {item.params.time ? ` 周期: ${item.params.time}小时` : ''}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        );
+      },
     },
     {
       title: '修改时间',
       dataIndex: 'updateTime',
       key: 'updateTime',
       search: false,
+      render: (text: string | null) => text || '-',
     },
     {
       title: '操作管理员',
       dataIndex: 'tenantId',
       key: 'tenantId',
       search: false,
+      render: (text: string | null) => text || '-',
     },
     {
       title: '操作',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Radio } from 'antd';
 import type { RadioChangeEvent } from 'antd';
-import { languages } from '@/config/language.js';
+import { languages } from '@/config/language';
 interface LanguageSelectorProps {
   value?: string;
   onChange?: (value: string) => void;
