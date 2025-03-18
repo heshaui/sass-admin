@@ -8,7 +8,7 @@ import {
   unfreezeLogin, unfreezeTransaction, unfreezeWithdrawal,
   updatePhone, updateEmail,getUserOperationLogs
 } from '@/services/ant-design-pro/UserManagement';
-import { sendGoogleKey } from '@/services/ant-design-pro/authAdmin';
+import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import TextArea from 'antd/es/input/TextArea';
 import GoogleCode from '@/components/GoogleCode';
 
@@ -102,6 +102,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
     const res=await sendGoogleKey();
     if(res.code==='0'){
       setGoogleCodeVisible(true);
+      setEmailModalVisible(false);
+      setPhoneModalVisible(false);
       setGoogleCodeData(res.data);
     }else{
       message.error(res.message);
@@ -111,6 +113,13 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
 
   const handleGoogleCodeSuccess = async (code: string) => {
     setGoogleCode(code);
+    
+    const res=await bindGoogleKey({ googleCode: code });
+    if(res.code==='0'){
+      message.success('绑定成功');
+    }else{
+      message.error(res.message);
+    }
     setGoogleCodeVisible(false);
   }
 
@@ -217,17 +226,20 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
         return;
       }
       
-      await updateUserPhone({ 
+     const res= await updatePhone({ 
         userId: user.userId, 
-        newPhone: `${countryCode} ${newPhone}`, 
-        googleCode, 
+        phone:user.phone,
+        newPhone:newPhone,
+        googleCode:googleCode,
         remark: phoneRemark 
       });
-      
-      message.success('手机号更新成功');
+      if(res.code==='0'){
+        message.success('手机号更新成功');
+      }else{
+        message.error(res.message);
+      }
       setPhoneModalVisible(false);
     } catch (error) {
-      console.error('更新手机号失败', error);
       message.error('手机号更新失败');
     }
   };
@@ -245,14 +257,18 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
         return;
       }
       
-      await updateUserEmail({ 
+     const res= await updateEmail({ 
         userId: user.userId, 
-        newEmail, 
-        googleCode, 
+        email:user.email,
+        newEmail:newEmail,
+        googleCode:googleCode,
         remark: emailRemark 
       });
-      
-      message.success('邮箱更新成功');
+      if(res.code==='0'){
+        message.success('邮箱更新成功');
+      }else{
+        message.error(res.message);
+      }
       setEmailModalVisible(false);
     } catch (error) {
       console.error('更新邮箱失败', error);
@@ -661,7 +677,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
           </Form.Item>
         </Form>
       </Modal>
-      <GoogleCode visible={googleCodeVisible} qrCodeUrl={googleCodeData?.codeUri} secretKey={googleCodeData?.secretKey} onSubmit={handleGoogleCodeSuccess}/>
+      <GoogleCode visible={googleCodeVisible} qrCodeUrl={googleCodeData?.codeUri} secretKey={googleCodeData?.secretKey} onSubmit={handleGoogleCodeSuccess} onCancel={() => setGoogleCodeVisible(false)}/>
     </>
   );
 };

@@ -346,7 +346,7 @@ export async function bindGoogleKey(
   body: API.GoogleAuthVo,
   options?: { [key: string]: any },
 ) {
-  return request<API.GoogleAuthResponse>('/tenant-admin/v1/google/bindGoogleKey?code='+body.googleCode, {
+  return request<API.GoogleAuthResponse>(isAdmin?'/tenant-admin/v1/google/bindGoogleKey?code='+body.googleCode:'/tenant/v1/google/bindGoogleKey?code='+body.googleCode, {
     method: 'POST',
     data: body,
     headers: {

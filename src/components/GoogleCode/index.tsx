@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, message, Progress, Modal } from 'antd';
+import { Button, Input, message, Modal } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import styles from './index.module.css';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface GoogleCodeProps {
   secretKey?: string;
@@ -32,19 +33,22 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   const [countdown, setCountdown] = useState<number>(30);
   const [loading, setLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    const currentTime = Math.floor(Date.now() / 1000);
-    const initialCountdown = 30 - (currentTime % 30);
-    setCountdown(initialCountdown);
+  const isTotpUri = qrCodeUrl.startsWith('otpauth://');
 
-    const timer = setInterval(() => {
-      const newTime = Math.floor(Date.now() / 1000);
-      const newCountdown = 30 - (newTime % 30);
-      setCountdown(newCountdown);
-    }, 1000);
-    
-    return () => clearInterval(timer);
-  }, []);
+  useEffect(() => {
+    if (isTotpUri && !secretKey) {
+      try {
+        const url = new URL(qrCodeUrl);
+        const secret = url.searchParams.get('secret');
+        if (secret) {
+          // 更新 secretKey
+          // 注意：这里需要一个状态变量来存储提取的密钥，如果 secretKey 是不可变的 prop
+        }
+      } catch (e) {
+        console.error('解析 TOTP URI 失败:', e);
+      }
+    }
+  }, [qrCodeUrl, secretKey, isTotpUri]);
 
   useEffect(() => {
     if (!visible) {
@@ -103,7 +107,11 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
       </p>
       
       <div className={styles.qrCode}>
-        <img src={qrCodeUrl} alt="谷歌验证器二维码" width={200} height={200} />
+        {isTotpUri ? (
+          <QRCodeSVG value={qrCodeUrl} size={200} />
+        ) : (
+          <img src={qrCodeUrl} alt="谷歌验证器二维码" width={200} height={200} />
+        )}
       </div>
       
       <div className={styles.secretKeyContainer}>
@@ -138,7 +146,6 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
       
       {error && <div id="verification-error" className={styles.errorMessage}>{errorMessage}</div>}
       
-      
     </div>
   );
 
@@ -151,21 +158,23 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
       maskClosable={maskClosable}
       centered={centered}
       destroyOnClose={true}
-      footer={[
-        <Button key="cancel" onClick={onCancel} className={styles.cancelButton}>
-          取消
-        </Button>,
-        <Button 
-          key="submit" 
-          type="primary" 
-          onClick={handleSubmit}
-          loading={loading}
-          className={styles.submitButton}
-          disabled={verificationCode.length !== 6}
-        >
-          提交
-        </Button>
-      ]}
+      footer={
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+          <Button key="cancel" onClick={onCancel} className={styles.cancelButton}>
+            取消
+          </Button>
+          <Button 
+            key="submit" 
+            type="primary" 
+            onClick={handleSubmit}
+            loading={loading}
+            className={styles.submitButton}
+            disabled={verificationCode.length !== 6}
+          >
+            提交
+          </Button>
+        </div>
+      }
     >
       {googleCodeContent}
     </Modal>

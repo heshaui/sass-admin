@@ -31,14 +31,18 @@ export interface UserOperationParams {
 export interface UpdatePhoneParams {
   userId: string | number;
   phone: string;
-  verificationCode?: string;
+  newPhone: string;
+  googleCode?: string;
+  remark?: string;
 }
 
 // 更新邮箱参数
 export interface UpdateEmailParams {
   userId: string | number;
   email: string;
-  verificationCode?: string;
+  newEmail: string;
+  googleCode?: string;
+  remark?: string;
 }
 
 // 操作日志查询参数
