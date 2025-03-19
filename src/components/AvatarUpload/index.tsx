@@ -40,6 +40,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
           onChange(url);
         }
         onSuccess(res, file);
+        message.success('上传成功');
       } else {
         message.error('上传失败');
         onError(new Error('上传失败'));
