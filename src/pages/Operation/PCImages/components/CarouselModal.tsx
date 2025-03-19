@@ -3,7 +3,7 @@ import { Modal, Form, Button, Input, InputNumber, Radio, Select, Switch, Upload,
 import { PlusOutlined } from '@ant-design/icons';
 import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { getLanguageList } from '@/services/ant-design-pro/operation';
-import LanguageSelector from '@/components/Languages';
+import LanguageSelector from '@/components/LanguageSelector';
 import AvatarUpload  from '@/components/AvatarUpload';
 interface CarouselModalProps {
   visible: boolean;

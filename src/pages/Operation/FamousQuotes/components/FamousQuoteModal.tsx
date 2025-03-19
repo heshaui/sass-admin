@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, message } from 'antd';
 import { getFamousAphorismsDetail, addFamousAphorisms, updateFamousAphorisms } from '@/services/ant-design-pro/operation';
-import LanguageSelector from '@/components/Languages';
+import LanguageSelector from '@/components/LanguageSelector';
 
 interface FamousQuoteModalProps {
   visible: boolean;

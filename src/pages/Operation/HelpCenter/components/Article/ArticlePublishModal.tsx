@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Form, Input, Select, Button, InputNumber } from 'antd';
 import SeedEditor from '@/components/SeedEditor';
-import LanguageSelector from '@/components/Languages';
+import LanguageSelector from '@/components/LanguageSelector';
 import { getHelpCenterClassList } from '@/services/ant-design-pro/operation';
 
 interface ArticlePublishModalProps {
