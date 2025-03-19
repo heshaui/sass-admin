@@ -404,7 +404,7 @@ export async function getFamousAphorismsDetail(id: string) {
   return request<{
     data: FamousAphorismsItem;
     success: boolean;
-  }>('/tenant/v1/famousAphorismsDetail', {
+  }>('/tenant/v1/famousAphorismsDetail?id='+id, {
     method: 'POST',
     data: { id },
   });

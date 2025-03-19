@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, message } from 'antd';
+import { Modal, Form, Input, message,Select} from 'antd';
 import { getFamousAphorismsDetail, addFamousAphorisms, updateFamousAphorisms } from '@/services/ant-design-pro/operation';
 import LanguageSelector from '@/components/LanguageSelector';
-
+import  {languages}  from '@/config/language';
 interface FamousQuoteModalProps {
   visible: boolean;
   editingId: number | null;
@@ -31,29 +31,38 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
   const [contentList, setContentList] = useState<LanguageContent[]>([
     { languageCode: 'en_US', languageContent: '' }
   ]);
-  // 添加useEffect钩子，在编辑模式下获取数据
-
-
+  
+  // 添加重置表单和状态的函数
+  const resetFormAndState = () => {
+    form.resetFields();
+    setLanguage('en_US');
+    setContent('');
+    setContentList([{ languageCode: 'en_US', languageContent: '' }]);
+  };
+  
+  // 修改onCancel处理函数，在关闭模态框时重置状态
+  const handleCancel = () => {
+    resetFormAndState();
+    onCancel();
+  };
+  
   // 添加获取名言详情的函数
   const fetchQuoteDetails = async () => {
     if (!editingId) return;
     
     try {
       setLoading(true);
-      const res = await getFamousAphorismsDetail({
-        id: editingId,
-        langId: language
-      });
+      const res = await getFamousAphorismsDetail(editingId.toString());
       
       if (res.code === '0' && res.data) {
-        // 获取对应语言的内容
-        const quoteContent = res.data.languageContent || '';
-        setContent(quoteContent);
+        // 获取所有语言内容
+      
+        
         
         // 更新表单
         form.setFieldsValue({
-          langId: language,
-          text: quoteContent
+          langId: res.data.famousAphorismsContents[0].languageCode,
+          text:  res.data.famousAphorismsContents[0].languageContent
         });
       }
     } catch (error) {
@@ -80,29 +89,24 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
   };
   const handleLanguageChange = (value: string) => {
     // 保存当前语言的内容
-    if (!editingId) {
-      setContentList(prev => {
-        const exists = prev.some(item => item.languageCode === language);
-        if (exists) {
-          return prev.map(item => 
-            item.languageCode === language ? { ...item, languageContent: content } : item
-          );
-        } else {
-          return [...prev, { languageCode: language, languageContent: content }];
-        }
-      });
-    }
+    setContentList(prev => {
+      const exists = prev.some(item => item.languageCode === language);
+      if (exists) {
+        return prev.map(item => 
+          item.languageCode === language ? { ...item, languageContent: content } : item
+        );
+      } else {
+        return [...prev, { languageCode: language, languageContent: content }];
+      }
+    });
     
     // 设置新语言
     setLanguage(value);
     
-    // 如果是编辑模式，语言变化时会通过useEffect触发获取新的内容
-    // 如果是新增模式，则从contentList获取对应语言的内容
-    if (!editingId) {
-      const langContent = contentList.find(item => item.languageCode === value)?.languageContent || '';
-      form.setFieldsValue({ text: langContent });
-      setContent(langContent);
-    }
+    // 从contentList获取对应语言的内容
+    const langContent = contentList.find(item => item.languageCode === value)?.languageContent || '';
+    form.setFieldsValue({ text: langContent });
+    setContent(langContent);
   };
 
   const getCurrentContent = (langKey: string): string => {
@@ -114,11 +118,23 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
       const values = await form.validateFields();
       setLoading(true);
       
+      // 更新当前语言内容到contentList
+      const updatedContentList = [...contentList];
+      const existingIndex = updatedContentList.findIndex(item => item.languageCode === language);
+      if (existingIndex >= 0) {
+        updatedContentList[existingIndex].languageContent = values.text;
+      } else {
+        updatedContentList.push({
+          languageCode: language,
+          languageContent: values.text
+        });
+      }
+      
       if (editingId) {
         // 更新操作
-       const res = await updateFamousAphorisms({
-          ...values,
+        const res = await updateFamousAphorisms({
           id: editingId,
+          famousAphorismsContents: updatedContentList
         });
         if(res.code==='0') {
           message.success('更新成功');
@@ -126,9 +142,10 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
           message.error('更新失败');
         }
       } else {
-          let data={
-            famousAphorismsContents:contentList
-          }
+        // 添加操作
+        const data = {
+          famousAphorismsContents: updatedContentList
+        };
           
         const res = await addFamousAphorisms(data);
         if(res.code==='0') {
@@ -139,6 +156,7 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
       }
       
       onSuccess();
+      resetFormAndState();
     } catch (error) {
       message.error('操作失败');
     } finally {
@@ -147,17 +165,22 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
   };
 
   useEffect(() => {
-    if (visible && editingId) {
-      fetchQuoteDetails();
+    if (visible) {
+      if (editingId) {
+        fetchQuoteDetails();
+      } else {
+        // 如果是新建，重置表单和状态
+        resetFormAndState();
+      }
     }
-  }, [visible, editingId, language]);
+  }, [visible, editingId]);
 
   return (
     <Modal
       title={editingId ? '编辑名言' : '添加名言'}
       open={visible}
       onOk={handleSubmit}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       confirmLoading={loading}
     >
       <Form form={form} layout="vertical" initialValues={{ langId: 'en_US' }}>
@@ -166,7 +189,18 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
           name="langId"
           rules={[{ required: true, message: '请选择语言' }]}
         >
-          <LanguageSelector value={language} onChange={handleLanguageChange} />
+          {
+           editingId ? <Select>
+              {
+                languages.map((item:any)=>(
+                  <Select.Option key={item.key} value={item.key} disabled={true}>{item.label}</Select.Option>
+                ))
+              }
+            </Select> : <LanguageSelector value={language} onChange={handleLanguageChange} />
+          }{
+
+          }
+          
         </Form.Item>
         
         <Form.Item

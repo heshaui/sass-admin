@@ -131,7 +131,6 @@ const FamousQuotes: React.FC = () => {
       <FamousQuoteModal
         visible={visible}
         editingId={editingId}
-        editingRecord={editingRecord}
         onSuccess={handleModalSuccess}
         onCancel={() => setVisible(false)}
       />
