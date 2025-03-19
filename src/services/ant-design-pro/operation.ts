@@ -72,7 +72,8 @@ export interface ClassMenuItem {
 
 // 名言接口定义
 export interface FamousAphorismsItem {
-  id: string;
+  id: string|number;
+  langId: string;
   content: string;
   author?: string;
   status: number;

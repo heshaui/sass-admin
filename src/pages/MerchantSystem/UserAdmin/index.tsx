@@ -1,9 +1,9 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Dropdown, Menu, Button, Tag, Space, message, Select, Modal } from 'antd';
-import { PlusOutlined, ReloadOutlined,DownOutlined } from '@ant-design/icons';
+import { Dropdown, Menu, Button, Tag, message, Modal } from 'antd';
+import { PlusOutlined,DownOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import { employeeList,saveEmployee,deleteEmployeeById,enableEmployee,offEmployee,resetPassword,updateEmployeeById,sendGoogleKey,bindGoogleKey,relieveGoogleKey} from '@/services/ant-design-pro/authAdmin';
-import { getTenantEmployeeList,saveTenantEmployee,deleteTenantEmployeeById,updateTenantEmployeeById,getTomeMenuParams} from '@/services/ant-design-pro/merchantSystem';
+import { bindGoogleKey,relieveGoogleKey} from '@/services/ant-design-pro/authAdmin';
+import { getTenantEmployeeList,saveTenantEmployee,restPasswordTenantEmployee,deleteTenantEmployeeById,updateTenantEmployeeById,getTomeMenuParams} from '@/services/ant-design-pro/merchantSystem';
 
 import UserModal from './component/UserModal'; // 引入UserModal
 import ResetPasswordModal from './component/ResetPasswordModal';
@@ -134,7 +134,7 @@ const UserAdmin: React.FC = () => {
                     content: '您确定要重置该用户的密码吗？',
                     onOk: async () => {
                       try {
-                        await resetPassword({ id: record.id });
+                        await restPasswordTenantEmployee({ id: record.id });
                         message.success('密码重置成功');
                       } catch (error) {
                         message.error('密码重置失败');
@@ -219,7 +219,7 @@ const UserAdmin: React.FC = () => {
       try {
         if (editingRecord) {
           // 编辑用户
-         const res= await updateEmployeeById({ ...editingRecord, ...values });
+         const res= await updateTenantEmployeeById({ ...editingRecord, ...values });
           if(res.code==='0'){
             message.success('用户编辑成功');
           }else{
@@ -254,9 +254,13 @@ const UserAdmin: React.FC = () => {
     const handleDelete = async (userId) => {
       try {
         // 调用API删除用户
-        await deleteEmployeeById({ userId });
-        message.success('用户删除成功');
-        getUserList();  // 刷新用户列表
+       const res= await deleteTenantEmployeeById({ userId });
+        if(res.code==='0'){
+          message.success('用户删除成功');
+          getUserList();  // 刷新用户列表
+        }else{
+          message.error('用户删除失败');
+        }
       } catch (error) {
         message.error('删除失败');
       }
@@ -265,7 +269,7 @@ const UserAdmin: React.FC = () => {
 // 重置密码
 const handleResetPassword = async (values) => {
   try {
-   const res= await resetPassword({ id: editingRecord.id });
+   const res= await restPasswordTenantEmployee({ id: editingRecord.id });
     if(res.code==='0'){
       message.success('密码重置成功');
     }else{
@@ -355,7 +359,15 @@ const handleResetGoogleAuth = async () => {
           showSizeChanger: true,
         }}
         toolBarRender={() => [
-          <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
+          <Button 
+            key="create" 
+            icon={<PlusOutlined />} 
+            type="primary" 
+            onClick={() => {
+              setEditingRecord(null); // 清空编辑记录
+              setModalVisible(true);
+            }}
+          >
             新建
           </Button>,
         ]}

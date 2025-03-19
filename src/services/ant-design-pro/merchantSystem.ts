@@ -27,7 +27,7 @@ export async function saveTenantEmployee(params?: Record<string, any>) {
  * @param params 请求参数
  */
 export async function deleteTenantEmployeeById(params?: Record<string, any>) {
-  return request('/tenant/v1/deleteTenantEmployeeById', {
+  return request('/tenant/v1/deleteTenantEmployeeById?idString='+params.userId, {
     method: 'POST',
     data: params,
   });
@@ -144,3 +144,10 @@ export async function deleteTenantPermissionsByIds(params?: Record<string, any>)
   });
 }
 
+// 重置商户员工密码
+export async function restPasswordTenantEmployee(params?: Record<string, any>) {
+  return request(`/tenant/v1/restPasswordTenantEmployee?id=${params.id}`, {
+    method: 'POST',
+    data: params,
+  });
+}

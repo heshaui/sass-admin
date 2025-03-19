@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, message, TextArea } from 'antd';
+import { Modal, Form, Input, message } from 'antd';
 import { getFamousAphorismsDetail, addFamousAphorisms, updateFamousAphorisms } from '@/services/ant-design-pro/operation';
 import LanguageSelector from '@/components/Languages';
 
@@ -32,11 +32,7 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
     { languageCode: 'en_US', languageContent: '' }
   ]);
   // 添加useEffect钩子，在编辑模式下获取数据
-  useEffect(() => {
-    if (visible && editingId) {
-      fetchQuoteDetails();
-    }
-  }, [visible, editingId, language]);
+
 
   // 添加获取名言详情的函数
   const fetchQuoteDetails = async () => {
@@ -149,6 +145,12 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (visible && editingId) {
+      fetchQuoteDetails();
+    }
+  }, [visible, editingId, language]);
 
   return (
     <Modal
