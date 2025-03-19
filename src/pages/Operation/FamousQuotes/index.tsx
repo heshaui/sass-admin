@@ -3,7 +3,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { getFamousAphorismsList,deleteFamousAphorisms } from '@/services/ant-design-pro/operation';
-import LanguageSelector from '@/components/Languages';
+// import LanguageSelector from '@/components/Languages';
 import FamousQuoteModal from './components/FamousQuoteModal';
 
 const FamousQuotes: React.FC = () => {
@@ -91,7 +91,7 @@ const FamousQuotes: React.FC = () => {
 
   return (
     <PageContainer>
-      <LanguageSelector value={language} onChange={handleLanguageChange} />
+      {/* <LanguageSelector value={language} onChange={handleLanguageChange} /> */}
 
       <ProTable
         rowKey="id"
