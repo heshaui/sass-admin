@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { request } from 'umi';
 import { getFamousAphorismsList,deleteFamousAphorisms } from '@/services/ant-design-pro/operation';
 import LanguageSelector from '@/components/Languages';
 import FamousQuoteModal from './components/FamousQuoteModal';
