@@ -1,9 +1,9 @@
-import React from 'react';
-import { Button } from 'antd';
+import React,{useEffect}from 'react';
+import { Button,message } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { 
-  getUserLevelBenefitList
+  getUserLevelBenefitList,updateLevelBenefitById
 } from '@/services/ant-design-pro/IdentityVerification';
 import EditModal from './components/EditModal';
 
@@ -63,7 +63,7 @@ const UserLevel: React.FC = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchUserLevelList({
       current: pagination.current,
       pageSize: pagination.pageSize,
@@ -88,18 +88,24 @@ const UserLevel: React.FC = () => {
 
   const handleSave = async (values: any) => {
     try {
-      // 这里添加保存逻辑，发送请求到后端
-      // 示例：await updateUserLevel({...values});
-      console.log('保存的值:', values);
-      
-      // 关闭模态框
-      setIsModalVisible(false);
-      
-      // 刷新表格数据
+      let params = {
+        benefitResps:values.benefitResps
+      }
+
+     const res = await updateLevelBenefitById(params);
+      if(res.code === '0'&&res.data){
+        message.success('更新成功');
+      }else{
+        message.error('更新失败');
+      }
       fetchUserLevelList({
         current: pagination.current,
         pageSize: pagination.pageSize,
       });
+      // 关闭模态框
+      setIsModalVisible(false);
+      
+    
     } catch (error) {
       console.error('更新失败:', error);
     }
@@ -110,20 +116,17 @@ const UserLevel: React.FC = () => {
       title: '等级',
       dataIndex: 'levelName',
       key: 'levelName',
-      search: false,
     },
     {
       title: '要求',
       dataIndex: 'demand',
       key: 'demand',
-      search: false,
       render: (text: string | null) => text || '-',
     },
     {
       title: '权益',
       dataIndex: 'benefitResps',
       key: 'benefitResps',
-      search: false,
       render: (benefitResps: UserLevelItem['benefitResps']) => {
         if (!benefitResps || benefitResps.length === 0) {
           return '-';
@@ -133,11 +136,13 @@ const UserLevel: React.FC = () => {
             {benefitResps.map((item) => (
               <li key={item.levelBenefitId}>
                 {item.benefitName}
+                {item.status ? ` 状态: ${item.status===1 ? '允许' : '不允许'}` : ''}
                 {item.params && (
                   <span style={{ color: '#999', marginLeft: 8 }}>
                     {item.params.amountLimit ? `限额: ${item.params.amountLimit}` : ''}
                     {item.params.coin ? ` 币种: ${item.params.coin}` : ''}
                     {item.params.time ? ` 周期: ${item.params.time}小时` : ''}
+                  
                   </span>
                 )}
               </li>
@@ -150,14 +155,13 @@ const UserLevel: React.FC = () => {
       title: '修改时间',
       dataIndex: 'updateTime',
       key: 'updateTime',
-      search: false,
-      render: (text: string | null) => text || '-',
+      valueType: 'dateTime',
+     
     },
     {
       title: '操作管理员',
       dataIndex: 'tenantId',
       key: 'tenantId',
-      search: false,
       render: (text: string | null) => text || '-',
     },
     {
@@ -181,6 +185,7 @@ const UserLevel: React.FC = () => {
       <ProTable 
         dataSource={dataSource} 
         columns={columns} 
+        search={false}
         pagination={{
           ...pagination,
           showSizeChanger: true,

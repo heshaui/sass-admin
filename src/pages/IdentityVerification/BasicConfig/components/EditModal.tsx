@@ -9,30 +9,85 @@ interface EditModalProps {
 }
 
 const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave }) => {
-  const [cryptoWithdrawal, setCryptoWithdrawal] = useState<string>('允许');
-  const [withdrawalLimit, setWithdrawalLimit] = useState<number>(70000);
+  const [cryptoWithdrawal, setCryptoWithdrawal] = useState<number>(1);
+  const [withdrawalLimit, setWithdrawalLimit] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState<number>(5);
-  const [cryptoDeposit, setCryptoDeposit] = useState<string>('允许');
+  const [cryptoDeposit, setCryptoDeposit] = useState<number>(1);
 
   // 当record变化时更新表单值
   useEffect(() => {
     if (record) {
-      // 这里根据实际record字段设置初始值
-      setCryptoWithdrawal('允许');
-      setWithdrawalLimit(70000);
+
+      
+      // 从benefitResps找到对应的配置项
+      const cryptoWithdrawalBenefit = record.benefitResps?.find(
+        (item: any) => item.benefitName === "加密货币提现"
+      );
+      
+      const cryptoDepositBenefit = record.benefitResps?.find(
+        (item: any) => item.benefitName === "加密货币充值"
+      );
+      console.log(cryptoDepositBenefit);
+      // 设置加密货币提现状态
+      setCryptoWithdrawal(
+        cryptoWithdrawalBenefit?.status
+      );
+      console.log(cryptoWithdrawal);
+      // 设置加密货币充值状态
+      setCryptoDeposit(
+        cryptoDepositBenefit?.status
+      );
+      
+      // 设置提现限额
+      if (cryptoWithdrawalBenefit?.params?.amountLimit) {
+        setWithdrawalLimit(cryptoWithdrawalBenefit.params.amountLimit);
+      } else {
+        setWithdrawalLimit(70000); // 默认值
+      }
+      
+      // 滑块值保持默认
       setSliderValue(5);
-      setCryptoDeposit('允许');
     }
   }, [record]);
 
   // 提交表单
   const handleSubmit = () => {
+    // 构建保存的数据结构
+    const updatedBenefits = [];
+    
+    // 更新加密货币提现配置
+    if (record?.benefitResps) {
+      const withdrawalBenefit = record.benefitResps.find(
+        (item: any) => item.benefitName === "加密货币提现"
+      );
+      
+      if (withdrawalBenefit) {
+        updatedBenefits.push({
+          ...withdrawalBenefit,
+          status: cryptoWithdrawal,
+          params: {
+            ...withdrawalBenefit.params,
+            amountLimit: withdrawalLimit
+          }
+        });
+      }
+      
+      // 更新加密货币充值配置
+      const depositBenefit = record.benefitResps.find(
+        (item: any) => item.benefitName === "加密货币充值"
+      );
+      
+      if (depositBenefit) {
+        updatedBenefits.push({
+          ...depositBenefit,
+          status: cryptoDeposit
+        });
+      }
+    }
+    
     onSave({
-      cryptoWithdrawal,
-      withdrawalLimit,
-      sliderValue,
-      cryptoDeposit,
-      id: record?.id // 确保包含记录ID
+      ...record,
+      benefitResps: updatedBenefits
     });
   };
 
@@ -57,8 +112,8 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
           value={cryptoWithdrawal} 
           onChange={(e) => setCryptoWithdrawal(e.target.value)}
         >
-          <Radio value="允许">允许</Radio>
-          <Radio value="禁止">禁止</Radio>
+          <Radio value={1}>允许</Radio>
+          <Radio value={0}>禁止</Radio>
         </Radio.Group>
       </div>
 
@@ -71,28 +126,6 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
           />
           <span>USDT/24小时</span>
         </Space>
-        <div style={{ display: 'flex', alignItems: 'center', marginTop: 10 }}>
-          <Slider
-            min={1}
-            max={10}
-            value={sliderValue}
-            onChange={setSliderValue}
-            style={{ flex: 1, marginRight: 10 }}
-          />
-          <div 
-            style={{ 
-              width: 30, 
-              height: 30, 
-              backgroundColor: '#F8C25A', 
-              borderRadius: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            {sliderValue}
-          </div>
-        </div>
       </div>
 
       <div style={{ marginBottom: 20 }}>
@@ -101,8 +134,8 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
           value={cryptoDeposit} 
           onChange={(e) => setCryptoDeposit(e.target.value)}
         >
-          <Radio value="允许">允许</Radio>
-          <Radio value="禁止">禁止</Radio>
+          <Radio value={1}>允许</Radio>
+          <Radio value={0}>禁止</Radio>
         </Radio.Group>
       </div>
     </Modal>
