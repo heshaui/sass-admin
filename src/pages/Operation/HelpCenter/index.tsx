@@ -3,7 +3,7 @@ import { Tabs } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import CategoryManagement from './components/Category/CategoryManagement';
 import ArticleManagement from './components/Article/ArticleManagement';
-import SelfService from './components/SelfService';
+import SelfService from './components/Self/SelfService';
 
 const { TabPane } = Tabs;
 

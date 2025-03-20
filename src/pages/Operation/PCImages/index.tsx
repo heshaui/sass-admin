@@ -37,8 +37,17 @@ const PCImages: React.FC = () => {
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
+
       if (modalMode === 'create') {
-        await addCarouselImage(values);
+      let data = {
+          "isShow": 1,
+          "sort": 69,
+          "title": values.title,
+          "accessType": values.accessType,
+          "accessUrl": values.linkUrl,
+          "carouselImageContents": values.languageEntries,
+      }
+        await addCarouselImage(data);
         message.success('添加成功');
       } else {
         await updateCarouselImage(values);
@@ -75,6 +84,7 @@ const PCImages: React.FC = () => {
       title: '图片',
       dataIndex: 'imageUrl',
       key: 'imageUrl',
+      search: false,
       render: (_, record: any) => (
         <Image src={record.imageUrl} width={100} height={100} />
       ),
@@ -83,11 +93,13 @@ const PCImages: React.FC = () => {
       title: '标题',
       dataIndex: 'title',
       key: 'title',
+      search: false,
     },
     {
       title: '链接',
       dataIndex: 'linkUrl',
       key: 'linkUrl',
+      search: false,
     },
     {
       title: '操作',
@@ -108,7 +120,8 @@ const PCImages: React.FC = () => {
       <ProTable
         rowKey="id"
         actionRef={actionRef}
-        headerTitle="轮播图列表"
+        headerTitle="个人中心广告图"
+        search={false}
         columns={columns}
         toolBarRender={() => [
           <Button type="primary" key="add" onClick={showCreateModal}>

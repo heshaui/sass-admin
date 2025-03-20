@@ -95,6 +95,27 @@ export interface CarouselImageItem {
   updateTime?: string;
 }
 
+// 帮助中心自定义接口定义
+export interface HelpCenterCustomizationItem {
+  id: string;
+  title: string;
+  status: number;
+  sort?: number;
+  createTime?: string;
+  updateTime?: string;
+}
+
+// 帮助中心自定义内容接口定义
+export interface HelpCenterCustomizationContentItem {
+  id: string;
+  customizationId: string;
+  title: string;
+  content: string;
+  status: number;
+  createTime?: string;
+  updateTime?: string;
+}
+
 // 获取媒体列表
 export async function getMediaList(data: any) {
   return request<{
@@ -489,6 +510,69 @@ export async function updateCarouselImage(params: CarouselImageItem) {
   return request<{
     success: boolean;
   }>('/tenant/v1/updatecarouselImage', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 获取帮助中心自定义列表
+export async function getHelpCenterCustomizationList(data: any) {
+  return request<{
+    data: HelpCenterCustomizationItem[];
+    success: boolean;
+  }>('/tenant/v1/homeHelpCenterCustomizationList', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 获取帮助中心自定义内容列表
+export async function getHelpCenterCustomizationContentList(data: any) {
+  return request<{
+    data: HelpCenterCustomizationContentItem[];
+    success: boolean;
+  }>('/tenant/v1/HomeHelpCenterCustomizationContentList', {
+    method: 'POST',
+    data,
+  });
+}
+
+// 获取帮助中心自定义参数
+export async function getHelpCenterCustomizationParams(id?: string) {
+  return request<{
+    data: any;
+    success: boolean;
+  }>('/tenant/v1/homeHelpCenterCustomizationParams' + (id ? `?idString=${id}` : ''), {
+    method: 'POST',
+  });
+}
+
+// 添加帮助中心自定义
+export async function addHelpCenterCustomization(params: Omit<HelpCenterCustomizationItem, 'id'>) {
+  return request<{
+    success: boolean;
+    data: HelpCenterCustomizationItem;
+  }>('/tenant/v1/saveHomeHelpCenterCustomization', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 更新帮助中心自定义
+export async function updateHelpCenterCustomization(params: HelpCenterCustomizationItem) {
+  return request<{
+    success: boolean;
+  }>('/tenant/v1/updateHomeHelpCenterCustomizationById', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 更新帮助中心自定义内容
+export async function updateHelpCenterCustomizationContent(params: any) {
+  return request<{
+    success: boolean;
+  }>('/tenant/v1/updateHomeHelpCenterCustomizationContentById', {
     method: 'POST',
     data: params,
   });
