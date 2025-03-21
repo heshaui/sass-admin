@@ -296,9 +296,10 @@ const Language: React.FC = () => {
   return (
     <PageContainer>
         <div style={{marginBottom: 10}}>
-        1.如需添加未存在语言，请联系客服！<br/>
-        2.已开启语言，新增语言包未翻译，前台将默认使用英文！<br/>
-        3.新添加语言，默认状态=禁用，需要管理员手动启用。
+          <div style={{fontSize: 16, fontWeight: 'bold',marginBottom: 10}}>TIPS</div>
+       <div style={{marginBottom: 10}}>1.如需添加未存在语言，请联系客服！<br/></div>
+       <div style={{marginBottom: 10}}> 2.已开启语言，新增语言包未翻译，前台将默认使用英文！</div>
+       <div style={{marginBottom: 10}}>3.新添加语言，默认状态=禁用，需要管理员手动启用。</div> 
         </div>
       <ProTable
         rowKey="id"
