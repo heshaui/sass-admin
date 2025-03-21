@@ -108,7 +108,6 @@ const Footer: React.FC = () => {
       displayStatus = 0;
     }
     try {
-      console.log(parentId.id);
       const data = {
         homeBottom: {
           menuDescription: values.values.menuDescription,
@@ -136,6 +135,7 @@ const Footer: React.FC = () => {
         message.error('菜单添加失败: ' + (response.message || '未知错误'));
       }
     } catch (error) {
+      console.log(error);
       message.error('提交失败: ' + (error || '网络错误'));
     }
   };
