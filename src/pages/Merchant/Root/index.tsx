@@ -139,7 +139,7 @@ const Root: React.FC = () => {
     },
     {
       title: "交易所名称",
-      dataIndex: "nickname",
+      dataIndex: "tenantName",
       search:false, 
     },
     {
