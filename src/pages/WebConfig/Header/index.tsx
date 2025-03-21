@@ -135,7 +135,7 @@ const Header: React.FC = () => {
     }
   };
 
-  // 递归渲染菜单（子菜单也有 `+` 按钮）
+  // 递归渲染菜单（支持多层嵌套）
   const renderMenu = (menuList: any[]) => {
     return menuList.map((item) =>
       item.languageCode === currentLanguage ? (
@@ -187,54 +187,63 @@ const Header: React.FC = () => {
             </Button>
           </div>
 
-          {/* 子级菜单（带 `+` 按钮） */}
+          {/* 递归渲染子菜单 */}
           {item.children && item.children.length > 0 && (
-            <div style={{ display: "flex", flexDirection: "column",  gap: 4 }}>
-              {item.children.map((child) => (
-                <div key={child.id} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <Button
-                    style={{
-                      background: "#F5F5F5",
-                      color: "#000",
-                      fontSize: 14,
-                      padding: "6px 12px",
-                      borderRadius: 8,
-                      minWidth: 80,
-                      textAlign: "left",
-                      position: "relative",
-                      paddingRight: 60,
-                    }}
-                  >
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                      <Popconfirm
-                        title="确定要删除这个菜单吗？"
-                        onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.id); }}
-                        okText="确定"
-                        cancelText="取消"
-                      >
-                        {/* <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} /> */}
-                      </Popconfirm>
-                      • {child.menuName}
+            <div style={{ display: "flex", flexDirection: "column", gap: 4, marginLeft: 20 }}>
+              {item.children.map((child: any) => (
+                <div key={child.id} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                    <Button
+                      style={{
+                        background: "#F5F5F5",
+                        color: "#000",
+                        fontSize: 14,
+                        padding: "6px 12px",
+                        borderRadius: 8,
+                        minWidth: 80,
+                        textAlign: "left",
+                        position: "relative",
+                        paddingRight: 60,
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center" }}>
+                        <Popconfirm
+                          title="确定要删除这个菜单吗？"
+                          onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.id); }}
+                          okText="确定"
+                          cancelText="取消"
+                        >
+                          {/* <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} /> */}
+                        </Popconfirm>
+                        • {child.menuName}
+                      </div>
+                      <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
+                        <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(child); }} style={{ color: "#1890ff" }} />
+                      </div>
+                    </Button>
+                    <Button
+                      onClick={() => handleModal(child)}
+                      style={{
+                        background: "#FF6A00",
+                        color: "#FFF",
+                        borderRadius: 8,
+                        height: 32,
+                        width: 32,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <PlusOutlined />
+                    </Button>
+                  </div>
+                  
+                  {/* 递归渲染更深层级的子菜单 */}
+                  {child.children && child.children.length > 0 && (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4, marginLeft: 20 }}>
+                      {renderMenu(child.children)}
                     </div>
-                    <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
-                      <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(child); }} style={{ color: "#1890ff" }} />
-                    </div>
-                  </Button>
-                  <Button
-                    onClick={() => handleModal(child)}
-                    style={{
-                      background: "#FF6A00",
-                      color: "#FFF",
-                      borderRadius: 8,
-                      height: 32,
-                      width: 32,
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <PlusOutlined />
-                  </Button>
+                  )}
                 </div>
               ))}
             </div>
