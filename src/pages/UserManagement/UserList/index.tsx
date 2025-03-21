@@ -134,7 +134,7 @@ const UserManagement: React.FC = () => {
       <PageContainer title="用户管理">
         <UserDetail 
           visible={showUserDetail} 
-          user={currentUser} 
+          userId={currentUser?.userId} 
           onClose={() => setShowUserDetail(false)} 
         />
       </PageContainer>

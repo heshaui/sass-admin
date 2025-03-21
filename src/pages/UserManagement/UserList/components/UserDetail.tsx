@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Card, Descriptions, Badge, Space, Button, Modal, message, Input, Form, Select, Tabs } from 'antd';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
 import {  ProTable } from '@ant-design/pro-components';
@@ -6,7 +6,7 @@ import { useModel } from 'umi';
 import { 
   freezeLogin, freezeTransaction, freezeWithdrawal,
   unfreezeLogin, unfreezeTransaction, unfreezeWithdrawal,
-  updatePhone, updateEmail,getUserOperationLogs
+  updatePhone, updateEmail,getUserOperationLogs,getUserDetail
 } from '@/services/ant-design-pro/UserManagement';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import TextArea from 'antd/es/input/TextArea';
@@ -16,12 +16,12 @@ const { Option } = Select;
 
 interface UserDetailProps {
   visible: boolean;
-  user: UserItem | null;
+  userId: string | number;
   onClose: () => void;
 }
 
-const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
-  if (!visible || !user) return null;
+const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => {
+  if (!visible || !userId) return null;
   const { initialState } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   console.log(currentUser);
@@ -32,6 +32,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
   const [withdrawalModalVisible, setWithdrawalModalVisible] = useState(false);
   const [phoneModalVisible, setPhoneModalVisible] = useState(false);
   const [emailModalVisible, setEmailModalVisible] = useState(false);
+  const [user, setUser] = useState<any>({});
   
   // 操作类型
   const [loginActionType, setLoginActionType] = useState<'freeze' | 'unfreeze'>('freeze');
@@ -90,12 +91,31 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
       key: 'remarkMsg',
     },
   ];
-  const getLog=async()=>{
-    const res=await getUserOperationLogs({ userId: user.userId });
+
+  const userDetailInfo=async()=>{
+    const res=await getUserDetail(userId);
     if(res.code==='0'){
-      return res.data.list;
+      setUser(res.data);
+    }else{
+      message.error(res.message);
     }
-    return [];
+  }
+  const getLog=async()=>{
+    const res=await getUserOperationLogs({ userId: userId });
+    if(res.code==='0'){
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.count || res.data.list.length
+      };
+    }else{
+      message.error(res.message);
+      return {
+        data: [],
+        success: false,
+        total: 0
+      };
+    }
   }
 
   const getGoogleCode=async()=>{
@@ -151,6 +171,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
       console.error(`${loginActionType === 'freeze' ? '冻结' : '解冻'}登录失败`, error);
       message.error(`${loginActionType === 'freeze' ? '冻结' : '解冻'}登录操作失败`);
     }
+   await userDetailInfo();
   };
 
   // 处理交易权限操作
@@ -181,6 +202,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
       console.error(`${transactionActionType === 'freeze' ? '冻结' : '解冻'}交易失败`, error);
       message.error(`${transactionActionType === 'freeze' ? '冻结' : '解冻'}交易操作失败`);
     }
+    await userDetailInfo();
   };
 
   // 处理提现权限操作
@@ -211,6 +233,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
       console.error(`${withdrawalActionType === 'freeze' ? '冻结' : '解冻'}提现失败`, error);
       message.error(`${withdrawalActionType === 'freeze' ? '冻结' : '解冻'}提现操作失败`);
     }
+    await userDetailInfo();
   };
 
   // 处理修改手机号
@@ -242,6 +265,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
     } catch (error) {
       message.error('手机号更新失败');
     }
+    await userDetailInfo();
   };
 
   // 处理修改邮箱
@@ -274,6 +298,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
       console.error('更新邮箱失败', error);
       message.error('邮箱更新失败');
     }
+    await userDetailInfo();
   };
 
   // 显示登录权限操作模态框
@@ -314,6 +339,9 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
     setEmailModalVisible(true);
   };
   
+  useEffect(()=>{
+    userDetailInfo();
+  },[userId]);
   return (
     <>
       <Card 
@@ -322,8 +350,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
         className="user-detail-card"
       >
         <Descriptions bordered column={2}>
-          <Descriptions.Item label="用户ID">{user.userId}</Descriptions.Item>
-          <Descriptions.Item label="昵称">{user.account}</Descriptions.Item>
+          <Descriptions.Item label="用户ID">{user?.userId}</Descriptions.Item>
+          <Descriptions.Item label="昵称">{user?.account}</Descriptions.Item>
           <Descriptions.Item label="用户状态">
             <Space>
             {user.status===1 ? '正常' : '冻结'}
@@ -433,7 +461,6 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, user, onClose }) => {
               search={false}
               pagination={false}
               request={getLog}
-
             />
           </Tabs.TabPane>
         </Tabs>
