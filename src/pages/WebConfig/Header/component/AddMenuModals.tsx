@@ -202,10 +202,12 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
                 <div>
                   <div style={{ textAlign: "center" }}>夜间</div>
                   <AvatarUpload onChange={handleDayChange} />
+                  <div style={{fontSize: 12, color: '#999'}}>请上传小于500k<br/>142*72png图片</div>
                 </div>
                 <div>
                   <div style={{ textAlign: "center" }}>日间</div>
                   <AvatarUpload onChange={handleNightChange} />
+                  <div style={{fontSize: 12, color: '#999'}}>请上传小于500k<br/>142*72png图片</div>
                 </div>
               </Flex>
             </Form.Item>
@@ -222,6 +224,9 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
                 {selectedStyle === "hot" && <Image src={iconHot} width={24} height={24} />}
                 {selectedStyle === "custom" && <AvatarUpload onChange={handleImageChange} />}
               </div>
+              {
+                selectedStyle === "custom"&&<div style={{fontSize: 12, color: '#999'}}>请上传小于500k<br/>142*72png图片</div>
+              }
             </Form.Item>
             <Form.Item label="是否显示" name="displayStatus" style={{ marginTop: tops }}>
               <Switch />
