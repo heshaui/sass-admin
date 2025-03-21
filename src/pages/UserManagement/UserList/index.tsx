@@ -8,6 +8,7 @@ import type { UserItem } from '@/services/ant-design-pro/UserManagement';
 import UserDetail from './components/UserDetail';
 
 const UserManagement: React.FC = () => {
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [loading, setLoading] = useState<boolean>(false);
   const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserItem | null>(null);
@@ -61,6 +62,12 @@ const UserManagement: React.FC = () => {
       width: 80,
       search: false,
     },
+    ...(isAdmin ? [] : [{
+      title: '商户id',
+      dataIndex: 'tenantId',
+      key: 'tenantId',
+      search:false, 
+    }]),
     {
       title: '昵称',
       dataIndex: 'account',
