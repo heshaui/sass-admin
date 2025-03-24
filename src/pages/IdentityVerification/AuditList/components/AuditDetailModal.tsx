@@ -1,9 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Button, Form, Space, Descriptions, message, Row, Col, Image, Modal, Input } from 'antd';
-import { updateUserIdentityVerificationById,getUserIdentityVerificationDetail } from '@/services/ant-design-pro/IdentityVerification';
 import { ImagePlaceholder } from '@/components/ImagePlaceholder';
-import styles from './AuditDetailModal.module.less';
+import { updateUserIdentityVerificationById } from '@/services/ant-design-pro/IdentityVerification';
+import {
+  Button,
+  Card,
+  Col,
+  Descriptions,
+  Form,
+  Image,
+  Input,
+  message,
+  Modal,
+  Row,
+  Space,
+} from 'antd';
 import dayjs from 'dayjs';
+import React, { useEffect, useState } from 'react';
+import styles from './AuditDetailModal.module.less';
 interface AuditDetailModalProps {
   visible: boolean;
   onClose: () => void;
@@ -17,7 +29,6 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
   onClose,
   onSuccess,
   record,
-  title,
 }) => {
   const [form] = Form.useForm();
   const [rejectModalVisible, setRejectModalVisible] = useState(false);
@@ -36,20 +47,16 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
     }
   }, [visible, record, form]);
 
-  const handleGoogleCodeSuccess = async (code: string) => {
-    console.log(code,'code');
-  }
-
   const handleApprove = async () => {
     try {
-    const res = await updateUserIdentityVerificationById({
+      const res = await updateUserIdentityVerificationById({
         id: record.id,
         authStatus: '1',
       });
-      if(res.code === '0'){
+      if (res.code === '0') {
         message.success('已通过审核');
         onSuccess();
-      }else{
+      } else {
         message.error('操作失败');
       }
     } catch (error) {
@@ -76,14 +83,14 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
       message.error('请填写拒绝原因');
       return;
     }
-    
+
     try {
       await updateUserIdentityVerificationById({
         id: record.id,
-        status: 'rejected',
-        rejectReason: rejectReason.trim()
+        authStatus: '0',
+        rejectReason: rejectReason.trim(),
       });
-      
+
       setRejectModalVisible(false);
       message.success('已拒绝审核');
       onSuccess();
@@ -102,18 +109,18 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
     }
   };
 
-  const handleRevoke=async()=>{
-    const res=await updateUserIdentityVerificationById({
-      id:record.id,
-      authStatus:'2'
+  const handleRevoke = async () => {
+    const res = await updateUserIdentityVerificationById({
+      id: record.id,
+      authStatus: '2',
     });
-    if(res.code==='0'){
+    if (res.code === '0') {
       message.success('撤销成功');
       onSuccess();
-    }else{
+    } else {
       message.error('操作失败');
     }
-  }
+  };
 
   if (!visible) {
     return null;
@@ -121,39 +128,66 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
 
   return (
     <>
-      <Card
-        title="审核详情"
-        extra={<Button onClick={onClose}>关闭</Button>}
-      >
+      <Card title="审核详情" extra={<Button onClick={onClose}>关闭</Button>}>
         <div className={styles.statusBar}>
           <div className={styles.statusLabel}>审核状态</div>
-          <div className={styles.statusValue} style={{color:record?.authStatus===0?'red':record?.authStatus===1?'green':'gray',}}>{record?.authStatus===0?'驳回':record?.authStatus===1?'通过':'未审核'}</div>
+          <div
+            className={styles.statusValue}
+            style={{
+              color: record?.authStatus === 0 ? 'red' : record?.authStatus === 1 ? 'green' : 'gray',
+            }}
+          >
+            {record?.authStatus === 0 ? '驳回' : record?.authStatus === 1 ? '通过' : '未审核'}
+          </div>
         </div>
-        
+
         <Descriptions bordered column={2}>
-          <Descriptions.Item label="用户ID" span={1}>{record?.userId }</Descriptions.Item>
-          <Descriptions.Item label="名" span={1}>{record?.firstName }</Descriptions.Item>
-          <Descriptions.Item label="国家或地区" span={1}>{record?.countryId }</Descriptions.Item>
-          <Descriptions.Item label="姓" span={1}>{record?.surname }</Descriptions.Item>
-          <Descriptions.Item label="出生日期" span={1}>{dayjs(record?.birthday).format('YYYY-MM-DD')}</Descriptions.Item>
-          <Descriptions.Item label="证件类型" span={1}>{record?.cardType }</Descriptions.Item>
-          <Descriptions.Item label="当前语言" span={1}>{record?.currentLanguage}</Descriptions.Item>
-          <Descriptions.Item label="证件号" span={2}>{record?.cardCode}</Descriptions.Item>
+          <Descriptions.Item label="用户ID" span={1}>
+            {record?.userId}
+          </Descriptions.Item>
+          <Descriptions.Item label="名" span={1}>
+            {record?.firstName}
+          </Descriptions.Item>
+          <Descriptions.Item label="国家或地区" span={1}>
+            {record?.countryId}
+          </Descriptions.Item>
+          <Descriptions.Item label="姓" span={1}>
+            {record?.surname}
+          </Descriptions.Item>
+          <Descriptions.Item label="出生日期" span={1}>
+            {dayjs(record?.birthday).format('YYYY-MM-DD')}
+          </Descriptions.Item>
+          <Descriptions.Item label="证件类型" span={1}>
+            {record?.cardType}
+          </Descriptions.Item>
+          <Descriptions.Item label="当前语言" span={1}>
+            {record?.currentLanguage}
+          </Descriptions.Item>
+          <Descriptions.Item label="证件号" span={2}>
+            {record?.cardCode}
+          </Descriptions.Item>
         </Descriptions>
-        
+
         <div className={styles.actionButtons}>
-          {record?.authStatus === 2 && <Space size="middle">
-            <Button type="primary" onClick={handleApprove}>通过</Button>
-            <Button danger onClick={showRejectModal}>驳回</Button>
-          </Space>
-          }
-          {record?.authStatus === 1 && <Space size="middle">
-           
-            <Button type='primary' danger onClick={handleRevoke}>撤销</Button>
-          </Space>
-          }
+          {record?.authStatus === 2 && (
+            <Space size="middle">
+              <Button type="primary" onClick={handleApprove}>
+                通过
+              </Button>
+              <Button danger onClick={showRejectModal}>
+                驳回
+              </Button>
+            </Space>
+          )}
+          {record?.authStatus === 1 && (
+            <Space size="middle">
+              <Button type="primary" danger onClick={handleRevoke}>
+                撤销
+              </Button>
+            </Space>
+          )}
         </div>
-        
+
         <div className={styles.documentSection}>
           <h3>证件照</h3>
           <Row gutter={16}>
@@ -162,11 +196,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
                 <div className={styles.imageLabel}>正面</div>
                 <div className={styles.imageContainer}>
                   {record?.frontUrl ? (
-                    <Image 
-                      src={record.frontUrl} 
-                      alt="证件正面"
-                      className={styles.documentImage}
-                    />
+                    <Image src={record.frontUrl} alt="证件正面" className={styles.documentImage} />
                   ) : (
                     <ImagePlaceholder />
                   )}
@@ -178,11 +208,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
                 <div className={styles.imageLabel}>背面</div>
                 <div className={styles.imageContainer}>
                   {record?.backUrl ? (
-                    <Image 
-                      src={record.backUrl} 
-                      alt="证件背面"
-                      className={styles.documentImage}
-                    />
+                    <Image src={record.backUrl} alt="证件背面" className={styles.documentImage} />
                   ) : (
                     <ImagePlaceholder />
                   )}
@@ -194,11 +220,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
                 <div className={styles.imageLabel}>自拍照</div>
                 <div className={styles.imageContainer}>
                   {record?.selfieUrl ? (
-                    <Image 
-                      src={record.selfieUrl} 
-                      alt="自拍照"
-                      className={styles.documentImage}
-                    />
+                    <Image src={record.selfieUrl} alt="自拍照" className={styles.documentImage} />
                   ) : (
                     <ImagePlaceholder />
                   )}
@@ -208,7 +230,6 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
           </Row>
         </div>
       </Card>
-
 
       {/* 驳回原因模态框 */}
       <Modal
@@ -238,4 +259,4 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
   );
 };
 
-export default AuditDetailCard; 
+export default AuditDetailCard;
