@@ -59,7 +59,7 @@ export interface OperationLogParams {
  * 获取用户列表
  */
 export async function getUserList(params: UserListParams) {
-  return request(isAdmin ? '/tenant-admin/v1/userList' : '/tenant/v1/userList', {
+  return request(isAdmin ? '/tenant-admin/v1/user/userList' : '/tenant/v1/userList', {
     method: 'POST',
     data: params,
   });
@@ -69,7 +69,7 @@ export async function getUserList(params: UserListParams) {
  * 获取用户详情
  */
 export async function getUserDetail(params: UserDetailParams) {
-  return request(isAdmin ? `/tenant-admin/v1/userDetail?id=${params}` : `/tenant/v1/userDetail?id=${params}`, {
+  return request(isAdmin ? `/tenant-admin/v1/user/userDetail?id=${params}` : `/tenant/v1/userDetail?id=${params}`, {
     method: 'POST',
     data: params,
   });
@@ -79,7 +79,7 @@ export async function getUserDetail(params: UserDetailParams) {
  * 更新用户信息
  */
 export async function updateUserById(params: UpdateUserParams) {
-  return request(isAdmin ? '/tenant-admin/v1/updateUserById' : '/tenant/v1/updateUserById', {
+  return request(isAdmin ? '/tenant-admin/v1/user/updateUserById' : '/tenant/v1/updateUserById', {
     method: 'POST',
     data: params,
   });
@@ -89,7 +89,7 @@ export async function updateUserById(params: UpdateUserParams) {
  * 获取用户操作日志列表
  */
 export async function getUserOperationLogs(params: OperationLogParams) {
-  return request(isAdmin ? '/tenant-admin/v1/userOperationLogList' : '/tenant/v1/userOperationLogList', {
+  return request(isAdmin ? '/tenant-admin/v1/user/userOperationLogList' : '/tenant/v1/userOperationLogList', {
     method: 'POST',
     data: params,
   });
@@ -99,7 +99,7 @@ export async function getUserOperationLogs(params: OperationLogParams) {
  * 冻结登录
  */
 export async function freezeLogin(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/freezeLogin' : '/tenant/v1/freezeLogin', {
+  return request(isAdmin ? '/tenant-admin/v1/user/freezeLogin' : '/tenant/v1/freezeLogin', {
     method: 'POST',
     data: params,
   });
@@ -109,7 +109,7 @@ export async function freezeLogin(params: UserOperationParams) {
  * 解冻登录
  */
 export async function unfreezeLogin(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/unfreezeLogin' : '/tenant/v1/unfreezeLogin', {
+  return request(isAdmin ? '/tenant-admin/v1/user/unfreezeLogin' : '/tenant/v1/unfreezeLogin', {
     method: 'POST',
     data: params,
   });
@@ -119,7 +119,7 @@ export async function unfreezeLogin(params: UserOperationParams) {
  * 冻结交易
  */
 export async function freezeTransaction(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/freezeTransaction' : '/tenant/v1/freezeTransaction', {
+  return request(isAdmin ? '/tenant-admin/v1/user/freezeTransaction' : '/tenant/v1/freezeTransaction', {
     method: 'POST',
     data: params,
   });
@@ -129,7 +129,7 @@ export async function freezeTransaction(params: UserOperationParams) {
  * 解冻交易
  */
 export async function unfreezeTransaction(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/unfreezeTransaction' : '/tenant/v1/unfreezeTransaction', {
+  return request(isAdmin ? '/tenant-admin/v1/user/unfreezeTransaction' : '/tenant/v1/unfreezeTransaction', {
     method: 'POST',
     data: params,
   });
@@ -139,7 +139,7 @@ export async function unfreezeTransaction(params: UserOperationParams) {
  * 冻结提现
  */
 export async function freezeWithdrawal(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/freezeWithdrawal' : '/tenant/v1/freezeWithdrawal', {
+  return request(isAdmin ? '/tenant-admin/v1/user/freezeWithdrawal' : '/tenant/v1/freezeWithdrawal', {
     method: 'POST',
     data: params,
   });
@@ -149,7 +149,7 @@ export async function freezeWithdrawal(params: UserOperationParams) {
  * 解冻提现
  */
 export async function unfreezeWithdrawal(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/unfreezeWithdrawal' : '/tenant/v1/unfreezeWithdrawal', {
+  return request(isAdmin ? '/tenant-admin/v1/user/unfreezeWithdrawal' : '/tenant/v1/unfreezeWithdrawal', {
     method: 'POST',
     data: params,
   });
@@ -159,7 +159,7 @@ export async function unfreezeWithdrawal(params: UserOperationParams) {
  * 更新用户手机号
  */
 export async function updatePhone(params: UpdatePhoneParams) {
-  return request(isAdmin ? '/tenant-admin/v1/updatePhone' : '/tenant/v1/updatePhone', {
+  return request(isAdmin ? '/tenant-admin/v1/user/updatePhone' : '/tenant/v1/updatePhone', {
     method: 'POST',
     data: params,
   });
@@ -169,7 +169,7 @@ export async function updatePhone(params: UpdatePhoneParams) {
  * 更新用户邮箱
  */
 export async function updateEmail(params: UpdateEmailParams) {
-  return request(isAdmin ? '/tenant-admin/v1/updateEmail' : '/tenant/v1/updateEmail', {
+  return request(isAdmin ? '/tenant-admin/v1/user/updateEmail' : '/tenant/v1/updateEmail', {
     method: 'POST',
     data: params,
   });
