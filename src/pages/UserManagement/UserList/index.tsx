@@ -62,11 +62,10 @@ const UserManagement: React.FC = () => {
       width: 80,
       search: false,
     },
-    ...(isAdmin ? [] : [{
+    ...(!isAdmin ? [] : [{
       title: '商户id',
       dataIndex: 'tenantId',
       key: 'tenantId',
-      search:false, 
     }]),
     {
       title: '昵称',

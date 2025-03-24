@@ -110,8 +110,8 @@ const AuditList: React.FC = () => {
     },
     {
       title: '国家/地区',
-      dataIndex: 'countryId',
-      key: 'countryId',
+      dataIndex: 'country',
+      key: 'country',
       search: false,
     },
     // {

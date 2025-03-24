@@ -11,7 +11,7 @@ import {
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import TextArea from 'antd/es/input/TextArea';
 import GoogleCode from '@/components/GoogleCode';
-
+import dayjs from 'dayjs';
 const { Option } = Select;
 
 interface UserDetailProps {
@@ -59,9 +59,10 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       title: '操作时间',
       dataIndex: 'createTime',
       key: 'createTime',
+      valueType: 'dateTime',
     },
     {
-      title: 'userId',
+      title: '用户id',
       dataIndex: 'userId',
       key: 'userId',
     },
@@ -380,7 +381,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           <Descriptions.Item label="姓名">
             {user.lastName} {user.firstName}
           </Descriptions.Item>
-          <Descriptions.Item label="注册时间">{user.createTime}</Descriptions.Item>
+          <Descriptions.Item label="注册时间">{dayjs(user.createTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
           <Descriptions.Item label="邮箱">
             {user.email}
             <Button 

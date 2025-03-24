@@ -149,7 +149,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
             {record?.firstName}
           </Descriptions.Item>
           <Descriptions.Item label="国家或地区" span={1}>
-            {record?.countryId}
+            {record?.country}
           </Descriptions.Item>
           <Descriptions.Item label="姓" span={1}>
             {record?.surname}
