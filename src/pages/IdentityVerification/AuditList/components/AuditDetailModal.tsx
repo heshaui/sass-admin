@@ -92,7 +92,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
       });
 
       setRejectModalVisible(false);
-      message.success('已拒绝审核');
+      message.success('驳回成功');
       onSuccess();
     } catch (error) {
       message.error('操作失败');
