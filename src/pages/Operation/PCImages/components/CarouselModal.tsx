@@ -19,12 +19,27 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
   onCancel,
   onSubmit,
 }) => {
+  console.log(initialValues);
   const [form] = Form.useForm();
-  const [accessType, setAccessType] = useState<'1' | '2'>('1');
+  const [accessType, setAccessType] = useState<1 | 2>(1);
   const [language, setLanguage] = useState<string>('en_US');
   const [languageEntries, setLanguageEntries] = useState<any[]>([]);
   const [pcAccessPaths, setPcAccessPaths] = useState<any[]>([]);
-
+ // 获取PC功能列表
+ const getPcAccessPath = async () => {
+  try {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000
+    }
+    const res = await pcAccessPathAll(data);
+    if (res.code === '0' && res.data) {
+      setPcAccessPaths(JSON.parse(res.data));
+    }
+  } catch (error) {
+    console.error('获取PC功能失败:', error);
+  }
+};
   // 使用ref来跟踪表单值的最新状态
   const formValuesRef = useRef<any>({});
   // 跟踪用户实际编辑过的语言
@@ -36,8 +51,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
     
     // 检查是否有实际内容
     const hasContent = currentValues.title || currentValues.image ||
-                      (accessType === '2' && currentValues.linkUrl) ||
-                      (accessType === '1' && currentValues.pcFunction);
+                      (accessType === 2 && currentValues.linkUrl) ||
+                      (accessType === 1 && currentValues.pcFunction);
     
     if (hasContent) {
       // 标记该语言已被编辑
@@ -47,8 +62,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
         ...formValuesRef.current,
         [language]: {
           title: currentValues.title || '',
-          linkUrl: accessType === '2' ? currentValues.linkUrl || '' : undefined,
-          pcFunction: accessType === '1' ? currentValues.pcFunction || '' : undefined,
+          linkUrl: accessType === 2 ? currentValues.linkUrl || '' : undefined,
+          pcFunction: accessType === 1 ? currentValues.pcFunction || '' : undefined,
           image: currentValues.image || ''
         }
       };
@@ -91,9 +106,9 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       
       // 根据新语言内容设置urlType
       if (values.pcFunction) {
-        setAccessType('1');
+        setAccessType(1);
       } else if (values.linkUrl) {
-        setAccessType('2');
+        setAccessType(2);
       }
     } else {
       // 如果是新语言，重置表单
@@ -133,7 +148,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
         const { language, linkUrl, pcFunction, image, ...rest } = entry;
         return { 
           languageCode: language, 
-          accessUrl: accessType === '1' ? pcFunction : linkUrl,
+          accessUrl: accessType === 1 ? pcFunction : linkUrl,
           imageUrl: image,
           accessType, // 为每个语言条目添加 accessType
           ...rest 
@@ -143,7 +158,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       const formData = {
         ...mainValues,
         title: currentEntries.find(e => e.language === language)?.title || '',
-        accessUrl: accessType === '1' ? form.getFieldValue('pcFunction') : form.getFieldValue('linkUrl'),
+        accessUrl: accessType === 1 ? form.getFieldValue('pcFunction') : form.getFieldValue('linkUrl'),
         imageUrl: defaultImage,
         languageEntries: formattedEntries,
         id: mode === 'edit' ? initialValues?.id : undefined,
@@ -166,97 +181,78 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       editedLanguagesRef.current = new Set(); // 重置编辑过的语言集合
       
       if (mode === 'edit' && initialValues) {
-        const { languageEntries: langEntries, ...baseValues } = initialValues;
+        // 处理后端返回的数据结构
+        console.log('初始化数据:', initialValues);
         
-        // 设置基础字段
+        // 从carouselImageContents获取语言条目
+        const langEntries = initialValues.carouselImageContents || [];
+        
+        // 获取accessType (可能在条目中或顶层)
+        const firstEntry = langEntries[0] || {};
+        // 确保accessType是数字类型1或2，默认为2
+        const defaultAccessType = firstEntry.accessType ? Number(firstEntry.accessType) : 2;
+        
+        // 设置基础字段，包括accessType
         form.setFieldsValue({
-          isShow: baseValues.isShow,
-          sort: baseValues.sort,
-          urlType: baseValues.urlType,
+          isShow: initialValues.isShow === 1,
+          sort: initialValues.sort,
+          accessType: defaultAccessType, // 明确设置accessType字段
         });
         
-        setAccessType(baseValues.accessType || '2');
-        const defaultLanguage = baseValues.languageCode || 'en_US';
+        // 更新状态值
+        setAccessType(defaultAccessType);
+        
+        const defaultLanguage = langEntries[0]?.languageCode || 'en_US';
         setLanguage(defaultLanguage);
         
         // 处理语言条目
         if (langEntries && langEntries.length > 0) {
           // 将语言条目加载到ref，并标记为已编辑
           langEntries.forEach((entry: any) => {
-            if (entry.title || entry.linkUrl || entry.pcFunction || entry.image) {
-              formValuesRef.current[entry.language] = {
+            // 确保使用数字类型的accessType
+            const entryAccessType = entry.accessType ? Number(entry.accessType) : defaultAccessType;
+            
+            if (entry.title || entry.accessUrl || entry.imageUrl) {
+              formValuesRef.current[entry.languageCode] = {
                 title: entry.title || '',
-                linkUrl: entry.linkUrl || '',
-                pcFunction: entry.pcFunction || '',
-                image: entry.image || baseValues.image || '',
+                linkUrl: entryAccessType === 2 ? entry.accessUrl || '' : '',
+                pcFunction: entryAccessType === 1 ? entry.accessUrl || '' : '',
+                image: entry.imageUrl || '',
               };
               // 标记为已编辑
-              editedLanguagesRef.current.add(entry.language);
+              editedLanguagesRef.current.add(entry.languageCode);
             }
           });
           
           // 加载当前语言的内容
           const currentLangEntry = langEntries.find(
-            (entry: any) => entry.language === defaultLanguage
+            (entry: any) => entry.languageCode === defaultLanguage
           );
           
           if (currentLangEntry) {
+            const entryAccessType = currentLangEntry.accessType ? Number(currentLangEntry.accessType) : defaultAccessType;
             form.setFieldsValue({
               title: currentLangEntry.title || '',
-              linkUrl: currentLangEntry.linkUrl || '',
-              pcFunction: currentLangEntry.pcFunction || '',
-              image: currentLangEntry.image || baseValues.image || '',
+              linkUrl: entryAccessType === 2 ? currentLangEntry.accessUrl || '' : '',
+              pcFunction: entryAccessType === 1 ? currentLangEntry.accessUrl || '' : '',
+              image: currentLangEntry.imageUrl || '',
             });
           }
           
           // 同步到状态
           syncRefToLanguageEntries();
-        } else {
-          // 如果没有语言条目，但有默认内容，创建一个默认条目
-          if (baseValues.title || baseValues.linkUrl || baseValues.pcFunction || baseValues.image) {
-            formValuesRef.current[defaultLanguage] = {
-              title: baseValues.title || '',
-              linkUrl: baseValues.linkUrl || '',
-              pcFunction: baseValues.pcFunction || '',
-              image: baseValues.image || '',
-            };
-            // 标记为已编辑
-            editedLanguagesRef.current.add(defaultLanguage);
-            
-            form.setFieldsValue({
-              title: baseValues.title || '',
-              linkUrl: baseValues.linkUrl || '',
-              pcFunction: baseValues.pcFunction || '',
-              image: baseValues.image || '',
-            });
-          }
-          
-          syncRefToLanguageEntries();
         }
       } else {
         // 创建模式
-        setAccessType('2');
+        setAccessType(2);
+        form.setFieldsValue({ accessType: 2 }); // 设置默认值
         setLanguage('en_US');
         setLanguageEntries([]);
       }
     }
   }, [visible, mode, initialValues, form]);
 
-  // 获取PC功能列表
-  const getPcAccessPath = async () => {
-    try {
-      let data = {
-        pageNo: 1,
-        pageSize: 10000
-      }
-      const res = await pcAccessPathAll(data);
-      if (res.code === '0' && res.data) {
-        setPcAccessPaths(JSON.parse(res.data));
-      }
-    } catch (error) {
-      console.error('获取PC功能失败:', error);
-    }
-  };
+ 
 
   const modalTitle = mode === 'create' ? '添加' : '编辑';
 
@@ -302,15 +298,14 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
           label="访问路径"
           name="accessType"
           rules={[{ required: true, message: '请选择访问路径类型' }]}
-          initialValue="custom"
         >
-          <Radio.Group onChange={(e) => setAccessType(e.target.value as '1' | '2')}>
-            <Radio value="1">PC功能</Radio>
-            <Radio value="2">自定义URL</Radio>
+          <Radio.Group onChange={(e) => setAccessType(e.target.value)}>
+            <Radio value={1}>PC功能</Radio>
+            <Radio value={2}>自定义URL</Radio>
           </Radio.Group>
         </Form.Item>
         {
-            accessType === '1' && (
+            accessType === 1 && (
                 <Form.Item
                     label="PC功能"
                     name="pcFunction"
@@ -325,7 +320,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
             )   
         }
 
-        {accessType === '2' && (
+        {accessType === 2 && (
           <Form.Item
             name="linkUrl"
             rules={[{ required: true, message: '请输入URL' }]}
