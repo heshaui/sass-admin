@@ -261,6 +261,53 @@ export default [
     // component: './UserManagement',
   },
   {
+    path: '/invite-friends',
+    name: 'inviteFriends',
+    icon: 'TeamOutlined',
+    routes: [
+      {
+        path: '/invite-friends/basic-config',
+        name: 'basicConfig',
+        component: './InviteFriends/BascConfig',
+      },
+      {
+        path: '/invite-friends/invite-records',
+        name: 'inviteRecords',
+        component: './InviteFriends/InviteRecords',
+      },
+      {
+        path: '/invite-friends/reward-records',
+        name: 'rewardRecords',
+        component: './InviteFriends/RewardRecords',
+      },
+      {
+        path: '/invite-friends',
+        redirect: '/invite-friends/basic-config',
+      },
+    ],
+  },
+  {
+    path: '/deposit-withdraw',
+    name: 'depositWithdraw',
+    icon: 'MoneyCollectOutlined',
+    routes: [
+      {
+        path: '/deposit-withdraw/deposit-manage',
+        name: 'depositManage',
+        component: './DepositWithdraw/DepositManage',
+      },
+      {
+        path: '/deposit-withdraw/withdraw-manage',
+        name: 'withdrawManage',
+        component: './DepositWithdraw/WithdrawManage',
+      },
+      {
+        path: '/deposit-withdraw',
+        redirect: '/deposit-withdraw/deposit-manage',
+      },
+    ],
+  },
+  {
     path: '/kvSetting',
     name: 'kvSetting',
     icon: 'smile',

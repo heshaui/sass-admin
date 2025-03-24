@@ -92,4 +92,11 @@ export default {
   'menu.merchantSystem.userAdmin': '员工管理',
   'menu.merchantSystem.roleAdmin': '角色管理',
   'menu.merchantSystem.permissionAdmin': '权限列表',
+  'menu.inviteFriends': '邀请好友',
+  'menu.inviteFriends.basicConfig': '基础配置',
+  'menu.inviteFriends.inviteRecords': '邀请记录',
+  'menu.inviteFriends.rewardRecords': '奖励记录',
+  'menu.depositWithdraw': '充币提现',
+  'menu.depositWithdraw.depositManage': '充币管理',
+  'menu.depositWithdraw.withdrawManage': '提现管理',
 };
