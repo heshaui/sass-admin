@@ -3,8 +3,7 @@ import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'rea
 import { Editor, Toolbar } from '@wangeditor/editor-for-react';
 import { IDomEditor, IEditorConfig, IToolbarConfig } from '@wangeditor/editor';
 import { ossImgFile,uploadFile } from '@/services/ant-design-pro/api';
-import { i18nChangeLanguage } from '@wangeditor/editor'
-import { getLocale,useIntl,FormattedMessage } from '@umijs/max';
+import { getLocale,useIntl } from '@umijs/max';
 
 
 interface SeedEditorProps {

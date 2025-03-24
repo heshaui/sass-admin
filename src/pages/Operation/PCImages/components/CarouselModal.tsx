@@ -20,7 +20,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
   onSubmit,
 }) => {
   const [form] = Form.useForm();
-  const [urlType, setUrlType] = useState<'custom' | 'pc'>('custom');
+  const [accessType, setAccessType] = useState<'1' | '2'>('1');
   const [language, setLanguage] = useState<string>('en_US');
   const [languageEntries, setLanguageEntries] = useState<any[]>([]);
   const [pcAccessPaths, setPcAccessPaths] = useState<any[]>([]);
@@ -36,8 +36,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
     
     // 检查是否有实际内容
     const hasContent = currentValues.title || currentValues.image ||
-                      (urlType === 'custom' && currentValues.linkUrl) ||
-                      (urlType === 'pc' && currentValues.pcFunction);
+                      (accessType === '2' && currentValues.linkUrl) ||
+                      (accessType === '1' && currentValues.pcFunction);
     
     if (hasContent) {
       // 标记该语言已被编辑
@@ -47,8 +47,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
         ...formValuesRef.current,
         [language]: {
           title: currentValues.title || '',
-          linkUrl: urlType === 'custom' ? currentValues.linkUrl || '' : undefined,
-          pcFunction: urlType === 'pc' ? currentValues.pcFunction || '' : undefined,
+          linkUrl: accessType === '2' ? currentValues.linkUrl || '' : undefined,
+          pcFunction: accessType === '1' ? currentValues.pcFunction || '' : undefined,
           image: currentValues.image || ''
         }
       };
@@ -91,9 +91,9 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       
       // 根据新语言内容设置urlType
       if (values.pcFunction) {
-        setUrlType('pc');
+        setAccessType('1');
       } else if (values.linkUrl) {
-        setUrlType('custom');
+        setAccessType('2');
       }
     } else {
       // 如果是新语言，重置表单
@@ -127,13 +127,25 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       const mainValues = form.getFieldsValue(['isShow', 'sort', 'urlType']);
       const defaultImage = currentEntries[0]?.image || '';
       
+      // 将 language 字段重命名为 languageCode，linkUrl/pcFunction 统一为 accessUrl，image 改为 imageUrl
+      // 并为每个语言条目添加 accessType
+      const formattedEntries = currentEntries.map(entry => {
+        const { language, linkUrl, pcFunction, image, ...rest } = entry;
+        return { 
+          languageCode: language, 
+          accessUrl: accessType === '1' ? pcFunction : linkUrl,
+          imageUrl: image,
+          accessType, // 为每个语言条目添加 accessType
+          ...rest 
+        };
+      });
+      
       const formData = {
         ...mainValues,
         title: currentEntries.find(e => e.language === language)?.title || '',
-        linkUrl: urlType === 'custom' ? form.getFieldValue('linkUrl') : '',
-        pcFunction: urlType === 'pc' ? form.getFieldValue('pcFunction') : '',
-        image: defaultImage,
-        languageEntries: currentEntries,
+        accessUrl: accessType === '1' ? form.getFieldValue('pcFunction') : form.getFieldValue('linkUrl'),
+        imageUrl: defaultImage,
+        languageEntries: formattedEntries,
         id: mode === 'edit' ? initialValues?.id : undefined,
       };
       
@@ -163,7 +175,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
           urlType: baseValues.urlType,
         });
         
-        setUrlType(baseValues.urlType || 'custom');
+        setAccessType(baseValues.accessType || '2');
         const defaultLanguage = baseValues.languageCode || 'en_US';
         setLanguage(defaultLanguage);
         
@@ -223,7 +235,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
         }
       } else {
         // 创建模式
-        setUrlType('custom');
+        setAccessType('2');
         setLanguage('en_US');
         setLanguageEntries([]);
       }
@@ -233,7 +245,11 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
   // 获取PC功能列表
   const getPcAccessPath = async () => {
     try {
-      const res = await pcAccessPathAll();
+      let data = {
+        pageNo: 1,
+        pageSize: 10000
+      }
+      const res = await pcAccessPathAll(data);
       if (res.code === '0' && res.data) {
         setPcAccessPaths(JSON.parse(res.data));
       }
@@ -284,17 +300,17 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
 
         <Form.Item
           label="访问路径"
-          name="urlType"
+          name="accessType"
           rules={[{ required: true, message: '请选择访问路径类型' }]}
           initialValue="custom"
         >
-          <Radio.Group onChange={(e) => setUrlType(e.target.value)}>
-            <Radio value="pc">PC功能</Radio>
-            <Radio value="custom">自定义URL</Radio>
+          <Radio.Group onChange={(e) => setAccessType(e.target.value as '1' | '2')}>
+            <Radio value="1">PC功能</Radio>
+            <Radio value="2">自定义URL</Radio>
           </Radio.Group>
         </Form.Item>
         {
-            urlType === 'pc' && (
+            accessType === '1' && (
                 <Form.Item
                     label="PC功能"
                     name="pcFunction"
@@ -309,7 +325,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
             )   
         }
 
-        {urlType === 'custom' && (
+        {accessType === '2' && (
           <Form.Item
             name="linkUrl"
             rules={[{ required: true, message: '请输入URL' }]}

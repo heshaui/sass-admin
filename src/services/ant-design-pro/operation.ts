@@ -488,7 +488,7 @@ export async function getCarouselImageDetail(id: string) {
 export async function deleteCarouselImage(id: string) {
   return request<{
     success: boolean;
-  }>('/tenant/v1/deletecarouselImageById', {
+  }>('/tenant/v1/deletecarouselImageById?id='+id, {
     method: 'POST',
     data: { id },
   });

@@ -5,15 +5,20 @@ import { getCarouselImageList, deleteCarouselImage, addCarouselImage, updateCaro
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import CarouselModal from './components/CarouselModal';
+import LanguageSelector from '@/components/LanguageSelector';
 
 const PCImages: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [currentRecord, setCurrentRecord] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [language, setLanguage] = useState('en_US');
 
   const actionRef = useRef<ActionType>();
-
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value);
+    actionRef.current?.reload();
+  }
   // 显示创建模态框
   const showCreateModal = () => {
     setModalMode('create');
@@ -37,21 +42,34 @@ const PCImages: React.FC = () => {
   const handleSubmit = async (values: any) => {
     setLoading(true);
     try {
-
       if (modalMode === 'create') {
-      let data = {
+        let data = {
           "isShow": 1,
-          "sort": 69,
+          "sort": values.sort,
           "title": values.title,
-          "accessType": values.accessType,
-          "accessUrl": values.linkUrl,
           "carouselImageContents": values.languageEntries,
-      }
-        await addCarouselImage(data);
-        message.success('添加成功');
+        }
+        const res = await addCarouselImage(data);
+        if(res.code === '0'){
+          message.success('添加成功');
+        }else{
+          message.error(res.message);
+        }
       } else {
-        await updateCarouselImage(values);
-        message.success('更新成功');
+        // 确保提交的编辑数据包含正确的结构
+        const updateData = {
+          id: currentRecord.id,
+          isShow: values.isShow,
+          sort: values.sort,
+          carouselImageContents: values.languageEntries,
+        };
+        
+        const res = await updateCarouselImage(updateData);
+        if(res.code === '0'){
+          message.success('更新成功');
+        }else{
+          message.error(res.message);
+        }
       }
       setModalVisible(false);
       actionRef.current?.reload();
@@ -69,9 +87,13 @@ const PCImages: React.FC = () => {
       content: '确定要删除这张图片吗？',
       onOk: async () => {
         try {
-          await deleteCarouselImage(record.id);
-          message.success('删除成功');
-          actionRef.current?.reload();
+          const res = await deleteCarouselImage(record.id);
+          if(res.code === '0'){
+            message.success('删除成功');
+            actionRef.current?.reload();
+          }else{
+            message.error(res.message);
+          }
         } catch (error) {
           message.error('删除失败');
         }
@@ -82,24 +104,30 @@ const PCImages: React.FC = () => {
   const columns: ProColumns<any>[] = [
     {
       title: '图片',
-      dataIndex: 'imageUrl',
+      dataIndex: ['carouselImageContents', 0, 'imageUrl'],
       key: 'imageUrl',
       search: false,
       render: (_, record: any) => (
-        <Image src={record.imageUrl} width={100} height={100} />
+        <Image 
+          src={record.carouselImageContents?.[0]?.imageUrl || ''} 
+          width={100} 
+          height={100} 
+        />
       ),
     },
     {
       title: '标题',
-      dataIndex: 'title',
+      dataIndex: ['carouselImageContents', 0, 'title'],
       key: 'title',
       search: false,
+      render: (_, record) => record.carouselImageContents?.[0]?.title || '',
     },
     {
       title: '链接',
-      dataIndex: 'linkUrl',
-      key: 'linkUrl',
+      dataIndex: ['carouselImageContents', 0, 'accessUrl'],
+      key: 'accessUrl',
       search: false,
+      render: (_, record) => record.carouselImageContents?.[0]?.accessUrl || '',
     },
     {
       title: '操作',
@@ -117,6 +145,8 @@ const PCImages: React.FC = () => {
 
   return (
     <PageContainer>
+                <LanguageSelector value={language} onChange={handleLanguageChange} />
+
       <ProTable
         rowKey="id"
         actionRef={actionRef}
@@ -133,6 +163,7 @@ const PCImages: React.FC = () => {
             const response = await getCarouselImageList({
               pageNo: params.current,
               pageSize: params.pageSize,
+              languageCode: language,
             });
             return {
               data: response.data || [],  
