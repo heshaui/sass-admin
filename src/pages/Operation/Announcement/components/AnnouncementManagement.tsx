@@ -4,7 +4,7 @@ import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { Button, message, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { 
-  getAnnouncementList, getAnnouncementContentList, updateAnnouncement
+  getAnnouncementList, getAnnouncementContentList, updateAnnouncement, addClassMenu
 } from '@/services/ant-design-pro/operation';
 import AnnouncementForm from './AnnouncementForm';
 import CategoryForm from './CategoryForm';
@@ -31,8 +31,29 @@ const AnnouncementManagement: React.FC = () => {
   const [announcementFormVisible, setAnnouncementFormVisible] = useState<boolean>(false);
   const [currentAnnouncement, setCurrentAnnouncement] = useState<AnnouncementItem>();
   const [formType, setFormType] = useState<'create' | 'update'>('create');
-  
+  const [categoryFormVisible, setCategoryFormVisible] = useState<boolean>(false);
   const announcementActionRef = useRef<ActionType>();
+  const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
+
+  const handleCategoryFormSuccess = async (formValues: Record<string, any>) => {
+    try {
+
+
+       
+       const  response = await addClassMenu(formValues);
+       if(response.code==='0'&&response.data){
+        message.success('创建成功');
+        setCategoryFormVisible(false);
+       }else{
+        message.error('创建失败');
+       }
+      
+    } catch (error) {
+      message.error('操作失败');
+    } finally {
+      
+    }
+  };
 
   // 获取公告列表
   const fetchAnnouncementList = async (params: any) => {
@@ -295,7 +316,7 @@ const AnnouncementManagement: React.FC = () => {
         }}
         options={false}
         toolBarRender={() => [
-          <Button key="menu">菜单管理</Button>,
+          <Button key="menu" onClick={() => {setCategoryFormVisible(true); setFormType('create');}}>菜单管理</Button>,
           <Button
             type="primary"
             key="publish"
@@ -324,6 +345,14 @@ const AnnouncementManagement: React.FC = () => {
           setAnnouncementFormVisible(false);
           announcementActionRef.current?.reload();
         }}
+
+      />
+       <CategoryForm
+        visible={categoryFormVisible}
+        type={formType}
+        values={currentCategory}
+        onCancel={() => setCategoryFormVisible(false)}
+        onSuccess={handleCategoryFormSuccess}
       />
     </>
   );

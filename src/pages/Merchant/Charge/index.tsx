@@ -128,10 +128,10 @@ const Charge: React.FC = () => {
             },
         },
         {
-            title: "状态",
+            title: "账户状态",
             dataIndex: "tenantStatus",
             search: false,
-            render: (_, record) => <div>{record.tenantStatus === 1 ? "正常" : "禁用"}</div>,
+            render: (_, record) => <div>{record.tenantStatus === 1 ? "服务中" : "已欠费"}</div>,
         },
         {
             title: "操作",

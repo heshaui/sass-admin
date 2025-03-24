@@ -5,6 +5,7 @@ import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import AddModal from "./component/AddModal";
 import { tenantLangList, updateEndpointInfo, deleteTenantLangPackage, checkUpdate, enablePackage, disablePackage, readJsonFromAliyun,deleteTenantLangEndpoint } from "@/services/ant-design-pro/WebConfig";
 import UploadModal from './component/UploadModal';
+import { useModel } from 'umi';
 // **主组件**
 const Language: React.FC = () => {
   const [dataSource, setDataSource] = useState([]);
@@ -14,8 +15,9 @@ const Language: React.FC = () => {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
   const [viewData, setViewData] = useState(null);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
-
-
+  const { initialState } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+  console.log(currentUser,'currentUser');
   // **获取语言列表数据**
   const fetchLanguages = async (pageNo = 1, pageSize = 10) => {
     try {
@@ -171,17 +173,22 @@ const Language: React.FC = () => {
   };
 
   const handleView = async (fileUrl: string) => {
-    try {
-      const response = await readJsonFromAliyun({ fileUrl });
-      if (response.code === '0') {
-        setViewData(response.data);
-        setIsViewModalVisible(true);
-      } else {
-        message.error(`查看失败: ${response.message}`);
-      }
-    } catch (error) {
-      message.error('操作失败，请重试');
+    if(currentUser?.host){
+      window.open(currentUser?.host, '_blank');
+    }else{
+      message.error('请先配置host');
     }
+    // try {
+    //   const response = await readJsonFromAliyun({ fileUrl });
+    //   if (response.code === '0') {
+    //     setViewData(response.data);
+    //     setIsViewModalVisible(true);
+    //   } else {
+    //     message.error(`查看失败: ${response.message}`);
+    //   }
+    // } catch (error) {
+    //   message.error('操作失败，请重试');
+    // }
   };
 
 
@@ -219,6 +226,9 @@ const Language: React.FC = () => {
           <Button type="link" onClick={() => toggleStatus(record)}>
             {record.status === 1 ? "禁用" : "启用"}
           </Button>
+          {record.status===1 ? (<Button type="link" onClick={() => handleView(record.fileUrl)}>
+            查看
+          </Button>) : ''}
           <Button type="link" danger onClick={() => handleDelete(record.id, record.lang)}>
             移除
           </Button>
@@ -267,14 +277,7 @@ const Language: React.FC = () => {
             </Button>
             ) : ''}
 
-            {endpoint.fileName ? (
-
-              <Button
-                type="link"
-                onClick={() => handleView(endpoint.fileUrl)}
-              >
-                查看
-              </Button>) : ''}
+            
           </Space>
 
         ),
