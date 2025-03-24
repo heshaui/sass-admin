@@ -484,9 +484,17 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
             <TextArea
               placeholder={`请输入${loginActionType === 'freeze' ? '冻结' : '解冻'}原因`}
               value={loginReason}
-              onChange={(e) => setLoginReason(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= 50) {
+                  setLoginReason(e.target.value);
+                }
+              }}
               rows={4}
+              maxLength={50}
             />
+            <div style={{ textAlign: 'right', color: '#999' }}>
+              {loginReason.length}/50
+            </div>
           </Form.Item>
         </Form>
       </Modal>
@@ -508,9 +516,17 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
             <TextArea
               placeholder={`请输入${transactionActionType === 'freeze' ? '冻结' : '解冻'}原因`}
               value={transactionReason}
-              onChange={(e) => setTransactionReason(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= 50) {
+                  setTransactionReason(e.target.value);
+                }
+              }}
               rows={4}
+              maxLength={50}
             />
+            <div style={{ textAlign: 'right', color: '#999' }}>
+              {transactionReason.length}/50
+            </div>
           </Form.Item>
         </Form>
       </Modal>
@@ -532,9 +548,17 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
             <TextArea
               placeholder={`请输入${withdrawalActionType === 'freeze' ? '冻结' : '解冻'}原因`}
               value={withdrawalReason}
-              onChange={(e) => setWithdrawalReason(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= 50) {
+                  setWithdrawalReason(e.target.value);
+                }
+              }}
               rows={4}
+              maxLength={50}
             />
+            <div style={{ textAlign: 'right', color: '#999' }}>
+              {withdrawalReason.length}/50
+            </div>
           </Form.Item>
         </Form>
       </Modal>
