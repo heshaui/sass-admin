@@ -146,10 +146,11 @@ const AuditList: React.FC = () => {
       valueEnum:{
         0:'驳回',
         1:'通过',
-        2:'未审核'
+        2:'未审核',
+        3:'审核中'
       },
       renderText: (text: number) => {
-        return text === 0 ? '驳回' : text === 1 ? '通过' : '未审核';
+        return text === 0 ? '驳回' : text === 1 ? '通过' : text === 2 ? '未审核':text === 3 ? '审核中':'';
       },
     },
     {
