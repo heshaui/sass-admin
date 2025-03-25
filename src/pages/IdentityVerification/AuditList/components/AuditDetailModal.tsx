@@ -196,7 +196,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
                 <div className={styles.imageLabel}>正面</div>
                 <div className={styles.imageContainer}>
                   {record?.frontUrl ? (
-                    <Image src={record.frontUrl} alt="证件正面" className={styles.documentImage} />
+                    <Image src={record.frontUrl} alt="证件正面" className={styles.documentImage} width={200} height={200} />
                   ) : (
                     <ImagePlaceholder />
                   )}
@@ -208,7 +208,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
                 <div className={styles.imageLabel}>背面</div>
                 <div className={styles.imageContainer}>
                   {record?.backUrl ? (
-                    <Image src={record.backUrl} alt="证件背面" className={styles.documentImage} />
+                    <Image src={record.backUrl} alt="证件背面" className={styles.documentImage} width={200} height={200} />
                   ) : (
                     <ImagePlaceholder />
                   )}
@@ -220,7 +220,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
                 <div className={styles.imageLabel}>自拍照</div>
                 <div className={styles.imageContainer}>
                   {record?.selfieUrl ? (
-                    <Image src={record.selfieUrl} alt="自拍照" className={styles.documentImage} />
+                    <Image src={record.selfieUrl} alt="自拍照" className={styles.documentImage} width={200} height={200} />
                   ) : (
                     <ImagePlaceholder />
                   )}
