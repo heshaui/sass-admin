@@ -36,6 +36,12 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   const [menuList, setMenuList] = useState<any[]>([]);
   // 获取并回显数据
   useEffect(() => {
+    if(type==='create'){
+      //表单内容清空
+      form.resetFields();
+      setContents({});
+      setTitles({});
+    }
     if (type === 'update' && values?.id && visible) {
       const fetchAnnouncementDetail = async () => {
         try {
