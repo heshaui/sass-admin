@@ -22,7 +22,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   onSubmit, 
   onCancel,
   visible = false,
-  title = '谷歌验证',
+  title = '绑定谷歌验证',
   width = 500,
   maskClosable = false,
   centered = true

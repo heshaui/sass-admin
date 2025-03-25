@@ -644,6 +644,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           <Form.Item 
             label="备注："
             style={{ marginBottom: '8px' }}
+            rules={[{ required: true, message: '请输入备注' }]}
           >
             <TextArea
               placeholder="请输入原因，50字符以内"
@@ -700,6 +701,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
             label="谷歌验证码："
             required
             style={{ marginBottom: '16px' }}
+            
           >
             {
               currentUser?.employeeResp?.googleCode===false && (
@@ -720,6 +722,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           <Form.Item 
             label="备注："
             style={{ marginBottom: '8px' }}
+            rules={[{ required: true, message: '请输入备注' }]}
           >
             <TextArea
               placeholder="请输入原因，50字符以内"
