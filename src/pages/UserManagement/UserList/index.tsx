@@ -95,9 +95,15 @@ const UserManagement: React.FC = () => {
       title: '注册时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      valueType: 'dateTime',
-      
-     
+      valueType: 'dateRange',
+      search: {
+        transform: (value) => {
+          return {
+            startTime: value[0] ? new Date(value[0]).getTime() : undefined,
+            endTime: value[1] ? new Date(value[1]).getTime() : undefined,
+          };
+        },
+      },
     },
     {
       title: '登录IP',
