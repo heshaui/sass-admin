@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { 
   Card, 
@@ -15,18 +15,50 @@ import {
   Upload 
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import type { RadioChangeEvent } from 'antd';
-
+import { getRewardConfigurationDetail,getUserInviteDetailList,getImageConfigurationDetail } from '@/services/ant-design-pro/inviteFriends';
+import LanguageSelector from '@/components/LanguageSelector';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
 const BasicConfig: React.FC = () => {
   const [form] = Form.useForm();
+  const [language, setLanguage] = useState('en_US');
+
+
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value);
+  }
+
+
+  //获取奖励配置详情
+  const getConfigurationDetail = async () => {
+    const res = await getRewardConfigurationDetail();
+    console.log(res);
+    form.setFieldsValue(res);
+  };
+
+  //获取图片配置详情
+  const getImageDetail = async () => {
+    const res = await getImageConfigurationDetail();
+    console.log(res);
+  };
+
+  //获取用户邀请详情列表
+  const getUserList = async () => {
+    const res = await getUserInviteDetailList();
+    console.log(res);
+  };
 
   const onFinish = (values: any) => {
     console.log('表单提交的值：', values);
     message.success('配置保存成功');
   };
+
+  useEffect(() => {
+    getConfigurationDetail();
+    getUserList();
+    getImageDetail();
+  }, []);
 
   return (
     <PageContainer title="邀请好友基础配置">
@@ -153,14 +185,8 @@ const BasicConfig: React.FC = () => {
 
       {/* 邀请页面配置 */}
       <Card title="邀请页面配置" style={{ marginBottom: 24 }}>
-        <Tabs defaultActiveKey="1">
-          <TabPane tab="English" key="1"></TabPane>
-          <TabPane tab="简体中文" key="2"></TabPane>
-          <TabPane tab="繁體中文" key="3"></TabPane>
-          <TabPane tab="日本語" key="4"></TabPane>
-          <TabPane tab="한국어" key="5"></TabPane>
-        </Tabs>
-        
+       
+      <LanguageSelector value={language} onChange={handleLanguageChange} />
         <div style={{ marginTop: 20 }}>
           <h4>邀请页背景配置（PC）</h4>
           <Upload

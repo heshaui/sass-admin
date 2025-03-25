@@ -308,6 +308,22 @@ export default [
     ],
   },
   {
+    path: '/spot-trading',
+    name: 'spotTrading',
+    icon: 'StockOutlined',
+    routes: [
+      {
+        path: '/spot-trading/currency-management',
+        name: 'currencyManagement',
+        component: './SpotTrading/CurrencyManagement',
+      },
+      {
+        path: '/spot-trading',
+        redirect: '/spot-trading/currency-management',
+      },
+    ],
+  },
+  {
     path: '/kvSetting',
     name: 'kvSetting',
     icon: 'smile',

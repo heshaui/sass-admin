@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect,useState } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import { Tag, Button, Space } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
+import { getUserInviteDetailList, } from '@/services/ant-design-pro/inviteFriends';
 
 interface InviteRecord {
   key: string;
@@ -52,6 +53,16 @@ const mockData: InviteRecord[] = [
 ];
 
 const InviteRecords: React.FC = () => {
+  const [userList, setUserList] = useState<InviteRecord[]>([]);
+
+  //获取用户邀请详情列表
+  const getUserList = async () => {
+    const res = await getUserInviteDetailList();
+    if(res.code === '0'){
+      setUserList(res.data);
+    }
+  };
+
   const columns: ProColumns<InviteRecord>[] = [
     {
       title: '编号',
@@ -123,11 +134,14 @@ const InviteRecords: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    getUserList();
+  }, []);
   return (
     <PageContainer>
       <ProTable<InviteRecord>
         columns={columns}
-        dataSource={mockData}
+        dataSource={userList}
         rowKey="key"
         pagination={{ pageSize: 10 }}
         search={{

@@ -99,4 +99,6 @@ export default {
   'menu.depositWithdraw': '充币提现',
   'menu.depositWithdraw.depositManage': '充币管理',
   'menu.depositWithdraw.withdrawManage': '提现管理',
+  'menu.spotTrading': '现货交易',
+  'menu.spotTrading.currencyManagement': '币种管理',
 };
