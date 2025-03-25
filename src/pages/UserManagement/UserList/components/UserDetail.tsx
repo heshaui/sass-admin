@@ -370,13 +370,16 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           </Descriptions.Item>
           <Descriptions.Item label="手机号码">
             {user.phone}
-            <Button 
-              type="link" 
-              onClick={showUpdatePhoneModal} 
-              style={{ marginLeft: '8px' }}
-            >
+            {user.phone ? (
+              <Button 
+                type="link" 
+                onClick={showUpdatePhoneModal} 
+                style={{ marginLeft: '8px' }}
+              >
+            
+
               修改
-            </Button>
+            </Button>) : ''}
           </Descriptions.Item>
           <Descriptions.Item label="姓名">
             {user.lastName} {user.firstName}
@@ -384,13 +387,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           <Descriptions.Item label="注册时间">{dayjs(user.createTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
           <Descriptions.Item label="邮箱">
             {user.email}
-            <Button 
-              type="link" 
-              onClick={showUpdateEmailModal} 
-              style={{ marginLeft: '8px' }}
-            >
-              修改
-            </Button>
+            {
+              user.email ? (
+                <Button 
+                  type="link" 
+                  onClick={showUpdateEmailModal} 
+                  style={{ marginLeft: '8px' }}
+                >
+                  
+                  修改
+                </Button>
+              ) : ''
+            }
+     
           </Descriptions.Item>
           <Descriptions.Item label="实名认证">{user.realnessStatus===1 ? '已认证' : '未认证'}</Descriptions.Item>
           <Descriptions.Item label="证件编号">{user.idNumber || '暂无'}</Descriptions.Item>
