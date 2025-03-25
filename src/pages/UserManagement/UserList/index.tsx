@@ -95,7 +95,7 @@ const UserManagement: React.FC = () => {
       title: '注册时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      valueType: 'dateRange',
+      valueType: 'dateTime',
       search: {
         transform: (value) => {
           return {
