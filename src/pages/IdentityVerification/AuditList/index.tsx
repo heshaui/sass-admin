@@ -9,6 +9,7 @@ import {
   updateUserIdentityVerificationById 
 } from '@/services/ant-design-pro/IdentityVerification';
 import AuditDetailCard from './components/AuditDetailModal';
+import dayjs from 'dayjs';
 
 const AuditList: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -96,6 +97,12 @@ const AuditList: React.FC = () => {
       search: false,
     },
     {
+      title: '账号',
+      dataIndex: 'account',
+      key: 'account',
+      hideInTable: true,
+    },
+    {
       title: '用户ID',
       dataIndex: 'userId',
       key: 'userId',
@@ -123,7 +130,19 @@ const AuditList: React.FC = () => {
       title: '提交时间',
       dataIndex: 'currentCheckTime',
       key: 'currentCheckTime',
-      valueType: 'dateTime',
+      valueType: 'dateTimeRange',
+      search: {
+        transform: (value) => {
+          return {
+            startTime: value[0] ? new Date(value[0]).getTime() : undefined,
+            endTime: value[1] ? new Date(value[1]).getTime() : undefined,
+          };
+        },
+      },
+      render: (_, record) => {
+        return record.currentCheckTime ? dayjs(record.currentCheckTime).format('YYYY-MM-DD HH:mm:ss') : '--';
+      },
+      
     },
     {
       title: '首次审核时间',
@@ -207,6 +226,8 @@ const AuditList: React.FC = () => {
             const queryParams = {
               pageSize: params.pageSize,
               pageNo: params.current,
+              startTime:params.startTime,
+              endTime:params.endTime,
               ...params,
               // 处理排序
               sorter: sorter && Object.keys(sorter).length ? JSON.stringify(sorter) : undefined,

@@ -188,6 +188,20 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
           )}
         </div>
 
+        {/* 显示驳回原因 */}
+        {record?.authStatus === 0 && record?.rejectReason && (
+          <div className={styles.rejectReasonSection}>
+            <h3>拒绝原因：</h3>
+            <div className={styles.rejectReasonContent}>
+              {record.rejectReason.split('\n').map((reason, index) => (
+                <div key={index} className={styles.rejectReasonItem}>
+                  <span className={styles.bulletPoint}>•</span> {reason}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className={styles.documentSection}>
           <h3>证件照</h3>
           <Row gutter={16}>

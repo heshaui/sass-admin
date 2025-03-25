@@ -38,7 +38,7 @@ const SeedEditor = forwardRef<IDomEditor | null, SeedEditorProps>(({ initialCont
           formData.append('file', file);
           const msg = await ossImgFile(formData);
           if (msg.code === '0') {
-            insertFn(msg.data); // 插入图片
+            insertFn(msg.data.data); // 插入图片
           }
         },
       },
@@ -49,7 +49,7 @@ const SeedEditor = forwardRef<IDomEditor | null, SeedEditorProps>(({ initialCont
           formData.append('file', file);
           const msg = await uploadFile(formData); // 调用上传接口
           if (msg.code === '0') {
-            const videoUrl = msg.data; // 返回视频 URL
+            const videoUrl = msg.data.data; // 返回视频 URL
             const posterUrl = `${videoUrl}?vframe/jpg/offset/1`; // 自动生成封面图，具体逻辑根据后端配置调整
             insertFn(videoUrl, posterUrl); // 插入视频及封面
           }

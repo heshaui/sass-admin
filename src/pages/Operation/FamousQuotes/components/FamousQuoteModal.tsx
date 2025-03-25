@@ -142,9 +142,13 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
           message.error('更新失败');
         }
       } else {
-        // 添加操作
+        // 过滤掉内容为空的语言
+        const filteredContentList = updatedContentList.filter(
+          item => item.languageContent.trim() !== ''
+        );
+     
         const data = {
-          famousAphorismsContents: updatedContentList
+          famousAphorismsContents: filteredContentList
         };
           
         const res = await addFamousAphorisms(data);
@@ -206,7 +210,17 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
         <Form.Item
           name="text"
           label="内容"
-          rules={[{ required: true, message: '请输入内容' }]}
+          rules={[
+            ({ getFieldValue }) => ({
+              validator: (_, value) => {
+                const currentLang = getFieldValue('langId') || language;
+                if (currentLang === 'en_US' && (!value || value.trim() === '')) {
+                  return Promise.reject(new Error('英语内容为必填项'));
+                }
+                return Promise.resolve();
+              }
+            })
+          ]}
         >
           <Input.TextArea 
             rows={4}

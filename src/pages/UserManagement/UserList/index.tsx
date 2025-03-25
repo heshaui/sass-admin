@@ -6,7 +6,7 @@ import type { ProColumns } from '@ant-design/pro-components';
 import { getUserList, getUserDetail } from '@/services/ant-design-pro/UserManagement';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
 import UserDetail from './components/UserDetail';
-
+import dayjs from 'dayjs';
 const UserManagement: React.FC = () => {
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [loading, setLoading] = useState<boolean>(false);
@@ -95,7 +95,7 @@ const UserManagement: React.FC = () => {
       title: '注册时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      valueType: 'dateTime',
+      valueType: 'dateTimeRange',
       search: {
         transform: (value) => {
           return {
@@ -103,6 +103,9 @@ const UserManagement: React.FC = () => {
             endTime: value[1] ? new Date(value[1]).getTime() : undefined,
           };
         },
+      },
+      render: (_, record) => {
+        return record.createTime ? dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') : '--';
       },
     },
     {
