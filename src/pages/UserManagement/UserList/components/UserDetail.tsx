@@ -6,7 +6,7 @@ import { useModel } from 'umi';
 import { 
   freezeLogin, freezeTransaction, freezeWithdrawal,
   unfreezeLogin, unfreezeTransaction, unfreezeWithdrawal,
-  updatePhone, updateEmail,getUserOperationLogs,getUserDetail
+  updatePhone, updateEmail,getUserOperationLogs,getUserDetail,relieveGoogle
 } from '@/services/ant-design-pro/UserManagement';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import TextArea from 'antd/es/input/TextArea';
@@ -53,6 +53,10 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const [countryCode, setCountryCode] = useState('86');
   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
+
+  // 添加解绑谷歌验证状态和原因
+  const [unbindGoogleModalVisible, setUnbindGoogleModalVisible] = useState(false);
+  const [unbindGoogleReason, setUnbindGoogleReason] = useState('');
 
   const columns: ProColumns<any>[] = [
     {
@@ -118,6 +122,32 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       };
     }
   }
+
+  // 修改解绑谷歌验证的处理函数
+  const showUnbindGoogleModal = () => {
+    setUnbindGoogleReason('');
+    setUnbindGoogleModalVisible(true);
+  };
+  
+  const handleUnbindGoogleCode = async () => {
+    if (!unbindGoogleReason.trim()) {
+      message.error('请输入解绑原因');
+      return;
+    }
+    
+    const res = await relieveGoogle({ 
+      userId: user.userId, 
+      remark: unbindGoogleReason 
+    });
+    
+    if(res.code === '0') {
+      message.success('解绑成功');
+      await userDetailInfo();
+      setUnbindGoogleModalVisible(false);
+    } else {
+      message.error(res.message);
+    }
+  };
 
   const getGoogleCode=async()=>{
     const res=await sendGoogleKey();
@@ -461,6 +491,15 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 解冻提现
               </Button>
             )}
+            {user.googleKey && (
+              <Button 
+                type="primary" 
+                style={{marginLeft: '10px'}} 
+                onClick={showUnbindGoogleModal}
+              >
+                解绑谷歌验证
+              </Button>
+            )}
           </Descriptions.Item>
         </Descriptions>
         <Tabs>
@@ -741,7 +780,45 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           </Form.Item>
         </Form>
       </Modal>
-      <GoogleCode visible={googleCodeVisible} qrCodeUrl={googleCodeData?.codeUri} secretKey={googleCodeData?.secretKey} onSubmit={handleGoogleCodeSuccess} onCancel={() => setGoogleCodeVisible(false)}/>
+      
+      {/* 添加解绑谷歌验证弹框 */}
+      <Modal
+        title="解绑谷歌验证"
+        open={unbindGoogleModalVisible}
+        onOk={handleUnbindGoogleCode}
+        onCancel={() => setUnbindGoogleModalVisible(false)}
+        okText="确认"
+        cancelText="取消"
+        okButtonProps={{ disabled: !unbindGoogleReason.trim() }}
+      >
+        <p style={{ marginBottom: '20px' }}>解绑谷歌后，该用户可登录账号重新绑定！</p>
+        <Form layout="vertical">
+          <Form.Item>
+            <TextArea
+              placeholder="请输入原因，50字符以内"
+              value={unbindGoogleReason}
+              onChange={(e) => {
+                if (e.target.value.length <= 50) {
+                  setUnbindGoogleReason(e.target.value);
+                }
+              }}
+              rows={4}
+              maxLength={50}
+            />
+            <div style={{ textAlign: 'right', color: '#999', marginTop: '5px' }}>
+              {unbindGoogleReason.length}/50
+            </div>
+          </Form.Item>
+        </Form>
+      </Modal>
+      
+      <GoogleCode 
+        visible={googleCodeVisible} 
+        qrCodeUrl={googleCodeData?.codeUri} 
+        secretKey={googleCodeData?.secretKey} 
+        onSubmit={handleGoogleCodeSuccess} 
+        onCancel={() => setGoogleCodeVisible(false)}
+      />
     </>
   );
 };

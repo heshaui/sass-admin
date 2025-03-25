@@ -174,3 +174,11 @@ export async function updateEmail(params: UpdateEmailParams) {
     data: params,
   });
 }
+
+// /tenant/v1/relieveGoogle
+export async function relieveGoogle(params: RelieveGoogleParams) {
+  return request(isAdmin ?'/tenant-admin/v1/user/relieveGoogle' :'/tenant/v1/relieveGoogle', {
+    method: 'POST',
+    data: params,
+  });
+}
