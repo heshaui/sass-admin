@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { getHelpCenterArticleList, addHelpCenterArticle, updateHelpCenterArticle } from '@/services/ant-design-pro/operation';
+import { getHelpCenterArticleList, addHelpCenterArticle, updateHelpCenterArticle,getHelpCenterArticleContentList } from '@/services/ant-design-pro/operation';
 import ArticlePublishModal from './ArticlePublishModal';
 
 
@@ -129,12 +129,27 @@ const ArticleManagement: React.FC = () => {
         startTime:startTime? new Date(startTime).getTime():null,
         endTime:endTime?new Date(endTime).getTime():null,
       });
+
+      const contentList = await getHelpCenterArticleContentList({
+        pageNo:current,
+        pageSize:1000,
+        languageCode:'en_US',
+      });
+      console.log(contentList);
+      response.data.list.forEach((item:any)=>{
+        const content = contentList.data.list.find((content:any)=>content.articleId===item.id);
+        if(content){
+          item.articleTitle = content.articleTitle;
+        }
+      });
+      console.log(response.data.list);
       return {
         data: response.data.list,
         success: response.code === '0' ? true : false,
         total: response.data.count,
       };
     } catch (error) {
+      console.log(error);
       message.error('获取文章列表失败');
       return {
         data: [],
@@ -155,7 +170,7 @@ const ArticleManagement: React.FC = () => {
         label: '描述',
       },
     },
-    { title: '标题', dataIndex: 'title', key: 'title', search: false },
+    { title: '标题', dataIndex: 'articleTitle', key: 'articleTitle', search: false },
     { title: '分类', dataIndex: 'classId', key: 'classId', search: false },
     { 
       title: '发布时间', 

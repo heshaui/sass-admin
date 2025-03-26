@@ -84,6 +84,7 @@ const UserAdmin: React.FC = () => {
       title: '2FA',
       dataIndex: 'googleCode',
       key: 'googleCode',
+      search:false,
       render: (text) => {
         return text && text !== '-' ? (
           <Tag color="green">已开启</Tag>

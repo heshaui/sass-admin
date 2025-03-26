@@ -101,8 +101,14 @@ export default {
   'menu.depositWithdraw.withdrawManage': '提现管理',
   'menu.spotTrading': '现货交易',
   'menu.spotTrading.currencyManagement': '币种管理',
+  'menu.spotTrading.tradingPairManagement': '币对管理',
+  'menu.spotTrading.currencyProtocol': '币种协议',
+  'menu.fundsTools': '资金工具',
+  'menu.fundsTools.assetAdjustment': '资产调整',
+  'menu.fundsTools.transferTool': '转账工具',
   'menu.riskControl': '资金风控',
   'menu.riskControl.config': '风控配置',
   'menu.riskControl.suggestions': '处理建议',
   'menu.riskControl.alerts': '报警记录',
+
 };
