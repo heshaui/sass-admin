@@ -308,6 +308,27 @@ export default [
     ],
   },
   {
+    path: '/funds-tools',
+    name: 'fundsTools',
+    icon: 'DollarOutlined',
+    routes: [
+      {
+        path: '/funds-tools/asset-adjustment',
+        name: 'assetAdjustment',
+        component: './FundsTools/AssetAdjustment',
+      },
+      {
+        path: '/funds-tools/transfer-tool',
+        name: 'transferTool',
+        component: './FundsTools/TransferTool',
+      },
+      {
+        path: '/funds-tools',
+        redirect: '/funds-tools/asset-adjustment',
+      },
+    ],
+  },
+  {
     path: '/spot-trading',
     name: 'spotTrading',
     icon: 'StockOutlined',
@@ -318,8 +339,39 @@ export default [
         component: './SpotTrading/CurrencyManagement',
       },
       {
+        path: '/spot-trading/currency-protocol',
+        name: 'currencyProtocol',
+        component: './SpotTrading/CurrencyProtocol',
+      },
+      {
         path: '/spot-trading',
         redirect: '/spot-trading/currency-management',
+      },
+    ],
+  },
+  {
+    path: '/risk-control',
+    name: 'riskControl',
+    icon: 'SafetyOutlined',
+    routes: [
+      {
+        path: '/risk-control/config',
+        name: 'config',
+        component: './RiskControl/Config',
+      },
+      {
+        path: '/risk-control/suggestions',
+        name: 'suggestions',
+        component: './RiskControl/Suggestions',
+      },
+      {
+        path: '/risk-control/alerts',
+        name: 'alerts',
+        component: './RiskControl/Alerts',
+      },
+      {
+        path: '/risk-control',
+        redirect: '/risk-control/config',
       },
     ],
   },
