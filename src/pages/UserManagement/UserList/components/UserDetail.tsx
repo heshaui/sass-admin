@@ -426,7 +426,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
             </Button>) : ''}
           </Descriptions.Item>
           <Descriptions.Item label="姓名">
-            {user.lastName} {user.firstName}
+            {user.surname} {user.firstName}
           </Descriptions.Item>
           <Descriptions.Item label="注册时间">{dayjs(user.createTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
           <Descriptions.Item label="邮箱">
