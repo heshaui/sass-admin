@@ -106,7 +106,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
     }
   }
   const getLog=async()=>{
-    const res=await getUserOperationLogs({ userId: userId });
+    const res=await getUserOperationLogs({ userId: userId,pageNo:1,pageSize:10});
     if(res.code==='0'){
       return {
         data: res.data.list,
@@ -519,7 +519,13 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
               columns={columns}
               rowKey="id"
               search={false}
-              pagination={false}
+              pagination={{
+                defaultPageSize: 10,
+                showSizeChanger: true,
+                showQuickJumper: true,
+                pageSizeOptions: ['10', '20', '50'],
+                showTotal: (total) => `共 ${total} 条记录`
+              }}
               request={getLog}
             />
           </Tabs.TabPane>
