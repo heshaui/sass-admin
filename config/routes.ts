@@ -236,7 +236,7 @@ export default [
   {
     path: '/merchantSystem',
     name: 'merchantSystem',
-    icon: 'UserOutlined',
+    icon: 'user',
     routes: [
       {
         path: '/merchantSystem/UserAdmin',

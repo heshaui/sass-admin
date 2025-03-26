@@ -9,6 +9,13 @@ const iconMapping = {
   dashboard: Icons.DashboardOutlined,
   key: Icons.KeyOutlined,
   smile: Icons.SmileOutlined,
+  TeamOutlined:Icons.TeamOutlined,
+  IdcardOutlined:Icons.IdcardOutlined,
+  GlobalOutlined:Icons.GlobalOutlined,
+  SettingOutlined:Icons.SettingOutlined,
+  StockOutlined:Icons.StockOutlined,
+  MoneyCollectOutlined:Icons.MoneyCollectOutlined,
+  UserOutlined:Icons.UserOutlined,
 };
 
 const getIcon = (iconName) => {
