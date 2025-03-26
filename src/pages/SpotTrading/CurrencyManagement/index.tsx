@@ -1,9 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { PageContainer } from '@ant-design/pro-components';
+import { PageContainer,ProTable } from '@ant-design/pro-components';
 import {  Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import ProTable from '@ant-design/pro-table';
 
 // 币种类型定义
 type CurrencyItem = {
@@ -164,15 +163,10 @@ const CurrencyManagement: React.FC = () => {
   return (
     <PageContainer>
 
-        <ProTable<CurrencyItem>
+        <ProTable
           headerTitle="币种管理"
           actionRef={actionRef}
           rowKey="id"
-          toolBarRender={() => [
-            <Button type="primary" onClick={handleAdd} icon={<PlusOutlined />}>
-              添加
-            </Button>,
-          ]}
           request={async (params) => {
             // 这里可以替换为实际的API请求
             console.log(params);
