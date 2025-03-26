@@ -108,8 +108,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       message.error(res.message);
     }
   }
-  const getLog=async()=>{
-    const res=await getUserOperationLogs({ userId: userId,pageNo:1,pageSize:10});
+  const getLog=async(params:any)=>{
+    const res=await getUserOperationLogs({ userId: userId,pageNo:params.current,pageSize:params.pageSize});
     if(res.code==='0'){
       return {
         data: res.data.list,
