@@ -4,7 +4,7 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { getHelpCenterArticleList, addHelpCenterArticle, updateHelpCenterArticle,getHelpCenterArticleContentList } from '@/services/ant-design-pro/operation';
 import ArticlePublishModal from './ArticlePublishModal';
-
+import dayjs from 'dayjs';
 
 // 文章管理数据接口
 interface ArticleItem {
@@ -175,8 +175,8 @@ const ArticleManagement: React.FC = () => {
     { title: '分类', dataIndex: 'classId', key: 'classId', search: false },
     { 
       title: '发布时间', 
-      dataIndex: 'publishTime', 
-      key: 'publishTime',
+      dataIndex: 'createTime', 
+      key: 'createTime',
       valueType: 'dateTimeRange',
       search: {
         transform: (value) => {
@@ -185,6 +185,9 @@ const ArticleManagement: React.FC = () => {
             endTime: value[1],
           };
         },
+      },
+      render: (_, record) => {
+        return record.createTime ? dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') : '--';
       },
     },
     { 
