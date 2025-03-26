@@ -686,7 +686,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           >
             {
               currentUser?.employeeResp?.googleCode===false && (
-                <Button type="link" onClick={() => window.open('https://www.google.com/account/about/', '_blank')}>未绑定，点击前往绑定</Button>
+                <Button type="link"  onClick={getGoogleCode}>未绑定，点击前往绑定</Button>
               )
             }
             {
