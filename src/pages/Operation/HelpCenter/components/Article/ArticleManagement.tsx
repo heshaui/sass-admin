@@ -104,7 +104,7 @@ const ArticleManagement: React.FC = () => {
     try {
       const newStatus = currentStatus === 1 ? 0 : 1;
       // 这里应该调用切换状态的接口，暂时用message演示
-      const res = await updateHelpCenterArticleStatus({id,showType:newStatus});
+      const res = await updateHelpCenterArticle({id,showType:newStatus});
       if(res.code==='0'){
         message.success(`文章ID: ${id} 状态已更新为 ${newStatus ? '启用' : '禁用'}`);
         articleActionRef.current?.reload();
@@ -113,6 +113,7 @@ const ArticleManagement: React.FC = () => {
       }
       articleActionRef.current?.reload();
     } catch (error) {
+      console.log(error);
       message.error('操作失败');
     }
   };
@@ -213,7 +214,7 @@ const ArticleManagement: React.FC = () => {
           danger={record.showType === 1}
           onClick={() => handleToggleStatus(record.id, record.showType)}
         >
-          {record.showType === 1 ? '启用' : '禁用'}
+          {record.showType === 1 ? '禁用' : '启用'}
         </Button>,
       ],
     },
