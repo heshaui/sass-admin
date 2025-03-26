@@ -1,9 +1,8 @@
 import React, { useEffect,useState } from 'react';
-import { PageContainer } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { 
   Card, 
   Form, 
-  Input, 
   Button, 
   InputNumber, 
   Switch, 
@@ -11,24 +10,81 @@ import {
   Alert, 
   Select, 
   Radio, 
-  Tabs, 
-  Upload 
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { getRewardConfigurationDetail,getUserInviteDetailList,getImageConfigurationDetail } from '@/services/ant-design-pro/inviteFriends';
+
+import { getRewardConfigurationDetail,getUserInviteDetailList,getImageConfigurationDetail,saveOrUpdateRewardConfiguration,saveOrUpdateImageConfiguration} from '@/services/ant-design-pro/inviteFriends';
 import LanguageSelector from '@/components/LanguageSelector';
+import type { ProColumns } from '@ant-design/pro-components';
+import AvatarUpload from "@/components/AvatarUpload/index";
+
 const { Option } = Select;
-const { TabPane } = Tabs;
+
 
 const BasicConfig: React.FC = () => {
   const [form] = Form.useForm();
   const [language, setLanguage] = useState('en_US');
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [imagesConfig, setImagesConfig] = useState<Record<string, {backgroundImage: string, posterImage: string}>>({
+    en_US: { backgroundImage: '', posterImage: '' },
+    zh_CN: { backgroundImage: '', posterImage: '' },
+    // 可以添加更多语言
+  });
 
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
   }
 
+  const toggleEdit = () => {
+    setIsEditing(!isEditing);
+  }
+
+  const handleBackgroundImageChange = (url: string) => {
+    setImagesConfig(prev => ({
+      ...prev,
+      [language]: {
+        ...prev[language],
+        backgroundImage: url
+      }
+    }));
+  };
+
+  const handlePosterImageChange = (url: string) => {
+    setImagesConfig(prev => ({
+      ...prev,
+      [language]: {
+        ...prev[language],
+        posterImage: url
+      }
+    }));
+  };
+
+  const saveImage = async () => {
+    // 将imagesConfig转换为API所需的格式
+    const images = Object.entries(imagesConfig).map(([languageCode, config]) => ({
+      languageCode,
+      backgroundImageUrl: config.backgroundImage,
+      posterBackgroundUrl: config.posterImage
+    }));
+    
+    const data = { images };
+    
+    const res = await saveOrUpdateImageConfiguration(data);
+    if (res.code === '0') {
+      message.success('图片配置保存成功');
+    } else {
+      message.error(res.message || '保存失败');
+    }
+  };
+
+  const saveConfiguration = async (values: any) => {
+    const res = await saveOrUpdateRewardConfiguration(values);
+    if (res.code === '0') {
+      message.success('配置保存成功');
+      setIsEditing(false); // 保存成功后关闭编辑状态
+    } else {
+      message.error(res.message);
+    }
+  }
 
   //获取奖励配置详情
   const getConfigurationDetail = async () => {
@@ -41,6 +97,21 @@ const BasicConfig: React.FC = () => {
   const getImageDetail = async () => {
     const res = await getImageConfigurationDetail();
     console.log(res);
+    if (res.code === '0' && res.data && res.data.images) {
+      // 初始化一个新的图片配置对象
+      const newImagesConfig: Record<string, {backgroundImage: string, posterImage: string}> = {};
+      
+      // 遍历API返回的图片配置数据
+      res.data.images.forEach((item: any) => {
+        newImagesConfig[item.languageCode] = {
+          backgroundImage: item.backgroundImageUrl || '',
+          posterImage: item.posterBackgroundUrl || ''
+        };
+      });
+      
+      // 更新状态
+      setImagesConfig(newImagesConfig);
+    }
   };
 
   //获取用户邀请详情列表
@@ -59,6 +130,66 @@ const BasicConfig: React.FC = () => {
     getUserList();
     getImageDetail();
   }, []);
+
+  // 定义资金账户列表的列配置
+  const columns: ProColumns[] = [
+    {
+      title: '币种',
+      dataIndex: 'currency',
+      valueType: 'text',
+    },
+    {
+      title: '账户可用',
+      dataIndex: 'available',
+      valueType: 'money',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      valueType: 'select',
+      valueEnum: {
+        using: { text: '使用中', status: 'Success' },
+        unused: { text: '未使用', status: 'Default' },
+      },
+    },
+    {
+      title: '添加时间',
+      dataIndex: 'addTime',
+      valueType: 'dateTime',
+    },
+    {
+      title: '操作',
+      valueType: 'option',
+      render: (_, record) => [
+        <a key="records" href="#">发放记录</a>,
+      ],
+    },
+  ];
+
+  // 模拟资金账户列表数据
+  const accountListData = [
+    {
+      id: '1',
+      currency: 'USDT',
+      available: 210.00,
+      status: 'using',
+      addTime: '2025-02-12 12:12:12',
+    },
+    {
+      id: '2',
+      currency: 'TRX',
+      available: 210.00,
+      status: 'unused',
+      addTime: '2024-02-12 12:12:12',
+    },
+    {
+      id: '3',
+      currency: 'BTC',
+      available: 210.00,
+      status: 'unused',
+      addTime: '2024-02-12 12:12:12',
+    },
+  ];
 
   return (
     <PageContainer title="邀请好友基础配置">
@@ -95,12 +226,12 @@ const BasicConfig: React.FC = () => {
       <Card 
         title="奖励配置" 
         style={{ marginBottom: 24 }}
-        extra={<Button type="primary">编辑</Button>}
+        extra={<Button type="primary" onClick={toggleEdit}>{isEditing ? '取消' : '编辑'}</Button>}
       >
         <Form
           form={form}
           layout="vertical"
-          onFinish={onFinish}
+          onFinish={saveConfiguration}
           initialValues={{
             enabled: true,
             inviteReward: 10,
@@ -111,6 +242,7 @@ const BasicConfig: React.FC = () => {
             minValue: 50,
             realNameRequired: 'required'
           }}
+          disabled={!isEditing}
         >
           <Form.Item
             name="returnCurrency"
@@ -134,7 +266,7 @@ const BasicConfig: React.FC = () => {
           
           <Form.Item
             name="validityPeriod"
-            label="任务有效期限"
+            label="任务有效期限:被邀请用户注册"
             rules={[{ required: true, message: '请输入有效期限' }]}
           >
             <InputNumber min={1} addonAfter="天" style={{ width: 200 }} />
@@ -142,7 +274,7 @@ const BasicConfig: React.FC = () => {
           
           <Form.Item
             name="minValue"
-            label="充值最小充值低于"
+            label="充值：最小充值不低于"
             rules={[{ required: true, message: '请输入最小充值金额' }]}
           >
             <InputNumber min={0} addonAfter="USDT" style={{ width: 200 }} />
@@ -158,28 +290,13 @@ const BasicConfig: React.FC = () => {
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item
-            name="inviteReward"
-            label="邀请人奖励积分"
-            rules={[{ required: true, message: '请输入邀请人奖励积分' }]}
-          >
-            <InputNumber min={0} />
-          </Form.Item>
-
-          <Form.Item
-            name="inviteeReward"
-            label="被邀请人奖励积分"
-            rules={[{ required: true, message: '请输入被邀请人奖励积分' }]}
-          >
-            <InputNumber min={0} />
-          </Form.Item>
-
-          <Form.Item
-            name="inviteDescription"
-            label="邀请活动说明"
-          >
-            <Input.TextArea rows={4} />
-          </Form.Item>
+          {isEditing && (
+            <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                保存
+              </Button>
+            </Form.Item>
+          )}
         </Form>
       </Card>
 
@@ -187,83 +304,47 @@ const BasicConfig: React.FC = () => {
       <Card title="邀请页面配置" style={{ marginBottom: 24 }}>
        
       <LanguageSelector value={language} onChange={handleLanguageChange} />
-        <div style={{ marginTop: 20 }}>
-          <h4>邀请页背景配置（PC）</h4>
-          <Upload
-            action="/upload.do"
-            listType="picture-card"
-          >
-            <div>
-              <UploadOutlined />
-              <div style={{ marginTop: 8 }}>上传</div>
-            </div>
-          </Upload>
+      <div style={{display:'flex',flexDirection:'row'}}>
+      <div style={{ marginTop: 20 }}>
+          <h4>邀请页背景配置（PC）- {language}</h4>
+          <AvatarUpload 
+            value={imagesConfig[language]?.backgroundImage || ''} 
+            onChange={handleBackgroundImageChange}
+          />
           <p>建议尺寸1236*452</p>
         </div>
         
         <div style={{ marginTop: 20 }}>
-          <h4>邀请海报底图（PC）</h4>
-          <Upload
-            action="/upload.do"
-            listType="picture-card"
-          >
-            <div>
-              <UploadOutlined />
-              <div style={{ marginTop: 8 }}>上传</div>
-            </div>
-          </Upload>
+          <h4>邀请海报底图（PC）- {language}</h4>
+          <AvatarUpload 
+            value={imagesConfig[language]?.posterImage || ''} 
+            onChange={handlePosterImageChange}
+          />
           <p>建议尺寸856*452</p>
         </div>
+      </div>
+      <Button type="primary" onClick={saveImage}>保存所有语言配置</Button>
+        
       </Card>
 
       {/* 资金账户列表 */}
       <Card title="资金账户列表">
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#f0f0f0' }}>
-              <th style={{ padding: '10px' }}>币种</th>
-              <th style={{ padding: '10px' }}>账户可用</th>
-              <th style={{ padding: '10px' }}>状态</th>
-              <th style={{ padding: '10px' }}>添加时间</th>
-              <th style={{ padding: '10px' }}>操作</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ padding: '10px' }}>USDT</td>
-              <td style={{ padding: '10px' }}>210.00</td>
-              <td style={{ padding: '10px' }}>使用中</td>
-              <td style={{ padding: '10px' }}>2025-02-12 12:12:12</td>
-              <td style={{ padding: '10px' }}><a href="#">发放记录</a></td>
-            </tr>
-            <tr>
-              <td style={{ padding: '10px' }}>TRX</td>
-              <td style={{ padding: '10px' }}>210.00</td>
-              <td style={{ padding: '10px' }}>未使用</td>
-              <td style={{ padding: '10px' }}>2024-02-12 12:12:12</td>
-              <td style={{ padding: '10px' }}><a href="#">发放记录</a></td>
-            </tr>
-            <tr>
-              <td style={{ padding: '10px' }}>BTC</td>
-              <td style={{ padding: '10px' }}>210.00</td>
-              <td style={{ padding: '10px' }}>未使用</td>
-              <td style={{ padding: '10px' }}>2024-02-12 12:12:12</td>
-              <td style={{ padding: '10px' }}><a href="#">发放记录</a></td>
-            </tr>
-          </tbody>
-        </table>
-        <div style={{ marginTop: 15, textAlign: 'right' }}>
-          <Button>上一页</Button>
-          <span style={{ margin: '0 10px' }}>2/5</span>
-          <Button>下一页</Button>
-        </div>
+        <ProTable
+          columns={columns}
+          dataSource={accountListData}
+          rowKey="id"
+          search={false}
+          pagination={{
+            showQuickJumper: true,
+            pageSize: 10,
+          }}
+          dateFormatter="string"
+          toolbar={{
+            title: '资金账户列表',
+          }}
+        />
       </Card>
 
-      <div style={{ marginTop: 24, textAlign: 'center' }}>
-        <Button type="primary" htmlType="submit" onClick={() => form.submit()}>
-          保存配置
-        </Button>
-      </div>
     </PageContainer>
   );
 };

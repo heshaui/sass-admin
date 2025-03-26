@@ -9,7 +9,7 @@ import ArticlePublishModal from './ArticlePublishModal';
 // 文章管理数据接口
 interface ArticleItem {
   id: number;
-  description: string;
+  articleDescription: string;
   title: string;
   category: string;
   publishTime: string;
@@ -113,15 +113,15 @@ const ArticleManagement: React.FC = () => {
 
   // 封装获取文章数据的函数
   const fetchArticleData = async (params: any) => {
-    const { current, pageSize, description, startTime, endTime } = params;
+    const { current, pageSize, articleDescription, startTime, endTime } = params;
     try {
       // 使用getHelpCenterArticleList接口获取数据
       const response = await getHelpCenterArticleList({
-        current,
+        pageNo:current,
         pageSize,
-        description,
-        startTime,
-        endTime,
+        articleDescription,
+        startTime:startTime? new Date(startTime).getTime():null,
+        endTime:endTime?new Date(endTime).getTime():null,
       });
       return {
         data: response.data.list,
