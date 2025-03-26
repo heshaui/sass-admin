@@ -51,12 +51,12 @@ const UserAdmin: React.FC = () => {
       dataIndex: 'nickname',
       key: 'nickname',
     },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      search:false
-    },
+    // {
+    //   title: '备注',
+    //   dataIndex: 'remark',
+    //   key: 'remark',
+    //   search:false
+    // },
     {
       title: '角色',
       dataIndex: 'role',
