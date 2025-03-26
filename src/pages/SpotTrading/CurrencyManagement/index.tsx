@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Button, message, Space } from 'antd';
+import { PageContainer } from '@ant-design/pro-components';
+import {  Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns } from '@ant-design/pro-table';
+import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import ProTable from '@ant-design/pro-table';
 
 // 币种类型定义
