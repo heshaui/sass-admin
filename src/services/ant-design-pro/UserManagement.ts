@@ -50,7 +50,7 @@ export interface UpdateEmailParams {
 export interface OperationLogParams {
   userId: string | number;
   pageSize?: number;
-  current?: number;
+  pageNo?: number;
   startTime?: string;
   endTime?: string;
 }

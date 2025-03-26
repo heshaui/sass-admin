@@ -23,7 +23,25 @@ interface AuditDetailModalProps {
   record: any;
   title?: React.ReactNode;
 }
-
+// 1居民身份证  2普通护照  3港澳通行证  4台湾通行证  5台湾身份证  6外国人永久居住身份证
+const cardType=(cardType:number)=>{
+  switch(cardType){
+    case 1:
+      return '居民身份证';
+    case 2:
+      return '普通护照';
+    case 3:
+      return '港澳通行证';
+    case 4:
+      return '台湾通行证';
+    case 5:
+      return '台湾身份证';
+    case 6:
+      return '外国人永久居住身份证';
+    default:
+      return '-';
+  }
+}
 const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
   visible,
   onClose,
@@ -158,7 +176,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
             {dayjs(record?.birthday).format('YYYY-MM-DD')}
           </Descriptions.Item>
           <Descriptions.Item label="证件类型" span={1}>
-            {record?.cardType}
+            {cardType(record?.cardType)}
           </Descriptions.Item>
           <Descriptions.Item label="当前语言" span={1}>
             {record?.currentLanguage}

@@ -20,6 +20,9 @@ interface UserDetailProps {
   onClose: () => void;
 }
 
+
+
+
 const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => {
   if (!visible || !userId) return null;
   const { initialState } = useModel('@@initialState');
