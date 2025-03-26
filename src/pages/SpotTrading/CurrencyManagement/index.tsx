@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import {  Button, message } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-
+import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 // 币种类型定义
 type CurrencyItem = {
   id: number;
@@ -19,91 +19,86 @@ type CurrencyItem = {
   sortId?: string; // 排序ID
 };
 
-// 模拟数据
-const mockData: CurrencyItem[] = [
-  {
-    id: 1,
-    name: '比特币',
-    symbol: 'BTC',
-    logo: 'https://example.com/btc.png',
-    networkType: 'Bitcoin',
-    status: 'enabled',
-    recharge: 'enabled',
-    withdrawal: 'enabled',
-    createdAt: '2022-12-23 12:12:37',
-    updatedAt: '2022-12-23 12:12:37',
-    sortId: '003'
-  },
-  {
-    id: 2,
-    name: '泰达币',
-    symbol: 'USDT',
-    logo: 'https://example.com/usdt.png',
-    networkType: '-',
-    status: 'disabled',
-    recharge: 'enabled',
-    withdrawal: 'enabled',
-    createdAt: '2022-12-23 12:12:12',
-    updatedAt: '2022-12-23 12:12:12',
-    sortId: '001'
-  },
-  // 添加更多模拟数据以匹配图片
-  {
-    id: 3,
-    name: '波场',
-    symbol: 'TRX',
-    logo: 'https://example.com/trx.png',
-    networkType: 'Tron (TRC20)',
-    status: 'enabled',
-    recharge: 'disabled',
-    withdrawal: 'enabled',
-    createdAt: '2022-12-23 12:12:12',
-    updatedAt: '2022-12-23 12:12:12',
-    sortId: '002'
-  },
-  // ... 其他币种
-];
+
 
 const CurrencyManagement: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [selectedRows, setSelectedRows] = useState<CurrencyItem[]>([]);
 
+  const [data, setData] = useState<CurrencyItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [total, setTotal] = useState<number>(0);
+  const [current, setCurrent] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+
+  const fetchData = async (params: any) => {
+    setLoading(true);
+    const res = await tenantCurrencyCoinList({
+      pageNo: current,
+      pageSize: pageSize,
+    });
+    if(res.code==='0'){
+    return {
+      data: res.data.list,
+      success: true,
+      total: res.data.count,
+    };
+  }else{
+    message.error(res.message);
+    return {
+      data: [],
+      success: false,
+      total: 0,
+    };
+  }
+  };
+
   // 表格列定义
   const columns: ProColumns<CurrencyItem>[] = [
     {
-      title: '排序',
-      dataIndex: 'sortId',
-      valueType: 'text',
-      width: 80,
+      title: 'id',
+      dataIndex: 'id',
     },
     {
       title: '币种简称',
-      dataIndex: 'symbol',
+      dataIndex: 'coinName',
       valueType: 'text',
     },
     {
       title: '网络类型',
-      dataIndex: 'networkType',
-      valueType: 'text',
+      dataIndex: 'mianChain',
+      renderText: (text: string) => {
+        return text === '1' ? '主链' : 'token';
+      },
     },
     {
       title: '币种状态',
       dataIndex: 'status',
+      renderText: (text: number) => {
+        return text === 0 ? '正常' : '禁用';
+      },
 
     },
     {
       title: '充值',
-      dataIndex: 'recharge',
+      dataIndex: 'canRecharge',
     },
     {
       title: '提现',
-      dataIndex: 'withdrawal',
+      dataIndex: 'canWithdraw',
+    },
+    {
+      title: '转账',
+      dataIndex: 'canTransfer',
+    },
+    {
+      title: '自动提币',
+      dataIndex: 'canAutoWithdraw',
     },
     {
       title: '创建时间',
-      dataIndex: 'createdAt',
+      dataIndex: 'createTime',
       valueType: 'dateTime',
-      sorter: true,
     },
     {
       title: '操作',
@@ -160,6 +155,8 @@ const CurrencyManagement: React.FC = () => {
     // 这里实现批量删除逻辑
   };
 
+ 
+
   return (
     <PageContainer>
 
@@ -167,16 +164,15 @@ const CurrencyManagement: React.FC = () => {
           headerTitle="币种管理"
           actionRef={actionRef}
           rowKey="id"
-          request={async (params) => {
-            // 这里可以替换为实际的API请求
-            console.log(params);
-            return {
-              data: mockData,
-              success: true,
-              total: mockData.length,
-            };
-          }}
+          request={fetchData}
           columns={columns}
+          toolBarRender={
+            () => [
+              <Button type="primary" onClick={handleAdd}>
+                添加币种
+              </Button>,
+            ]
+          }
           rowSelection={{
             onChange: (_, selectedRows) => {
               setSelectedRows(selectedRows);
@@ -185,7 +181,6 @@ const CurrencyManagement: React.FC = () => {
           pagination={{
             pageSize: 10,
           }}
-          options={false}
         />
     </PageContainer>
   );

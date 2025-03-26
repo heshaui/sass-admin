@@ -24,6 +24,9 @@ const UserModal: React.FC<UserModalProps> = ({
   const [roleList, setRoleList] = useState<API.RoleListItem[]>([]);
   
   useEffect(() => {
+    if(!initialValues){
+      form.setFieldsValue({})
+    }
     const fetchRoleList = async () => {
       try {
           let data={

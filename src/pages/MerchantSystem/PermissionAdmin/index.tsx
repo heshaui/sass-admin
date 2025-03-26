@@ -19,7 +19,6 @@ const PermissionAdmin: React.FC = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      width: 100,
        search: false,
     },
     {
@@ -67,6 +66,7 @@ const PermissionAdmin: React.FC = () => {
       title: '标题',
       dataIndex: 'title',
       key: 'title',
+      search: false,
     },
     {
       title: '页面路径',

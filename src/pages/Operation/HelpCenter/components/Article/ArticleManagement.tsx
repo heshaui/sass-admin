@@ -11,9 +11,9 @@ interface ArticleItem {
   id: number;
   articleDescription: string;
   title: string;
-  category: string;
+  classId: string;
   publishTime: string;
-  status: number;
+  showType: number;
 }
 
 const ArticleManagement: React.FC = () => {
@@ -104,7 +104,13 @@ const ArticleManagement: React.FC = () => {
     try {
       const newStatus = currentStatus === 1 ? 0 : 1;
       // 这里应该调用切换状态的接口，暂时用message演示
-      message.success(`文章ID: ${id} 状态已更新为 ${newStatus ? '启用' : '禁用'}`);
+      const res = await updateHelpCenterArticleStatus({id,showType:newStatus});
+      if(res.code==='0'){
+        message.success(`文章ID: ${id} 状态已更新为 ${newStatus ? '启用' : '禁用'}`);
+        articleActionRef.current?.reload();
+      }else{
+        message.error('操作失败');
+      }
       articleActionRef.current?.reload();
     } catch (error) {
       message.error('操作失败');
@@ -167,11 +173,11 @@ const ArticleManagement: React.FC = () => {
     },
     { 
       title: '状态', 
-      dataIndex: 'status', 
-      key: 'status',
+      dataIndex: 'showType', 
+      key: 'showType',
       search: false,
       render: (_, record) => (
-        <span>{record.status === 1 ? '启用' : '禁用'}</span>
+        <span>{record.showType === 1 ? '启用' : '禁用'}</span>
       ),
     },
     {
@@ -185,14 +191,14 @@ const ArticleManagement: React.FC = () => {
           onClick={() => showEditModal(record)}
         >
           编辑
-        </Button>,
+        </Button>,            
         <Button 
           type="link" 
           key="toggle"
-          danger={record.status === 1}
-          onClick={() => handleToggleStatus(record.id, record.status)}
+          danger={record.showType === 1}
+          onClick={() => handleToggleStatus(record.id, record.showType)}
         >
-          {record.status === 1 ? '禁用' : '启用'}
+          {record.showType === 1 ? '启用' : '禁用'}
         </Button>,
       ],
     },

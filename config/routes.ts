@@ -344,6 +344,11 @@ export default [
         component: './SpotTrading/CurrencyProtocol',
       },
       {
+        path: '/spot-trading/trading-pair-management',
+        name: 'tradingPairManagement',
+        component: './SpotTrading/TradingPairManagement',
+      },
+      {
         path: '/spot-trading',
         redirect: '/spot-trading/currency-management',
       },

@@ -44,6 +44,7 @@ export interface HelpCenterArticleItem {
   id: string;
   title: string;
   status: number;
+  showType: number;
   sort?: number;
   createTime?: string;
   updateTime?: string;
