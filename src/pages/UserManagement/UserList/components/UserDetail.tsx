@@ -143,7 +143,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       remark: unbindGoogleReason 
     });
     
-    if(res.code === '0') {
+    if(res.code === '0'&&res.data) {
       message.success('解绑成功');
       await userDetailInfo();
       setUnbindGoogleModalVisible(false);
@@ -171,7 +171,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
     setGoogleCode(code);
     
     const res=await bindGoogleKey({ googleCode: code });
-    if(res.code==='0'){
+    if(res.code==='0'&&res.data){
       message.success('绑定成功');
       await getLog()
     }else{
@@ -190,7 +190,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       
       if (loginActionType === 'freeze') {
         const res= await freezeLogin({ userId: user.userId, remark: loginReason });
-        if(res.code==='0'){
+        if(res.code==='0'&&res.data){
           message.success('冻结登录操作成功');
           await getLog()
         }else{
@@ -198,7 +198,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         }
       } else {
         const res= await unfreezeLogin({ userId: user.userId, remark: loginReason });
-        if(res.code==='0'){
+        if(res.code==='0'&&res.data){
           message.success('解冻登录操作成功');
           await getLog()
         }else{
@@ -231,7 +231,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         }
       } else {
         const res= await unfreezeTransaction({ userId: user.userId, remark: transactionReason });
-        if(res.code==='0'){
+        if(res.code==='0'&&res.data){
           message.success('解冻交易操作成功');
           await getLog()
         }else{ 
@@ -256,7 +256,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       
       if (withdrawalActionType === 'freeze') {
        const res= await freezeWithdrawal({ userId: user.userId, remark: withdrawalReason });
-       if(res.code==='0'){
+       if(res.code==='0'&&res.data){
         message.success('冻结提现操作成功');
         await getLog()
        }else{
@@ -264,7 +264,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
        }
       } else {
         const res= await unfreezeWithdrawal({ userId: user.userId, remark: withdrawalReason });
-        if(res.code==='0'){
+        if(res.code==='0'&&res.data){
           message.success('解冻提现操作成功');
           await getLog()
         }else{
@@ -299,7 +299,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         googleCode:googleCode,
         remark: phoneRemark 
       });
-      if(res.code==='0'){
+      if(res.code==='0'&&res.data){
         message.success('手机号更新成功');
         await getLog()
       }else{
