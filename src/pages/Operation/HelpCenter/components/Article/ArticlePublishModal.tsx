@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Form, Input, Select, Button, InputNumber } from 'antd';
 import SeedEditor from '@/components/SeedEditor';
 import LanguageSelector from '@/components/LanguageSelector';
-import { getHelpCenterClassList } from '@/services/ant-design-pro/operation';
-import { divide } from 'lodash';
+import { getHelpCenterClassList,getHelpCenterArticleParams } from '@/services/ant-design-pro/operation';
 
 interface ArticlePublishModalProps {
   visible: boolean;
@@ -59,42 +58,53 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
       }
     }
   }
+  const getEditInfo = async()=>{
+    const res = await getHelpCenterArticleParams(article.id);
+    if(res.code==='0'){
+      const { homeHelpCenterArticle, homeHelpCenterArticleContents } = res.data;
+      
+      // 设置基本表单字段
+      form.setFieldsValue({
+        categoryId: homeHelpCenterArticle.classId,
+        description: homeHelpCenterArticle.articleDescription,
+        order: homeHelpCenterArticle.sort,
+      });
+      
+      // 初始化多语言内容
+      const newContentMap: Record<string, string> = {};
+      const newTitleMap: Record<string, string> = {};
+      
+      // 设置各语言的标题和内容
+      if (Array.isArray(homeHelpCenterArticleContents)) {
+        homeHelpCenterArticleContents.forEach(content => {
+          newContentMap[content.languageCode] = content.articleContent || '';
+          newTitleMap[content.languageCode] = content.articleTitle || '';
+        });
+      }
+      
+      setContentMap(newContentMap);
+      setTitleMap(newTitleMap);
+      
+      // 设置默认显示的语言（使用第一个有内容的语言）
+      if (homeHelpCenterArticleContents && homeHelpCenterArticleContents.length > 0) {
+        const defaultLang = homeHelpCenterArticleContents[0].languageCode;
+        setLanguage(defaultLang);
+        form.setFieldsValue({
+          language: defaultLang,
+          title: newTitleMap[defaultLang] || ''
+        });
+        setEditorKey(prevKey => prevKey + 1); // 触发编辑器重新渲染
+      }
+    }
+  }
   
   useEffect(() => {
     getClassList();
 
     
     if (isEditing && article) {
-      const initialValues = {
-        order: article.sort || 0,
-        categoryId: article.classId,
-        description: article.description || article.articleDescription,
-        language: 'en_US',
-      };
+      getEditInfo()
       
-      const initialContentMap: Record<string, string> = {};
-      const initialTitleMap: Record<string, string> = {};
-      
-      if (article.articles && Array.isArray(article.articles)) {
-        article.articles.forEach((item: any) => {
-          if (item.languageCode) {
-            if (item.articleContent) {
-              initialContentMap[item.languageCode] = item.articleContent;
-            }
-            
-            if (item.articleTitle) {
-              initialTitleMap[item.languageCode] = item.articleTitle;
-            }
-          }
-        });
-      }
-      
-      setContentMap(initialContentMap);
-      setTitleMap(initialTitleMap);
-      
-      initialValues.title = initialTitleMap['en_US'] || '';
-      
-      form.setFieldsValue(initialValues);
     } else {
 
       form.resetFields();
@@ -104,6 +114,8 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
     }
   }, [isEditing, article, visible]);
   
+
+
   const handleLanguageChange = (value: string) => {
     setTitleMap(prev => ({
       ...prev,
