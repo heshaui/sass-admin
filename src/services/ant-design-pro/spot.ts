@@ -54,3 +54,63 @@ export async function tenantCurrencyCoinList(params?: Record<string, any>) {
     data: params,
   });
 }
+
+
+// 币种添加
+export async function saveTenantCurrencyCoin(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-coin/saveTenantCurrencyCoin', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// /tenant/v1/tenant-coin/tenantCurrencyCoinAll
+export async function tenantCurrencyCoinAll(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-coin/tenantCurrencyCoinAll', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+//协议新增
+export async function saveProtocolType(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/protocol-type/saveProtocolType', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+//协议查询详情
+export async function protocolTypeParams(params?: Record<string, any>) {
+  return request(`/tenant-admin/v1/protocol-type/protocolTypeParams?idString=${params.id}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+//协议修改
+export async function updateProtocolTypeById(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/protocol-type/updateProtocolTypeById', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+//协议删除
+export async function deleteProtocolTypeById(params?: Record<string, any>) {
+  return request(`/tenant-admin/v1/protocol-type/deleteProtocolTypeById?idString=${params.id}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+//协议列表
+export async function protocolTypeList(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/protocol-type/protocolTypeList', {
+    method: 'POST',
+    data: params,
+  });
+}

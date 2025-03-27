@@ -1,9 +1,10 @@
 import React, { useState, useRef,useEffect } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
-import {  Button, message } from 'antd';
+import {  Button, message, Modal, Drawer } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
+import { tenantCurrencyCoinList,saveTenantCurrencyCoin } from '@/services/ant-design-pro/spot';
+import CurrencyForm from './components/CurrencyForm';
 // 币种类型定义
 type CurrencyItem = {
   id: number;
@@ -30,6 +31,9 @@ const CurrencyManagement: React.FC = () => {
   const [total, setTotal] = useState<number>(0);
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
+  const [formVisible, setFormVisible] = useState<boolean>(false);
+  const [currentCurrency, setCurrentCurrency] = useState<CurrencyItem | null>(null);
+  const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
 
   const fetchData = async (params: any) => {
     setLoading(true);
@@ -122,13 +126,16 @@ const CurrencyManagement: React.FC = () => {
 
   // 处理函数
   const handleAdd = () => {
-    message.success('添加币种');
-    // 这里实现添加逻辑
+    setFormMode('add');
+    setCurrentCurrency(null);
+    setFormVisible(true);
+
   };
 
   const handleEdit = (record: CurrencyItem) => {
-    message.success(`编辑币种: ${record.name}`);
-    // 这里实现编辑逻辑
+    setFormMode('edit');
+    setCurrentCurrency(record);
+
   };
 
   const handlePublish = (record: CurrencyItem) => {
@@ -155,11 +162,32 @@ const CurrencyManagement: React.FC = () => {
     // 这里实现批量删除逻辑
   };
 
- 
+  const handleFormSubmit = async (values: CurrencyFormData) => {
+    console.log('表单提交数据:', values);
+    if (formMode === 'add') {
+      const res = await saveTenantCurrencyCoin(values);
+      if(res.code==='0'){
+        message.success('添加币种成功');
+      }else{
+        message.error(res.message);
+      }
+    } else {
+      message.success(`编辑币种成功: ${values.coinName}`);
+    }
+
+    // 重新加载数据
+    actionRef.current?.reload();
+  };
+
+  const handleFormCancel = () => {
+    console.log('取消');
+    setFormVisible(false);
+  };
 
   return (
     <PageContainer>
 
+       {!formVisible ? (
         <ProTable
           headerTitle="币种管理"
           actionRef={actionRef}
@@ -182,6 +210,15 @@ const CurrencyManagement: React.FC = () => {
             pageSize: 10,
           }}
         />
+        ) : (
+          <CurrencyForm
+            initialValues={currentCurrency}
+            onSubmit={handleFormSubmit}
+            onCancel={handleFormCancel}
+          />
+        )}
+       
+      
     </PageContainer>
   );
 };

@@ -67,6 +67,7 @@ const PermissionAdmin: React.FC = () => {
       title: '标题',
       dataIndex: 'title',
       key: 'title',
+      search: false,
     },
     {
       title: '页面路径',
