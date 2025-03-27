@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Form, Modal, message, Space, Switch } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { protocolTypeList,deleteProtocolTypeById,saveProtocolType,updateProtocolTypeById } from '@/services/ant-design-pro/spot';
-import ProTable from '@ant-design/pro-table';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
+ import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import ProtocolForm, { ProtocolItem } from './components/ProtocolForm';
 
 const CurrencyProtocol: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [protocols, setProtocols] = useState<ProtocolItem[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [currentProtocol, setCurrentProtocol] = useState();
   const [form] = Form.useForm();
