@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, InputNumber, Space, Radio, Button, message } from 'antd';
+import { Modal, Form, Input, InputNumber, Space, Radio, Button, message,Select} from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import type { HelpCenterClassItem } from '@/services/ant-design-pro/operation';
+import  { HelpCenterClassItem,getHelpCenterClassList } from '@/services/ant-design-pro/operation';
 import AvatarUpload from '@/components/AvatarUpload';
 import LanguageSelector from '@/components/LanguageSelector'
 
@@ -22,7 +22,20 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   const [language, setLanguage] = useState('en_US');
   const [titleMap, setTitleMap] = useState<Record<string, string>>({});
   const [currentTitle, setCurrentTitle] = useState('');
-  
+  const [helpCenterClassList, setHelpCenterClassList] = useState<HelpCenterClassItem[]>([]);
+
+
+  const getClassList = async() => {
+    const response = await getHelpCenterClassList({});
+    if(response.code==='0') {
+      if(Array.isArray(response.data.list)) {
+        setHelpCenterClassList(response.data.list);
+      } else {
+        console.error('API返回的数据结构不是预期的数组格式:', response.data);
+      }
+    }
+  }
+
   const handleLanguageChange = (value: string) => {
     // 保存当前语言的标题
     if (language && currentTitle) {
@@ -86,6 +99,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   };
 
   useEffect(() => {
+    getClassList();
     if (visible) {
       // 重置状态
       let initialTitleMap: Record<string, string> = {};
@@ -193,12 +207,13 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           name="parentId"
           rules={[{ required: true, message: '请选择上级分类' }]}
         >
-          <Space>
-            <Button icon={<PlusOutlined />}></Button>
-            <Radio.Group>
-              <Radio value="helpCenter">帮助中心</Radio>
-            </Radio.Group>
-          </Space>
+           <Select
+            placeholder="请选择分类"
+            options={Array.isArray(helpCenterClassList) ? helpCenterClassList.map((item) => ({
+              value: item.id,
+              label: item.helpDescription,
+            })) : []}
+          />
         </Form.Item>
 
         <Form.Item
