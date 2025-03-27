@@ -3,6 +3,7 @@ import { Modal, Form, Input, Select, Button, InputNumber } from 'antd';
 import SeedEditor from '@/components/SeedEditor';
 import LanguageSelector from '@/components/LanguageSelector';
 import { getHelpCenterClassList } from '@/services/ant-design-pro/operation';
+import { divide } from 'lodash';
 
 interface ArticlePublishModalProps {
   visible: boolean;
@@ -61,6 +62,7 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
   
   useEffect(() => {
     getClassList();
+
     
     if (isEditing && article) {
       const initialValues = {
@@ -94,7 +96,7 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
       
       form.setFieldsValue(initialValues);
     } else {
-      form.setFieldsValue({ language: language });
+      form.resetFields();
     }
   }, [isEditing, article, visible]);
   
