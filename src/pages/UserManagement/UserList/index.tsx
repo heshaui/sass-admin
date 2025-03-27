@@ -74,8 +74,8 @@ const UserManagement: React.FC = () => {
     },
     {
       title: '国家',
-      dataIndex: 'countryCode',
-      key: 'countryCode',
+      dataIndex: 'country',
+      key: 'country',
       render: (text) => text || '--',
       search: false,
     },
