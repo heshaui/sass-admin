@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Button, message, Popconfirm, Card } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
-import { getHelpCenterClassList,addHelpCenterClass} from '@/services/ant-design-pro/operation';
+import { getHelpCenterClassList,addHelpCenterClass,updateHelpCenterClass,updateHelpCenterClassContent} from '@/services/ant-design-pro/operation';
 import type { HelpCenterClassItem } from '@/services/ant-design-pro/operation';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import CategoryFormModal from './CategoryFormModal';
@@ -93,13 +93,28 @@ const CategoryManagement: React.FC = () => {
           message.error(`添加失败: ${res.message || '未知错误'}`);
         }
       } else {
-        // 编辑分类逻辑
-        // TODO: 实现编辑功能
-        message.success('编辑成功');
-        setVisible(false);
-        if (actionRef.current) {
-          actionRef.current.reload();
+        
+        const res = await updateHelpCenterClass(values);
+        const languageContents = Array.isArray(values.languages) ? values.languages : [];
+
+        let data={
+          homeHelpCenterClassContent:languageContents.map((item: any) => ({
+            languageCode: item.languageCode,
+            articleTitle: item.articleTitle,
+          }))
         }
+
+        const resContent = await updateHelpCenterClassContent(data);
+        if (res.code === '0' && resContent.code === '0') {
+          message.success('编辑成功');
+          setVisible(false);
+          if (actionRef.current) {
+            actionRef.current.reload();
+          }
+        } else {
+          message.error(`编辑失败: ${res.message || '未知错误'}`);
+        }
+        
       }
     } catch (error) {
       message.error('操作失败');
@@ -147,15 +162,15 @@ const CategoryManagement: React.FC = () => {
       valueType: 'option',
       render: (_, record) => [
         <a key="edit" onClick={() => handleEdit(record)}>编辑</a>,
-        <Popconfirm
-          key="delete"
-          title="确定要删除此分类吗？"
-          onConfirm={() => handleDelete(record.id)}
-          okText="确定"
-          cancelText="取消"
-        >
-          <a>删除</a>
-        </Popconfirm>,
+        // <Popconfirm
+        //   key="delete"
+        //   title="确定要删除此分类吗？"
+        //   onConfirm={() => handleDelete(record.id)}
+        //   okText="确定"
+        //   cancelText="取消"
+        // >
+        //   <a>删除</a>
+        // </Popconfirm>,
       ],
     },
   ];
