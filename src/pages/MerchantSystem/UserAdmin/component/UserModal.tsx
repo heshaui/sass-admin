@@ -19,13 +19,15 @@ const UserModal: React.FC<UserModalProps> = ({
 }) => {
   const [form] = Form.useForm();
 
-
-
   const [roleList, setRoleList] = useState<API.RoleListItem[]>([]);
   
   useEffect(() => {
-    if(!initialValues){
-      form.setFieldsValue({})
+    if (visible) {
+      if (initialValues) {
+        form.setFieldsValue(initialValues);
+      } else {
+        form.resetFields();
+      }
     }
     const fetchRoleList = async () => {
       try {
@@ -43,13 +45,7 @@ const UserModal: React.FC<UserModalProps> = ({
     };
     
     fetchRoleList();
-  }, []);
-  // 编辑时填充初始值
-  useEffect(() => {
-    if (initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [initialValues, form]);
+  }, [visible, initialValues, form]);
 
   // 提交表单
   const handleSubmit = () => {
