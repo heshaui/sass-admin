@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react';
-import { Form, Input, InputNumber, Modal, Radio, Select } from 'antd';
+import { Form, Input, InputNumber, Modal, Radio, Select, Button } from 'antd';
 import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 type TradingPair = {
   id?: string;
@@ -107,9 +107,18 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
       title={values ? '编辑币对' : '新增币对'}
       open={visible}
       onCancel={onCancel}
-      onOk={handleSubmit}
       destroyOnClose
-      width={900}
+      width={800}
+      footer={
+        <div style={{ textAlign: 'center' }}>
+          <Button onClick={onCancel} style={{ marginRight: 8 }}>
+            取消
+          </Button>
+          <Button type="primary" onClick={handleSubmit}>
+            确定
+          </Button>
+        </div>
+      }
     >
       <Form
         form={form}

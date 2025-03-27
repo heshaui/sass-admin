@@ -96,7 +96,11 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
       
       form.setFieldsValue(initialValues);
     } else {
+
       form.resetFields();
+      form.setFieldsValue({
+        language: 'en_US',
+      });
     }
   }, [isEditing, article, visible]);
   
