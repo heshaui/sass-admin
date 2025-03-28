@@ -1,7 +1,7 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
-
+const isAdmin=process.env.UMI_APP_ADMIN_FLAG==='1';
 /** 获取当前的用户 GET /api/currentUser */
 export async function currentUser(options?: { [key: string]: any }) {
   return request<{
@@ -135,7 +135,7 @@ export async function removeRule(options?: { [key: string]: any }) {
 
 // 图片上传
 export async function ossImgFile(file: File, options?: { [key: string]: any }) {
-  return request<API.OssImgFile>('/api/ambit-oss/oss/img/file', {
+  return request<API.OssImgFile>(isAdmin?'tenant-admin/ambit-oss/oss/img/file':'/api/ambit-oss/oss/img/file', {
     // return request<API.OssImgFile>('/oss/img/file ', {
     method: 'POST',
     data: file, // 直接发送 FormData
@@ -144,7 +144,7 @@ export async function ossImgFile(file: File, options?: { [key: string]: any }) {
 
 //文件上传
 export async function uploadFile(file: File, options?: { [key: string]: any }) {
-  return request<API.OssImgFile>('/api/ambit-oss/oss/upload/file', {
+  return request<API.OssImgFile>(isAdmin?'tenant-admin/ambit-oss/oss/upload/file':'/api/ambit-oss/oss/upload/file', {
     // return request<API.OssImgFile>('/oss/upload/file', {
     method: 'POST',
     data: file, // 直接发送 FormData
