@@ -84,9 +84,9 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
       // 构建最终提交数据
       const homeHelpCenterCustomization = {
         // 修正图标数据的获取方式
-        whiteIcon: nightIcon,
+        whiteIcon: dayIcon,
         
-        blackIcon: dayIcon,
+        blackIcon: nightIcon,
         accessType: accessType,
       };
       
