@@ -25,7 +25,7 @@ interface UserDetailProps {
 
 const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => {
   if (!visible || !userId) return null;
-  const { initialState } = useModel('@@initialState');
+  const { initialState,refresh } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   console.log(currentUser);
 
@@ -147,6 +147,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       message.success('解绑成功');
       await userDetailInfo();
       setUnbindGoogleModalVisible(false);
+      refresh();
      await getLog()
     } else {
       message.error(res.message);
@@ -173,6 +174,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
     const res=await bindGoogleKey({ googleCode: code });
     if(res.code==='0'&&res.data){
       message.success('绑定成功');
+      refresh();
       await getLog()
     }else{
       message.error(res.message);
