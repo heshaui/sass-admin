@@ -97,8 +97,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
     },
     {
       title: '备注',
-      dataIndex: 'remarkMsg',
-      key: 'remarkMsg',
+      dataIndex: 'operationRemark',
+      key: 'operationRemark',
     },
   ];
 
