@@ -13,6 +13,8 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
   const [withdrawalLimit, setWithdrawalLimit] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState<number>(5);
   const [cryptoDeposit, setCryptoDeposit] = useState<number>(1);
+  const [coin, setCoin] = useState<string>('');
+  const [time, setTime] = useState<number>(0);
 
   // 当record变化时更新表单值
   useEffect(() => {
@@ -41,6 +43,8 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
       // 设置提现限额
       if (cryptoWithdrawalBenefit?.params?.amountLimit) {
         setWithdrawalLimit(cryptoWithdrawalBenefit.params.amountLimit);
+        setCoin(cryptoWithdrawalBenefit.params.coin);
+        setTime(cryptoWithdrawalBenefit.params.time);
       } else {
         setWithdrawalLimit(70000); // 默认值
       }
@@ -67,7 +71,9 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
           status: cryptoWithdrawal,
           params: {
             ...withdrawalBenefit.params,
-            amountLimit: withdrawalLimit
+            amountLimit: withdrawalLimit,
+            coin: coin,
+            time: time
           }
         });
       }
@@ -124,7 +130,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
             onChange={(e) => setWithdrawalLimit(Number(e.target.value))}
             style={{ width: 200 }}
           />
-          <span>USDT/24小时</span>
+          <span>{coin}/{time}小时</span>
         </Space>
       </div>
 

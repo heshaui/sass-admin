@@ -1,9 +1,8 @@
 import React, { useState, useRef,useEffect } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
-import {  Button, message, Modal, Drawer } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import {  Button, message, Modal,Switch } from 'antd';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { tenantCurrencyCoinList,saveTenantCurrencyCoin } from '@/services/ant-design-pro/spot';
+import { tenantCurrencyCoinList,saveTenantCurrencyCoin,currencyCoinList,updateCurrencyCoinById } from '@/services/ant-design-pro/spot';
 import CurrencyForm from './components/CurrencyForm';
 // 币种类型定义
 type CurrencyItem = {
@@ -34,10 +33,15 @@ const CurrencyManagement: React.FC = () => {
   const [formVisible, setFormVisible] = useState<boolean>(false);
   const [currentCurrency, setCurrentCurrency] = useState<CurrencyItem | null>(null);
   const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === "1";
 
   const fetchData = async (params: any) => {
     setLoading(true);
-    const res = await tenantCurrencyCoinList({
+
+    const res = isAdmin ? await currencyCoinList({
+      pageNo: current,
+      pageSize: pageSize,
+    }) : await tenantCurrencyCoinList({
       pageNo: current,
       pageSize: pageSize,
     });
@@ -57,11 +61,14 @@ const CurrencyManagement: React.FC = () => {
   }
   };
 
+
+
+  
   // 表格列定义
   const columns: ProColumns<CurrencyItem>[] = [
     {
-      title: 'id',
-      dataIndex: 'id',
+      title: '排序',
+      dataIndex: 'sort',
     },
     {
       title: '币种简称',
@@ -86,18 +93,74 @@ const CurrencyManagement: React.FC = () => {
     {
       title: '充值',
       dataIndex: 'canRecharge',
+      render: (_, record) => (
+        <Switch
+          checked={record.canRecharge===1}
+          onChange={(checked) => {
+            Modal.confirm({
+              title: `确定要${checked ? '开启' : '关闭'}充值吗？`,
+              onOk: () => {
+                message.success(`充值${checked ? '开启' : '关闭'}成功`);
+                actionRef.current?.reload();
+              },
+            });
+          }}
+        />
+      ),
     },
     {
       title: '提现',
       dataIndex: 'canWithdraw',
+      render: (_, record) => (
+        <Switch
+          checked={record.canWithdraw===1}
+          onChange={(checked) => {
+            Modal.confirm({
+              title: `确定要${checked ? '开启' : '关闭'}提现吗？`,
+              onOk: () => {
+                message.success(`提现${checked ? '开启' : '关闭'}成功`);
+                actionRef.current?.reload();
+              },
+            });
+          }}
+        />
+      ),
     },
     {
       title: '转账',
       dataIndex: 'canTransfer',
+      render: (_, record) => (
+        <Switch
+          checked={record.canTransfer===1}
+          onChange={(checked) => {
+            Modal.confirm({
+              title: `确定要${checked ? '开启' : '关闭'}转账吗？`,
+              onOk: () => {
+                message.success(`转账${checked ? '开启' : '关闭'}成功`);
+                actionRef.current?.reload();
+              },
+            });
+          }}
+        />
+      ),
     },
     {
       title: '自动提币',
       dataIndex: 'canAutoWithdraw',
+      render: (_, record) => (
+        <Switch
+          checked={record.canAutoWithdraw===1} 
+          onChange={(checked) => {
+            Modal.confirm({
+              title: `确定要${checked ? '开启' : '关闭'}自动提币吗？`,
+              onOk: () => {
+                message.success(`自动提币${checked ? '开启' : '关闭'}成功`);
+                actionRef.current?.reload();
+              },
+            });
+          }}
+        />
+      ),
     },
     {
       title: '创建时间',
@@ -108,18 +171,15 @@ const CurrencyManagement: React.FC = () => {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a key="edit" onClick={() => handleEdit(record)}>
+        <Button key="edit" onClick={() => handleEdit(record)}>
           编辑
-        </a>,
-        <a key="publish" onClick={() => handlePublish(record)}>
-          发布上线
-        </a>,
-        <a key="addSameChain" onClick={() => handleAddSameChain(record)}>
+        </Button>,
+        <Button key="addSameChain" onClick={() => handleAddSameChain(record)}>
           添加同币异链
-        </a>,
-        <a key="detail" onClick={() => handleDetail(record)}>
+        </Button>,
+        <Button key="detail" onClick={() => handleDetail(record)}>
           币种简介
-        </a>,
+        </Button>,
       ],
     },
   ];

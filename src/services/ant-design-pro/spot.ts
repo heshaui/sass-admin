@@ -114,3 +114,47 @@ export async function protocolTypeList(params?: Record<string, any>) {
     data: params,
   });
 }
+
+
+// 总后台币种新增
+export async function saveCurrencyCoin(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/coin/saveCurrencyCoin', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// 总后台币种修改
+export async function updateCurrencyCoinById(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/coin/updateCurrencyCoinById', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// 总后台币种删除
+export async function deleteCurrencyCoinById(params?: Record<string, any>) {
+  return request(`/tenant-admin/v1/coin/deleteCurrencyCoinById?idString=${params.id}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 总后台币种查询详情
+export async function currencyCoinParams(params?: Record<string, any>) {
+  return request(`/tenant-admin/v1/coin/currencyCoinParams?idString=${params.id}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// 总后台币种列表
+export async function currencyCoinList(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/coin/currencyCoinList', {
+    method: 'POST',
+    data: params,
+  });
+}
