@@ -211,7 +211,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
           <div className={styles.rejectReasonSection}>
             <h3>拒绝原因：</h3>
             <div className={styles.rejectReasonContent}>
-              {record.rejectReason.split('\n').map((reason, index) => (
+              {record.remark.split('\n').map((reason, index) => (
                 <div key={index} className={styles.rejectReasonItem}>
                   <span className={styles.bulletPoint}>•</span> {reason}
                 </div>
