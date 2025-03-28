@@ -71,14 +71,14 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       valueType: 'dateTime',
     },
     {
-      title: '用户id',
-      dataIndex: 'userId',
-      key: 'userId',
+      title: '管理员Id',
+      dataIndex: 'tenantId',
+      key: 'tenantId',
     },
     {
       title: '操作管理员',
-      dataIndex: 'tenantId',
-      key: 'tenantId',
+      dataIndex: 'tenantName',
+      key: 'tenantName',
     },
     {
       title: '操作行为',
