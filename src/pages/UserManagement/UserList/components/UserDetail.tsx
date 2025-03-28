@@ -726,7 +726,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           <Form.Item 
             label="备注："
             style={{ marginBottom: '8px' }}
-            rules={[{ required: true, message: '请输入备注' }]}
+            required
           >
             <TextArea
               placeholder="请输入原因，50字符以内"
@@ -804,7 +804,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           <Form.Item 
             label="备注："
             style={{ marginBottom: '8px' }}
-            rules={[{ required: true, message: '请输入备注' }]}
+            required
           >
             <TextArea
               placeholder="请输入原因，50字符以内"
