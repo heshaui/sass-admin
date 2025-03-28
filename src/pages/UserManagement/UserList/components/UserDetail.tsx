@@ -34,7 +34,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [transactionModalVisible, setTransactionModalVisible] = useState(false);
   const [withdrawalModalVisible, setWithdrawalModalVisible] = useState(false);
-  const [phoneModalVisible, setPhoneModalVisible] = useState(true);
+  const [phoneModalVisible, setPhoneModalVisible] = useState(false);
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [user, setUser] = useState<any>({});
   
