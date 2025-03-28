@@ -150,3 +150,12 @@ export async function uploadFile(file: File, options?: { [key: string]: any }) {
     data: file, // 直接发送 FormData
   });
 }
+
+
+// 国家区号
+export async function selectHomeCountryList(options?: { [key: string]: any }) {
+  return request('/tenant/v1/country/selectHomeCountryList', {
+    method: 'GET',
+    ...(options || {}),
+  });
+}

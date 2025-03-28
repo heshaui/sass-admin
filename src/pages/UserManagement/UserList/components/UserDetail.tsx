@@ -9,6 +9,7 @@ import {
   updatePhone, updateEmail,getUserOperationLogs,getUserDetail,relieveGoogle
 } from '@/services/ant-design-pro/UserManagement';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
+import { selectHomeCountryList } from '@/services/ant-design-pro/api';
 import TextArea from 'antd/es/input/TextArea';
 import GoogleCode from '@/components/GoogleCode';
 import dayjs from 'dayjs';
@@ -33,7 +34,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const [loginModalVisible, setLoginModalVisible] = useState(false);
   const [transactionModalVisible, setTransactionModalVisible] = useState(false);
   const [withdrawalModalVisible, setWithdrawalModalVisible] = useState(false);
-  const [phoneModalVisible, setPhoneModalVisible] = useState(false);
+  const [phoneModalVisible, setPhoneModalVisible] = useState(true);
   const [emailModalVisible, setEmailModalVisible] = useState(false);
   const [user, setUser] = useState<any>({});
   
@@ -53,13 +54,14 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const [googleCode, setGoogleCode] = useState('');
   const [phoneRemark, setPhoneRemark] = useState('');
   const [emailRemark, setEmailRemark] = useState('');
-  const [countryCode, setCountryCode] = useState('86');
+  const [countryCode, setCountryCode] = useState('');
   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
 
   // 添加解绑谷歌验证状态和原因
   const [unbindGoogleModalVisible, setUnbindGoogleModalVisible] = useState(false);
   const [unbindGoogleReason, setUnbindGoogleReason] = useState('');
+  const [countryList, setCountryList] = useState<any[]>([]);
 
   const columns: ProColumns<any>[] = [
     {
@@ -99,6 +101,13 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       key: 'remarkMsg',
     },
   ];
+
+ const getCountryList=async()=>{
+  const res=await selectHomeCountryList();
+  if(res.code==='0'){
+    setCountryList(res.data);
+  }
+ }
 
   const userDetailInfo=async()=>{
     const res=await getUserDetail(userId);
@@ -148,7 +157,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       await userDetailInfo();
       setUnbindGoogleModalVisible(false);
       refresh();
-     await getLog()
+      await getLog({current:1,pageSize:10})
     } else {
       message.error(res.message);
     }
@@ -161,7 +170,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       setEmailModalVisible(false);
       setPhoneModalVisible(false);
       setGoogleCodeData(res.data);
-      await getLog()
+      await getLog({current:1,pageSize:10})
     }else{
       message.error(res.message);
     }
@@ -175,7 +184,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
     if(res.code==='0'&&res.data){
       message.success('绑定成功');
       refresh();
-      await getLog()
+      await getLog({current:1,pageSize:10})
+
     }else{
       message.error(res.message);
     }
@@ -194,7 +204,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         const res= await freezeLogin({ userId: user.userId, remark: loginReason });
         if(res.code==='0'&&res.data){
           message.success('冻结登录操作成功');
-          await getLog()
+          await getLog({current:1,pageSize:10})
+
         }else{
           message.error(res.message);
         }
@@ -202,7 +213,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         const res= await unfreezeLogin({ userId: user.userId, remark: loginReason });
         if(res.code==='0'&&res.data){
           message.success('解冻登录操作成功');
-          await getLog()
+          await getLog({current:1,pageSize:10})
+
         }else{
           message.error(res.message);
         }
@@ -227,7 +239,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         const res= await freezeTransaction({ userId: user.userId, remark: transactionReason });
         if(res.code==='0'){
           message.success('冻结交易操作成功');
-          await getLog()
+          await getLog({current:1,pageSize:10})
+
         }else{
           message.error(res.message);
         }
@@ -235,7 +248,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         const res= await unfreezeTransaction({ userId: user.userId, remark: transactionReason });
         if(res.code==='0'&&res.data){
           message.success('解冻交易操作成功');
-          await getLog()
+          await getLog({current:1,pageSize:10})
+
         }else{ 
           message.error(res.message);
         }
@@ -260,7 +274,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
        const res= await freezeWithdrawal({ userId: user.userId, remark: withdrawalReason });
        if(res.code==='0'&&res.data){
         message.success('冻结提现操作成功');
-        await getLog()
+        await getLog({current:1,pageSize:10})
+
        }else{
         message.error(res.message);
        }
@@ -268,7 +283,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         const res= await unfreezeWithdrawal({ userId: user.userId, remark: withdrawalReason });
         if(res.code==='0'&&res.data){
           message.success('解冻提现操作成功');
-          await getLog()
+          await getLog({current:1,pageSize:10})
+
         }else{
           message.error(res.message);
         }
@@ -303,7 +319,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       });
       if(res.code==='0'&&res.data){
         message.success('手机号更新成功');
-        await getLog()
+        await getLog({current:1,pageSize:10})
+
       }else{
         message.error(res.message);
       }
@@ -336,7 +353,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       });
       if(res.code==='0'){
         message.success('邮箱更新成功');
-        await getLog()
+        await getLog({current:1,pageSize:10})
+
       }else{
         message.error(res.message);
       }
@@ -387,6 +405,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   };
   
   useEffect(()=>{
+    getCountryList();
     userDetailInfo();
   },[userId]);
   return (
@@ -665,12 +684,14 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 value={countryCode}
                 onChange={setCountryCode}
               >
-                <Option value="86">全部</Option>
-                <Option value="1">美国 +1</Option>
-                <Option value="44">英国 +44</Option>
-                <Option value="86">中国 +86</Option>
-                <Option value="852">香港 +852</Option>
-                <Option value="81">日本 +81</Option>
+                {countryList.map((item:any)=>(
+                  <Option key={item.id} value={item.id}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <span>{item.countryName}</span>
+                      <span>+{item.areaCode}</span>
+                    </div>
+                  </Option>
+                ))}
               </Select>
               <Input 
                 style={{ width: '70%' }} 
