@@ -1,5 +1,5 @@
+import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import React from 'react';
-import { Form, Input, Button, Modal, InputNumber, Switch } from 'antd';
 
 // 拓展信息数据类型定义
 export type ExtendInfoFormData = {
@@ -67,11 +67,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         </Button>,
       ]}
     >
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={initialValues || {}}
-      >
+      <Form form={form} layout="vertical" initialValues={initialValues || {}}>
         <Form.Item
           name="coinId"
           label="币种ID"
@@ -96,10 +92,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
           <Input />
         </Form.Item>
 
-        <Form.Item
-          name="token"
-          label="Token"
-        >
+        <Form.Item name="token" label="Token">
           <Input />
         </Form.Item>
 
@@ -110,15 +103,6 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         >
           <InputNumber style={{ width: '100%' }} min={0} max={18} />
         </Form.Item>
-
-        <Form.Item
-          name="status"
-          label="状态"
-          valuePropName="checked"
-        >
-          <Switch checkedChildren="启用" unCheckedChildren="禁用" />
-        </Form.Item>
-
         <Form.Item
           name="withdrawFee"
           label="提现手续费"
@@ -147,4 +131,4 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
   );
 };
 
-export default ExtendInfoForm; 
+export default ExtendInfoForm;
