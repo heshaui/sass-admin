@@ -24,8 +24,8 @@ export default defineConfig({
 });
 
 
-const isAdmin = UMI_APP_ADMIN_FLAG === "1";
-const isMerchant = UMI_APP_MERCHANT_FLAG === "1";
+const isAdmin = process.env.UMI_APP_ADMIN_FLAG === "1";
+const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === "1";
 
 return (
   <div>

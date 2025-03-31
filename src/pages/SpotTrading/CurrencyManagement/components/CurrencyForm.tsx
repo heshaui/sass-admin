@@ -3,7 +3,8 @@ import { Form, Input, Radio, InputNumber, Select, DatePicker, Button, Card, Row,
 import type { FormInstance } from 'antd/es/form';
 import dayjs from 'dayjs';
 import { tenantCurrencyCoinAll } from '@/services/ant-design-pro/spot';
-import moment from 'moment';
+import AvatarUpload from '@/components/AvatarUpload';
+
 
 // 币种表单类型
 export type CurrencyFormData = {
@@ -13,7 +14,7 @@ export type CurrencyFormData = {
   sort: number;
   unitScale: number;
   memoTag: number;
-  issueTime: moment.Moment;
+  issueTime: string;
   transactionNum: number;
   maxSupplyQuantity: number;
   status: number;
@@ -34,11 +35,13 @@ interface CurrencyFormProps {
 const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, onCancel }) => {
   const [form] = Form.useForm();
   const [currencyAll, setCurrencyAll] = useState([]);
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG  === "1";
   const handleSubmit = () => {
     form.validateFields()
       .then(values => {
         console.log(values);
         if (values.issuingDate) {
+          values.unit=values.coinName
           values.issuingDate = dayjs(values.issuingDate).format('YYYY-MM-DD');
         }
         onSubmit(values);
@@ -49,9 +52,13 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
   };
 
   const getCurrencyAll = async () => {
-    const res = await tenantCurrencyCoinAll();
-    if(res.code==='0'){
-      setCurrencyAll(res.data);
+    if(!isAdmin){
+      const res = await tenantCurrencyCoinAll();
+      if(res.code==='0'){
+        setCurrencyAll(res.data);
+      }
+    }else{
+      setCurrencyAll([]);
     }
   }
 
@@ -95,13 +102,17 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               </Radio.Group>
             </Form.Item>
             
-            <Form.Item
+        
+          </Col>
+          <Col span={12}>
+          <Form.Item
               name="chainCoin"
-              label="选择币种"
+              label="币种"
             >
-              <Select onChange={(value) => {
-                const selectedCoin = currencyAll.find(item => item.coinId === value);
-                if (selectedCoin) {
+              { !isAdmin && (
+                <Select onChange={(value) => {
+                  const selectedCoin = currencyAll.find(item => item.coinId === value);
+                  if (selectedCoin) {
                   form.setFieldsValue({
                     coinName: selectedCoin.coinName
                   });
@@ -113,9 +124,15 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
                   ))
                 }
               </Select>
+              )
+              }
+              {
+                isAdmin && (
+                  <Input placeholder='请输入币种'/>
+                )
+              }
             </Form.Item>
           </Col>
-          
           <Col span={12}>
             <Form.Item
               name="coinName"
@@ -123,9 +140,24 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               required
               rules={[{ required: true, message: '请输入币种简称' }]}
             >
-              <Input  disabled={true} />
+              <Input  disabled={!isAdmin} />
             </Form.Item>
           </Col>
+              {
+                isAdmin && (
+             
+          <Col span={12}>
+            <Form.Item
+              name="iconUrl"
+              label="币种图标"
+              required
+              rules={[{ required: true, message: '请输入币种简称' }]}
+            >
+              <AvatarUpload />
+            </Form.Item>
+          </Col>
+                )
+           }
           
           <Col span={12}>
             <Form.Item
@@ -199,6 +231,8 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
       </Card>
       
       <Card title="币种开关" style={{ marginBottom: 16 }}>
+      <Row gutter={24}>
+      <Col span={8}>
         <Form.Item
           name="status"
           label="是否启用"
@@ -208,6 +242,8 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Select.Option value={1}>否</Select.Option>
           </Select>
         </Form.Item>
+        </Col>
+        </Row>
       </Card>
       
       <Card title="充值信息" style={{ marginBottom: 16 }}>
@@ -248,16 +284,6 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               </Select>
             </Form.Item>
           </Col>
-          
-          <Col span={12}>
-            <Form.Item
-              name="withdrawFee"
-              label="提现手续费"
-            >
-              <InputNumber style={{ width: '100%' }} />
-            </Form.Item>
-          </Col>
-          
           <Col span={12}>
             <Form.Item
               name="minWithdrawAmount"

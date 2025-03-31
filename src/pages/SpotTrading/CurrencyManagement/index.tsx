@@ -2,8 +2,9 @@ import React, { useState, useRef,useEffect } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import {  Button, message, Modal,Switch } from 'antd';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { tenantCurrencyCoinList,saveTenantCurrencyCoin,currencyCoinList,updateCurrencyCoinById } from '@/services/ant-design-pro/spot';
+import { tenantCurrencyCoinList,saveTenantCurrencyCoin,currencyCoinList,updateCurrencyCoinById,adminSaveCurrencyCoin,adminSaveCurrencyCoinExt } from '@/services/ant-design-pro/spot';
 import CurrencyForm from './components/CurrencyForm';
+import ExtendInfoForm, { ExtendInfoFormData } from './components/ExtendInfoForm';
 // 币种类型定义
 type CurrencyItem = {
   id: number;
@@ -31,6 +32,7 @@ const CurrencyManagement: React.FC = () => {
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [formVisible, setFormVisible] = useState<boolean>(false);
+  const [extendInfoVisible, setExtendInfoVisible] = useState<boolean>(false);
   const [currentCurrency, setCurrentCurrency] = useState<CurrencyItem | null>(null);
   const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === "1";
@@ -170,7 +172,14 @@ const CurrencyManagement: React.FC = () => {
     {
       title: '操作',
       valueType: 'option',
-      render: (_, record) => [
+      render: (_, record) => isAdmin ? [
+        <Button key="edit" onClick={() => handleEdit(record)}>
+          编辑
+        </Button>,
+        <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
+          拓展信息增加
+        </Button>
+      ] : [
         <Button key="edit" onClick={() => handleEdit(record)}>
           编辑
         </Button>,
@@ -180,6 +189,9 @@ const CurrencyManagement: React.FC = () => {
         <Button key="detail" onClick={() => handleDetail(record)}>
           币种简介
         </Button>,
+        <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
+          拓展信息
+        </Button>
       ],
     },
   ];
@@ -194,7 +206,8 @@ const CurrencyManagement: React.FC = () => {
 
   const handleEdit = (record: CurrencyItem) => {
     setFormMode('edit');
-    setCurrentCurrency(record);
+    setCurrentCurrency(record.id);
+    setFormVisible(true);
 
   };
 
@@ -213,6 +226,33 @@ const CurrencyManagement: React.FC = () => {
     // 实现查看币种简介逻辑
   };
 
+  const handleExtendInfo = (record: CurrencyItem) => {
+    setCurrentCurrency(record);
+    setExtendInfoVisible(true);
+  };
+
+  const handleExtendInfoSubmit = async (values: ExtendInfoFormData) => {
+    console.log('拓展信息表单提交数据:', values);
+    
+    let res;
+    if(isAdmin){
+      res = await adminSaveCurrencyCoinExt(values);
+    }
+    
+    if(res && res.code==='0'){
+      message.success('拓展信息保存成功');
+    }else if(res){
+      message.error(res.message);
+    }
+    
+    setExtendInfoVisible(false);
+    actionRef.current?.reload();
+  };
+
+  const handleExtendInfoCancel = () => {
+    setExtendInfoVisible(false);
+  };
+
   const handleBatchDelete = () => {
     if (selectedRows.length === 0) {
       message.warning('请选择要删除的币种');
@@ -225,7 +265,12 @@ const CurrencyManagement: React.FC = () => {
   const handleFormSubmit = async (values: CurrencyFormData) => {
     console.log('表单提交数据:', values);
     if (formMode === 'add') {
-      const res = await saveTenantCurrencyCoin(values);
+      let res;
+      if(isAdmin){
+         res = await adminSaveCurrencyCoin(values);
+      }else{
+         res = await saveTenantCurrencyCoin(values);
+      }
       if(res.code==='0'){
         message.success('添加币种成功');
       }else{
@@ -246,8 +291,7 @@ const CurrencyManagement: React.FC = () => {
 
   return (
     <PageContainer>
-
-       {!formVisible ? (
+      {!formVisible ? (
         <ProTable
           headerTitle="币种管理"
           actionRef={actionRef}
@@ -270,15 +314,20 @@ const CurrencyManagement: React.FC = () => {
             pageSize: 10,
           }}
         />
-        ) : (
-          <CurrencyForm
-            initialValues={currentCurrency}
-            onSubmit={handleFormSubmit}
-            onCancel={handleFormCancel}
-          />
-        )}
-       
+      ) : (
+        <CurrencyForm
+          initialValues={currentCurrency}
+          onSubmit={handleFormSubmit}
+          onCancel={handleFormCancel}
+        />
+      )}
       
+      <ExtendInfoForm
+        visible={extendInfoVisible}
+        initialValues={currentCurrency ? { coinId: currentCurrency.id } : null}
+        onSubmit={handleExtendInfoSubmit}
+        onCancel={handleExtendInfoCancel}
+      />
     </PageContainer>
   );
 };

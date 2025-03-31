@@ -160,7 +160,7 @@ const UserLevel: React.FC = () => {
     },
     {
       title: '操作管理员',
-      dataIndex: 'tenantId',
+      dataIndex: 'operatorName',
       key: 'tenantId',
       render: (text: string | null) => text || '-',
     },

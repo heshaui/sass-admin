@@ -158,3 +158,19 @@ export async function currencyCoinList(params?: Record<string, any>) {
     data: params,
   });
 }
+
+// 总后台币种拓展新增
+export async function adminSaveCurrencyCoinExt(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/coin-ext/saveCurrencyCoinExt', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 总后台币种基础信息新增
+export async function adminSaveCurrencyCoin(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/coin/saveCurrencyCoin', {
+    method: 'POST',
+    data: params,
+  });
+}
