@@ -13,8 +13,6 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
   const [withdrawalLimit, setWithdrawalLimit] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState<number>(5);
   const [cryptoDeposit, setCryptoDeposit] = useState<number>(1);
-  const [coin, setCoin] = useState<string>('');
-  const [time, setTime] = useState<number>(0);
 
   // 当record变化时更新表单值
   useEffect(() => {
@@ -23,11 +21,11 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
       
       // 从benefitResps找到对应的配置项
       const cryptoWithdrawalBenefit = record.benefitResps?.find(
-        (item: any) => item.benefitName === "加密货币提现"
+        (item: any) => item.benefitId === 2
       );
       
       const cryptoDepositBenefit = record.benefitResps?.find(
-        (item: any) => item.benefitName === "加密货币充值"
+        (item: any) => item.benefitId === 3
       );
       console.log(cryptoDepositBenefit);
       // 设置加密货币提现状态
@@ -43,8 +41,6 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
       // 设置提现限额
       if (cryptoWithdrawalBenefit?.params?.amountLimit) {
         setWithdrawalLimit(cryptoWithdrawalBenefit.params.amountLimit);
-        setCoin(cryptoWithdrawalBenefit.params.coin);
-        setTime(cryptoWithdrawalBenefit.params.time);
       } else {
         setWithdrawalLimit(70000); // 默认值
       }
@@ -62,7 +58,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
     // 更新加密货币提现配置
     if (record?.benefitResps) {
       const withdrawalBenefit = record.benefitResps.find(
-        (item: any) => item.benefitName === "加密货币提现"
+        (item: any) => item.benefitId ===2
       );
       
       if (withdrawalBenefit) {
@@ -72,15 +68,13 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
           params: {
             ...withdrawalBenefit.params,
             amountLimit: withdrawalLimit,
-            coin: coin,
-            time: time
           }
         });
       }
       
       // 更新加密货币充值配置
       const depositBenefit = record.benefitResps.find(
-        (item: any) => item.benefitName === "加密货币充值"
+        (item: any) => item.benefitId === 3
       );
       
       if (depositBenefit) {
@@ -130,7 +124,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
             onChange={(e) => setWithdrawalLimit(Number(e.target.value))}
             style={{ width: 200 }}
           />
-          <span>{coin}/{time}小时</span>
+          <span>USDT/24小时</span>
         </Space>
       </div>
 
