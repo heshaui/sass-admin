@@ -1,30 +1,42 @@
-import React, { useState, useRef,useEffect } from 'react';
-import { PageContainer,ProTable } from '@ant-design/pro-components';
-import {  Button, message, Modal,Switch } from 'antd';
+import {
+  adminCurrencyCoinExtList,
+  adminSaveCurrencyCoin,
+  adminSaveCurrencyCoinExt,
+  currencyCoinList,
+  saveTenantCurrencyCoin,
+  tenantCurrencyCoinList,
+  adminUpdateCurrencyCoinExtById,
+  adminUpdateCurrencyCoinById
+} from '@/services/ant-design-pro/spot';
+import { EditOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { tenantCurrencyCoinList,saveTenantCurrencyCoin,currencyCoinList,updateCurrencyCoinById,adminSaveCurrencyCoin,adminSaveCurrencyCoinExt } from '@/services/ant-design-pro/spot';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { Button, Descriptions, message, Modal, Space, Spin, Switch } from 'antd';
+import React, { useRef, useState } from 'react';
 import CurrencyForm from './components/CurrencyForm';
 import ExtendInfoForm, { ExtendInfoFormData } from './components/ExtendInfoForm';
 // 币种类型定义
 type CurrencyItem = {
   id: number;
+  coinId: number | string;
   name: string;
   symbol: string;
   logo: string;
   networkType: string;
-  status: 'enabled' | 'disabled';
-  recharge: 'enabled' | 'disabled'; // 充值
-  withdrawal: 'enabled' | 'disabled'; // 提现
+  status: number;
   createdAt: string;
   updatedAt: string;
   sortId?: string; // 排序ID
+  canRecharge:number;
+  canWithdraw:number;
+  canTransfer:number;
+  canAutoWithdraw:number;
 };
-
-
 
 const CurrencyManagement: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [selectedRows, setSelectedRows] = useState<CurrencyItem[]>([]);
+  const [extInfo, setExtInfo] = useState<any>(null);
 
   const [data, setData] = useState<CurrencyItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -35,51 +47,202 @@ const CurrencyManagement: React.FC = () => {
   const [extendInfoVisible, setExtendInfoVisible] = useState<boolean>(false);
   const [currentCurrency, setCurrentCurrency] = useState<CurrencyItem | null>(null);
   const [formMode, setFormMode] = useState<'add' | 'edit'>('add');
-  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === "1";
+  const [extendInfoMode, setExtendInfoMode] = useState<'add' | 'edit'>('add');
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+  const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
+  const [expandLoading, setExpandLoading] = useState<Record<string, boolean>>({});
+  const [expandedData, setExpandedData] = useState<Record<string, any>>({});
 
   const fetchData = async (params: any) => {
     setLoading(true);
 
-    const res = isAdmin ? await currencyCoinList({
-      pageNo: current,
-      pageSize: pageSize,
-    }) : await tenantCurrencyCoinList({
-      pageNo: current,
-      pageSize: pageSize,
-    });
-    if(res.code==='0'){
-    return {
-      data: res.data.list,
-      success: true,
-      total: res.data.count,
-    };
-  }else{
-    message.error(res.message);
-    return {
-      data: [],
-      success: false,
-      total: 0,
-    };
-  }
+    const res = isAdmin
+      ? await currencyCoinList({
+        pageNo: current,
+        pageSize: pageSize,
+      })
+      : await tenantCurrencyCoinList({
+        pageNo: current,
+        pageSize: pageSize,
+      });
+    if (res.code === '0') {
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.count,
+      };
+    } else {
+      message.error(res.message);
+      return {
+        data: [],
+        success: false,
+        total: 0,
+      };
+    }
   };
 
+  // 获取拓展信息
+  const fetchExtendInfo = async (coinId: string | number) => {
+    try {
+      setExpandLoading((prev) => ({ ...prev, [coinId]: true }));
 
+      // 这里替换为实际的API调用
+      const res = await adminCurrencyCoinExtList({
+        coinId: coinId,
+        pageNo: 1,
+        pageSize: 1,
+      });
 
-  
+      if (res.code === '0') {
+        setExpandedData((prev) => ({ ...prev, [coinId]: res.data.list[0] }));
+      } else {
+        message.error(res.message || '获取拓展信息失败');
+      }
+    } catch (error) {
+      console.error('获取拓展信息失败:', error);
+      message.error('获取拓展信息失败');
+    } finally {
+      setExpandLoading((prev) => ({ ...prev, [coinId]: false }));
+    }
+  };
+
+  // 处理添加拓展信息
+  const handleAddExtendInfo = (record: CurrencyItem) => {
+    setCurrentCurrency(record);
+    setExtendInfoMode('add');
+    setExtendInfoVisible(true);
+  };
+
+  // 处理编辑拓展信息按钮点击
+  const handleEditExtendInfo = (record: CurrencyItem, extInfo: any) => {
+    // 设置当前选中的币种
+    setCurrentCurrency(record);
+    setExtInfo(extInfo);
+
+    // 使用扩展信息填充表单的初始值
+    const initialValues = {
+      id: extInfo.id,
+      coinId: record.coinId,
+      protocolId: extInfo.protocolId,
+      mainAddress: extInfo.mainAddress,
+      token: extInfo.token,
+      decimals: extInfo.decimals,
+      status: extInfo.status,
+      withdrawFee: extInfo.withdrawFee,
+      minWithdrawFee: extInfo.minWithdrawFee,
+      confirms: extInfo.confirms,
+    };
+
+    // 设置当前表单初始值，模式为编辑，并显示表单
+    setCurrentCurrency({ ...record, ...initialValues });
+    setExtendInfoMode('edit');
+    setExtendInfoVisible(true);
+  };
+
+  // 渲染展开行
+  const renderExpandedRow = (record: CurrencyItem) => {
+    const extInfo = expandedData[record.coinId];
+
+    if (expandLoading[record.coinId]) {
+      return <Spin tip="加载中..." />;
+    }
+
+    if (!extInfo) {
+      return (
+        <div style={{ padding: 16 }}>
+          <Space>
+            <span>未添加拓展信息</span>
+          </Space>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ position: 'relative', padding: '0 16px' }}>
+        <Descriptions title="币种拓展信息" bordered column={2} size="small">
+          <Descriptions.Item label="协议ID">{extInfo.protocolId}</Descriptions.Item>
+          <Descriptions.Item label="主地址">{extInfo.mainAddress}</Descriptions.Item>
+          <Descriptions.Item label="Token">{extInfo.token}</Descriptions.Item>
+          <Descriptions.Item label="小数位数">{extInfo.decimals}</Descriptions.Item>
+          <Descriptions.Item label="状态">{extInfo.status ? '启用' : '禁用'}</Descriptions.Item>
+          <Descriptions.Item label="提现手续费">{extInfo.withdrawFee}</Descriptions.Item>
+          <Descriptions.Item label="最小提现手续费">{extInfo.minWithdrawFee}</Descriptions.Item>
+          <Descriptions.Item label="确认数">{extInfo.confirms}</Descriptions.Item>
+        </Descriptions>
+
+        <Button
+          type="primary"
+          icon={<EditOutlined />}
+          style={{ position: 'absolute', top: 5, right: 16 }}
+          onClick={() => handleEditExtendInfo(record, extInfo)}
+        >
+          编辑
+        </Button>
+      </div>
+    );
+  };
+
+  // 处理行展开事件
+  const handleExpand = (expanded: boolean, record: CurrencyItem) => {
+    console.log(record);
+    if (expanded) {
+      // 展开行时加载数据
+      fetchExtendInfo(record.coinId);
+      setExpandedRowKeys([record.coinId]);
+    } else {
+      setExpandedRowKeys([]);
+    }
+  };
+
+  const handleSwtich=async(record:CurrencyItem,type:string)=>{
+    let data
+      if(type==='canRecharge'){
+        data={
+          coinId:record.coinId,
+          canRecharge:record.canRecharge===1?0:1
+        }
+      }else if(type==='canWithdraw'){
+        data={
+          coinId:record.coinId,
+          canWithdraw:record.canWithdraw===1?0:1
+        }
+      }else if(type==='canTransfer'){
+        data={
+          coinId:record.coinId,
+          canTransfer:record.canTransfer===1?0:1
+        }
+      }else if(type==='canAutoWithdraw'){
+        data={
+          coinId:record.coinId,
+          canAutoWithdraw:record.canAutoWithdraw===1?0:1
+        }
+      }
+    let res=await adminUpdateCurrencyCoinById(data);
+    if(res.code==='0'){
+      message.success(`${type}成功`);
+      actionRef.current?.reload();
+    }else{
+      message.error(res.message);
+    }
+  }
+
   // 表格列定义
   const columns: ProColumns<CurrencyItem>[] = [
     {
       title: '排序',
       dataIndex: 'sort',
+      search: false,
     },
     {
       title: '币种简称',
       dataIndex: 'coinName',
       valueType: 'text',
+      search: false,
     },
     {
       title: '网络类型',
       dataIndex: 'mianChain',
+      search: false,
       renderText: (text: string) => {
         return text === '1' ? '主链' : 'token';
       },
@@ -87,23 +250,29 @@ const CurrencyManagement: React.FC = () => {
     {
       title: '币种状态',
       dataIndex: 'status',
+      valueEnum:{
+        0:'正常',
+        1:'禁用'
+      },
       renderText: (text: number) => {
         return text === 0 ? '正常' : '禁用';
       },
-
     },
     {
       title: '充值',
       dataIndex: 'canRecharge',
+      valueEnum:{
+        0:'关闭',
+        1:'开启'
+      },
       render: (_, record) => (
         <Switch
-          checked={record.canRecharge===1}
+          checked={record.canRecharge === 1}
           onChange={(checked) => {
             Modal.confirm({
               title: `确定要${checked ? '开启' : '关闭'}充值吗？`,
               onOk: () => {
-                message.success(`充值${checked ? '开启' : '关闭'}成功`);
-                actionRef.current?.reload();
+                handleSwtich(record,'canRecharge');
               },
             });
           }}
@@ -113,15 +282,18 @@ const CurrencyManagement: React.FC = () => {
     {
       title: '提现',
       dataIndex: 'canWithdraw',
+      valueEnum:{
+        0:'关闭',
+        1:'开启'
+      },
       render: (_, record) => (
         <Switch
-          checked={record.canWithdraw===1}
+          checked={record.canWithdraw === 1}
           onChange={(checked) => {
             Modal.confirm({
               title: `确定要${checked ? '开启' : '关闭'}提现吗？`,
               onOk: () => {
-                message.success(`提现${checked ? '开启' : '关闭'}成功`);
-                actionRef.current?.reload();
+                handleSwtich(record,'canWithdraw');
               },
             });
           }}
@@ -131,15 +303,18 @@ const CurrencyManagement: React.FC = () => {
     {
       title: '转账',
       dataIndex: 'canTransfer',
+      valueEnum:{
+        0:'关闭',
+        1:'开启'
+      },
       render: (_, record) => (
         <Switch
-          checked={record.canTransfer===1}
+          checked={record.canTransfer === 1}
           onChange={(checked) => {
             Modal.confirm({
               title: `确定要${checked ? '开启' : '关闭'}转账吗？`,
               onOk: () => {
-                message.success(`转账${checked ? '开启' : '关闭'}成功`);
-                actionRef.current?.reload();
+                handleSwtich(record,'canTransfer');
               },
             });
           }}
@@ -149,15 +324,18 @@ const CurrencyManagement: React.FC = () => {
     {
       title: '自动提币',
       dataIndex: 'canAutoWithdraw',
+      valueEnum:{
+        0:'关闭',
+        1:'开启'
+      },
       render: (_, record) => (
         <Switch
-          checked={record.canAutoWithdraw===1} 
+          checked={record.canAutoWithdraw === 1}
           onChange={(checked) => {
             Modal.confirm({
               title: `确定要${checked ? '开启' : '关闭'}自动提币吗？`,
               onOk: () => {
-                message.success(`自动提币${checked ? '开启' : '关闭'}成功`);
-                actionRef.current?.reload();
+                handleSwtich(record,'canAutoWithdraw');
               },
             });
           }}
@@ -168,31 +346,36 @@ const CurrencyManagement: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       valueType: 'dateTime',
+      search: false,
     },
     {
       title: '操作',
       valueType: 'option',
-      render: (_, record) => isAdmin ? [
-        <Button key="edit" onClick={() => handleEdit(record)}>
-          编辑
-        </Button>,
-        <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
-          拓展信息增加
-        </Button>
-      ] : [
-        <Button key="edit" onClick={() => handleEdit(record)}>
-          编辑
-        </Button>,
-        <Button key="addSameChain" onClick={() => handleAddSameChain(record)}>
-          添加同币异链
-        </Button>,
-        <Button key="detail" onClick={() => handleDetail(record)}>
-          币种简介
-        </Button>,
-        <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
-          拓展信息
-        </Button>
-      ],
+      search: false,
+      render: (_, record) =>
+        isAdmin
+          ? [
+            <Button key="edit" onClick={() => handleEdit(record)}>
+              编辑
+            </Button>,
+            <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
+              拓展信息增加
+            </Button>,
+          ]
+          : [
+            <Button key="edit" onClick={() => handleEdit(record)}>
+              编辑
+            </Button>,
+            <Button key="addSameChain" onClick={() => handleAddSameChain(record)}>
+              添加同币异链
+            </Button>,
+            <Button key="detail" onClick={() => handleDetail(record)}>
+              币种简介
+            </Button>,
+            <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
+              拓展信息
+            </Button>,
+          ],
     },
   ];
 
@@ -201,14 +384,12 @@ const CurrencyManagement: React.FC = () => {
     setFormMode('add');
     setCurrentCurrency(null);
     setFormVisible(true);
-
   };
 
   const handleEdit = (record: CurrencyItem) => {
     setFormMode('edit');
-    setCurrentCurrency(record.id);
+    setCurrentCurrency(record);
     setFormVisible(true);
-
   };
 
   const handlePublish = (record: CurrencyItem) => {
@@ -232,21 +413,43 @@ const CurrencyManagement: React.FC = () => {
   };
 
   const handleExtendInfoSubmit = async (values: ExtendInfoFormData) => {
-    console.log('拓展信息表单提交数据:', values);
-    
+    console.log('拓展信息表单提交数据:', values, '模式:', extendInfoMode);
+
     let res;
-    if(isAdmin){
-      res = await adminSaveCurrencyCoinExt(values);
+    if (extendInfoMode === 'add') {
+      if (isAdmin) {
+        res = await adminSaveCurrencyCoinExt(values);
+      }
+
+      if (res && res.code === '0') {
+        message.success(extendInfoMode === 'add' ? '拓展信息添加成功' : '拓展信息更新成功');
+
+        // 更新已展开行的数据
+        if (expandedRowKeys.length > 0) {
+          const coinId = expandedRowKeys[0];
+          fetchExtendInfo(coinId);
+        }
+      } else if (res) {
+        message.error(res.message);
+      }
+
+      setExtendInfoVisible(false);
+    } else {
+      if (isAdmin) {
+        values.id = extInfo?.id;
+        res = await adminUpdateCurrencyCoinExtById(values);
+      }
+      if (res && res.code === '0') {
+        message.success(extendInfoMode === 'add' ? '拓展信息添加成功' : '拓展信息更新成功');
+
+        // 更新已展开行的数据
+        if (expandedRowKeys.length > 0) {
+          const coinId = expandedRowKeys[0];
+          fetchExtendInfo(coinId);
+        }
+        setExtendInfoVisible(false);
+      }
     }
-    
-    if(res && res.code==='0'){
-      message.success('拓展信息保存成功');
-    }else if(res){
-      message.error(res.message);
-    }
-    
-    setExtendInfoVisible(false);
-    actionRef.current?.reload();
   };
 
   const handleExtendInfoCancel = () => {
@@ -266,18 +469,33 @@ const CurrencyManagement: React.FC = () => {
     console.log('表单提交数据:', values);
     if (formMode === 'add') {
       let res;
-      if(isAdmin){
-         res = await adminSaveCurrencyCoin(values);
-      }else{
-         res = await saveTenantCurrencyCoin(values);
+      if (isAdmin) {
+        res = await adminSaveCurrencyCoin(values);
+      } else {
+        res = await saveTenantCurrencyCoin(values);
       }
-      if(res.code==='0'){
+      if (res.code === '0'&&res.data) {
         message.success('添加币种成功');
-      }else{
+      } else {
         message.error(res.message);
       }
     } else {
-      message.success(`编辑币种成功: ${values.coinName}`);
+      let res;
+      if (isAdmin) {
+        console.log(currentCurrency);
+        let data={
+          coinId:currentCurrency?.coinId,
+          ...values
+        }
+        res = await adminUpdateCurrencyCoinById(data);
+      } 
+      if (res.code === '0'&&res.data) {
+        message.success(`编辑币种成功: ${values.coinName}`);
+      } else {
+        message.error('编辑币种失败');
+      
+      }
+      setFormVisible(false);
     }
 
     // 重新加载数据
@@ -295,20 +513,23 @@ const CurrencyManagement: React.FC = () => {
         <ProTable
           headerTitle="币种管理"
           actionRef={actionRef}
-          rowKey="id"
+          rowKey="coinId"
           request={fetchData}
           columns={columns}
-          toolBarRender={
-            () => [
-              <Button type="primary" onClick={handleAdd}>
-                添加币种
-              </Button>,
-            ]
-          }
+          toolBarRender={() => [
+            <Button type="primary" onClick={handleAdd}>
+              添加币种
+            </Button>,
+          ]}
           rowSelection={{
             onChange: (_, selectedRows) => {
               setSelectedRows(selectedRows);
             },
+          }}
+          expandable={{
+            expandedRowRender: renderExpandedRow,
+            expandedRowKeys,
+            onExpand: handleExpand,
           }}
           pagination={{
             pageSize: 10,
@@ -321,15 +542,16 @@ const CurrencyManagement: React.FC = () => {
           onCancel={handleFormCancel}
         />
       )}
-      
+
       <ExtendInfoForm
         visible={extendInfoVisible}
-        initialValues={currentCurrency ? { coinId: currentCurrency.id } : null}
+        initialValues={currentCurrency}
         onSubmit={handleExtendInfoSubmit}
         onCancel={handleExtendInfoCancel}
+        mode={extendInfoMode}
       />
     </PageContainer>
   );
 };
 
-export default CurrencyManagement; 
+export default CurrencyManagement;

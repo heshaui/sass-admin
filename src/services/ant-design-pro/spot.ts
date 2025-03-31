@@ -126,7 +126,7 @@ export async function saveCurrencyCoin(params?: Record<string, any>) {
 
 
 // 总后台币种修改
-export async function updateCurrencyCoinById(params?: Record<string, any>) {
+export async function adminUpdateCurrencyCoinById(params?: Record<string, any>) {
   return request('/tenant-admin/v1/coin/updateCurrencyCoinById', {
     method: 'POST',
     data: params,
@@ -144,6 +144,7 @@ export async function deleteCurrencyCoinById(params?: Record<string, any>) {
 
 // 总后台币种查询详情
 export async function currencyCoinParams(params?: Record<string, any>) {
+  console.log(params);
   return request(`/tenant-admin/v1/coin/currencyCoinParams?idString=${params.id}`, {
     method: 'POST',
     data: params,
@@ -170,6 +171,23 @@ export async function adminSaveCurrencyCoinExt(params?: Record<string, any>) {
 // 总后台币种基础信息新增
 export async function adminSaveCurrencyCoin(params?: Record<string, any>) {
   return request('/tenant-admin/v1/coin/saveCurrencyCoin', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// 总后台币种拓展列表
+export async function adminCurrencyCoinExtList(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/coin-ext/currencyCoinExtList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 总后台币种拓展修改
+export async function adminUpdateCurrencyCoinExtById(params?: Record<string, any>) {
+  return request('/tenant-admin/v1/coin-ext/updateCurrencyCoinExtById', {
     method: 'POST',
     data: params,
   });

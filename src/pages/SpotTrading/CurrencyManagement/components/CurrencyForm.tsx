@@ -1,8 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { Form, Input, Radio, InputNumber, Select, DatePicker, Button, Card, Row, Col, message } from 'antd';
-import type { FormInstance } from 'antd/es/form';
 import dayjs from 'dayjs';
-import { tenantCurrencyCoinAll } from '@/services/ant-design-pro/spot';
+import { tenantCurrencyCoinAll,currencyCoinParams } from '@/services/ant-design-pro/spot';
 import AvatarUpload from '@/components/AvatarUpload';
 
 
@@ -62,7 +61,24 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
     }
   }
 
+  const getEditInfo = async (coinId:any) => {
+    let data={
+      id:coinId
+    }
+    const res = await currencyCoinParams(data);
+    if(res.code==='0'){
+      console.log(res.data);
+      if (res.data.issuingDate) {
+        res.data.issuingDate = dayjs(res.data.issuingDate);
+      }
+      form.setFieldsValue(res.data);
+    }
+  }
+
   useEffect(() => {
+    if(initialValues){
+      getEditInfo(initialValues.coinId);
+    }
     getCurrencyAll();
   }, []);
   return (
@@ -72,10 +88,10 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
       initialValues={{
         mianChain: 1,
         status: 1,
-        canRecharge: 1,
-        canWithdraw: 1,
+        canRecharge: 0,
+        canWithdraw: 0,
         unitScale: 8,
-        ...initialValues,
+
       }}
     >
       <Card 
@@ -104,7 +120,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             
         
           </Col>
+          { !isAdmin && (
           <Col span={12}>
+
           <Form.Item
               name="chainCoin"
               label="币种"
@@ -126,13 +144,10 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               </Select>
               )
               }
-              {
-                isAdmin && (
-                  <Input placeholder='请输入币种'/>
-                )
-              }
+              
             </Form.Item>
           </Col>
+          )}
           <Col span={12}>
             <Form.Item
               name="coinName"
