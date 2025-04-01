@@ -27,6 +27,7 @@ const BasicConfig: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [coinList,setCoinList]=useState([]);
   const [config,setConfig]=useState('');
+  const [configId,setConfigId]=useState('');
   const [imagesConfig, setImagesConfig] = useState<Record<string, {backgroundImage: string, posterImage: string}>>({
     en_US: { backgroundImage: '', posterImage: '' },
     zh_CN: { backgroundImage: '', posterImage: '' },
@@ -100,7 +101,11 @@ const BasicConfig: React.FC = () => {
   };
 
   const saveConfiguration = async (values: any) => {
-    const res = await saveOrUpdateRewardConfiguration(values);
+    let data={
+      ...values,
+      id:configId
+    }
+    const res = await saveOrUpdateRewardConfiguration(data);
     if (res.code === '0') {
       message.success('配置保存成功');
       setIsEditing(false); // 保存成功后关闭编辑状态
@@ -112,8 +117,10 @@ const BasicConfig: React.FC = () => {
   //获取奖励配置详情
   const getConfigurationDetail = async () => {
     const res = await getRewardConfigurationDetail();
-    console.log(res);
-    form.setFieldsValue(res);
+    if(res.code==='0'){
+      setConfigId(res.data.id);
+      form.setFieldsValue(res.data);
+    }
   };
 
   //获取图片配置详情
@@ -298,8 +305,8 @@ const BasicConfig: React.FC = () => {
             label="是否要求实名"
           >
             <Radio.Group>
-              <Radio value="required">需要实名</Radio>
-              <Radio value="not_required">无需实名</Radio>
+              <Radio value="1">需要实名</Radio>
+              <Radio value="0">无需实名</Radio>
             </Radio.Group>
           </Form.Item>
 

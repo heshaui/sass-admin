@@ -207,11 +207,11 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
         </div>
 
         {/* 显示驳回原因 */}
-        {record?.authStatus === 0 && record?.rejectReason && (
+        {record?.authStatus === 0 && record?.remark && (
           <div className={styles.rejectReasonSection}>
             <h3>拒绝原因：</h3>
             <div className={styles.rejectReasonContent}>
-              {record.rejectReason.split('&&').map((reason, index) => (
+              {record.remark.split('&&').map((reason:string, index:number) => (
                 <div key={index} className={styles.rejectReasonItem}>
                   <span className={styles.bulletPoint}>•</span> {reason}
                 </div>
