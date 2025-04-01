@@ -4,7 +4,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, message, Switch } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch, ProFormItem } from '@ant-design/pro-components';
-import { queryRateList, updateRate, queryTenantRateList,updateExchangeRateById } from '../../services/ant-design-pro/Rate';
+import { queryRateList, updateRate, queryTenantRateList,updateExchangeRateById,updateTenantExchangeRate } from '../../services/ant-design-pro/Rate';
 import AvatarUpload from "@/components/AvatarUpload/index";
 
 const Rate: React.FC = () => {
@@ -16,7 +16,7 @@ const Rate: React.FC = () => {
   const [formRef] = useState(() => createRef<FormInstance>());
 
   const merchantUpdateRate=async(id:string,status:number)=>{
-    const res= await updateRate({
+    const res= await updateTenantExchangeRate({
       id,
       status,
     });
@@ -115,7 +115,7 @@ const Rate: React.FC = () => {
     }] : []),
 
     ...(!isAdmin ? [{
-      title: '是否显示',
+      title: '是否启用',
       dataIndex: 'status',
       key: 'status',
       render: (_: any, record: any) => [
@@ -125,10 +125,11 @@ const Rate: React.FC = () => {
     {
       title: '操作',
       valueType: 'option',
-      render: (_, record) => [
+      render: (_, record) => [isAdmin?
         <a key="edit" onClick={() => handleEdit(record)} style={{ color: '#1890ff' }}>
           编辑
-        </a>,
+        </a>:
+       ''
       ],
     },
   ];

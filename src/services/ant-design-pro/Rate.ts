@@ -28,3 +28,11 @@ export async function updateExchangeRateById(params: any) {
     data: params,
   });
 }
+
+
+export async function updateTenantExchangeRate(params: any) {
+  return request('/tenant/v1/tenantExchangeRate/updateExchangeRate', {
+    method: 'POST',
+    data: params,
+  });
+}
