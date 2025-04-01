@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Form, Input, Button, Select, InputNumber, message, Table, Space, Tabs } from 'antd';
-import type { TabsProps } from 'antd';
-import { PlusOutlined, MinusOutlined } from '@ant-design/icons';
+import {  Form,Button, Select,message } from 'antd';
+import { ProTable } from '@ant-design/pro-components';
+import type { ProColumns } from '@ant-design/pro-components';
 
 const { Option } = Select;
 
@@ -22,153 +22,62 @@ const AssetAdjustment: React.FC = () => {
     }, 1000);
   };
 
-  const items: TabsProps['items'] = [
-    {
-      key: 'increase',
-      label: '增加资产',
-      icon: <PlusOutlined />,
-      children: (
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          initialValues={{ operation: 'increase' }}
-        >
-          <Form.Item name="operation" hidden>
-            <Input />
-          </Form.Item>
-          
-          <Form.Item
-            name="userId"
-            label="用户ID"
-            rules={[{ required: true, message: '请输入用户ID' }]}
-          >
-            <Input placeholder="请输入用户ID或用户名" />
-          </Form.Item>
-          
-          <Form.Item
-            name="currency"
-            label="币种"
-            rules={[{ required: true, message: '请选择币种' }]}
-          >
-            <Select placeholder="请选择币种">
-              <Option value="BTC">BTC</Option>
-              <Option value="ETH">ETH</Option>
-              <Option value="USDT">USDT</Option>
-            </Select>
-          </Form.Item>
-          
-          <Form.Item
-            name="amount"
-            label="数量"
-            rules={[{ required: true, message: '请输入数量' }]}
-          >
-            <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入增加数量" />
-          </Form.Item>
-          
-          <Form.Item
-            name="reason"
-            label="原因"
-            rules={[{ required: true, message: '请输入原因' }]}
-          >
-            <Input.TextArea rows={4} placeholder="请输入调整原因" />
-          </Form.Item>
-          
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              提交
-            </Button>
-          </Form.Item>
-        </Form>
-      ),
+  // 定义ProTable的列
+  const columns: ProColumns[] = [
+    { title: '编号', dataIndex: 'id', key: 'id', search: false },
+    { 
+      title: '币种', 
+      dataIndex: 'currency', 
+      key: 'currency',
+      valueEnum: {
+        'BTC': { text: 'BTC' },
+        'ETH': { text: 'ETH' },
+        'USDT': { text: 'USDT' },
+      },
     },
-    {
-      key: 'decrease',
-      label: '减少资产',
-      icon: <MinusOutlined />,
-      children: (
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={onFinish}
-          initialValues={{ operation: 'decrease' }}
-        >
-          <Form.Item name="operation" hidden>
-            <Input />
-          </Form.Item>
-          
-          <Form.Item
-            name="userId"
-            label="用户ID"
-            rules={[{ required: true, message: '请输入用户ID' }]}
-          >
-            <Input placeholder="请输入用户ID或用户名" />
-          </Form.Item>
-          
-          <Form.Item
-            name="currency"
-            label="币种"
-            rules={[{ required: true, message: '请选择币种' }]}
-          >
-            <Select placeholder="请选择币种">
-              <Option value="BTC">BTC</Option>
-              <Option value="ETH">ETH</Option>
-              <Option value="USDT">USDT</Option>
-            </Select>
-          </Form.Item>
-          
-          <Form.Item
-            name="amount"
-            label="数量"
-            rules={[{ required: true, message: '请输入数量' }]}
-          >
-            <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入减少数量" />
-          </Form.Item>
-          
-          <Form.Item
-            name="reason"
-            label="原因"
-            rules={[{ required: true, message: '请输入原因' }]}
-          >
-            <Input.TextArea rows={4} placeholder="请输入调整原因" />
-          </Form.Item>
-          
-          <Form.Item>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              提交
-            </Button>
-          </Form.Item>
-        </Form>
-      ),
+    { title: '金额', dataIndex: 'amount', key: 'amount', search: false },
+    { title: '备注', dataIndex: 'reason', key: 'reason' },
+    { title: '操作人', dataIndex: 'operator', key: 'operator' },
+    { 
+      title: '时间', 
+      dataIndex: 'operateTime', 
+      key: 'operateTime',
+      valueType: 'dateTime',
     },
-    {
-      key: 'history',
-      label: '操作记录',
-      children: (
-        <Table
-          columns={[
-            { title: '操作ID', dataIndex: 'id', key: 'id' },
-            { title: '用户ID', dataIndex: 'userId', key: 'userId' },
-            { title: '操作类型', dataIndex: 'type', key: 'type' },
-            { title: '币种', dataIndex: 'currency', key: 'currency' },
-            { title: '数量', dataIndex: 'amount', key: 'amount' },
-            { title: '原因', dataIndex: 'reason', key: 'reason' },
-            { title: '操作人', dataIndex: 'operator', key: 'operator' },
-            { title: '操作时间', dataIndex: 'operateTime', key: 'operateTime' },
-          ]} 
-          dataSource={[]} 
-          rowKey="id"
-          pagination={{ pageSize: 10 }}
-        />
-      ),
-    },
+  ];
+
+  // 模拟数据
+  const mockData = [
+    { id: 10, currency: 'BTC', amount: '0.5', reason: '系统奖励', operator: '管理员', operateTime: '2023-06-15 10:30:45' },
+    { id: 9, currency: 'ETH', amount: '2.0', reason: '活动奖励', operator: '管理员', operateTime: '2023-06-14 15:20:30' },
+    // 可以添加更多模拟数据
   ];
 
   return (
     <PageContainer>
-      <Card>
-        <Tabs defaultActiveKey="increase" items={items} />
-      </Card>
+      <ProTable
+        columns={columns}
+        request={async (params, sorter, filter) => {
+          // 这里可以替换为实际的API请求
+          return {
+            data: mockData,
+            success: true,
+            total: mockData.length,
+          };
+        }}
+        rowKey="id"
+        pagination={{
+          pageSize: 10,
+        }}
+        toolBarRender={() => [
+          <Button key="button" type="primary">
+            增减操作
+          </Button>,
+        ]}
+        search={{
+          labelWidth: 'auto',
+        }}
+      />
     </PageContainer>
   );
 };

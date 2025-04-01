@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Card, Input, DatePicker } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
-
+import { getGrantRecordList } from '@/services/ant-design-pro/inviteFriends';
 const { RangePicker } = DatePicker;
 
 interface RewardRecord {
@@ -21,55 +21,25 @@ interface RewardRecord {
   distributionTime: string;
 }
 
-const mockData: RewardRecord[] = [
-  {
-    key: '1',
-    serialNumber: 3,
-    uid: '123123',
-    accountNumber: '123*456',
-    inviterId: '789456',
-    orderId: '123',
-    fee: '1 USDT',
-    commissionRate: '20%',
-    commissionAmount: '0.2 USDT',
-    actualCommissionAmount: '60 BITT',
-    usdtValue: 1.01,
-    distributionType: '手动',
-    distributionTime: '2022-12-16 12:12:12',
-  },
-  {
-    key: '2',
-    serialNumber: 2,
-    uid: '123123',
-    accountNumber: '123*456',
-    inviterId: '789456',
-    orderId: '123',
-    fee: '1 TRX',
-    commissionRate: '20%',
-    commissionAmount: '0.2 TRX',
-    actualCommissionAmount: '60 BITT',
-    usdtValue: 5.01,
-    distributionType: '自动',
-    distributionTime: '2022-12-16 12:12:12',
-  },
-  {
-    key: '3',
-    serialNumber: 1,
-    uid: '123123',
-    accountNumber: '123*456',
-    inviterId: '789456',
-    orderId: '123',
-    fee: '1 TRX',
-    commissionRate: '20%',
-    commissionAmount: '0.2 TRX',
-    actualCommissionAmount: '52.03 BITT',
-    usdtValue: 5.21,
-    distributionType: '自动',
-    distributionTime: '2022-12-16 12:12:12',
-  },
-];
 
 const RewardRecords: React.FC = () => {
+
+
+  const getList=async(params:any)=>{
+    let data={
+      pageNo:params.current,
+      pageSize:params.pageSize,
+    }
+    const res=await getGrantRecordList(data);
+    if(res.code==='0'){
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.total,
+      }
+    }
+  }
+  
   const columns: ProColumns<RewardRecord>[] = [
     {
       title: '编号',
@@ -161,22 +131,12 @@ const RewardRecords: React.FC = () => {
     <PageContainer title="发放记录">
       <ProTable<RewardRecord>
         columns={columns}
-        dataSource={mockData}
         rowKey="key"
         pagination={{
           pageSize: 10,
         }}
         headerTitle="发放记录"
-        request={async (params) => {
-          console.log(params);
-          // 这里应该是实际的API请求
-          // 现在使用mockData模拟
-          return {
-            data: mockData,
-            success: true,
-            total: mockData.length,
-          };
-        }}
+        request={getList}
       />
     </PageContainer>
   );

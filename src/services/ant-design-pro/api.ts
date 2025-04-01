@@ -154,7 +154,7 @@ export async function uploadFile(file: File, options?: { [key: string]: any }) {
 
 // 国家区号
 export async function selectHomeCountryList(options?: { [key: string]: any }) {
-  return request('/tenant/v1/country/selectHomeCountryList', {
+  return request(isAdmin?'/tenant-admin/v1/country/selectHomeCountryList':'/tenant/v1/country/selectHomeCountryList', {
     method: 'GET',
     ...(options || {}),
   });

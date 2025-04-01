@@ -47,6 +47,39 @@ export async function getImageConfigurationDetail() {
 export async function getUserInviteDetailList(params: any) {
   return request('/tenant/v1/userInviteDetailList', {
     method: 'POST',
-    params,
+    data: params,
+  });
+}
+
+
+
+/**
+ * 获取币种列表
+ */
+export async function getCurrencyCoinList(params: any) {
+  return request('/tenant/v1/coin/currencyCoinList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+
+
+
+export async function getGrantRecordList(params: any) {
+  return request('/tenant/v1/grantRecordList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+
+// /tenant/v1/fundAccountsList
+export async function getFundAccountsList(params: any) {
+  return request('/tenant/v1/fundAccountsList', {
+    method: 'POST',
+    data: params,
   });
 }

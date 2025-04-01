@@ -77,6 +77,11 @@ export default [
         name: 'allocation',
         component: './Merchant/Allocation',
       },
+      {
+        path: '/merchant/account',
+        name: 'account',
+        component: './Merchant/Account',
+      },
     ],
   },
   {
@@ -321,6 +326,11 @@ export default [
         path: '/funds-tools/transfer-tool',
         name: 'transferTool',
         component: './FundsTools/TransferTool',
+      },
+      {
+        path: '/funds-tools/transfer-records',
+        name: 'transferRecords',
+        component: './FundsTools/TransferRecords',
       },
       {
         path: '/funds-tools',

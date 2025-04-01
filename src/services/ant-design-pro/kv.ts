@@ -85,7 +85,6 @@ export async function updateTenantKv(data: any) {
 export async function getTenantKvParams(params: any) {
   return request('/tenant/v1/tenantKeyValueParams?idString='+params.keyValue, {
     method: 'POST',
-    data: params,
   });
 } 
 

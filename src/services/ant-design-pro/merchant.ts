@@ -238,7 +238,6 @@ export async function saveTenant(
   }
 
 
-
   export async function updateTenantPermissionsById(
     body:API.TenantPermissionsVo,
     options?: { [key: string]: any },
@@ -350,7 +349,80 @@ export async function saveTenant(
   }
 
 
+  // 钱包类型列表
+  export async function walletTypeList(
+    body: API.WalletTypeVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.WalletType>('/tenant-admin/v1/wallet-type/walletTypeList', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
 
+  // 钱包类型参数
+  export async function walletTypeParams(
+    body: API.WalletTypeVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.WalletType>('/tenant-admin/v1/wallet-type/walletTypeParams?idString='+body, {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+  // 更新钱包类型
+  export async function updateWalletTypeById(
+    body: API.WalletTypeVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.WalletType>('/tenant-admin/v1/wallet-type/updateWalletTypeById', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+  // 保存钱包类型
+  export async function saveWalletType(
+    body: API.WalletTypeVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.WalletType>('/tenant-admin/v1/wallet-type/saveWalletType', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+
+  // 删除钱包类型
+  export async function deleteWalletTypeById(
+    body: API.WalletTypeVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.WalletType>('/tenant-admin/v1/wallet-type/deleteWalletTypeById?idString='+body, {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
 
 
   

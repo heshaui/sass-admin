@@ -12,10 +12,11 @@ import {
   Radio, 
 } from 'antd';
 
-import { getRewardConfigurationDetail,getUserInviteDetailList,getImageConfigurationDetail,saveOrUpdateRewardConfiguration,saveOrUpdateImageConfiguration} from '@/services/ant-design-pro/inviteFriends';
+import { getRewardConfigurationDetail,getCurrencyCoinList,getUserInviteDetailList,getImageConfigurationDetail,saveOrUpdateRewardConfiguration,saveOrUpdateImageConfiguration,getFundAccountsList} from '@/services/ant-design-pro/inviteFriends';
 import LanguageSelector from '@/components/LanguageSelector';
 import type { ProColumns } from '@ant-design/pro-components';
 import AvatarUpload from "@/components/AvatarUpload/index";
+import { getTenantKeyParams,updateValue } from '@/services/ant-design-pro/kv';
 
 const { Option } = Select;
 
@@ -24,11 +25,33 @@ const BasicConfig: React.FC = () => {
   const [form] = Form.useForm();
   const [language, setLanguage] = useState('en_US');
   const [isEditing, setIsEditing] = useState(false);
+  const [coinList,setCoinList]=useState([]);
+  const [config,setConfig]=useState('');
   const [imagesConfig, setImagesConfig] = useState<Record<string, {backgroundImage: string, posterImage: string}>>({
     en_US: { backgroundImage: '', posterImage: '' },
     zh_CN: { backgroundImage: '', posterImage: '' },
     // 可以添加更多语言
   });
+
+
+  const getCoin=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    const res=await getCurrencyCoinList(data);
+    if(res.code==='0'){
+      setCoinList(res.data.list);
+    }
+
+  }
+
+  const getConfig=async()=>{
+    const res=await getTenantKeyParams({key:'account_configuration'});
+    if(res.code==='0'){
+      setConfig(res.data.keyValue);
+    }
+  }
 
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
@@ -116,9 +139,28 @@ const BasicConfig: React.FC = () => {
 
   //获取用户邀请详情列表
   const getUserList = async () => {
-    const res = await getUserInviteDetailList();
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    const res = await getUserInviteDetailList(data);
     console.log(res);
   };
+
+  const getFundAccounts=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    const res = await getFundAccountsList(data);
+    if(res.code==='0'){
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.total,
+      }
+    }
+  }
 
   const onFinish = (values: any) => {
     console.log('表单提交的值：', values);
@@ -126,6 +168,8 @@ const BasicConfig: React.FC = () => {
   };
 
   useEffect(() => {
+    getCoin();
+    getConfig();
     getConfigurationDetail();
     getUserList();
     getImageDetail();
@@ -135,61 +179,33 @@ const BasicConfig: React.FC = () => {
   const columns: ProColumns[] = [
     {
       title: '币种',
-      dataIndex: 'currency',
-      valueType: 'text',
+      dataIndex: 'coinName',
     },
     {
       title: '账户可用',
-      dataIndex: 'available',
-      valueType: 'money',
+      dataIndex: 'balance',
     },
     {
       title: '状态',
-      dataIndex: 'status',
-      valueType: 'select',
-      valueEnum: {
-        using: { text: '使用中', status: 'Success' },
-        unused: { text: '未使用', status: 'Default' },
-      },
+      dataIndex: 'isLock',
+      render: (text:number) => {
+        return text===0?'未锁定':'锁定'
+      }
     },
     {
       title: '添加时间',
-      dataIndex: 'addTime',
+      dataIndex: 'createTime',
       valueType: 'dateTime',
     },
     {
       title: '操作',
       valueType: 'option',
       render: (_, record) => [
-        <a key="records" href="#">发放记录</a>,
+        <a key="records" href="/invite-friends/reward-records">发放记录</a>,
       ],
     },
   ];
 
-  // 模拟资金账户列表数据
-  const accountListData = [
-    {
-      id: '1',
-      currency: 'USDT',
-      available: 210.00,
-      status: 'using',
-      addTime: '2025-02-12 12:12:12',
-    },
-    {
-      id: '2',
-      currency: 'TRX',
-      available: 210.00,
-      status: 'unused',
-      addTime: '2024-02-12 12:12:12',
-    },
-    {
-      id: '3',
-      currency: 'BTC',
-      available: 210.00,
-      status: 'unused',
-      addTime: '2024-02-12 12:12:12',
-    },
-  ];
 
   return (
     <PageContainer title="邀请好友基础配置">
@@ -214,7 +230,14 @@ const BasicConfig: React.FC = () => {
           label="是否开启"
           valuePropName="checked"
         >
-          <Switch />
+          <Switch checked={config==='1'} onChange={ async (checked)=>{
+           const res= await updateValue({keyProperty:'account_configuration',keyValue:checked?'1':'0'});
+           if(res.code==='0'){
+            message.success('配置保存成功');
+           }else{
+            message.error(res.message);
+           }
+          }} />
         </Form.Item>
         <div className="tips">
           <p>Tips:</p>
@@ -232,32 +255,22 @@ const BasicConfig: React.FC = () => {
           form={form}
           layout="vertical"
           onFinish={saveConfiguration}
-          initialValues={{
-            enabled: true,
-            inviteReward: 10,
-            inviteeReward: 5,
-            returnCurrency: 'USDT',
-            returnRatio: 20,
-            validityPeriod: 14,
-            minValue: 50,
-            realNameRequired: 'required'
-          }}
           disabled={!isEditing}
         >
           <Form.Item
-            name="returnCurrency"
+            name="coinId"
             label="返佣返币币种"
             rules={[{ required: true, message: '请选择返佣币种' }]}
           >
             <Select style={{ width: 200 }}>
-              <Option value="USDT">USDT</Option>
-              <Option value="TRX">TRX</Option>
-              <Option value="BTC">BTC</Option>
+              {coinList.map((item:any)=>(
+                <Option value={item.coinId} key={item.coinId}>{item.coinName}</Option>
+              ))}
             </Select>
           </Form.Item>
           
           <Form.Item
-            name="returnRatio"
+            name="rebateRatio"
             label="返佣比例"
             rules={[{ required: true, message: '请输入返佣比例' }]}
           >
@@ -265,7 +278,7 @@ const BasicConfig: React.FC = () => {
           </Form.Item>
           
           <Form.Item
-            name="validityPeriod"
+            name="validTime"
             label="任务有效期限:被邀请用户注册"
             rules={[{ required: true, message: '请输入有效期限' }]}
           >
@@ -273,7 +286,7 @@ const BasicConfig: React.FC = () => {
           </Form.Item>
           
           <Form.Item
-            name="minValue"
+            name="rechargeLimit"
             label="充值：最小充值不低于"
             rules={[{ required: true, message: '请输入最小充值金额' }]}
           >
@@ -281,7 +294,7 @@ const BasicConfig: React.FC = () => {
           </Form.Item>
           
           <Form.Item
-            name="realNameRequired"
+            name="isRealname"
             label="是否要求实名"
           >
             <Radio.Group>
@@ -331,9 +344,9 @@ const BasicConfig: React.FC = () => {
       <Card title="资金账户列表">
         <ProTable
           columns={columns}
-          dataSource={accountListData}
           rowKey="id"
           search={false}
+          request={getFundAccounts}
           pagination={{
             showQuickJumper: true,
             pageSize: 10,

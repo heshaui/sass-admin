@@ -2,7 +2,7 @@ import React from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Card, Button, Tag, Space } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
-
+import { fetchWithdrawDepositList } from '@/services/ant-design-pro/depositWithdraw';
 interface WithdrawRecord {
   key: string;
   orderNo: string;
@@ -22,91 +22,24 @@ interface WithdrawRecord {
 }
 
 const WithdrawManage: React.FC = () => {
-  // 模拟数据
-  const mockData: WithdrawRecord[] = [
-    {
-      key: '1',
-      orderNo: '0003',
-      userId: '741852',
-      coinType: 'USDT',
-      network: 'ERC20',
-      amount: 20.00,
-      fee: 1,
-      actualAmount: 19.00,
-      minerFee: '0.0001ETH',
-      address: '这是一个地址',
-      txId: '-',
-      riskLevel: 7,
-      riskDesc: '这是一个风控原因XXXX',
-      status: '待审核',
-      withdrawTime: '2022-12-12 12:12:12',
-    },
-    {
-      key: '2',
-      orderNo: '0002',
-      userId: '936685',
-      coinType: 'TRX',
-      network: 'TRX',
-      amount: 20.00,
-      fee: 1,
-      actualAmount: 0.3214,
-      minerFee: '1.00TRX',
-      address: '这是一个地址',
-      txId: '-',
-      riskLevel: 5,
-      riskDesc: '这是一个风控原因',
-      status: '已拒绝',
-      withdrawTime: '2022-12-12 12:12:12',
-    },
-    {
-      key: '3',
-      orderNo: '0001',
-      userId: '852147',
-      coinType: 'USDT',
-      network: 'TRC20',
-      amount: 20.00,
-      fee: 1,
-      actualAmount: 19.00,
-      minerFee: '0.0001TRX',
-      address: '这是一个地址',
-      txId: '这是一个TxID',
-      riskLevel: 0,
-      riskDesc: '-',
-      status: '完成',
-      withdrawTime: '2022-12-12 12:12:12',
-    },
-    {
-      key: '4',
-      orderNo: '0003',
-      userId: '741852',
-      coinType: 'USDT',
-      network: 'ERC20',
-      amount: 20.00,
-      fee: 1,
-      actualAmount: 19.00,
-      minerFee: '0.0001ETH',
-      address: '这是一个地址',
-      txId: '-',
-      riskLevel: 0,
-      riskDesc: '-',
-      status: '已撤销',
-      withdrawTime: '2022-12-12 12:12:12',
-    },
-  ];
 
-  // 模拟请求函数
+
+
+
   const fetchWithdrawData = async (params: any) => {
-    console.log('查询参数:', params);
-    // 这里应该是真实的API调用
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          data: mockData,
-          success: true,
-          total: mockData.length,
-        });
-      }, 500);
-    });
+    let data={
+      pageNo:params.current,
+      pageSize:params.pageSize,
+    }
+    const res = await fetchWithdrawDepositList(data);
+    if(res.code==='0'){
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.total,
+      }
+    }
+    
   };
 
   const columns: ProColumns<WithdrawRecord>[] = [

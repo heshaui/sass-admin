@@ -16,82 +16,54 @@ interface InviteRecord {
   distributionStatus: '已发放' | '未发放';
 }
 
-const mockData: InviteRecord[] = [
-  {
-    key: '1',
-    serialNumber: 3,
-    uid: '123123',
-    registrationAccount: '123*456',
-    inviteAID: '789456',
-    registrationTime: '2022-12-16 12:12:12',
-    rechargeAmount: 12.03,
-    invitationStatus: '未成功',
-    distributionStatus: '未发放',
-  },
-  {
-    key: '2',
-    serialNumber: 2,
-    uid: '123123',
-    registrationAccount: '123*456',
-    inviteAID: '789456',
-    registrationTime: '2022-12-16 12:12:12',
-    rechargeAmount: 50.00,
-    invitationStatus: '成功',
-    distributionStatus: '已发放',
-  },
-  {
-    key: '3',
-    serialNumber: 2,
-    uid: '123123',
-    registrationAccount: '123*456',
-    inviteAID: '789456',
-    registrationTime: '2022-12-16 12:12:12',
-    rechargeAmount: 52.03,
-    invitationStatus: '成功',
-    distributionStatus: '未发放',
-  },
-];
+
 
 const InviteRecords: React.FC = () => {
   const [userList, setUserList] = useState<InviteRecord[]>([]);
 
   //获取用户邀请详情列表
-  const getUserList = async () => {
-    const res = await getUserInviteDetailList();
+  const getUserList = async (params:any) => {
+    let data={
+      pageNo:params.current,
+      pageSize:params.pageSize,
+    }
+    const res = await getUserInviteDetailList(data);
     if(res.code === '0'){
-      setUserList(res.data);
+      return {
+        data: res.data.list,
+        success: true,
     }
   };
+}
 
   const columns: ProColumns<InviteRecord>[] = [
     {
       title: '编号',
-      dataIndex: 'serialNumber',
-      key: 'serialNumber',
+      dataIndex: 'id',
+      key: 'id',
       search: false,
     },
     {
       title: 'UID',
-      dataIndex: 'uid',
-      key: 'uid',
+      dataIndex: 'userId',
+      key: 'userId',
     },
     {
       title: '注册账号',
-      dataIndex: 'registrationAccount',
-      key: 'registrationAccount',
+      dataIndex: 'account',
+      key: 'account',
       search: false,
     },
     {
       title: '邀请AID',
-      dataIndex: 'inviteAID',
-      key: 'inviteAID',
+      dataIndex: 'parentUserId',
+      key: 'parentUserId',
     },
     {
       title: '注册时间',
-      dataIndex: 'registrationTime',
-      key: 'registrationTime',
+      dataIndex: 'createTime',
+      key: 'createTime',
       valueType: 'dateTime',
-      sorter: (a, b) => a.registrationTime.localeCompare(b.registrationTime),
     },
     {
       title: '14D累计充值USDT',
@@ -101,21 +73,13 @@ const InviteRecords: React.FC = () => {
     },
     {
       title: '邀请状态',
-      dataIndex: 'invitationStatus',
-      key: 'invitationStatus',
-      valueEnum: {
-        成功: { text: '成功', status: 'Success' },
-        未成功: { text: '未成功', status: 'Error' },
-      },
+      dataIndex: 'inviteStatus',
+      key: 'inviteStatus',
     },
     {
       title: '发放状态',
-      dataIndex: 'distributionStatus',
-      key: 'distributionStatus',
-      valueEnum: {
-        已发放: { text: '已发放', status: 'Success' },
-        未发放: { text: '未发放', status: 'Default' },
-      },
+      dataIndex: 'distributeStatus',
+      key: 'distributeStatus',
     },
     {
       title: '操作',
@@ -135,18 +99,18 @@ const InviteRecords: React.FC = () => {
   ];
 
   useEffect(() => {
-    getUserList();
+
   }, []);
   return (
     <PageContainer>
       <ProTable<InviteRecord>
         columns={columns}
-        dataSource={userList}
         rowKey="key"
         pagination={{ pageSize: 10 }}
         search={{
           labelWidth: 'auto',
         }}
+        request={getUserList}
         dateFormatter="string"
       />
     </PageContainer>

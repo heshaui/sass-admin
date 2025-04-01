@@ -182,3 +182,31 @@ export async function relieveGoogle(params: RelieveGoogleParams) {
     data: params,
   });
 }
+
+
+// 用户资产
+export async function userWalletList(params: any) {
+  return request(isAdmin ?'/tenant-admin/v1/user/userWalletList' :'/tenant/v1/userWalletList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// 用户流水
+export async function userTransactionLogList(params: any) {
+  return request(isAdmin ?'/tenant-admin/v1/user/userTransactionLogList' :'/tenant/v1/userTransactionLogList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+
+export async function gatewayAccessLogList(params: any) {
+  return request(isAdmin ?'/tenant-admin/v1/user/gatewayAccessLogList' :'/tenant/v1/gatewayAccessLogList', {
+    method: 'POST',
+    data: params,
+  });
+}
+

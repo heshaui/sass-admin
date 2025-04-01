@@ -20,7 +20,6 @@ const UserManagement: React.FC = () => {
       const response = await getUserList({
         pageNo: params.current,
         pageSize: params.pageSize,
-        tenantId: '1002',
         ...params
       });
       setLoading(false);

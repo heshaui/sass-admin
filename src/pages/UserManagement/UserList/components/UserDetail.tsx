@@ -13,7 +13,13 @@ import { selectHomeCountryList } from '@/services/ant-design-pro/api';
 import TextArea from 'antd/es/input/TextArea';
 import GoogleCode from '@/components/GoogleCode';
 import dayjs from 'dayjs';
+import Asset from './Asset';
+import UserTransaction from './UserTransaction';
+import Reconciliation from './Reconciliation';
+import Log from './log';
+
 const { Option } = Select;
+
 
 interface UserDetailProps {
   visible: boolean;
@@ -538,7 +544,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           </Descriptions.Item>
         </Descriptions>
         <Tabs>
-          <Tabs.TabPane tab="操作日志" key="1">
+        <Tabs.TabPane tab="资产" key="1">
+          <Asset userId={userId} />
+        </Tabs.TabPane>
+          <Tabs.TabPane tab="流水" key="2">
+            <UserTransaction userId={userId} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="对账" key="3">
+            <Reconciliation userId={userId} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="日志" key="4">
+            <Log userId={userId} />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="操作日志" key="5">
             <ProTable
               columns={columns}
               rowKey="id"
@@ -553,6 +571,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
               request={getLog}
             />
           </Tabs.TabPane>
+          
         </Tabs>
       </Card>
 
