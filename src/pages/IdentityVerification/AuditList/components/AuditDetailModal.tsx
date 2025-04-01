@@ -106,7 +106,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
       await updateUserIdentityVerificationById({
         id: record.id,
         authStatus: '0',
-        rejectReason: rejectReason.trim(),
+        remark: rejectReason.trim(),
       });
 
       setRejectModalVisible(false);

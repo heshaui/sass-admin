@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import {  Form,Button, Select,message } from 'antd';
+import { Form, Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
-
-const { Option } = Select;
+import AssetAdjustmentForm from './components/AssetAdjustmentForm';
 
 const AssetAdjustment: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
+  const [formVisible, setFormVisible] = useState<boolean>(false);
 
   const onFinish = (values: any) => {
     setLoading(true);
@@ -20,6 +20,12 @@ const AssetAdjustment: React.FC = () => {
       form.resetFields();
       setLoading(false);
     }, 1000);
+  };
+
+  const handleFormSubmit = (values: any) => {
+    console.log('表单提交数据:', values);
+    message.success('资产调整操作已提交');
+    setFormVisible(false);
   };
 
   // 定义ProTable的列
@@ -70,13 +76,23 @@ const AssetAdjustment: React.FC = () => {
           pageSize: 10,
         }}
         toolBarRender={() => [
-          <Button key="button" type="primary">
+          <Button 
+            key="button" 
+            type="primary" 
+            onClick={() => setFormVisible(true)}
+          >
             增减操作
           </Button>,
         ]}
         search={{
           labelWidth: 'auto',
         }}
+      />
+      
+      <AssetAdjustmentForm
+        visible={formVisible}
+        onCancel={() => setFormVisible(false)}
+        onSubmit={handleFormSubmit}
       />
     </PageContainer>
   );

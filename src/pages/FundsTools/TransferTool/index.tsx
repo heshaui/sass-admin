@@ -74,7 +74,7 @@ const TransferTool: React.FC = () => {
             >
               <Select placeholder="请选择转出账户">
                 {walletList.map((item: any) => (
-                  <Option key={item.id} value={item.id}>{item.name}</Option>
+                  <Option key={item.id} value={item.id}>{item.walletTypeDefeat}</Option>
                 ))}
               </Select>
             </Form.Item>
