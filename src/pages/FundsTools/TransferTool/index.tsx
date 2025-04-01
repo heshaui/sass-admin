@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Button, Select, InputNumber, message, Table, Divider } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
+import { walletTypeList } from '@/services/ant-design-pro/fundsTools';
 
 const { Option } = Select;
 
@@ -10,6 +11,14 @@ const TransferTool: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [transferRecords, setTransferRecords] = useState<any[]>([]);
   const [availableBalance, setAvailableBalance] = useState<number>(1000);
+  const [walletList, setWalletList] = useState<any[]>([]);
+
+  const walletData = async () => {
+    const res = await walletTypeList();
+    if (res.code === '0' ) {
+      setWalletList(res.data.list);
+    }
+  };
 
   const onFinish = (values: any) => {
     setLoading(true);
@@ -48,6 +57,10 @@ const TransferTool: React.FC = () => {
     { title: '操作时间', dataIndex: 'operateTime', key: 'operateTime' },
   ];
 
+  useEffect(() => {
+    walletData();
+  }, []);
+
   return (
     <PageContainer>
       <Card title="用户间转账">
@@ -60,8 +73,9 @@ const TransferTool: React.FC = () => {
               style={{ flex: 1 }}
             >
               <Select placeholder="请选择转出账户">
-                <Option value="company">公司总账户</Option>
-                {/* 可以添加更多选项 */}
+                {walletList.map((item: any) => (
+                  <Option key={item.id} value={item.id}>{item.name}</Option>
+                ))}
               </Select>
             </Form.Item>
             
