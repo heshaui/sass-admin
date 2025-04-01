@@ -16,7 +16,7 @@ const Rate: React.FC = () => {
   const [formRef] = useState(() => createRef<FormInstance>());
 
   const merchantUpdateRate=async(id:string,status:number)=>{
-    const res= await updateTenantExchangeRate({
+    const res= await updateRate({
       id,
       status,
     });

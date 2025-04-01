@@ -34,7 +34,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   if (!visible || !userId) return null;
   const { initialState,refresh } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-  console.log(currentUser);
+
 
   // 模态框显示状态
   const [loginModalVisible, setLoginModalVisible] = useState(false);

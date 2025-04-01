@@ -11,7 +11,6 @@ import {
   Select, 
   Radio, 
 } from 'antd';
-
 import { getRewardConfigurationDetail,getCurrencyCoinList,getUserInviteDetailList,getImageConfigurationDetail,saveOrUpdateRewardConfiguration,saveOrUpdateImageConfiguration,getFundAccountsList} from '@/services/ant-design-pro/inviteFriends';
 import LanguageSelector from '@/components/LanguageSelector';
 import type { ProColumns } from '@ant-design/pro-components';

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Card, Form, Input, Button, Select, InputNumber, message, Table, Divider } from 'antd';
 import { SwapOutlined } from '@ant-design/icons';
-import { walletTypeList } from '@/services/ant-design-pro/fundsTools';
+import { walletTypeList,tenantToWallet } from '@/services/ant-design-pro/fundsTools';
+import {getCurrencyCoinList} from '@/services/ant-design-pro/inviteFriends';
 
 const { Option } = Select;
 
@@ -12,6 +13,7 @@ const TransferTool: React.FC = () => {
   const [transferRecords, setTransferRecords] = useState<any[]>([]);
   const [availableBalance, setAvailableBalance] = useState<number>(1000);
   const [walletList, setWalletList] = useState<any[]>([]);
+  const [coinList, setCoinList] = useState<any[]>([]);
 
   const walletData = async () => {
     const res = await walletTypeList();
@@ -20,45 +22,30 @@ const TransferTool: React.FC = () => {
     }
   };
 
-  const onFinish = (values: any) => {
-    setLoading(true);
-    console.log('提交的转账数据:', values);
-    
-    // 模拟API调用
-    setTimeout(() => {
-      message.success('转账申请已提交');
-      
-      // 添加到转账记录
-      const newRecord = {
-        id: Date.now().toString(),
-        fromUser: values.fromUser,
-        toUser: values.toUser,
-        currency: values.currency,
-        amount: values.amount,
-        reason: values.reason,
-        status: '成功',
-        operateTime: new Date().toLocaleString(),
-      };
-      
-      setTransferRecords([newRecord, ...transferRecords]);
-      form.resetFields();
-      setLoading(false);
-    }, 1000);
+  const getCoin=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    const res=await getCurrencyCoinList(data);
+    if(res.code==='0'){
+      setCoinList(res.data.list);
+    }
+
+  }
+  const onFinish =async  (values: any) => {
+   const res= await tenantToWallet(values);
+   if(res.code==='0'){
+    message.success('转账成功');
+   }else{
+    message.error(res.message);
+   }
   };
 
-  const columns = [
-    { title: '转账ID', dataIndex: 'id', key: 'id' },
-    { title: '转出用户', dataIndex: 'fromUser', key: 'fromUser' },
-    { title: '转入用户', dataIndex: 'toUser', key: 'toUser' },
-    { title: '币种', dataIndex: 'currency', key: 'currency' },
-    { title: '数量', dataIndex: 'amount', key: 'amount' },
-    { title: '原因', dataIndex: 'reason', key: 'reason' },
-    { title: '状态', dataIndex: 'status', key: 'status' },
-    { title: '操作时间', dataIndex: 'operateTime', key: 'operateTime' },
-  ];
 
   useEffect(() => {
     walletData();
+    getCoin();
   }, []);
 
   return (
@@ -67,14 +54,14 @@ const TransferTool: React.FC = () => {
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Form.Item
-              name="fromUser"
+              name="form"
               label="转出账户"
               rules={[{ required: true, message: '请选择转出账户' }]}
               style={{ flex: 1 }}
             >
               <Select placeholder="请选择转出账户">
                 {walletList.map((item: any) => (
-                  <Option key={item.id} value={item.id}>{item.walletTypeDefeat}</Option>
+                  <Option key={item.walletType} value={item.walletType}>{item.walletTypeDefeat}</Option>
                 ))}
               </Select>
             </Form.Item>
@@ -84,32 +71,33 @@ const TransferTool: React.FC = () => {
             </div>
             
             <Form.Item
-              name="toUser"
+              name="to"
               label="转入账户"
               rules={[{ required: true, message: '请选择转入账户' }]}
               style={{ flex: 1 }}
             >
               <Select placeholder="请选择转入账户">
-                <Option value="client">邀请返佣账户</Option>
-                {/* 可以添加更多选项 */}
+              {walletList.map((item: any) => (
+                  <Option key={item.walletType} value={item.walletType}>{item.walletTypeDefeat}</Option>
+                ))}
               </Select>
             </Form.Item>
           </div>
           
           <Form.Item
-            name="currency"
+            name="coinId"
             label="币种"
             rules={[{ required: true, message: '请选择币种' }]}
           >
             <Select placeholder="请选择转账币种">
-              <Option value="USDT">USDT</Option>
-              <Option value="BTC">BTC</Option>
-              <Option value="ETH">ETH</Option>
+                {coinList.map((item: any) => (
+                  <Option key={item.coinId} value={item.coinId}>{item.coinName}</Option>
+                ))}
             </Select>
           </Form.Item>
           
           <Form.Item
-            name="amount"
+            name="count"
             label="转账金额"
             rules={[{ required: true, message: '请输入转账金额' }]}
           >
@@ -121,7 +109,7 @@ const TransferTool: React.FC = () => {
           </div>
           
           <Form.Item
-            name="reason"
+            name="remark"
             label="备注"
             rules={[{ required: true, message: '请输入备注' }]}
           >
