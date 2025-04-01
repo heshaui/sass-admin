@@ -128,8 +128,8 @@ const AuditList: React.FC = () => {
     // },
     {
       title: '提交时间',
-      dataIndex: 'currentCheckTime',
-      key: 'currentCheckTime',
+      dataIndex: 'createTime',
+      key: 'createTime',
       valueType: 'dateTimeRange',
       search: {
         transform: (value) => {
@@ -146,8 +146,8 @@ const AuditList: React.FC = () => {
     },
     {
       title: '首次审核时间',
-      dataIndex: 'currentCheckTime',
-      key: 'currentCheckTime',
+      dataIndex: 'firstCheckTime',
+      key: 'firstCheckTime',
       valueType: 'dateTime',
       search: false,
     },
