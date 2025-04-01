@@ -39,7 +39,8 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
       dataIndex: 'holding',
       key: 'holding',
       render: (record:AssetItem)=>{
-        return record.balance+record.releaseBalance+record.frozenBalance
+        console.log(record);
+        return Number(record?.balance)+Number(record?.releaseBalance)+Number(record?.frozenBalance)
       }
     },
     {
