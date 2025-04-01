@@ -1,5 +1,5 @@
 import { request } from 'umi';
-
+const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
 // 交易币种列表请求接口
 export async function exchangeCoinList(params?: Record<string, any>) {
   return request('/tenant/v1/exchange-coin/exchangeCoinList', {
@@ -109,7 +109,7 @@ export async function deleteProtocolTypeById(params?: Record<string, any>) {
 
 //协议列表
 export async function protocolTypeList(params?: Record<string, any>) {
-  return request('/tenant-admin/v1/protocol-type/protocolTypeList', {
+  return request(isAdmin ? '/tenant-admin/v1/protocol-type/protocolTypeList' : '/tenant/v1/protocol-type/protocolTypeList', {
     method: 'POST',
     data: params,
   });
@@ -145,7 +145,7 @@ export async function deleteCurrencyCoinById(params?: Record<string, any>) {
 // 总后台币种查询详情
 export async function currencyCoinParams(params?: Record<string, any>) {
   console.log(params);
-  return request(`/tenant-admin/v1/coin/currencyCoinParams?idString=${params.id}`, {
+  return request(isAdmin ? `/tenant-admin/v1/coin/currencyCoinParams?idString=${params.id}` : `/tenant/v1/coin/currencyCoinParams?idString=${params.id}`, {
     method: 'POST',
     data: params,
   });
@@ -179,7 +179,7 @@ export async function adminSaveCurrencyCoin(params?: Record<string, any>) {
 
 // 总后台币种拓展列表
 export async function adminCurrencyCoinExtList(params?: Record<string, any>) {
-  return request('/tenant-admin/v1/coin-ext/currencyCoinExtList', {
+  return request(isAdmin ? '/tenant-admin/v1/coin-ext/currencyCoinExtList' : '/tenant/v1/tenant-coin-ext/tenantCurrencyCoinExtList', {
     method: 'POST',
     data: params,
   });
@@ -192,3 +192,6 @@ export async function adminUpdateCurrencyCoinExtById(params?: Record<string, any
     data: params,
   });
 }
+
+
+

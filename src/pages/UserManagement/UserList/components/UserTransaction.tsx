@@ -73,14 +73,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
     },
     {
       title: '币种',
-      dataIndex: 'currency',
-      width: 100,
-      valueEnum: currencies.reduce((prev, curr) => {
-        if (curr.value !== 'all') {
-          prev[curr.value] = { text: curr.label };
-        }
-        return prev;
-      }, {}),
+      dataIndex: 'coinId',
     },
     {
       title: '数量',
@@ -98,9 +91,9 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
     },
     {
       title: '时间',
-      dataIndex: 'time',
+      dataIndex: 'createTime',
       width: 180,
-      valueType: 'dateTimeRange',
+      valueType: 'dateTime',
     },
   ];
 

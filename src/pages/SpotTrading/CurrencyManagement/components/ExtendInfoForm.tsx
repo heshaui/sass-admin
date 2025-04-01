@@ -150,19 +150,23 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
                 
         <Form.Item
           name="mainAddress"
-          label="主地址"
-          rules={[{ required: true, message: '请输入主地址' }]}
+          label="主链地址"
+          rules={[{ required: true, message: '请输入主链地址' }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item name="token" label="Token">
+        <Form.Item 
+        name="Token" 
+        label="合约地址"
+        rules={[{ required: true, message: '请输入合约地址' }]}
+        >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="decimals"
-          label="小数位数"
+          label="合约精度"
           rules={[{ required: true, message: '请输入小数位数' }]}
         >
           <InputNumber style={{ width: '100%' }} />
@@ -182,7 +186,51 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         >
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
-
+        <Form.Item
+          name="withdraw"
+          label="提现开关"
+        >
+          <Switch 
+            checkedChildren="启用" 
+            unCheckedChildren="禁用" 
+          />
+        </Form.Item>
+        <Form.Item
+          name="recharge"
+          label="充值开关"
+        >
+          <Switch 
+            checkedChildren="启用" 
+            unCheckedChildren="禁用" 
+          />
+        </Form.Item>
+        <Form.Item
+          name="autoWithdraw"
+          label="自动提现开关"
+        >
+          <Switch 
+            checkedChildren="启用" 
+            unCheckedChildren="禁用" 
+          />
+        </Form.Item>
+        <Form.Item
+          name="minWithdraw"
+          label="最小提现量"
+        >
+          <InputNumber style={{ width: '100%' }} />
+        </Form.Item>
+        <Form.Item
+          name="maxWithdraw"
+          label="最大提现量"
+        >
+          <InputNumber style={{ width: '100%' }} />
+        </Form.Item>
+        <Form.Item
+          name="minRecharge"
+          label="最小充值量"
+        >
+          <InputNumber style={{ width: '100%' }} />
+        </Form.Item>
         <Form.Item
           name="confirms"
           label="确认数"

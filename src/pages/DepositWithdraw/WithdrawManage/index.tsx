@@ -60,25 +60,13 @@ const WithdrawManage: React.FC = () => {
     },
     { 
       title: '币种', 
-      dataIndex: 'coinType', 
-      key: 'coinType',
-      valueEnum: {
-        '': { text: '全部' },
-        'USDT': { text: 'USDT' },
-        'TRX': { text: 'TRX' },
-        'BTC': { text: 'BTC' }
-      }
+      dataIndex: 'coinId', 
+      key: 'coinId',
     },
     { 
       title: '网络名称', 
-      dataIndex: 'network', 
-      key: 'network',
-      valueEnum: {
-        '': { text: '全部' },
-        'ERC20': { text: 'ERC20' },
-        'TRC20': { text: 'TRC20' },
-        'TRX': { text: 'TRX' }
-      }
+      dataIndex: 'protocolId', 
+      key: 'protocolId',
     },
     { 
       title: '提现数量', 
@@ -106,8 +94,8 @@ const WithdrawManage: React.FC = () => {
     },
     { 
       title: '地址/TxId', 
-      dataIndex: 'address', 
-      key: 'address',
+      dataIndex: 'txHash', 
+      key: 'txHash',
       render: (text) => <a>{text}</a>,
       fieldProps: {
         placeholder: '到账地址、TxID'

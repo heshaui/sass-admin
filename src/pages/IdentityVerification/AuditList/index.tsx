@@ -130,18 +130,8 @@ const AuditList: React.FC = () => {
       title: '提交时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      valueType: 'dateTimeRange',
-      search: {
-        transform: (value) => {
-          return {
-            startTime: value[0] ? new Date(value[0]).getTime() : undefined,
-            endTime: value[1] ? new Date(value[1]).getTime() : undefined,
-          };
-        },
-      },
-      render: (_, record) => {
-        return record.currentCheckTime ? dayjs(record.currentCheckTime).format('YYYY-MM-DD HH:mm:ss') : '--';
-      },
+      valueType: 'dateTime',
+
       
     },
     {
@@ -226,9 +216,9 @@ const AuditList: React.FC = () => {
             const queryParams = {
               pageSize: params.pageSize,
               pageNo: params.current,
-              startTime:params.startTime,
-              endTime:params.endTime,
               ...params,
+              // 处理时间字段，转换为时间戳格式
+              createTime: params.createTime ? dayjs(params.createTime).valueOf() : undefined,
               // 处理排序
               sorter: sorter && Object.keys(sorter).length ? JSON.stringify(sorter) : undefined,
               filter: filter && Object.keys(filter).length ? JSON.stringify(filter) : undefined,

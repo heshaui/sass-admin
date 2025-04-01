@@ -4,6 +4,8 @@ import { SearchOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { userWalletList } from '@/services/ant-design-pro/UserManagement';
+import { getCurrencyCoinList } from '@/services/ant-design-pro/inviteFriends';
+import { currencyCoinList } from '@/services/ant-design-pro/spot';
 const { Option } = Select;
 const { Text } = Typography;
 
@@ -27,41 +29,60 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [hideZeroAssets, setHideZeroAssets] = useState<boolean>(false);
   const [totalAsset, setTotalAsset] = useState<string>('0');
+  const [currencyList, setCurrencyList] = useState<any[]>([]);
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+
+  const getCurrencyList=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    let res
+    if(isAdmin){
+       res=await currencyCoinList(data)
+    }else{
+       res=await getCurrencyCoinList(data)
+    }
+    if(res.code==='0'){
+      setCurrencyList(res.data.list)
+    }
+  }
 
   const columns: ProColumns<AssetItem>[] = [
     {
       title: '币种',
-      dataIndex: 'coinId',
-      key: 'coinId',
+      dataIndex: 'coinName',
+      key: 'coinName',
     },
     {
       title: '持仓',
-      dataIndex: 'holding',
-      key: 'holding',
-      render: (record:AssetItem)=>{
-        console.log(record);
-        return Number(record?.balance)+Number(record?.releaseBalance)+Number(record?.frozenBalance)
+      dataIndex: 'balance',
+      key: 'balance',
+      render: (text:string, record: AssetItem)=>{
+        return Number(text)+Number(record?.releaseBalance)+Number(record?.frozenBalance)
       }
     },
     {
       title: '可用',
-      dataIndex: 'releaseBalance',
-      key: 'releaseBalance',
+      dataIndex: 'balance',
+      key: 'balance',
 
     },
     {
       title: '冻结',
-      dataIndex: 'frozen',
-      key: 'frozen',
+      dataIndex: 'frozenBalance',
+      key: 'frozenBalance',
     },
   ];
 
 
   const fetchAssetData = async (params: any) => {
+    
     let data={
       pageNo:params.current,
       pageSize:params.pageSize,
-      userId:userId
+      userId:userId,
+      coinId:currency
     }
     const res = await userWalletList(data);
 
@@ -78,7 +99,7 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
 
   useEffect(() => {
     // 获取总资产
-
+    getCurrencyList()
   }, []);
 
   const handleRadioChange = (e: any) => {
@@ -100,10 +121,10 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
           }} 
           style={{ width: 120, marginRight: '16px' }}
         >
-          <Option value="全部">全部</Option>
-          <Option value="USDT">USDT</Option>
-          <Option value="BTC">BTC</Option>
-          <Option value="ETH">ETH</Option>
+          <Option value="">全部</Option>
+          {currencyList.map((item:any)=>(
+            <Option key={item.coinId} value={item.coinId}>{item.coinName}</Option>
+          ))}
         </Select>
         
       </div>

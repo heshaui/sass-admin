@@ -151,7 +151,7 @@ const CurrencyManagement: React.FC = () => {
       return (
         <div style={{ padding: 16 }}>
           <Space>
-            <span>未添加拓展信息</span>
+            <span>--</span>
           </Space>
         </div>
       );
@@ -162,11 +162,16 @@ const CurrencyManagement: React.FC = () => {
         <Descriptions title="币种拓展信息" bordered column={2} size="small">
           <Descriptions.Item label="协议ID">{extInfo.protocolId}</Descriptions.Item>
           <Descriptions.Item label="主地址">{extInfo.mainAddress}</Descriptions.Item>
-          <Descriptions.Item label="Token">{extInfo.token}</Descriptions.Item>
+          <Descriptions.Item label="合约地址">{extInfo.token}</Descriptions.Item>
           <Descriptions.Item label="小数位数">{extInfo.decimals}</Descriptions.Item>
-          <Descriptions.Item label="状态">{extInfo.status ? '启用' : '禁用'}</Descriptions.Item>
+          <Descriptions.Item label="状态">{extInfo.status===1 ? '启用' : '禁用'}</Descriptions.Item>
           <Descriptions.Item label="提现手续费">{extInfo.withdrawFee}</Descriptions.Item>
           <Descriptions.Item label="最小提现手续费">{extInfo.minWithdrawFee}</Descriptions.Item>
+          <Descriptions.Item label="充值开关">{extInfo.recharge===1 ? '启用' : '禁用'}</Descriptions.Item>
+          <Descriptions.Item label="自动提现开关">{extInfo.autoWithdraw===1 ? '启用' : '禁用'}</Descriptions.Item>
+          <Descriptions.Item label="最小提现量">{extInfo.minWithdraw}</Descriptions.Item>
+          <Descriptions.Item label="最大提现量">{extInfo.maxWithdraw}</Descriptions.Item>
+          <Descriptions.Item label="最小充值量">{extInfo.minRecharge}</Descriptions.Item>
           <Descriptions.Item label="确认数">{extInfo.confirms}</Descriptions.Item>
         </Descriptions>
 
@@ -366,14 +371,11 @@ const CurrencyManagement: React.FC = () => {
             <Button key="edit" onClick={() => handleEdit(record)}>
               编辑
             </Button>,
-            <Button key="addSameChain" onClick={() => handleAddSameChain(record)}>
-              添加同币异链
-            </Button>,
             <Button key="detail" onClick={() => handleDetail(record)}>
               币种简介
             </Button>,
             <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
-              拓展信息
+              添加同币异链
             </Button>,
           ],
     },
