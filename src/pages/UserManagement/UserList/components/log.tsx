@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Button, Space } from 'antd';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import ProTable from '@ant-design/pro-table';
+import ProTable from '@ant-design/pro-components';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { gatewayAccessLogList } from '@/services/ant-design-pro/UserManagement';
 
@@ -77,15 +77,7 @@ const Log: React.FC<LogProps> = ({ userId }) => {
     },
     {
       title: '名称',
-      dataIndex: 'operationName',
-      valueType: 'select',
-      valueEnum: {
-        '登录': { text: '登录' },
-        '绑定OTP': { text: '绑定OTP' },
-      },
-      fieldProps: {
-        placeholder: '请选择',
-      },
+      dataIndex: 'requestName',
     },
     {
       title: '请求时间',

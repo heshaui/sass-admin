@@ -8,10 +8,14 @@ const { Option } = Select;
 const { Text } = Typography;
 
 interface AssetItem {
-  currency: string;
-  holding: number;
-  available: number;
-  frozen: number;
+  balance:number;
+  frozenBalance:number;
+  releaseBalance:number;
+  isLock:number;
+  memberId:string;
+  version:number;
+  coinId:string;
+  coinName:string;
 }
 
 interface AssetProps {
@@ -34,11 +38,15 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
       title: '持仓',
       dataIndex: 'holding',
       key: 'holding',
+      render: (record:AssetItem)=>{
+        return record.balance+record.releaseBalance+record.frozenBalance
+      }
     },
     {
       title: '可用',
       dataIndex: 'releaseBalance',
       key: 'releaseBalance',
+
     },
     {
       title: '冻结',
