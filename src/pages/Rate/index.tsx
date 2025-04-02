@@ -225,6 +225,8 @@ const Rate: React.FC = () => {
           checkedChildren="是"
           unCheckedChildren="否"
           rules={[{ required: true, message: '请选择是否启用' }]}
+          valuePropName="checked"
+          transform={(value) => ({ status: value ? 1 : 0 })}
         />
        
       </ModalForm>

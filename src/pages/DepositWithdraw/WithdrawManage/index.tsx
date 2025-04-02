@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Card, Button, Tag, Space } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { fetchWithdrawDepositList } from '@/services/ant-design-pro/depositWithdraw';
+import DetailModal from './components/DetailModal';
+
 interface WithdrawRecord {
   key: string;
   orderNo: string;
@@ -22,9 +24,8 @@ interface WithdrawRecord {
 }
 
 const WithdrawManage: React.FC = () => {
-
-
-
+  const [detailVisible, setDetailVisible] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState<WithdrawRecord | null>(null);
 
   const fetchWithdrawData = async (params: any) => {
     let data={
@@ -166,11 +167,19 @@ const WithdrawManage: React.FC = () => {
       hideInSearch: true,
       render: (_, record) => (
         <Space size="middle">
-          {record.status === '待审核' ? <Button type="primary" size="small">审核</Button> : <Button type="link">详情</Button>}
+          {record.status === '待审核' ? 
+            <Button type="primary" size="small">审核</Button> : 
+            <Button type="link" onClick={() => showDetailModal(record)}>详情</Button>}
         </Space>
       ),
     },
   ];
+
+  // 打开详情模态框
+  const showDetailModal = (record: WithdrawRecord) => {
+    setCurrentRecord(record);
+    setDetailVisible(true);
+  };
 
   return (
     <PageContainer>
@@ -195,6 +204,13 @@ const WithdrawManage: React.FC = () => {
           dateFormatter="string"
         />
       </Card>
+      
+      {/* 引入详情模态框组件 */}
+      <DetailModal 
+        visible={detailVisible}
+        record={currentRecord}
+        onClose={() => setDetailVisible(false)}
+      />
     </PageContainer>
   );
 };
