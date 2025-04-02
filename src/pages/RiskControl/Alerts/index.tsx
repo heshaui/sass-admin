@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { PageContainer } from '@ant-design/pro-components';
-import { Card, Table, Input, Select, DatePicker, Button, Space, Row, Col } from 'antd';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { Card, Input, Select, DatePicker, Button, Space, Row, Col } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-
+import { assetAccountReviewList } from '@/services/ant-design-pro/risk';
+import type { ProColumns } from '@ant-design/pro-components';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -15,21 +16,19 @@ const RiskControlAlerts: React.FC = () => {
   });
 
   // 表格列定义
-  const columns = [
+  const columns: ProColumns[] = [
     {
       title: 'UID',
-      dataIndex: 'uid',
-      key: 'uid',
+      dataIndex: 'id',
     },
     {
       title: '触发类型',
-      dataIndex: 'alertType',
-      key: 'alertType',
+      dataIndex: 'sceneCode',
+      key: 'sceneCode',
     },
     {
       title: '触发原因',
-      dataIndex: 'reason',
-      key: 'reason',
+      dataIndex: 'resultContent',
     },
     {
       title: '触发后风控等级',
@@ -40,74 +39,32 @@ const RiskControlAlerts: React.FC = () => {
       title: '风控周期',
       dataIndex: 'riskPeriod',
       key: 'riskPeriod',
+      valueType: 'text',
     },
     {
       title: '处理建议',
-      dataIndex: 'suggestion',
-      key: 'suggestion',
+      dataIndex: 'code',
+      key: 'code',
+      valueType: 'text',
     },
     {
       title: '触发时间',
-      dataIndex: 'triggerTime',
-      key: 'triggerTime',
+      dataIndex: 'createTime',
+      valueType: 'dateTime',
     },
   ];
   
-  // 模拟数据
-  const data = [
-    {
-      uid: '2550',
-      alertType: '资产不平',
-      reason: '账目不平的资产折合>= 1.0 BTC',
-      riskLevel: 4,
-      riskPeriod: '--',
-      suggestion: '冻结交易; 冻结提现; 核算用户资产',
-      triggerTime: '2024-05-05 03:10',
-    },
-    {
-      uid: '5216',
-      alertType: '洗钱嫌疑',
-      reason: '累计委托交易笔数< 1 笔，且提现后总资产折合< 1.0 BTC',
-      riskLevel: 3,
-      riskPeriod: '--',
-      suggestion: '冻结交易; 冻结提现; 检查用户资金来源',
-      triggerTime: '2024-04-01 10:37',
-    },
-    {
-      uid: '7120',
-      alertType: '被盗预警',
-      reason: '用户提现的IP登录次数占比< 1%',
-      riskLevel: 2,
-      riskPeriod: '--',
-      suggestion: '冻结提现; 建议回访用户后处理',
-      triggerTime: '2024-03-10 22:09',
-    },
-    {
-      uid: '8569',
-      alertType: '被盗预警',
-      reason: '用户提现地址之前未成功提现',
-      riskLevel: 1,
-      riskPeriod: '--',
-      suggestion: '冻结提现; 建议回访用户后处理',
-      triggerTime: '2023-02-09 03:32',
-    },
-    {
-      uid: '1804',
-      alertType: '敏感信息',
-      reason: '修改密码',
-      riskLevel: 0,
-      riskPeriod: '24H',
-      suggestion: '冻结提现',
-      triggerTime: '2023-02-09 03:32',
-    },
-  ];
+  const getList=async(params:any)=>{
+    const res=await assetAccountReviewList(filters);
+    if(res.code==='0'){
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.count
+      };
+    }
+  }
 
-  // 处理查询
-  const handleSearch = () => {
-    console.log('搜索条件:', filters);
-    // 这里可以添加实际的查询逻辑
-  };
-  
   return (
     <PageContainer>
       <Card title="报警记录" bordered={false}>
@@ -138,12 +95,27 @@ const RiskControlAlerts: React.FC = () => {
             </Space>
           </Col>
           <Col span={2}>
-            <Button type="primary" icon={<SearchOutlined />} onClick={handleSearch}>
+            <Button type="primary" icon={<SearchOutlined />} onClick={() => {
+              console.log('搜索条件:', filters);
+              // 这里可以添加实际的查询逻辑
+            }}>
               查询
             </Button>
           </Col>
         </Row>
-        <Table columns={columns} dataSource={data} rowKey="uid" />
+        <ProTable
+          columns={columns}
+          request={getList}
+          rowKey="uid"
+          pagination={{
+            showQuickJumper: true,
+          }}
+          search={{
+            labelWidth: 'auto',
+          }}
+          dateFormatter="string"
+          toolBarRender={false}
+        />
       </Card>
     </PageContainer>
   );

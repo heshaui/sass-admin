@@ -1,6 +1,6 @@
 import React, { useRef, useState, createRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
+import type { ActionType, ProColumns, FormInstance } from '@ant-design/pro-components';
 import { Button, message, Switch } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch, ProFormItem } from '@ant-design/pro-components';
@@ -52,7 +52,13 @@ const Rate: React.FC = () => {
 
   // 处理编辑
   const handleEdit = (record: any) => {
-    setCurrentRow(record);
+    // 先重置表单数据
+    formRef.current?.resetFields();
+    console.log(record);
+    // setCurrentRow(record);
+    formRef.current?.setFieldsValue({
+      ...record,
+    });
     setEditMode(true);
     setCreateModalVisible(true);
   };
@@ -171,7 +177,6 @@ const Rate: React.FC = () => {
         visible={createModalVisible}
         onVisibleChange={setCreateModalVisible}
         onFinish={handleSubmit}
-        initialValues={currentRow}
         formRef={formRef}
       >
         <ProFormText
@@ -210,7 +215,7 @@ const Rate: React.FC = () => {
           rules={[{ required: true, message: '请上传图标' }]}
         >
           <AvatarUpload 
-            defaultValue={currentRow?.iconUrl} 
+
             onChange={(url) => formRef.current?.setFieldsValue({ iconUrl: url })} 
           />
         </ProFormItem>

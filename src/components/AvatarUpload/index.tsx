@@ -19,6 +19,8 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
     console.log('AvatarUpload value changed:', value);
     if (value) {
       setImageUrl(value);
+    }else{
+      setImageUrl('');
     }
   }, [value]);
 
