@@ -5,13 +5,14 @@ import { pcAccessPathAll } from "@/services/ant-design-pro/WebConfig";
 const { Option } = Select;
 
 interface AddMenuModalsProps {
+  editingMenu: any;
   visible: boolean;
   parentId: any;
   onSubmit: (values: any) => void;
   onCancel: () => void;
 }
 
-const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCancel,parentId }) => {
+const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCancel,parentId,editingMenu }) => {
   const [accessType, setAccessType] = useState("1");
   const [formModal3] = Form.useForm();
   const [selectedStyle, setSelectedStyle] = useState("new");
@@ -44,7 +45,36 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
     };
     
     fetchAccessPaths();
-  }, []);
+    if(editingMenu){
+      // 正确处理嵌套的数据结构
+      const { homeMenu, homeMenuTranslation } = editingMenu;
+      
+      // 设置状态变量
+      setTypeId(homeMenu.typeId);
+      setAccessType(homeMenu.accessType || "1");
+      setDisplayType(homeMenu.spreadPattern?.toString() || "0");
+      
+      // 设置图标状态
+      setIconUrlDay(homeMenu.iconUrlDay);
+      setIconUrlNight(homeMenu.iconUrlNight);
+      setUploadedImageUrl(homeMenu.cornerMarkOne);
+      
+      if (homeMenu.cornerMarkOne) {
+        setSelectedStyle("custom");
+      }
+      
+      // 填充表单数据
+      formModal3.setFieldsValue({
+        typeId: homeMenu.typeId,
+        menuName: homeMenuTranslation.menuName,
+        menuViceName: homeMenuTranslation.menuViceName,
+        menuDescription: homeMenu.menuDescription,
+        accessPath: homeMenu.accessPath,
+        spreadPattern: homeMenu.spreadPattern?.toString(),
+        displayStatus: homeMenu.displayStatus === 1,
+      });
+    }
+  }, [editingMenu]);
 
   const handleImageChange = (url: string | null) => {
     setUploadedImageUrl(url);
@@ -201,12 +231,12 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
               <Flex gap="middle" wrap>
                 <div>
                   <div style={{ textAlign: "center" }}>夜间</div>
-                  <AvatarUpload onChange={handleDayChange} />
+                  <AvatarUpload onChange={handleDayChange} value={iconUrlNight} />
                   <div style={{fontSize: 12, color: '#999'}}>请上传小于500k<br/>142*72png图片</div>
                 </div>
                 <div>
                   <div style={{ textAlign: "center" }}>日间</div>
-                  <AvatarUpload onChange={handleNightChange} />
+                  <AvatarUpload onChange={handleNightChange} value={iconUrlDay} />
                   <div style={{fontSize: 12, color: '#999'}}>请上传小于500k<br/>142*72png图片</div>
                 </div>
               </Flex>

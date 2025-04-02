@@ -37,7 +37,28 @@ const Header: React.FC = () => {
     try {
       const res = await homeMenuParams({ menuId: item.id });
       if (res.code === "0") {
+        // 查找父级菜单信息
+        let parentMenuInfo = null;
+        if (res.data.homeMenu.parentId) {
+          // 递归查找父级菜单
+          const findParentMenu = (menus: any[], parentId: number): any => {
+            for (const menu of menus) {
+              if (menu.id === parentId) {
+                return menu;
+              }
+              if (menu.children && menu.children.length > 0) {
+                const found = findParentMenu(menu.children, parentId);
+                if (found) return found;
+              }
+            }
+            return null;
+          };
+          parentMenuInfo = findParentMenu(menuData, res.data.homeMenu.parentId);
+        }
+        
+
         setEditingMenu(res.data);
+        setParentId(parentMenuInfo);
         setModalType(true);
       } else {
         message.error("获取菜单详情失败");
@@ -88,48 +109,67 @@ const Header: React.FC = () => {
     }
     
     try {
-      const data = {
-        homeMenu: {
-          menuDescription: values.values.menuDescription,
-          parentId: parentId?.id || 0,
-          typeId: values.values.typeId,
-          orderIndex: 1,
-          iconUrlDay: values.iconUrlDay,
-          iconUrlNight: values.iconUrlNight,
-          cornerMarkOne: values.uploadedImageUrl,
-          cornerMarkTwo: "",
-          displayStatus: displayStatus,
-          spreadPattern: values.values.spreadPattern,
-          accessType: values.values.accessType,
-          accessPath: values.values.accessPath,
-        },
-        homeMenuTranslation: {
-          languageCode: currentLanguage,
-          languagePath: "/home/zh_CN",
-          menuName: values.values.menuName,
-          menuViceName: values.values.menuViceName,
-          languageIcon: values.values.uploadedImageUrl,
-        },
-      };
-
-      let response;
+    
+      
       if (editingMenu) {
-        // 编辑模式 - 使用更新接口
-        data.homeMenu.id = editingMenu.id; // 添加菜单ID
-        data.homeMenuTranslation.menuId = editingMenu.id; // 添加菜单ID到翻译对象
-        response = await updateHomeMenuById(data);
-      } else {
-        // 新增模式 - 使用保存接口
-        response = await saveHomeMenu(data);
-      }
+        const data = {
+          id:editingMenu.id,
+          menuDescription:values.values.menuDescription,
+          parentId:editingMenu.homeMenu.parentId,
+          typeId:values.values.typeId,
+          iconUrlDay:values.iconUrlDay,
+          iconUrlNight:values.iconUrlNight,
+          cornerMarkOne:values.uploadedImageUrl,
+          cornerMarkTwo:"",
+          displayStatus:displayStatus,
+          spreadPattern:values.values.spreadPattern,
+          accessType:values.values.accessType,
+          accessPath:values.values.accessPath,
+        }
+       const response = await updateHomeMenuById(data);
 
-      if (response.code === "0") {
-        message.success(editingMenu ? "菜单更新成功" : "菜单添加成功");
+      if (response.code === "0"&&response.data) {
+        message.success( "菜单更新成功" );
         handleCancel();
         getMenu(); // 重新获取菜单数据
       } else {
-        message.error((editingMenu ? "菜单更新失败: " : "菜单添加失败: ") + (response.message || "未知错误"));
+        message.error( "菜单更新失败" );
       }
+      } else {
+        const data = {
+          homeMenu: {
+            menuDescription: values.values.menuDescription,
+            parentId: parentId?.id || 0,
+            typeId: values.values.typeId,
+            orderIndex: 1,
+            iconUrlDay: values.iconUrlDay,
+            iconUrlNight: values.iconUrlNight,
+            cornerMarkOne: values.uploadedImageUrl,
+            cornerMarkTwo: "",
+            displayStatus: displayStatus,
+            spreadPattern: values.values.spreadPattern,
+            accessType: values.values.accessType,
+            accessPath: values.values.accessPath,
+          },
+          homeMenuTranslation: {
+            languageCode: currentLanguage,
+            languagePath: "/home/zh_CN",
+            menuName: values.values.menuName,
+            menuViceName: values.values.menuViceName,
+            languageIcon: values.values.uploadedImageUrl,
+          },
+        };
+  
+        const res = await saveHomeMenu(data);
+        if(res.code === "0"){
+          message.success( "菜单添加成功" );
+          handleCancel();
+          getMenu(); // 重新获取菜单数据
+        }else{
+          message.error( "菜单添加失败" );
+        }
+      }
+
     } catch (error) {
       message.error("提交失败: " + (error || "网络错误"));
     }
