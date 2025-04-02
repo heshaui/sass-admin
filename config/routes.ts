@@ -346,6 +346,7 @@ export default [
       {
         path: '/spot-trading/currency-management',
         name: 'currencyManagement',
+        icon: 'DollarOutlined',
         component: './SpotTrading/CurrencyManagement',
       },
       {

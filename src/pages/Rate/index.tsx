@@ -55,7 +55,7 @@ const Rate: React.FC = () => {
     // 先重置表单数据
     formRef.current?.resetFields();
     console.log(record);
-    // setCurrentRow(record);
+     setCurrentRow(record);
     formRef.current?.setFieldsValue({
       ...record,
     });
