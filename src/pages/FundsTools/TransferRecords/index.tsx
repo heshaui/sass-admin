@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 import { useIntl } from 'umi';
 
 interface TransferRecord {
@@ -23,47 +23,8 @@ const TransferRecords: React.FC = () => {
 
   useEffect(() => {
     // 模拟数据加载
-    setLoading(true);
-    // 这里应该是从API获取数据，这里用模拟数据代替
-    setTimeout(() => {
-      const mockData: TransferRecord[] = [
-        {
-          key: '1',
-          time: '2025-12-12 12:12:12',
-          fromAccount: '1232',
-          fromAccountType: '用户账户：现货账户',
-          toAccount: '52698',
-          toAccountType: '用户账户：现货账户',
-          amount: '10USDT',
-          remark: '123',
-          operator: '马克',
-        },
-        {
-          key: '2',
-          time: '2025-12-12 12:12:12',
-          fromAccount: '1232',
-          fromAccountType: '公司总账户',
-          toAccount: '52698',
-          toAccountType: '用户账户：现货账户',
-          amount: '10USDT',
-          remark: '123',
-          operator: '马克',
-        },
-        {
-          key: '3',
-          time: '2025-12-12 12:12:12',
-          fromAccount: '1232',
-          fromAccountType: '公司总账户',
-          toAccount: '52698',
-          toAccountType: '邀请返佣账户',
-          amount: '10USDT',
-          remark: '邀请返佣',
-          operator: '马克',
-        },
-      ];
-      setData(mockData);
-      setLoading(false);
-    }, 1000);
+
+
   }, []);
 
   const columns: ColumnsType<TransferRecord> = [

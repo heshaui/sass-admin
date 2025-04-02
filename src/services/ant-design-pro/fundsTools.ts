@@ -5,7 +5,7 @@ import { request } from '@umijs/max';
  * @param params 请求参数
  */
 export async function tenantWallet(params: any) {
-  return request('/tenant/v1/tenant-wallet/tenantWallet', {
+  return request('/tenant/v1/tenant-wallet/tenantWallet?coinId='+params.coinId+'&walletType='+params.walletType, {
     method: 'POST',
     data: params,
   });
@@ -39,5 +39,14 @@ export async function tenantToWallet(params: any) {
 export async function walletTypeList() {
   return request('/tenant/v1/tenant-wallet/walletTypeList', {
     method: 'GET',
+  });
+}
+
+
+
+export async function tenantSubWallet(params: any) {
+  return request('/tenant/v1/tenant-wallet/tenantSubWallet', {
+    method: 'POST',
+    data: params,
   });
 }

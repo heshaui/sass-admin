@@ -16,6 +16,7 @@ const iconMapping = {
   StockOutlined:Icons.StockOutlined,
   MoneyCollectOutlined:Icons.MoneyCollectOutlined,
   UserOutlined:Icons.UserOutlined,
+  SafetyOutlined:Icons.SafetyOutlined,
 };
 
 const getIcon = (iconName) => {

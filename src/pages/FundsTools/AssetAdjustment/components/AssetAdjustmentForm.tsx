@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Select, Radio, Input, Space, Modal, message } from 'antd';
 import styles from './AssetAdjustmentForm.css';
-import { walletTypeList } from '@/services/ant-design-pro/fundsTools';
+import { walletTypeList,tenantWallet,tenantSubWallet} from '@/services/ant-design-pro/fundsTools';
 import {getCurrencyCoinList} from '@/services/ant-design-pro/inviteFriends';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import { useModel } from 'umi';
@@ -26,7 +26,19 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
   const { currentUser } = initialState || {};
+  const [googleCode, setGoogleCode] = useState('');
+  const [walletBalance, setWalletBalance] = useState<any>(null);
+  const [coinName, setCoinName] = useState('');
 
+  const getWalletBalance=async(coinId:string)=>{
+    const res=await tenantWallet({
+      walletType:'company_general_account',
+      coinId:coinId
+    });
+    if(res.code==='0'){
+      setWalletBalance(res.data);
+    }
+  }
   const walletData = async () => {
     const res = await walletTypeList();
     if (res.code === '0' ) {
@@ -139,10 +151,13 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
               </Radio.Group>
             </Form.Item>
             
-            <Form.Item label="币种" name="currency" initialValue="USDT">
-              <Select style={{ width: '100%' }}>
+            <Form.Item label="币种" name="currency" initialValue="">
+              <Select style={{ width: '100%' }} onChange={(value,option)=>{
+                getWalletBalance(value);
+                setCoinName(option.children);
+              }}>
                 {coinList.map((item: any) => (
-                  <Option key={item.coinId} value={item.coinId}>{item.coinName}</Option>
+                  <Option key={item.coinId} value={item.coinId} >{item.coinName}</Option>
                 ))}
               </Select>
             </Form.Item>
@@ -180,8 +195,8 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15 }}>
               <span>账户余额</span>
               <Space>
-                <span>12.620</span>
-                <span>USDT</span>
+                <span>{walletBalance?.balance}</span>
+                <span>{coinName}</span>
               </Space>
             </div>
             

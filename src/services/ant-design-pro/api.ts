@@ -135,7 +135,7 @@ export async function removeRule(options?: { [key: string]: any }) {
 
 // 图片上传
 export async function ossImgFile(file: File, options?: { [key: string]: any }) {
-  return request<API.OssImgFile>(isAdmin?'tenant-admin/ambit-oss/oss/img/file':'/api/ambit-oss/oss/img/file', {
+  return request<API.OssImgFile>(isAdmin?'/gateway/ambit-oss/oss/img/file':'/api/ambit-oss/oss/img/file', {
     //  return request<API.OssImgFile>('/api/ambit-oss/oss/img/file ', {
     method: 'POST',
     data: file, // 直接发送 FormData
@@ -144,7 +144,7 @@ export async function ossImgFile(file: File, options?: { [key: string]: any }) {
 
 //文件上传
 export async function uploadFile(file: File, options?: { [key: string]: any }) {
-  return request<API.OssImgFile>(isAdmin?'tenant-admin/ambit-oss/oss/upload/file':'/api/ambit-oss/oss/upload/file', {
+  return request<API.OssImgFile>(isAdmin?'/gateway/ambit-oss/oss/upload/file':'/api/ambit-oss/oss/upload/file', {
     // return request<API.OssImgFile>('/oss/upload/file', {
     method: 'POST',
     data: file, // 直接发送 FormData
@@ -154,7 +154,7 @@ export async function uploadFile(file: File, options?: { [key: string]: any }) {
 
 // 国家区号
 export async function selectHomeCountryList(options?: { [key: string]: any }) {
-  return request(isAdmin?'/tenant-admin/v1/country/selectHomeCountryList':'/tenant/v1/country/selectHomeCountryList', {
+  return request(isAdmin?'/gateway/v1/country/selectHomeCountryList':'/tenant/v1/country/selectHomeCountryList', {
     method: 'GET',
     ...(options || {}),
   });

@@ -4,6 +4,7 @@ import { Form, Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import AssetAdjustmentForm from './components/AssetAdjustmentForm';
+import {tenantSubWallet} from '@/services/ant-design-pro/fundsTools';
 
 const AssetAdjustment: React.FC = () => {
   const [form] = Form.useForm();
@@ -22,9 +23,26 @@ const AssetAdjustment: React.FC = () => {
     }, 1000);
   };
 
-  const handleFormSubmit = (values: any) => {
-    console.log('表单提交数据:', values);
-    message.success('资产调整操作已提交');
+  const handleFormSubmit = async(values: any) => {
+    if(values.direction==='increase'){
+      values.to=values.account;
+    }else{
+      values.form=values.account;
+    }
+   let data={
+    sceneTypeEnum:'M2M',
+    coinId:values.currency,
+    count:values.amount,
+    googleCode:values.googleCode,
+    form:values?.form,
+    to:values?.to,
+   }
+    const res=await tenantSubWallet(data);
+    if(res.code==='0'){
+      message.success('资产调整操作已提交');
+    }else{
+      message.error(res.message);
+    }
     setFormVisible(false);
   };
 
@@ -54,8 +72,7 @@ const AssetAdjustment: React.FC = () => {
 
   // 模拟数据
   const mockData = [
-    { id: 10, currency: 'BTC', amount: '0.5', reason: '系统奖励', operator: '管理员', operateTime: '2023-06-15 10:30:45' },
-    { id: 9, currency: 'ETH', amount: '2.0', reason: '活动奖励', operator: '管理员', operateTime: '2023-06-14 15:20:30' },
+  
     // 可以添加更多模拟数据
   ];
 
