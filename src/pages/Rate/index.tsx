@@ -13,7 +13,7 @@ const Rate: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<any>();
   const [editMode, setEditMode] = useState<boolean>(false);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
-  const [formRef] = useState(() => createRef<FormInstance>());
+  const formRef = useRef<FormInstance>();
 
   const merchantUpdateRate=async(id:string,status:number)=>{
     const res= await updateRate({
@@ -52,15 +52,18 @@ const Rate: React.FC = () => {
 
   // 处理编辑
   const handleEdit = (record: any) => {
-    // 先重置表单数据
-    formRef.current?.resetFields();
-    console.log(record);
-     setCurrentRow(record);
-    formRef.current?.setFieldsValue({
-      ...record,
-    });
+    setCurrentRow(record);
     setEditMode(true);
     setCreateModalVisible(true);
+    
+    // 延迟设置表单值，确保表单已完全挂载
+    setTimeout(() => {
+      formRef.current?.setFieldsValue({
+        ...record,
+        // 将 status 转换为 boolean 值用于 Switch 组件
+        status: record.status === 1
+      });
+    }, 100);
   };
 
   const columns: ProColumns[] = [
@@ -174,10 +177,14 @@ const Rate: React.FC = () => {
       <ModalForm
         title={editMode ? '编辑计价单位' : '新增计价单位'}
         width="400px"
-        visible={createModalVisible}
-        onVisibleChange={setCreateModalVisible}
+        open={createModalVisible}
+        onOpenChange={setCreateModalVisible}
         onFinish={handleSubmit}
         formRef={formRef}
+        modalProps={{
+          destroyOnClose: true,
+          afterClose: () => formRef.current?.resetFields()
+        }}
       >
         <ProFormText
           name="shortName"

@@ -5,7 +5,7 @@ import { fetchWithdrawDepositDetail } from '@/services/ant-design-pro/depositWit
 
 interface WithdrawRecord {
   key: string;
-  orderNo: string;
+  withdrawalId: string;
   userId: string;
   coinType: string;
   network: string;
@@ -46,7 +46,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
   const fetchDetailData = async (orderId: string) => {
     setDetailLoading(true);
     try {
-      const res = await fetchWithdrawDepositDetail({ orderId });
+      const res = await fetchWithdrawDepositDetail({ withdrawalId:orderId });
       if (res.code === '0') {
         setDetailData(res.data.detail || record);
         setRiskLogs(res.data.riskLogs || []);
@@ -69,7 +69,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
 
   useEffect(() => {
     if (visible && record) {
-      fetchDetailData(record.orderNo);
+      fetchDetailData(record.withdrawalId);
     }
   }, [visible, record]);
 
@@ -100,11 +100,17 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
             <ProDescriptions.Item label="收款地址" span={1} copyable>{currentRecord.address}</ProDescriptions.Item>
             <ProDescriptions.Item label="审核状态" span={1}>
               <Tag color={
-                currentRecord.status === '已拒绝' ? 'red' : 
-                currentRecord.status === '完成' ? 'green' : 
-                currentRecord.status === '已撤销' ? 'gray' : 'blue'
+                currentRecord.status === 3 || currentRecord.status === '3' ? 'red' : 
+                currentRecord.status === 2 || currentRecord.status === '2' ? 'green' : 
+                currentRecord.status === 4 || currentRecord.status === '4' ? 'gray' : 'blue'
               }>
-                {currentRecord.status}
+                {
+                  currentRecord.status === 0 || currentRecord.status === '0' ? '创建' :
+                  currentRecord.status === 1 || currentRecord.status === '1' ? '待审核' :
+                  currentRecord.status === 2 || currentRecord.status === '2' ? '完成' :
+                  currentRecord.status === 3 || currentRecord.status === '3' ? '拒绝' :
+                  currentRecord.status === 4 || currentRecord.status === '4' ? '用户撤销' : '未知状态'
+                }
               </Tag>
             </ProDescriptions.Item>
             <ProDescriptions.Item label="处理方式" span={1}>人工处理</ProDescriptions.Item>

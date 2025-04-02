@@ -46,18 +46,12 @@ const WithdrawManage: React.FC = () => {
   const columns: ProColumns<WithdrawRecord>[] = [
     { 
       title: '提现单号', 
-      dataIndex: 'orderNo', 
-      key: 'orderNo',
+      dataIndex: 'orderNo',
       hideInSearch: true
     },
     { 
       title: '用户ID', 
       dataIndex: 'userId', 
-      key: 'userId',
-      render: (text) => <a>{text}</a>,
-      fieldProps: {
-        placeholder: 'UID'
-      }
     },
     { 
       title: '币种', 
@@ -132,34 +126,54 @@ const WithdrawManage: React.FC = () => {
     { 
       title: '状态', 
       dataIndex: 'status', 
-      key: 'status',
-      render: (status) => {
+      renderText: (record:number) => {
+        console.log(record);
         let color = 'blue';
-        if (status === '已拒绝') color = 'red';
-        if (status === '完成') color = 'green';
-        if (status === '已撤销') color = 'gray';
-        return <Tag color={color}>{status}</Tag>;
+        let statusText = '创建';
+        
+        switch(Number(record)) {
+          case 0:
+            statusText = '创建';
+            color = 'blue';
+            break;
+          case 1:
+            statusText = '待审核';
+            color = 'blue';
+            break;
+          case 2:
+            statusText = '完成';
+            color = 'green';
+            break;
+          case 3:
+            statusText = '拒绝';
+            color = 'red';
+            break;
+          case 4:
+            statusText = '用户撤销';
+            color = 'gray';
+            break;
+          default:
+            statusText = '未知状态';
+            color = 'default';
+        }
+        
+        return <Tag color={color}>{statusText}</Tag>;
       },
       valueEnum: {
         '': { text: '全部' },
-        '待审核': { text: '待审核', status: 'Processing' },
-        '已拒绝': { text: '已拒绝', status: 'Error' },
-        '完成': { text: '完成', status: 'Success' },
-        '已撤销': { text: '已撤销', status: 'Default' }
+        '0': { text: '创建', status: 'Processing' },
+        '1': { text: '待审核', status: 'Processing' },
+        '2': { text: '完成', status: 'Success' },
+        '3': { text: '拒绝', status: 'Error' },
+        '4': { text: '用户撤销', status: 'Default' }
       }
     },
     { 
       title: '提现时间', 
-      dataIndex: 'withdrawTime', 
-      key: 'withdrawTime',
-      valueType: 'dateTimeRange',
+      dataIndex: 'createTime', 
+      key: 'createTime',
+      valueType: 'dateTime',
       hideInTable: true
-    },
-    { 
-      title: '提现时间', 
-      dataIndex: 'withdrawTime', 
-      key: 'withdrawTime',
-      hideInSearch: true
     },
     { 
       title: '操作', 
@@ -183,7 +197,6 @@ const WithdrawManage: React.FC = () => {
 
   return (
     <PageContainer>
-      <Card title="提币申核">
         <ProTable<WithdrawRecord>
           columns={columns}
           request={fetchWithdrawData}
@@ -203,7 +216,6 @@ const WithdrawManage: React.FC = () => {
           scroll={{ x: 'max-content' }}
           dateFormatter="string"
         />
-      </Card>
       
       {/* 引入详情模态框组件 */}
       <DetailModal 
