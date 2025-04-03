@@ -58,7 +58,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 资产折合 &gt;=</>}
-                name="assetThreshold"
+                name="count"
               >
                 <Space>
                   <InputNumber min={0} placeholder="1.0" disabled={editingSection !== 'asset'} />
@@ -67,7 +67,7 @@ const RiskControlConfig: React.FC = () => {
               </Form.Item>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
-                name="assetRiskLevel"
+                name="riskIncrement"
               >
                 <Space>
                   <InputNumber min={1} placeholder="1" disabled={editingSection !== 'asset'} />
@@ -104,7 +104,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span></>}
-                name="timeLimit"
+                name={['time_window','count']}
               >
                 <Space>
                   <InputNumber min={1} placeholder="10" disabled={editingSection !== 'money'} />
@@ -117,7 +117,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
-                name="withdrawalCountRiskLevel"
+                name="riskIncrement"
               >
                 <Space>
                   <InputNumber min={1} placeholder="1" disabled={editingSection !== 'money'} />
@@ -131,7 +131,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 24小时内充值 &gt;</>}
-                name="depositLimit"
+                name={['recharge_min','withdraw_ratio']}
               >
                 <Space>
                   <InputNumber min={1} placeholder="100000" disabled={editingSection !== 'money'} />
@@ -144,7 +144,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
-                name="depositWithdrawalRiskLevel"
+                name="riskIncrement"
               >
                 <Space>
                   <InputNumber min={1} placeholder="1" disabled={editingSection !== 'money'} />

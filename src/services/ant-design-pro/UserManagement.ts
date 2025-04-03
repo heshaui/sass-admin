@@ -210,3 +210,11 @@ export async function gatewayAccessLogList(params: any) {
   });
 }
 
+
+
+export async function userTransactionCount(params: any) {
+  return request(isAdmin ?'/tenant-admin/v1/user/userTransactionCount' :'/tenant/v1/userTransactionCount', {
+    method: 'POST',
+    data: params,
+  });
+}

@@ -6,7 +6,7 @@ import AvatarUpload from "@/components/AvatarUpload/index";
 interface ImageConfigModalProps {
     visible: boolean;
     onCancel: () => void;
-    onSave: () => void;
+    onSave: (backgroundImage: string, posterImage: string) => void;
     language: string;
     imagesConfig:any;
 
@@ -24,6 +24,22 @@ const ImageConfigModal: React.FC<ImageConfigModalProps> = ({
 const [backgroundImage,setBackgroundImage]=useState('');
 const [posterImage,setPosterImage]=useState('');
 
+// 初始化使用imagesConfig中的数据
+React.useEffect(() => {
+    if (imagesConfig && imagesConfig[language]) {
+        setBackgroundImage(imagesConfig[language].backgroundImage || '');
+        setPosterImage(imagesConfig[language].posterImage || '');
+    }
+}, [imagesConfig, language]);
+
+// 添加安全访问方法
+const getBackgroundImageValue = () => {
+    return imagesConfig && imagesConfig[language] ? imagesConfig[language].backgroundImage || '' : '';
+};
+
+const getPosterImageValue = () => {
+    return imagesConfig && imagesConfig[language] ? imagesConfig[language].posterImage || '' : '';
+};
 
     return (
         <Modal
@@ -59,7 +75,7 @@ const [posterImage,setPosterImage]=useState('');
 
 
                         <div style={{ marginTop: 10 }}>
-                            <AvatarUpload onChange={(url)=>{setBackgroundImage(url)}} value={imagesConfig[language].backgroundImage}/>
+                            <AvatarUpload onChange={(url)=>{setBackgroundImage(url)}} value={getBackgroundImageValue()}/>
                             <p>建议尺寸1236*452</p>
                         </div>
                     </div>
@@ -67,7 +83,7 @@ const [posterImage,setPosterImage]=useState('');
                     <div style={{ marginTop: 0 }}>
 
                         <div style={{ marginTop: 10 }}>
-                            <AvatarUpload onChange={(url)=>{setPosterImage(url)}} value={imagesConfig[language].posterImage}/>
+                            <AvatarUpload onChange={(url)=>{setPosterImage(url)}} value={getPosterImageValue()}/>
                             <p>建议尺寸856*452</p>
                         </div>
                     </div>

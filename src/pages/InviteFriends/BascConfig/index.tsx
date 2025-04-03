@@ -198,7 +198,7 @@ const BasicConfig: React.FC = () => {
   return (
     <PageContainer title="邀请好友基础配置">
       {/* 账户余额警告 */}
-      <Alert
+      {/* <Alert
         message="账户余额不足提醒！"
         description="尊敬的客户！检测到您邀请返佣账户余额不足！请及时补充余额！若余额不足，自动停止发放奖励，资金充足后自动补发。"
         type="warning"
@@ -209,7 +209,7 @@ const BasicConfig: React.FC = () => {
             前往
           </Button>
         }
-      />
+      /> */}
 
       {/* 账户配置 */}
       <Card title="账户配置" style={{ marginBottom: 24 }}>

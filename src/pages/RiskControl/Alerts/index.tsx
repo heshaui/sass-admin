@@ -67,56 +67,17 @@ const RiskControlAlerts: React.FC = () => {
 
   return (
     <PageContainer>
-      <Card title="报警记录" bordered={false}>
-        <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-          <Col span={4}>
-            <Input placeholder="UID" value={filters.uid} onChange={e => setFilters({...filters, uid: e.target.value})} />
-          </Col>
-          <Col span={4}>
-            <Select
-              defaultValue="全部"
-              style={{ width: '100%' }}
-              onChange={value => setFilters({...filters, alertType: value})}
-            >
-              <Option value="全部">触发类型: 全部</Option>
-              <Option value="资产不平">资产不平</Option>
-              <Option value="洗钱嫌疑">洗钱嫌疑</Option>
-              <Option value="被盗预警">被盗预警</Option>
-              <Option value="敏感信息">敏感信息</Option>
-            </Select>
-          </Col>
-          <Col span={8}>
-            <Space>
-              <span>触发时间</span>
-              <RangePicker
-                onChange={dates => setFilters({...filters, dateRange: dates})}
-                placeholder={['开始日期', '结束日期']}
-              />
-            </Space>
-          </Col>
-          <Col span={2}>
-            <Button type="primary" icon={<SearchOutlined />} onClick={() => {
-              console.log('搜索条件:', filters);
-              // 这里可以添加实际的查询逻辑
-            }}>
-              查询
-            </Button>
-          </Col>
-        </Row>
+
         <ProTable
           columns={columns}
           request={getList}
-          rowKey="uid"
+
+          rowKey="id"
           pagination={{
             showQuickJumper: true,
           }}
-          search={{
-            labelWidth: 'auto',
-          }}
           dateFormatter="string"
-          toolBarRender={false}
         />
-      </Card>
     </PageContainer>
   );
 };
