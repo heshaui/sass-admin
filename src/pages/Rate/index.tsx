@@ -22,6 +22,7 @@ const Rate: React.FC = () => {
     });
     if(res.code === '0'){
       message.success('更新成功');
+      actionRef.current?.reload();
     }else{
       message.error(res.message);
     }
@@ -127,6 +128,10 @@ const Rate: React.FC = () => {
       title: '是否启用',
       dataIndex: 'status',
       key: 'status',
+      valueEnum: {
+        1: { text: '是', status: 'Success' },
+        0: { text: '否', status: 'Default' },
+      },
       render: (_: any, record: any) => [
         <Switch key="switch" checked={record.status === 1} onChange={(checked: boolean) => merchantUpdateRate(record.id, checked ? 1 : 0)} />
       ]
