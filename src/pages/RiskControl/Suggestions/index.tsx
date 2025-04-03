@@ -53,7 +53,7 @@ const RiskControlSuggestions: React.FC = () => {
           <div style={{ padding: 20, marginBottom: 30 }}>
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               <Space align="baseline" size="large">
-                <span style={{ color: 'red' }}>* 风险等级>=</span>
+                <span style={{ color: 'red' }}>* 风险等级&gt;=</span>
                 <Form.Item 
                   name="riskLevel1"
                   style={{ marginBottom: 0, marginRight: 5 }}
@@ -80,7 +80,7 @@ const RiskControlSuggestions: React.FC = () => {
               </Space>
               
               <Space align="baseline" size="large">
-                <span style={{ color: 'red' }}>* 风险等级>=</span>
+                <span style={{ color: 'red' }}>* 风险等级&gt;=</span>
                 <Form.Item 
                   name="riskLevel2"
                   style={{ marginBottom: 0, marginRight: 5 }}
@@ -107,7 +107,7 @@ const RiskControlSuggestions: React.FC = () => {
               </Space>
               
               <Space align="baseline" size="large">
-                <span style={{ color: 'red' }}>* 风险等级>=</span>
+                <span style={{ color: 'red' }}>* 风险等级&gt;=</span>
                 <Form.Item 
                   name="riskLevel3"
                   style={{ marginBottom: 0, marginRight: 5 }}
