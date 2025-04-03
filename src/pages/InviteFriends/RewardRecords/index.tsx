@@ -55,14 +55,14 @@ const RewardRecords: React.FC = () => {
     },
     {
       title: '注册账号',
-      dataIndex: 'accountNumber',
-      key: 'accountNumber',
+      dataIndex: 'account',
+      key: 'account',
       search: false,
     },
     {
       title: '邀请人ID',
-      dataIndex: 'inviterId',
-      key: 'inviterId',
+      dataIndex: 'parentUserId',
+      key: 'parentUserId',
       render: (text) => <a>{text}</a>,
       search: false,
     },
@@ -81,20 +81,20 @@ const RewardRecords: React.FC = () => {
     },
     {
       title: '返佣比例',
-      dataIndex: 'commissionRate',
-      key: 'commissionRate',
+      dataIndex: 'rebateRatio',
+      key: 'rebateRatio',
       search: false,
     },
     {
       title: '返佣金额',
-      dataIndex: 'commissionAmount',
-      key: 'commissionAmount',
+      dataIndex: 'rebateAmount',
+      key: 'rebateAmount',
       search: false,
     },
     {
       title: '实际返佣金额',
-      dataIndex: 'actualCommissionAmount',
-      key: 'actualCommissionAmount',
+      dataIndex: 'actualRebateAmount',
+      key: 'actualRebateAmount',
       search: false,
     },
     {
@@ -105,11 +105,14 @@ const RewardRecords: React.FC = () => {
     },
     {
       title: '发放类型',
-      dataIndex: 'distributionType',
-      key: 'distributionType',
+      dataIndex: 'type',
+      key: 'type',
       valueEnum: {
-        '手动': { text: '手动' },
-        '自动': { text: '自动' },
+        // 1 增加 2 扣减 3 冻结 4 解冻
+        '1': { text: '增加' },
+        '2': { text: '扣减' },
+        '3': { text: '冻结' },
+        '4': { text: '解冻' },
       },
       formItemProps: {
         label: '发放类型',
@@ -117,13 +120,10 @@ const RewardRecords: React.FC = () => {
     },
     {
       title: '发放时间',
-      dataIndex: 'distributionTime',
-      key: 'distributionTime',
+      dataIndex: 'createTime',
+      key: 'createTime',
       valueType: 'dateTime',
-      formItemProps: {
-        label: '发放时间',
-      },
-      renderFormItem: () => <RangePicker placeholder={['年/月/日', '年/月/日']} />,
+      
     },
   ];
 

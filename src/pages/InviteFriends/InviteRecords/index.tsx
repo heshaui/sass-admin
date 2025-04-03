@@ -67,8 +67,8 @@ const InviteRecords: React.FC = () => {
     },
     {
       title: '14D累计充值USDT',
-      dataIndex: 'rechargeAmount',
-      key: 'rechargeAmount',
+      dataIndex: 'accumulate',
+      key: 'accumulate',
       search: false,
     },
     {
