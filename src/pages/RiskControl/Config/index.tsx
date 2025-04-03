@@ -39,10 +39,10 @@ const RiskControlConfig: React.FC = () => {
     <PageContainer>
       <Form form={form} onFinish={onFinish} layout="vertical">
         {/* 资产不平 */}
-        <Card 
-          title="资产不平" 
-          bordered={false} 
-          style={{marginBottom:20}}
+        <Card
+          title="资产不平"
+          bordered={false}
+          style={{ marginBottom: 20 }}
           extra={
             editingSection === 'asset' ? (
               <Space>
@@ -77,18 +77,20 @@ const RiskControlConfig: React.FC = () => {
             </Col>
             <Col span={8}>
               <Form.Item label="报警通知" name="alertMethod">
-               <Input placeholder="邮箱或手机，以类文通号啓开" disabled={editingSection !== 'asset'} />
+                <Input placeholder="邮箱或手机，以类文通号啓开" disabled={editingSection !== 'asset'} />
               </Form.Item>
             </Col>
           </Row>
         </Card>
+      </Form>
 
-        {/* 洗钱嫌疑 */}
-        <Card 
-          title="洗钱嫌疑" 
-          bordered={false} 
+      {/* 洗钱嫌疑 */}
+      <Form form={form} onFinish={onFinish} layout="vertical">
+        <Card
+          title="洗钱嫌疑"
+          bordered={false}
           className="mt-4"
-          style={{marginBottom:20}}
+          style={{ marginBottom: 20 }}
           extra={
             editingSection === 'money' ? (
               <Space>
@@ -104,7 +106,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span></>}
-                name={['time_window','count']}
+                name={['time_window', 'count']}
               >
                 <Space>
                   <InputNumber min={1} placeholder="10" disabled={editingSection !== 'money'} />
@@ -127,11 +129,14 @@ const RiskControlConfig: React.FC = () => {
             </Col>
           </Row>
 
+
+
+
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 24小时内充值 &gt;</>}
-                name={['recharge_min','withdraw_ratio']}
+                name={['recharge_min', 'withdraw_ratio']}
               >
                 <Space>
                   <InputNumber min={1} placeholder="100000" disabled={editingSection !== 'money'} />
@@ -154,11 +159,14 @@ const RiskControlConfig: React.FC = () => {
             </Col>
           </Row>
         </Card>
+      </Form>
 
-        {/* 被盗预警 */}
-        <Card 
-          title="被盗预警" 
-          bordered={false} 
+
+      {/* 被盗预警 */}
+      <Form form={form} onFinish={onFinish} layout="vertical">
+        <Card
+          title="被盗预警"
+          bordered={false}
           className="mt-4"
           extra={
             editingSection === 'theft' ? (
@@ -175,7 +183,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 用户提现的IP更换次数占比 &lt;</>}
-                name="ipChangeRatio"
+                name="count"
               >
                 <Space>
                   <InputNumber min={1} placeholder="1" disabled={editingSection !== 'theft'} />
@@ -186,7 +194,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
-                name="ipChangeRiskLevel"
+                name="riskIncrement"
               >
                 <Space>
                   <InputNumber min={1} placeholder="1" disabled={editingSection !== 'theft'} />
@@ -200,7 +208,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<>用户提现地址之前未成功提现 &gt;</>}
-                name="newAddressCount"
+                name="count"
               >
                 <Space>
                   <InputNumber min={1} placeholder="5" disabled={editingSection !== 'theft'} />
@@ -211,7 +219,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
-                name="newAddressRiskLevel"
+                name="riskIncrement"
               >
                 <Space>
                   <InputNumber min={1} placeholder="1" disabled={editingSection !== 'theft'} />
@@ -232,7 +240,7 @@ const RiskControlConfig: React.FC = () => {
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
-                name="multiAccountRiskLevel"
+                name="riskIncrement"
               >
                 <Space>
                   <InputNumber min={1} placeholder="1" disabled={editingSection !== 'theft'} />
