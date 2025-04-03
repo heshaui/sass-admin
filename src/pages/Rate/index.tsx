@@ -155,15 +155,15 @@ const Rate: React.FC = () => {
           const { current, pageSize, ...restParams } = params;
           const convertedParams = {
             ...restParams,
-            PageNo: current,
-            PageSize: pageSize,
+            pageNo: current,
+            pageSize: pageSize,
           };
          
           const response = isAdmin ? await queryRateList(convertedParams) : await queryTenantRateList(convertedParams);
           return {
             data: response.data.list || [],
-            success: response.success,
-            total: response.count || 0,
+            success: response.code === '0',
+            total: response.data.count || 0,
           };
         }}
         pagination={{

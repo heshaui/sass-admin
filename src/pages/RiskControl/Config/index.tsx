@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Form, Input, InputNumber, Button, Row, Col, Space, Typography } from 'antd';
-
+import { riskConditionTemplateList } from '@/services/ant-design-pro/risk';
 
 const { Text } = Typography;
 
@@ -10,6 +10,8 @@ const RiskControlConfig: React.FC = () => {
 
   // 添加编辑状态控制
   const [editingSection, setEditingSection] = useState<string | null>(null);
+
+
 
   const onFinish = (values: any) => {
     console.log('表单提交的值:', values);
@@ -25,6 +27,13 @@ const RiskControlConfig: React.FC = () => {
       setEditingSection(section);
     }
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await riskConditionTemplateList({});
+      console.log(res);
+    };
+    fetchData();
+  }, []);
 
   return (
     <PageContainer>

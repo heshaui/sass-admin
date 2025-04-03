@@ -7,3 +7,12 @@ export async function assetAccountReviewList(data?: any) {
     data,
   });
 }
+
+
+
+export async function riskConditionTemplateList(data?: any) {
+  return request('/tenant/v1/riskConditionTemplateList', {
+    method: 'POST',
+    data,
+  });
+}
