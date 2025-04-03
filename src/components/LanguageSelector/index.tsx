@@ -4,9 +4,10 @@ import type { RadioChangeEvent } from 'antd';
 interface LanguageSelectorProps {
   value?: string;
   onChange?: (value: string) => void;
+  text?:string;
 }
 
-const LanguageSelector: React.FC<LanguageSelectorProps> = ({ value, onChange }) => {
+const LanguageSelector: React.FC<LanguageSelectorProps> = ({ value, onChange,text}) => {
   // 处理语言选择变化
   const handleLanguageChange = (e: RadioChangeEvent) => {
     onChange?.(e.target.value);
@@ -18,6 +19,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ value, onChange }) 
     { "key": "ja_JP", "label": "日本語" },
     { "key": "ko_KR", "label": "한국어"}
 ]
+const texts=text||'支持多个语言编辑，英文为必填，其他语言配置则显示，不配置不显示';
   return (
       <div>
 
@@ -29,7 +31,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({ value, onChange }) 
         ))}
       </Radio.Group>
       <div style={{ marginBottom: '8px', color: '#999', fontSize: '12px', marginTop: '4px' }}>
-        *支持多个语言编辑，英文为必填，其他语言配置则显示，不配置不显示
+      *{texts}
       </div>
       </div>
 

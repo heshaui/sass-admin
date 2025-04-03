@@ -112,8 +112,9 @@ const Header: React.FC = () => {
     
       
       if (editingMenu) {
+        console.log(editingMenu)
         const data = {
-          id:editingMenu.id,
+          id:editingMenu.homeMenu.id,
           menuDescription:values.values.menuDescription,
           parentId:editingMenu.homeMenu.parentId,
           typeId:values.values.typeId,

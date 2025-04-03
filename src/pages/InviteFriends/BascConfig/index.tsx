@@ -10,13 +10,15 @@ import {
   Alert, 
   Select, 
   Radio, 
+  Image
 } from 'antd';
 import { getRewardConfigurationDetail,getCurrencyCoinList,getUserInviteDetailList,getImageConfigurationDetail,saveOrUpdateRewardConfiguration,saveOrUpdateImageConfiguration,getFundAccountsList} from '@/services/ant-design-pro/inviteFriends';
 import LanguageSelector from '@/components/LanguageSelector';
 import type { ProColumns } from '@ant-design/pro-components';
 import AvatarUpload from "@/components/AvatarUpload/index";
 import { getTenantKeyParams,updateValue } from '@/services/ant-design-pro/kv';
-
+import ImageConfigModal from './components/ImageConfigModal';
+ import ImagePlaceholder from '@/components/ImagePlaceholder';
 const { Option } = Select;
 
 
@@ -27,11 +29,8 @@ const BasicConfig: React.FC = () => {
   const [coinList,setCoinList]=useState([]);
   const [config,setConfig]=useState('');
   const [configId,setConfigId]=useState('');
-  const [imagesConfig, setImagesConfig] = useState<Record<string, {backgroundImage: string, posterImage: string}>>({
-    en_US: { backgroundImage: '', posterImage: '' },
-    zh_CN: { backgroundImage: '', posterImage: '' },
-    // 可以添加更多语言
-  });
+  const [imagesConfig, setImagesConfig] = useState<Record<string, {backgroundImage: string, posterImage: string}>>();
+  const [imageModalVisible, setImageModalVisible] = useState(true);
 
 
   const getCoin=async()=>{
@@ -82,14 +81,14 @@ const BasicConfig: React.FC = () => {
   };
 
   const saveImage = async () => {
-    // 将imagesConfig转换为API所需的格式
-    const images = Object.entries(imagesConfig).map(([languageCode, config]) => ({
-      languageCode,
-      backgroundImageUrl: config.backgroundImage,
-      posterBackgroundUrl: config.posterImage
-    }));
+    // // 将imagesConfig转换为API所需的格式
+    // const images = Object.entries(imagesConfig).map(([languageCode, config]) => ({
+    //   languageCode,
+    //   backgroundImageUrl: config.backgroundImage,
+    //   posterBackgroundUrl: config.posterImage
+    // }));
     
-    const data = { images };
+    // const data = { images };
     
     const res = await saveOrUpdateImageConfiguration(data);
     if (res.code === '0') {
@@ -213,6 +212,13 @@ const BasicConfig: React.FC = () => {
   ];
 
 
+  const handleCancel = () => {
+    setImageModalVisible(false);
+  };
+
+  const handleSave = () => {
+    setImageModalVisible(false);
+  };
   return (
     <PageContainer title="邀请好友基础配置">
       {/* 账户余额警告 */}
@@ -322,28 +328,28 @@ const BasicConfig: React.FC = () => {
       {/* 邀请页面配置 */}
       <Card title="邀请页面配置" style={{ marginBottom: 24 }}>
        
-      <LanguageSelector value={language} onChange={handleLanguageChange} />
+      <LanguageSelector value={language} text="配置英文样式，则默认同步至其他语言。若不配置将使用系统默认。" onChange={handleLanguageChange} />
+      <Button type="primary" onClick={()=>{
+        setImageModalVisible(true);
+      }}>配置图片</Button>
       <div style={{display:'flex',flexDirection:'row'}}>
       <div style={{ marginTop: 20 }}>
-          <h4>邀请页背景配置（PC）- {language}</h4>
-          <AvatarUpload 
-            value={imagesConfig[language]?.backgroundImage || ''} 
-            onChange={handleBackgroundImageChange}
-          />
-          <p>建议尺寸1236*452</p>
+          <h4>邀请页背景配置（PC）</h4>
+          <ImagePlaceholder />
         </div>
         
         <div style={{ marginTop: 20 }}>
-          <h4>邀请海报底图（PC）- {language}</h4>
-          <AvatarUpload 
-            value={imagesConfig[language]?.posterImage || ''} 
-            onChange={handlePosterImageChange}
-          />
-          <p>建议尺寸856*452</p>
+          <h4>邀请海报底图（PC）</h4>
+
+          <ImagePlaceholder />
         </div>
       </div>
-      <Button type="primary" onClick={saveImage}>保存所有语言配置</Button>
-        
+      <ImageConfigModal
+        visible={imageModalVisible}
+        onCancel={handleCancel}
+        onSave={handleSave}
+        language={language}
+      />
       </Card>
 
       {/* 资金账户列表 */}
