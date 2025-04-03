@@ -157,7 +157,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         </Form.Item>
 
         <Form.Item 
-        name="Token" 
+        name="token" 
         label="合约地址"
         rules={[{ required: true, message: '请输入合约地址' }]}
         >

@@ -63,11 +63,23 @@ const RiskControlConfig: React.FC = () => {
    setEditingSection(null); // 提交后退出编辑模式
   };
 
-  const moneyFinish = (values: any) => {
+  const moneyFinish = async(values: any) => {
+    let conditionId1
+    let conditionId2
+    moneyTemplate?.riskConditions.forEach((item: any) => {
+      if(item.conditionId!==2){
+        conditionId1=item.conditionId;
+      }
+    });
+    moneyTemplate?.riskConditions.forEach((item: any) => {
+      if(item.conditionId!==3){
+        conditionId2=item.conditionId;
+      }
+    })
     let riskConditionVos=[
       { 
-        googleCode:values.googleCode,
-        conditionId:moneyTemplate?.riskConditions[0].conditionId,
+       
+        conditionId:conditionId1,
         riskIncrement:values.riskIncrement,
         thresholdMap:{
           count:values.count,
@@ -76,7 +88,7 @@ const RiskControlConfig: React.FC = () => {
       },
       {
         googleCode:values.googleCode,
-        conditionId:moneyTemplate?.riskConditions[1].conditionId,
+        conditionId:conditionId2,
         riskIncrement:values.riskIncrement,
         thresholdMap:{
           count:values.count,
@@ -84,6 +96,15 @@ const RiskControlConfig: React.FC = () => {
         }
       }
     ]
+
+    let data={
+      googleCode:values.googleCode,
+      riskConditionVos:riskConditionVos,
+    }
+    let res= await saveRiskConditions(data);
+    if(res.code==='0'){
+      message.success('保存成功');
+    }
   }
 
   const theftFinish = (values: any) => {
@@ -148,6 +169,14 @@ const RiskControlConfig: React.FC = () => {
             }
           }else if(item.riskConditionTemplateType==='AML_STRUCTURING_DETECTION'){
             setMoneyTemplate(item);
+            if(item.riskConditions[0].conditionId!==1){
+              moneyForm.setFieldsValue({
+                time_window:Number(item.riskConditions[0].thresholdMap.count),
+                count:Number(item.riskConditions[0].thresholdMap.count),
+                oneRiskIncrement:Number(item.riskConditions[0].riskIncrement),
+                twoRiskIncrement:Number(item.riskConditions[1].riskIncrement),
+              });
+            }
           }else if(item.riskConditionTemplateType==='THEFT_WARNING'){
             setTheftTemplate(item);
           }
@@ -178,20 +207,22 @@ const RiskControlConfig: React.FC = () => {
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
-                label={<><span style={{ color: 'red' }}>*</span> 资产折合 &gt;=</>}
+                label='资产折合'
+                required
                 name="count"
               >
                 <Space>
-                  <InputNumber min={0}  disabled={editingSection !== 'asset'} />
+                  <Input   disabled={editingSection !== 'asset'} />
                   <Text>USDT</Text>
                 </Space>
               </Form.Item>
               <Form.Item
-                label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
+                label='风控等级'
+                required
                 name="riskIncrement"
               >
                 <Space>
-                  <InputNumber min={1}  disabled={editingSection !== 'asset'} />
+                  <Input   disabled={editingSection !== 'asset'} />
                   <Text>级</Text>
                 </Space>
               </Form.Item>
@@ -204,7 +235,7 @@ const RiskControlConfig: React.FC = () => {
             {
               currentUser?.employeeResp?.googleCode===true&&(
                 <Col span={8}>
-                  <Form.Item label="谷歌验证码" name="googleCode">
+                  <Form.Item label="谷歌验证码" name="googleCode" required>
                     <Input placeholder="请输入谷歌验证码" disabled={editingSection !== 'asset'} />
               </Form.Item>
             </Col>
@@ -233,30 +264,33 @@ const RiskControlConfig: React.FC = () => {
         >
           <Row gutter={24}>
             <Col span={12}>
+            <div style={{display:'flex',flexDirection:'row',gap:'10px'}}>
+
+              <span style={{color:'red'}}>*</span>
               <Form.Item
-                label={<><span style={{ color: 'red' }}>*</span></>}
+                required
                 name='time_window'
               >
                 <Space>
-                  <InputNumber min={1} placeholder="10" disabled={editingSection !== 'money'} />
+                  <Input disabled={editingSection !== 'money'} />
                   <Text>分钟内，累计提现笔数 &gt;</Text>
                 
                   
                 </Space>
               </Form.Item>
               <Form.Item name="count">
-              <InputNumber min={1} placeholder="5" disabled={editingSection !== 'money'} />
+              <Input placeholder="5" disabled={editingSection !== 'money'} />
               <Text>次。</Text>
               </Form.Item>
-              
+              </div>
             </Col>
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
-                name="riskIncrement"
+                name="oneRiskIncrement"
               >
                 <Space>
-                  <InputNumber min={1} placeholder="1" disabled={editingSection !== 'money'} />
+                  <Input  disabled={editingSection !== 'money'} />
                   <Text>级</Text>
                 </Space>
               </Form.Item>
@@ -268,27 +302,30 @@ const RiskControlConfig: React.FC = () => {
 
           <Row gutter={24}>
             <Col span={12}>
+            <div style={{display:'flex',flexDirection:'row',gap:'10px'}}>
+
+              <span style={{color:'red'}}>*</span><span>24小时内充值</span>
               <Form.Item
-                label={<><span style={{ color: 'red' }}>*</span> 24小时内充值 &gt;</>}
                 name='recharge_min' 
               >
                 <Space>
-                  <InputNumber min={1} placeholder="100000" disabled={editingSection !== 'money'} />
+                  <InputNumber min={1}  disabled={editingSection !== 'money'} />
                   <Text>USDT 且提现金额大于</Text>
                 </Space>
               </Form.Item>
               <Form.Item name="withdraw_ratio">
-                <InputNumber min={1} max={100} placeholder="90" disabled={editingSection !== 'money'} />
+                <InputNumber min={1} max={100}  disabled={editingSection !== 'money'} />
                 <Text>%的充值金额。</Text>
               </Form.Item>
+              </div>
             </Col>
             <Col span={12}>
               <Form.Item
                 label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
-                name="riskIncrement"
+                name="twoRiskIncrement"
               >
                 <Space>
-                  <InputNumber min={1} placeholder="1" disabled={editingSection !== 'money'} />
+                  <InputNumber min={1}  disabled={editingSection !== 'money'} />
                   <Text>级</Text>
                 </Space>
               </Form.Item>
