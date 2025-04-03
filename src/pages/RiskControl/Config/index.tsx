@@ -1,23 +1,91 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
-import { Card, Form, Input, InputNumber, Button, Row, Col, Space, Typography } from 'antd';
-import { riskConditionTemplateList } from '@/services/ant-design-pro/risk';
-
+import { Card, Form, Input, InputNumber, Button, Row, Col, Space, Typography,message } from 'antd';
+import { riskConditionTemplateList,saveRiskConditions } from '@/services/ant-design-pro/risk';
+import { useModel } from 'umi';
+import GoogleCode from '@/components/GoogleCode';
+import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 const { Text } = Typography;
 
 const RiskControlConfig: React.FC = () => {
-  const [form] = Form.useForm();
+  const [assetForm] = Form.useForm();
+  const [moneyForm] = Form.useForm();
+  const [theftForm] = Form.useForm();
 
   // 添加编辑状态控制
   const [editingSection, setEditingSection] = useState<string | null>(null);
+  const [assetTemplate, setAssetTemplate] = useState<any>({});
+  const [moneyTemplate, setMoneyTemplate] = useState<any>({});
+  const [theftTemplate, setTheftTemplate] = useState<any>({});
+  const { initialState,refresh } = useModel('@@initialState');
+  const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
+  const [googleCodeData, setGoogleCodeData] = useState<any>(null);
+  const { currentUser } = initialState || {};
+  const [googleCode, setGoogleCode] = useState('');
 
+  const assetFinish = async(values: any) => {
+    let conditionId
+    assetTemplate?.riskConditions.forEach((item: any) => {
+      if(item.conditionCode==='ASSET_IMBALANCE_1'){
+      conditionId=item.conditionId;
+      }
+    });
 
+    let riskConditionVos=[
+      { 
+       
+        conditionId:conditionId,
+        riskIncrement:values.riskIncrement,
+        earlyWarning:values.earlyWarning,
+        thresholdMap:{
+          count:values.count,
+          coin:'USDT'
+        }
+      }
+    ]
+    let data={
+      googleCode:values.googleCode,
+      riskConditionVos:riskConditionVos,
+    }
+   let res= await saveRiskConditions(data);
+   if(res.code==='0'){
+    message.success('保存成功');
+   }else{
+    message.error(res.message);
+   }
+   setEditingSection(null); // 提交后退出编辑模式
+  };
 
-  const onFinish = (values: any) => {
+  const moneyFinish = (values: any) => {
+    let riskConditionVos=[
+      { 
+        googleCode:values.googleCode,
+        conditionId:moneyTemplate?.riskConditions[0].conditionId,
+        riskIncrement:values.riskIncrement,
+        thresholdMap:{
+          count:values.count,
+          coin:'USDT'
+        }
+      },
+      {
+        googleCode:values.googleCode,
+        conditionId:moneyTemplate?.riskConditions[1].conditionId,
+        riskIncrement:values.riskIncrement,
+        thresholdMap:{
+          count:values.count,
+          coin:'USDT'
+        }
+      }
+    ]
+  }
+
+  const theftFinish = (values: any) => {
     console.log('表单提交的值:', values);
     // 处理保存逻辑
     setEditingSection(null); // 提交后退出编辑模式
   };
+  
+  
 
   // 切换编辑状态的函数
   const toggleEdit = (section: string) => {
@@ -27,17 +95,56 @@ const RiskControlConfig: React.FC = () => {
       setEditingSection(section);
     }
   };
+
+  const getGoogleCode=async()=>{
+    const res=await sendGoogleKey();
+    if(res.code==='0'){
+        
+        setGoogleCodeData(res.data);
+        setGoogleCodeVisible(true);
+    }else{
+        message.error(res.message);
+    }
+    
+  }
+  const handleGoogleCodeSuccess = async (code: string) => {
+
+    
+    const res=await bindGoogleKey({ googleCode: code });
+    if(res.code==='0'&&res.data){
+      message.success('绑定成功');
+      refresh();
+
+
+    }else{
+      message.error(res.message);
+    }
+    setGoogleCodeVisible(false);
+  }
+
+
+
   useEffect(() => {
     const fetchData = async () => {
       const res = await riskConditionTemplateList({});
-      console.log(res);
+      if(res.code==='0'&&res.data){
+        res.data.forEach((item: any) => {
+          if(item.sceneCode==='ASSET_IMBALANCE'){
+            setAssetTemplate(item);
+          }else if(item.riskConditionTemplateType==='AML_STRUCTURING_DETECTION'){
+            setMoneyTemplate(item);
+          }else if(item.riskConditionTemplateType==='THEFT_WARNING'){
+            setTheftTemplate(item);
+          }
+        });
+      }
     };
     fetchData();
   }, []);
 
   return (
     <PageContainer>
-      <Form form={form} onFinish={onFinish} layout="vertical">
+      <Form form={assetForm} onFinish={assetFinish} layout="vertical">
         {/* 资产不平 */}
         <Card
           title="资产不平"
@@ -47,10 +154,10 @@ const RiskControlConfig: React.FC = () => {
             editingSection === 'asset' ? (
               <Space>
                 <Button onClick={() => toggleEdit('asset')}>取消</Button>
-                <Button type="primary" onClick={() => form.submit()}>保存</Button>
+                <Button type="primary" onClick={() => assetForm.submit()}>保存</Button>
               </Space>
             ) : (
-              <Button type="primary" onClick={() => toggleEdit('asset')}>编辑</Button>
+              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('asset'):getGoogleCode()}>编辑</Button>
             )
           }
         >
@@ -76,16 +183,25 @@ const RiskControlConfig: React.FC = () => {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item label="报警通知" name="alertMethod">
+              <Form.Item label="报警通知" name="earlyWarning">
                 <Input placeholder="邮箱或手机，以类文通号啓开" disabled={editingSection !== 'asset'} />
               </Form.Item>
             </Col>
+            {
+              currentUser?.employeeResp?.googleCode===true&&(
+                <Col span={8}>
+                  <Form.Item label="谷歌验证码" name="googleCode">
+                    <Input placeholder="请输入谷歌验证码" disabled={editingSection !== 'asset'} />
+              </Form.Item>
+            </Col>
+            )
+          }
           </Row>
         </Card>
       </Form>
 
       {/* 洗钱嫌疑 */}
-      <Form form={form} onFinish={onFinish} layout="vertical">
+      <Form form={moneyForm} onFinish={moneyFinish} layout="vertical">
         <Card
           title="洗钱嫌疑"
           bordered={false}
@@ -95,10 +211,10 @@ const RiskControlConfig: React.FC = () => {
             editingSection === 'money' ? (
               <Space>
                 <Button onClick={() => toggleEdit('money')}>取消</Button>
-                <Button type="primary" onClick={() => form.submit()}>保存</Button>
+                <Button type="primary" onClick={() => moneyForm.submit()}>保存</Button>
               </Space>
             ) : (
-              <Button type="primary" onClick={() => toggleEdit('money')}>编辑</Button>
+              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('money'):getGoogleCode()}>编辑</Button>
             )
           }
         >
@@ -158,12 +274,23 @@ const RiskControlConfig: React.FC = () => {
               </Form.Item>
             </Col>
           </Row>
+          {
+            currentUser?.employeeResp?.googleCode===true&&(
+              <Row gutter={24}>
+            <Col span={8}>
+              <Form.Item label="谷歌验证码" name="googleCode">
+                <Input placeholder="请输入谷歌验证码" disabled={editingSection !== 'money'} />
+              </Form.Item>
+            </Col>
+          </Row>
+            )
+          }
         </Card>
       </Form>
 
 
       {/* 被盗预警 */}
-      <Form form={form} onFinish={onFinish} layout="vertical">
+      <Form form={theftForm} onFinish={theftFinish} layout="vertical">
         <Card
           title="被盗预警"
           bordered={false}
@@ -172,10 +299,10 @@ const RiskControlConfig: React.FC = () => {
             editingSection === 'theft' ? (
               <Space>
                 <Button onClick={() => toggleEdit('theft')}>取消</Button>
-                <Button type="primary" onClick={() => form.submit()}>保存</Button>
+                <Button type="primary" onClick={() => theftForm.submit()}>保存</Button>
               </Space>
             ) : (
-              <Button type="primary" onClick={() => toggleEdit('theft')}>编辑</Button>
+              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('theft'):getGoogleCode()}>编辑</Button>
             )
           }
         >
@@ -249,8 +376,27 @@ const RiskControlConfig: React.FC = () => {
               </Form.Item>
             </Col>
           </Row>
+          {
+            currentUser?.employeeResp?.googleCode===true&&(
+              <Row gutter={24}>
+            <Col span={8}>
+              <Form.Item label="谷歌验证码" name="googleCode">
+                <Input placeholder="请输入谷歌验证码" disabled={editingSection !== 'theft'} />
+              </Form.Item>
+            </Col>
+          </Row>
+            )
+          }
+          
         </Card>
       </Form>
+      <GoogleCode
+       visible={googleCodeVisible} 
+       qrCodeUrl={googleCodeData?.codeUri} 
+       secretKey={googleCodeData?.secretKey} 
+       onSubmit={handleGoogleCodeSuccess} 
+       onCancel={() => setGoogleCodeVisible(false)}
+      />
     </PageContainer>
   );
 };

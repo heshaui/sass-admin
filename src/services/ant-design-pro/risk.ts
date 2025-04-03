@@ -16,3 +16,12 @@ export async function riskConditionTemplateList(data?: any) {
     data,
   });
 }
+
+
+
+export async function saveRiskConditions(data?: any) {
+  return request('/tenant/v1/saveRiskConditions', {
+    method: 'POST',
+    data,
+  });
+}

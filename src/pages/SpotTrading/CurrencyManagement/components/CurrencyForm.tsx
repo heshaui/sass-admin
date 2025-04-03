@@ -52,7 +52,11 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
 
   const getCurrencyAll = async () => {
     if(!isAdmin){
-      const res = await tenantCurrencyCoinAll();
+      let data={
+        pageNo:1,
+        pageSize:10000
+      }
+      const res = await tenantCurrencyCoinAll(data);
       if(res.code==='0'){
         setCurrencyAll(res.data);
       }
