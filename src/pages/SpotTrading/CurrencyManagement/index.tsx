@@ -6,7 +6,9 @@ import {
   saveTenantCurrencyCoin,
   tenantCurrencyCoinList,
   adminUpdateCurrencyCoinExtById,
-  adminUpdateCurrencyCoinById
+  adminUpdateCurrencyCoinById,
+  saveTenantCurrencyCoinExt,
+  updateTenantCurrencyCoinExtById
 } from '@/services/ant-design-pro/spot';
 import { EditOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -421,6 +423,8 @@ const CurrencyManagement: React.FC = () => {
     if (extendInfoMode === 'add') {
       if (isAdmin) {
         res = await adminSaveCurrencyCoinExt(values);
+      }else{
+        res = await saveTenantCurrencyCoinExt(values);
       }
 
       if (res && res.code === '0') {
@@ -440,7 +444,11 @@ const CurrencyManagement: React.FC = () => {
       if (isAdmin) {
         values.id = extInfo?.id;
         res = await adminUpdateCurrencyCoinExtById(values);
+      }else{
+        values.id = extInfo?.id;
+        res = await updateTenantCurrencyCoinExtById(values);
       }
+      
       if (res && res.code === '0') {
         message.success(extendInfoMode === 'add' ? '拓展信息添加成功' : '拓展信息更新成功');
 

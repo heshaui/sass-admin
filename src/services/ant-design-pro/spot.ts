@@ -127,7 +127,7 @@ export async function saveCurrencyCoin(params?: Record<string, any>) {
 
 // 总后台币种修改
 export async function adminUpdateCurrencyCoinById(params?: Record<string, any>) {
-  return request('/tenant-admin/v1/coin/updateCurrencyCoinById', {
+  return request(isAdmin ? '/tenant-admin/v1/coin/updateCurrencyCoinById' : '/tenant/v1/tenant-coin/updateTenantCurrencyCoinById', {
     method: 'POST',
     data: params,
   });
@@ -195,3 +195,19 @@ export async function adminUpdateCurrencyCoinExtById(params?: Record<string, any
 
 
 
+// /tenant/v1/tenant-coin-ext/saveTenantCurrencyCoinExt
+export async function saveTenantCurrencyCoinExt(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-coin-ext/saveTenantCurrencyCoinExt', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// /tenant/v1/tenant-coin-ext/updateTenantCurrencyCoinExtById
+export async function updateTenantCurrencyCoinExtById(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-coin-ext/updateTenantCurrencyCoinExtById', {
+    method: 'POST',
+    data: params,
+  });
+}

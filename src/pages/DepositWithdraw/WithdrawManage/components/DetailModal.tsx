@@ -44,7 +44,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
   const [checkStatus, setCheckStatus] = useState<string>('2');
   const [txId, setTxId] = useState<string>('');
   const [remark, setRemark] = useState<string>('');
-
+  const [realityFee, setRealityFee] = useState<string>('');
   // 获取详情数据
   const fetchDetailData = async (orderId: string) => {
     setDetailLoading(true);
@@ -72,7 +72,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
 
 const handleUpdate = async () => {
 
-    const res = await updateWithdrawDeposit({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark});
+    const res = await updateWithdrawDeposit({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee});
     if (res.code === '0') {
       message.success('更新成功');
       onClose();
@@ -91,7 +91,6 @@ const handleUpdate = async () => {
 
   return (
     <Modal
-      title="提现详情"
       open={visible}
       onCancel={onClose}
       footer={null}
@@ -158,9 +157,9 @@ const handleUpdate = async () => {
             {
               currentRecord.status === 1 && (
                 <>
-                <ProDescriptions.Item label="TXID" span={1} ><Input/></ProDescriptions.Item>
-                <ProDescriptions.Item label="实际矿工费" span={1} ><Input/></ProDescriptions.Item>
-                <ProDescriptions.Item label="审核备注" span={1}><Input/></ProDescriptions.Item>
+                <ProDescriptions.Item label="TXID" span={1} ><Input value={txId} onChange={(e) => setTxId(e.target.value)}/></ProDescriptions.Item>
+                <ProDescriptions.Item label="实际矿工费" span={1} ><Input value={realityFee} onChange={(e) => setRealityFee(e.target.value)}/></ProDescriptions.Item>
+                <ProDescriptions.Item label="审核备注" span={1}><Input value={remark} onChange={(e) => setRemark(e.target.value)}/></ProDescriptions.Item>
                 </>
               )
             }

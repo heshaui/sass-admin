@@ -8,7 +8,11 @@ const { Title } = Typography;
 
 const RiskControlSuggestions: React.FC = () => {
   // 风控建议数据
-  const [form] = Form.useForm();
+  const [suggestionsForm] = Form.useForm();
+  const [sensitiveForm] = Form.useForm();
+  // 添加编辑状态
+  const [editingSuggestions, setEditingSuggestions] = useState(false);
+  const [editingSensitive, setEditingSensitive] = useState(false);
   
   // 处理建议选项
   const suggestionOptions = [
@@ -21,39 +25,52 @@ const RiskControlSuggestions: React.FC = () => {
 
   const handleSave = (values: any) => {
     console.log('表单值:', values);
+    // 保存后关闭编辑状态
+    setEditingSuggestions(false);
+    setEditingSensitive(false);
     // 这里添加保存逻辑
   };
 
   return (
     <PageContainer>
-      <Card bordered={false}>
-        <Form form={form} layout="vertical" onFinish={handleSave}>
+    
+      
+          
+          <Card style={{marginBottom:30}}>
+          <Form form={suggestionsForm} layout="vertical" onFinish={handleSave}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
             <Title level={4}>提现处理建议</Title>
-            <Button type="primary" htmlType="submit">保存</Button>
+            {!editingSuggestions ? (
+              <Button type="primary" onClick={() => setEditingSuggestions(true)}>编辑</Button>
+            ) : (
+              <Space>
+                <Button onClick={() => setEditingSuggestions(false)}>取消</Button>
+                <Button type="primary" htmlType="submit">保存</Button>
+              </Space>
+            )}
           </div>
-          
           {/* 风险等级配置区域 */}
-          <div style={{ background: '#f9f0f0', padding: 20, marginBottom: 30 }}>
+          <div style={{ padding: 20, marginBottom: 30 }}>
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               <Space align="baseline" size="large">
+                <span style={{ color: 'red' }}>* 风险等级>=</span>
                 <Form.Item 
-                  label={<span style={{ color: 'red' }}>* 风险等级&gt;=</span>} 
                   name="riskLevel1"
-                  style={{ marginBottom: 0 }}
+                  style={{ marginBottom: 0, marginRight: 5 }}
                 >
-                  <Input style={{ width: 60 }} defaultValue="3" />
+                  <Input style={{ width: 60 }} defaultValue="3" disabled={!editingSuggestions} />
                 </Form.Item>
                 <span>级</span>
                 
+                <span style={{ color: 'red', marginLeft: 15 }}>* 处理建议</span>
                 <Form.Item
-                  label={<span style={{ color: 'red' }}>* 处理建议</span>}
                   name="suggestion1"
-                  style={{ marginBottom: 0, width: 500 }}
+                  style={{ marginBottom: 0, width: 500, marginLeft: 5 }}
                 >
                   <Select 
                     suffixIcon={<DownOutlined />}
                     defaultValue="建议回访用户后处理"
+                    disabled={!editingSuggestions}
                   >
                     {suggestionOptions.map(option => (
                       <Option key={option} value={option}>{option}</Option>
@@ -63,23 +80,24 @@ const RiskControlSuggestions: React.FC = () => {
               </Space>
               
               <Space align="baseline" size="large">
+                <span style={{ color: 'red' }}>* 风险等级>=</span>
                 <Form.Item 
-                  label={<span style={{ color: 'red' }}>* 风险等级&gt;=</span>} 
                   name="riskLevel2"
-                  style={{ marginBottom: 0 }}
+                  style={{ marginBottom: 0, marginRight: 5 }}
                 >
-                  <Input style={{ width: 60 }} defaultValue="6" />
+                  <Input style={{ width: 60 }} defaultValue="6" disabled={!editingSuggestions} />
                 </Form.Item>
                 <span>级</span>
                 
+                <span style={{ color: 'red', marginLeft: 15 }}>* 处理建议</span>
                 <Form.Item
-                  label={<span style={{ color: 'red' }}>* 处理建议</span>}
                   name="suggestion2"
-                  style={{ marginBottom: 0, width: 500 }}
+                  style={{ marginBottom: 0, width: 500, marginLeft: 5 }}
                 >
                   <Select 
                     suffixIcon={<DownOutlined />}
                     defaultValue="建议禁止提现，并回访用户后再处理"
+                    disabled={!editingSuggestions}
                   >
                     {suggestionOptions.map(option => (
                       <Option key={option} value={option}>{option}</Option>
@@ -89,23 +107,24 @@ const RiskControlSuggestions: React.FC = () => {
               </Space>
               
               <Space align="baseline" size="large">
+                <span style={{ color: 'red' }}>* 风险等级>=</span>
                 <Form.Item 
-                  label={<span style={{ color: 'red' }}>* 风险等级&gt;=</span>} 
                   name="riskLevel3"
-                  style={{ marginBottom: 0 }}
+                  style={{ marginBottom: 0, marginRight: 5 }}
                 >
-                  <Input style={{ width: 60 }} defaultValue="9" />
+                  <Input style={{ width: 60 }} defaultValue="9" disabled={!editingSuggestions} />
                 </Form.Item>
                 <span>级</span>
                 
+                <span style={{ color: 'red', marginLeft: 15 }}>* 处理建议</span>
                 <Form.Item
-                  label={<span style={{ color: 'red' }}>* 处理建议</span>}
                   name="suggestion3"
-                  style={{ marginBottom: 0, width: 500 }}
+                  style={{ marginBottom: 0, width: 500, marginLeft: 5 }}
                 >
                   <Select 
                     suffixIcon={<DownOutlined />}
                     defaultValue="建议冻结用户提现"
+                    disabled={!editingSuggestions}
                   >
                     {suggestionOptions.map(option => (
                       <Option key={option} value={option}>{option}</Option>
@@ -115,73 +134,135 @@ const RiskControlSuggestions: React.FC = () => {
               </Space>
             </Space>
           </div>
+          </Form>
+          </Card>
 
           {/* 敏感信息修改区域 */}
+          <Card>
+          <Form form={sensitiveForm} layout="vertical" onFinish={handleSave}>
           <div style={{ marginBottom: 30 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
               <Title level={4}>敏感信息修改</Title>
-              <Button type="primary">编辑</Button>
+              {!editingSensitive ? (
+                <Button type="primary" onClick={() => setEditingSensitive(true)}>编辑</Button>
+              ) : (
+                <Space>
+                  <Button onClick={() => setEditingSensitive(false)}>取消</Button>
+                  <Button type="primary" htmlType="submit">保存</Button>
+                </Space>
+              )}
             </div>
             
             <Space direction="vertical" style={{ width: '100%' }} size="large">
-              <Space align="baseline" size="large">
-                <Form.Item 
-                  label={<span style={{ color: 'red' }}>* 修改密码后禁止提现增加</span>} 
-                  name="passwordTime"
-                  style={{ marginBottom: 0 }}
-                >
-                  <Input style={{ width: 60 }} defaultValue="24" />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: 'red', width: '200px' }}>* 修改密码后禁止提现增加</span>
+                <Form.Item name="passwordTime" style={{ margin: 0, width: '60px' }}>
+                  <Input style={{ width: 60 }} defaultValue="24" disabled={!editingSensitive} />
                 </Form.Item>
-                <span>H</span>
+                <span style={{ marginRight: '20px' }}>H</span>
                 
-                <Form.Item
-                  label={<span style={{ color: 'red' }}>* 处理建议</span>}
-                  name="passwordSuggestion"
-                  style={{ marginBottom: 0, width: 500 }}
-                >
+                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <Form.Item name="passwordSuggestion" style={{ margin: 0, width: '300px' }}>
                   <Select 
                     suffixIcon={<DownOutlined />}
                     defaultValue="建议回访用户后处理"
+                    disabled={!editingSensitive}
                   >
                     {suggestionOptions.map(option => (
                       <Option key={option} value={option}>{option}</Option>
                     ))}
                   </Select>
                 </Form.Item>
-              </Space>
+              </div>
               
-              {/* 其他敏感信息项... */}
-              <Space align="baseline" size="large">
-                <Form.Item 
-                  label={<span style={{ color: 'red' }}>* 解绑2FA后禁止提现增加</span>} 
-                  name="2faTime"
-                  style={{ marginBottom: 0 }}
-                >
-                  <Input style={{ width: 60 }} defaultValue="24" />
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: 'red', width: '200px' }}>* 解绑2FA后禁止提现增加</span>
+                <Form.Item name="2faTime" style={{ margin: 0, width: '60px' }}>
+                  <Input style={{ width: 60 }} defaultValue="24" disabled={!editingSensitive} />
                 </Form.Item>
-                <span>H</span>
+                <span style={{ marginRight: '20px' }}>H</span>
                 
-                <Form.Item
-                  label={<span style={{ color: 'red' }}>* 处理建议</span>}
-                  name="2faSuggestion"
-                  style={{ marginBottom: 0, width: 500 }}
-                >
+                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <Form.Item name="2faSuggestion" style={{ margin: 0, width: '300px' }}>
                   <Select 
                     suffixIcon={<DownOutlined />}
                     defaultValue="建议禁止提现，并回访用户后再处理"
+                    disabled={!editingSensitive}
                   >
                     {suggestionOptions.map(option => (
                       <Option key={option} value={option}>{option}</Option>
                     ))}
                   </Select>
                 </Form.Item>
-              </Space>
+              </div>
               
-              {/* 添加更多敏感信息相关的表单项 */}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: 'red', width: '200px' }}>* 更换手机号后禁止提现增加</span>
+                <Form.Item name="phoneTime" style={{ margin: 0, width: '60px' }}>
+                  <Input style={{ width: 60 }} defaultValue="24" disabled={!editingSensitive} />
+                </Form.Item>
+                <span style={{ marginRight: '20px' }}>H</span>
+                
+                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <Form.Item name="phoneSuggestion" style={{ margin: 0, width: '300px' }}>
+                  <Select 
+                    suffixIcon={<DownOutlined />}
+                    defaultValue="建议冻结用户提现"
+                    disabled={!editingSensitive}
+                  >
+                    {suggestionOptions.map(option => (
+                      <Option key={option} value={option}>{option}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: 'red', width: '200px' }}>* 更换邮箱后禁止提现增加</span>
+                <Form.Item name="emailTime" style={{ margin: 0, width: '60px' }}>
+                  <Input style={{ width: 60 }} defaultValue="24" disabled={!editingSensitive} />
+                </Form.Item>
+                <span style={{ marginRight: '20px' }}>H</span>
+                
+                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <Form.Item name="emailSuggestion" style={{ margin: 0, width: '300px' }}>
+                  <Select 
+                    suffixIcon={<DownOutlined />}
+                    defaultValue="建议禁止提现，并回访用户后再处理"
+                    disabled={!editingSensitive}
+                  >
+                    {suggestionOptions.map(option => (
+                      <Option key={option} value={option}>{option}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span style={{ color: 'red', width: '200px' }}>* 修改资金密码后禁止提现增加</span>
+                <Form.Item name="fundPasswordTime" style={{ margin: 0, width: '60px' }}>
+                  <Input style={{ width: 60 }} defaultValue="24" disabled={!editingSensitive} />
+                </Form.Item>
+                <span style={{ marginRight: '20px' }}>H</span>
+                
+                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <Form.Item name="fundPasswordSuggestion" style={{ margin: 0, width: '300px' }}>
+                  <Select 
+                    suffixIcon={<DownOutlined />}
+                    defaultValue="建议冻结用户提现"
+                    disabled={!editingSensitive}
+                  >
+                    {suggestionOptions.map(option => (
+                      <Option key={option} value={option}>{option}</Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </div>
             </Space>
           </div>
-        </Form>
-      </Card>
+          </Form>
+          </Card>
+
     </PageContainer>
   );
 };

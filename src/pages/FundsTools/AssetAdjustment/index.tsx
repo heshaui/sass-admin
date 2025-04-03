@@ -51,17 +51,12 @@ const AssetAdjustment: React.FC = () => {
     { title: '编号', dataIndex: 'id', key: 'id', search: false },
     { 
       title: '币种', 
-      dataIndex: 'currency', 
-      key: 'currency',
-      valueEnum: {
-        'BTC': { text: 'BTC' },
-        'ETH': { text: 'ETH' },
-        'USDT': { text: 'USDT' },
-      },
+      dataIndex: 'coinName', 
+      key: 'coinName',
     },
     { title: '金额', dataIndex: 'amount', key: 'amount', search: false },
-    { title: '备注', dataIndex: 'reason', key: 'reason' },
-    { title: '操作人', dataIndex: 'operator', key: 'operator' },
+    { title: '备注', dataIndex: 'reason', key: 'reason', search: false },
+    { title: '操作人', dataIndex: 'operator', key: 'operator' , search: false},
     { 
       title: '时间', 
       dataIndex: 'operateTime', 
