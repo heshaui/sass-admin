@@ -1,18 +1,16 @@
-import React from 'react';
-import { Modal, Button, Image, Input } from 'antd';
-import LanguageSelector from '@/components/LanguageSelector';
+import React, { useState } from 'react';
+import { Modal, Button, Select } from 'antd';
 import AvatarUpload from "@/components/AvatarUpload/index";
-import { divide } from 'lodash';
+
 
 interface ImageConfigModalProps {
     visible: boolean;
     onCancel: () => void;
     onSave: () => void;
     language: string;
-    onLanguageChange: (value: string) => void;
-    imagesConfig?: Record<string, { backgroundImage: string, posterImage: string }>;
-    onBackgroundImageChange: (url: string) => void;
-    onPosterImageChange: (url: string) => void;
+    imagesConfig:any;
+
+
 }
 
 const ImageConfigModal: React.FC<ImageConfigModalProps> = ({
@@ -20,9 +18,13 @@ const ImageConfigModal: React.FC<ImageConfigModalProps> = ({
     onCancel,
     onSave,
     language,
-    imagesConfig,
-    onBackgroundImageChange,
+    imagesConfig
 }) => {
+
+const [backgroundImage,setBackgroundImage]=useState('');
+const [posterImage,setPosterImage]=useState('');
+
+
     return (
         <Modal
             title="邀请页面图片配置"
@@ -33,7 +35,7 @@ const ImageConfigModal: React.FC<ImageConfigModalProps> = ({
                     <Button key="cancel" onClick={onCancel} style={{ marginRight: '20px' }}>
                         取消
                     </Button>
-                    <Button key="save" type="primary" onClick={onSave}>
+                    <Button key="save" type="primary" onClick={()=>{onSave(backgroundImage,posterImage)}}>
                         保存
                     </Button>
                 </div>
@@ -43,7 +45,13 @@ const ImageConfigModal: React.FC<ImageConfigModalProps> = ({
         >
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                    语言： <Input disabled={true} style={{ width: '200px' }} value={language}></Input>
+                    语言： <Select value={language} disabled={true} >
+                         <Select.Option value="zh_CN">简体中文</Select.Option>
+                        <Select.Option value="zh_TW">繁体中文</Select.Option>
+                        <Select.Option value="en_US">英文</Select.Option>
+                        <Select.Option value="ja_JP">日语</Select.Option>
+                        <Select.Option value="ko_KR">韩语</Select.Option>
+                    </Select>
                 </div>
 
                 <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', marginTop: 20 }}>
@@ -51,7 +59,7 @@ const ImageConfigModal: React.FC<ImageConfigModalProps> = ({
 
 
                         <div style={{ marginTop: 10 }}>
-                            <AvatarUpload/>
+                            <AvatarUpload onChange={(url)=>{setBackgroundImage(url)}} value={imagesConfig[language].backgroundImage}/>
                             <p>建议尺寸1236*452</p>
                         </div>
                     </div>
@@ -59,7 +67,7 @@ const ImageConfigModal: React.FC<ImageConfigModalProps> = ({
                     <div style={{ marginTop: 0 }}>
 
                         <div style={{ marginTop: 10 }}>
-                            <AvatarUpload />
+                            <AvatarUpload onChange={(url)=>{setPosterImage(url)}} value={imagesConfig[language].posterImage}/>
                             <p>建议尺寸856*452</p>
                         </div>
                     </div>

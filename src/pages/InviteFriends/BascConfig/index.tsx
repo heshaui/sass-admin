@@ -18,7 +18,7 @@ import type { ProColumns } from '@ant-design/pro-components';
 import AvatarUpload from "@/components/AvatarUpload/index";
 import { getTenantKeyParams,updateValue } from '@/services/ant-design-pro/kv';
 import ImageConfigModal from './components/ImageConfigModal';
- import ImagePlaceholder from '@/components/ImagePlaceholder';
+import ImagePlaceholder from '@/components/ImagePlaceholder';
 const { Option } = Select;
 
 
@@ -30,7 +30,7 @@ const BasicConfig: React.FC = () => {
   const [config,setConfig]=useState('');
   const [configId,setConfigId]=useState('');
   const [imagesConfig, setImagesConfig] = useState<Record<string, {backgroundImage: string, posterImage: string}>>();
-  const [imageModalVisible, setImageModalVisible] = useState(true);
+  const [imageModalVisible, setImageModalVisible] = useState(false);
 
 
   const getCoin=async()=>{
@@ -60,43 +60,24 @@ const BasicConfig: React.FC = () => {
     setIsEditing(!isEditing);
   }
 
-  const handleBackgroundImageChange = (url: string) => {
-    setImagesConfig(prev => ({
-      ...prev,
-      [language]: {
-        ...prev[language],
-        backgroundImage: url
+ const saveImage=async(backgroundImage:string,posterImage:string)=>{
+  let data={
+    images:[
+      {
+        languageCode:language,
+        backgroundImageUrl:backgroundImage,
+        posterBackgroundUrl:posterImage
       }
-    }));
-  };
-
-  const handlePosterImageChange = (url: string) => {
-    setImagesConfig(prev => ({
-      ...prev,
-      [language]: {
-        ...prev[language],
-        posterImage: url
-      }
-    }));
-  };
-
-  const saveImage = async () => {
-    // // 将imagesConfig转换为API所需的格式
-    // const images = Object.entries(imagesConfig).map(([languageCode, config]) => ({
-    //   languageCode,
-    //   backgroundImageUrl: config.backgroundImage,
-    //   posterBackgroundUrl: config.posterImage
-    // }));
-    
-    // const data = { images };
-    
-    const res = await saveOrUpdateImageConfiguration(data);
-    if (res.code === '0') {
-      message.success('图片配置保存成功');
-    } else {
-      message.error(res.message || '保存失败');
-    }
-  };
+    ]
+  }
+  const res=await saveOrUpdateImageConfiguration(data);
+  if(res.code==='0'){
+    message.success('图片配置保存成功');
+  }else{
+    message.error(res.message);
+  }
+ }
+ 
 
   const saveConfiguration = async (values: any) => {
     let data={
@@ -124,21 +105,15 @@ const BasicConfig: React.FC = () => {
   //获取图片配置详情
   const getImageDetail = async () => {
     const res = await getImageConfigurationDetail();
-    console.log(res);
-    if (res.code === '0' && res.data && res.data.images) {
-      // 初始化一个新的图片配置对象
-      const newImagesConfig: Record<string, {backgroundImage: string, posterImage: string}> = {};
-      
-      // 遍历API返回的图片配置数据
-      res.data.images.forEach((item: any) => {
-        newImagesConfig[item.languageCode] = {
-          backgroundImage: item.backgroundImageUrl || '',
-          posterImage: item.posterBackgroundUrl || ''
+    if (res.code === '0') {
+      const imageConfigObj: Record<string, {backgroundImage: string, posterImage: string}> = {};
+      res.data.forEach((item: any) => {
+        imageConfigObj[item.languageCode] = {
+          backgroundImage: item.backgroundImageUrl,
+          posterImage: item.posterBackgroundUrl
         };
       });
-      
-      // 更新状态
-      setImagesConfig(newImagesConfig);
+      setImagesConfig(imageConfigObj);
     }
   };
 
@@ -216,8 +191,9 @@ const BasicConfig: React.FC = () => {
     setImageModalVisible(false);
   };
 
-  const handleSave = () => {
+  const handleSave = (backgroundImage:string,posterImage:string) => {
     setImageModalVisible(false);
+    saveImage(backgroundImage,posterImage);
   };
   return (
     <PageContainer title="邀请好友基础配置">
@@ -333,15 +309,32 @@ const BasicConfig: React.FC = () => {
         setImageModalVisible(true);
       }}>配置图片</Button>
       <div style={{display:'flex',flexDirection:'row'}}>
-      <div style={{ marginTop: 20 }}>
+        <div style={{ marginTop: 20, marginRight: 20 }}>
           <h4>邀请页背景配置（PC）</h4>
-          <ImagePlaceholder />
+          {imagesConfig && imagesConfig[language] ? (
+            <Image 
+              src={imagesConfig[language].backgroundImage} 
+              width={200} 
+              height={150} 
+              style={{ objectFit: 'cover' }}
+            />
+          ) : (
+            <ImagePlaceholder />
+          )}
         </div>
         
         <div style={{ marginTop: 20 }}>
           <h4>邀请海报底图（PC）</h4>
-
-          <ImagePlaceholder />
+          {imagesConfig && imagesConfig[language] ? (
+            <Image 
+              src={imagesConfig[language].posterImage} 
+              width={200} 
+              height={150} 
+              style={{ objectFit: 'cover' }}
+            />
+          ) : (
+            <ImagePlaceholder />
+          )}
         </div>
       </div>
       <ImageConfigModal
@@ -349,6 +342,7 @@ const BasicConfig: React.FC = () => {
         onCancel={handleCancel}
         onSave={handleSave}
         language={language}
+        imagesConfig={imagesConfig}
       />
       </Card>
 
