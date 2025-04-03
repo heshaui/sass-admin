@@ -37,8 +37,8 @@ const RiskControlAlerts: React.FC = () => {
     },
     {
       title: '风控周期',
-      dataIndex: 'riskPeriod',
-      key: 'riskPeriod',
+      dataIndex: 'riskCycle',
+      key: 'riskCycle',
       valueType: 'text',
     },
     {

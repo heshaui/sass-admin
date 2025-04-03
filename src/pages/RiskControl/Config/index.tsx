@@ -66,33 +66,30 @@ const RiskControlConfig: React.FC = () => {
   const moneyFinish = async(values: any) => {
     let conditionId1
     let conditionId2
-    moneyTemplate?.riskConditions.forEach((item: any) => {
-      if(item.conditionId!==2){
-        conditionId1=item.conditionId;
-      }
-    });
-    moneyTemplate?.riskConditions.forEach((item: any) => {
-      if(item.conditionId!==3){
-        conditionId2=item.conditionId;
-      }
-    })
+    console.log(moneyTemplate);
+    if(moneyTemplate?.riskConditions[0].conditionId!==2){
+      conditionId1=moneyTemplate?.riskConditions[0].conditionId;
+    }
+    if(moneyTemplate?.riskConditions[1].conditionId!==3){
+      conditionId2=moneyTemplate?.riskConditions[1].conditionId;
+    }
     let riskConditionVos=[
       { 
        
         conditionId:conditionId1,
-        riskIncrement:values.riskIncrement,
+        riskIncrement:values.oneRiskIncrement,
         thresholdMap:{
-          count:values.count,
-          coin:'USDT'
+          time_window:values.time_window,
+          count:values.count
         }
       },
       {
-        googleCode:values.googleCode,
         conditionId:conditionId2,
-        riskIncrement:values.riskIncrement,
+        riskIncrement:values.twoRiskIncrement,
         thresholdMap:{
-          count:values.count,
-          coin:'USDT'
+          time_window:'24',
+          recharge_min:values.recharge_min,
+          withdraw_ratio:values.withdraw_ratio
         }
       }
     ]
@@ -167,9 +164,9 @@ const RiskControlConfig: React.FC = () => {
                 earlyWarning:item.riskConditions[0].earlyWarning,
               });
             }
-          }else if(item.riskConditionTemplateType==='AML_STRUCTURING_DETECTION'){
+          }else if(item.sceneCode==='AML_STRUCTURING_DETECTION'){
             setMoneyTemplate(item);
-            if(item.riskConditions[0].conditionId!==1){
+            if(item.riskConditions[0].conditionId!==2){
               moneyForm.setFieldsValue({
                 time_window:Number(item.riskConditions[0].thresholdMap.count),
                 count:Number(item.riskConditions[0].thresholdMap.count),
@@ -177,7 +174,7 @@ const RiskControlConfig: React.FC = () => {
                 twoRiskIncrement:Number(item.riskConditions[1].riskIncrement),
               });
             }
-          }else if(item.riskConditionTemplateType==='THEFT_WARNING'){
+          }else if(item.sceneCode==='THEFT_WARNING'){
             setTheftTemplate(item);
           }
         });
