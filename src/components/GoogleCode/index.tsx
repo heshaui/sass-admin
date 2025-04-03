@@ -7,7 +7,7 @@ import { QRCodeSVG } from 'qrcode.react';
 interface GoogleCodeProps {
   secretKey?: string;
   qrCodeUrl?: string;
-  onSubmit?: (code: string) => Promise<boolean>;
+  onSubmit?: (code: string) => void;
   onCancel?: () => void;
   visible?: boolean;
   title?: string;

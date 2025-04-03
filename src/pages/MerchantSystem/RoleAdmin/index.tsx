@@ -186,6 +186,7 @@ const Allocation: React.FC = () => {
     }
   };
 
+
   return (
     <PageContainer>
       <ProTable

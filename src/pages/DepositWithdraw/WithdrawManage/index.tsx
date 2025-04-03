@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Card, Button, Tag, Space } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
@@ -26,7 +26,7 @@ interface WithdrawRecord {
 const WithdrawManage: React.FC = () => {
   const [detailVisible, setDetailVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<WithdrawRecord | null>(null);
-
+  const actionRef = useRef<ActionType>();
   const fetchWithdrawData = async (params: any) => {
     let data={
       pageNo:params.current,
@@ -199,6 +199,7 @@ const WithdrawManage: React.FC = () => {
     <PageContainer>
         <ProTable<WithdrawRecord>
           columns={columns}
+          actionRef={actionRef}
           request={fetchWithdrawData}
           rowKey="key"
           pagination={{
@@ -221,7 +222,12 @@ const WithdrawManage: React.FC = () => {
       <DetailModal 
         visible={detailVisible}
         record={currentRecord}
-        onClose={() => setDetailVisible(false)}
+        onClose={() => {
+          setDetailVisible(false);
+          setCurrentRecord(null);
+          actionRef.current?.reload();
+  
+        }}
       />
     </PageContainer>
   );

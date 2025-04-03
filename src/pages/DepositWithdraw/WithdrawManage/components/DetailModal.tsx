@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Tag, Tabs, Table } from 'antd';
+import { Modal, Tag, Tabs, Table, Radio,Input,Button,message } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
-import { fetchWithdrawDepositDetail } from '@/services/ant-design-pro/depositWithdraw';
-
+import { fetchWithdrawDepositDetail,updateWithdrawDeposit } from '@/services/ant-design-pro/depositWithdraw';
+import OperaLog from './OperaLog';
+import RiskLog from './RiskLog';
 interface WithdrawRecord {
   key: string;
   withdrawalId: string;
@@ -39,8 +40,10 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailData, setDetailData] = useState<WithdrawRecord | null>(null);
   const [riskLogs, setRiskLogs] = useState<RiskLogRecord[]>([]);
-
-
+  const [processingMethod, setProcessingMethod] = useState<string>('wallet');
+  const [checkStatus, setCheckStatus] = useState<string>('2');
+  const [txId, setTxId] = useState<string>('');
+  const [remark, setRemark] = useState<string>('');
 
   // 获取详情数据
   const fetchDetailData = async (orderId: string) => {
@@ -66,6 +69,19 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
   ];
 
   const currentRecord = detailData || record;
+
+const handleUpdate = async () => {
+
+    const res = await updateWithdrawDeposit({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark});
+    if (res.code === '0') {
+      message.success('更新成功');
+      onClose();
+    }else{
+      message.error('更新失败');
+    }
+
+}
+
 
   useEffect(() => {
     if (visible && record) {
@@ -96,8 +112,8 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
             <ProDescriptions.Item label="提现金额" span={1}>{currentRecord.amount} {currentRecord.coinType}</ProDescriptions.Item>
             <ProDescriptions.Item label="手续费" span={1}>{currentRecord.fee} {currentRecord.coinType}</ProDescriptions.Item>
             <ProDescriptions.Item label="应到金额" span={1}>{currentRecord.actualAmount} {currentRecord.coinType}</ProDescriptions.Item>
-            <ProDescriptions.Item label="提币协议" span={1}>{currentRecord.network}</ProDescriptions.Item>
-            <ProDescriptions.Item label="收款地址" span={1} copyable>{currentRecord.address}</ProDescriptions.Item>
+            <ProDescriptions.Item label="提币协议" span={1}>{currentRecord.protocolName}</ProDescriptions.Item>
+            <ProDescriptions.Item label="收款地址" span={1}>{currentRecord.fromAddress}</ProDescriptions.Item>
             <ProDescriptions.Item label="审核状态" span={1}>
               <Tag color={
                 currentRecord.status === 3 || currentRecord.status === '3' ? 'red' : 
@@ -113,10 +129,52 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
                 }
               </Tag>
             </ProDescriptions.Item>
-            <ProDescriptions.Item label="处理方式" span={1}>人工处理</ProDescriptions.Item>
-            <ProDescriptions.Item label="TXID" span={1} copyable>{currentRecord.txId}</ProDescriptions.Item>
-            <ProDescriptions.Item label="审核备注" span={1}>{currentRecord.riskDesc}</ProDescriptions.Item>
+            {
+              currentRecord.status === 1 && (
+                <ProDescriptions.Item label="审核结果" span={1}>
+                  <Radio.Group 
+                value={checkStatus} 
+                onChange={(e) => setCheckStatus(e.target.value)}
+              >
+                <Radio value="2">通过</Radio>
+                <Radio value="3">拒绝</Radio>
+              </Radio.Group>
+            </ProDescriptions.Item>
+            )
+            }
+              
+            <ProDescriptions.Item label="处理方式" span={1}>
+              {/* <Radio.Group 
+                value={processingMethod} 
+                onChange={(e) => setProcessingMethod(e.target.value)}
+              >
+                <Radio value="wallet">钱包处理</Radio>
+                <Radio value="manual">人工处理</Radio>
+              </Radio.Group> */}
+              <div>
+              人工处理
+              </div>
+            </ProDescriptions.Item>
+            {
+              currentRecord.status === 1 && (
+                <>
+                <ProDescriptions.Item label="TXID" span={1} ><Input/></ProDescriptions.Item>
+                <ProDescriptions.Item label="实际矿工费" span={1} ><Input/></ProDescriptions.Item>
+                <ProDescriptions.Item label="审核备注" span={1}><Input/></ProDescriptions.Item>
+                </>
+              )
+            }
           </ProDescriptions>
+          {
+            currentRecord.status === 1 && (
+              <>
+              <div style={{display: 'flex', justifyContent: 'center', gap: 10,marginTop: 20}}>
+                <Button type="primary" onClick={handleUpdate}>提交</Button>
+                <Button  onClick={onClose}>取消</Button>
+              </div>
+              </>
+            )
+          }
 
           <Tabs
             defaultActiveKey="riskLogs"
@@ -124,19 +182,12 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
               {
                 key: 'riskLogs',
                 label: '风控日志',
-                children: (
-                  <Table
-                    columns={riskLogColumns}
-                    dataSource={riskLogs}
-                    rowKey="triggerTime"
-                    pagination={false}
-                  />
-                ),
+                children: <RiskLog userId={currentRecord.userId} />,
               },
               {
                 key: 'operationLogs',
                 label: '操作日志',
-                children: <p>操作日志内容</p>,
+                children: <OperaLog userId={currentRecord.userId} />,
               },
             ]}
           />

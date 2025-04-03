@@ -25,6 +25,8 @@ const RiskControlConfig: React.FC = () => {
 
   const assetFinish = async(values: any) => {
     let conditionId
+    let conditionCode='ASSET_IMBALANCE_1'
+    let sceneCode='ASSET_IMBALANCE'
     assetTemplate?.riskConditions.forEach((item: any) => {
       if(item.conditionCode==='ASSET_IMBALANCE_1'){
       conditionId=item.conditionId;
@@ -33,8 +35,8 @@ const RiskControlConfig: React.FC = () => {
 
     let riskConditionVos=[
       { 
-       
-        conditionId:conditionId,
+        sceneCode:sceneCode,
+        conditionCode:conditionCode,
         riskIncrement:values.riskIncrement,
         earlyWarning:values.earlyWarning,
         thresholdMap:{
@@ -45,6 +47,8 @@ const RiskControlConfig: React.FC = () => {
     ]
     let data={
       googleCode:values.googleCode,
+      
+      
       riskConditionVos:riskConditionVos,
     }
    let res= await saveRiskConditions(data);
@@ -204,7 +208,6 @@ const RiskControlConfig: React.FC = () => {
       <Form form={moneyForm} onFinish={moneyFinish} layout="vertical">
         <Card
           title="洗钱嫌疑"
-          bordered={false}
           className="mt-4"
           style={{ marginBottom: 20 }}
           extra={
@@ -293,7 +296,6 @@ const RiskControlConfig: React.FC = () => {
       <Form form={theftForm} onFinish={theftFinish} layout="vertical">
         <Card
           title="被盗预警"
-          bordered={false}
           className="mt-4"
           extra={
             editingSection === 'theft' ? (
