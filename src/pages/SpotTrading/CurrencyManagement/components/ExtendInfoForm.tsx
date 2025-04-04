@@ -16,6 +16,12 @@ export type ExtendInfoFormData = {
   minWithdrawFee?: number;
   confirms?: number;
   coinName?: string;
+  withdraw?: number;
+  recharge?: number;
+  autoWithdraw?: number;
+  minWithdraw?: number;
+  maxWithdraw?: number;
+  minRecharge?: number;
 };
 
 interface ExtendInfoFormProps {
@@ -55,7 +61,10 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
       // 将状态值转换为布尔值，用于 Switch 组件
       const formValues = {
         ...initialValues,
-        status: initialValues.status === 1
+        status: initialValues.status === 1,
+        withdraw: initialValues.withdraw === 1,
+        recharge: initialValues.recharge === 1,
+        autoWithdraw: initialValues.autoWithdraw === 1
       };
       form.setFieldsValue(formValues);
     }
@@ -70,7 +79,10 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
       // 将布尔值转换回 0 或 1
       const submitValues = {
         ...values,
-        status: values.status ? 1 : 0
+        status: values.status ? 1 : 0,
+        withdraw: values.withdraw ? 1 : 0,
+        recharge: values.recharge ? 1 : 0,
+        autoWithdraw: values.autoWithdraw ? 1 : 0
       };
       
       onSubmit(submitValues);
@@ -107,7 +119,13 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
       <Form
         form={form}
         layout="vertical"
-        initialValues={initialValues ? { ...initialValues, status: initialValues.status === 1 } : {}}
+        initialValues={initialValues ? { 
+          ...initialValues, 
+          status: initialValues.status === 1,
+          withdraw: initialValues.withdraw === 1,
+          recharge: initialValues.recharge === 1,
+          autoWithdraw: initialValues.autoWithdraw === 1
+        } : {}}
       >
         <Form.Item
           name="coinId"
@@ -169,14 +187,14 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
           label="合约精度"
           rules={[{ required: true, message: '请输入小数位数' }]}
         >
-          <InputNumber style={{ width: '100%' }} />
+          <Input style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="withdrawFee"
           label="提现手续费"
           rules={[{ required: true, message: '请输入提现手续费' }]}
         >
-          <InputNumber style={{ width: '100%' }}  />
+          <Input style={{ width: '100%' }}  />
         </Form.Item>
 
         <Form.Item
@@ -184,11 +202,12 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
           label="最小提现手续费"
           rules={[{ required: true, message: '请输入最小提现手续费' }]}
         >
-          <InputNumber style={{ width: '100%' }} />
+          <Input style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="withdraw"
           label="提现开关"
+          rules={[{ required: true, message: '请选择提现开关' }]}
         >
           <Switch 
             checkedChildren="启用" 
@@ -198,6 +217,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         <Form.Item
           name="recharge"
           label="充值开关"
+          rules={[{ required: true, message: '请选择充值开关' }]}
         >
           <Switch 
             checkedChildren="启用" 
@@ -207,6 +227,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         <Form.Item
           name="autoWithdraw"
           label="自动提现开关"
+          rules={[{ required: true, message: '请选择自动提现开关' }]}
         >
           <Switch 
             checkedChildren="启用" 
@@ -216,27 +237,30 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         <Form.Item
           name="minWithdraw"
           label="最小提现量"
+          rules={[{ required: true, message: '请输入最小提现量' }]}
         >
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="maxWithdraw"
           label="最大提现量"
+          rules={[{ required: true, message: '请输入最大提现量' }]}
         >
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="minRecharge"
           label="最小充值量"
+          rules={[{ required: true, message: '请输入最小充值量' }]}
         >
-          <InputNumber style={{ width: '100%' }} />
+          <Input style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="confirms"
           label="确认数"
           rules={[{ required: true, message: '请输入确认数' }]}
         >
-          <InputNumber style={{ width: '100%' }} />
+          <Input style={{ width: '100%' }} />
         </Form.Item>
       </Form>
     </Modal>
