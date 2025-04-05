@@ -112,5 +112,6 @@ export default {
   'menu.riskControl.config': '风控配置',
   'menu.riskControl.suggestions': '处理建议',
   'menu.riskControl.alerts': '报警记录',
+  'menu.riskControl.templates': '风控模板',
 
 };

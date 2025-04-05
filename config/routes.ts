@@ -386,6 +386,11 @@ export default [
         component: './RiskControl/Alerts',
       },
       {
+        path: '/risk-control/templates',
+        name: 'templates',
+        component: './RiskControl/Templates',
+      },
+      {
         path: '/risk-control',
         redirect: '/risk-control/config',
       },
