@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Input, Radio, Typography } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { Select, Radio, Typography } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { userWalletList } from '@/services/ant-design-pro/UserManagement';
@@ -87,14 +86,19 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
     const res = await userWalletList(data);
 
     if(res.code==='0'){
+      let filteredData = res.data.list;
+      
+      // 如果选择了隐藏0资产，过滤掉可用资产为0的记录
+      if (hideZeroAssets) {
+        filteredData = filteredData.filter((item: AssetItem) => Number(item.balance) > 0);
+      }
+      
       return {
-        data: res.data.list,
+        data: filteredData,
         success: true,
-        total: res.data.count,
+        total: hideZeroAssets ? filteredData.length : res.data.count,
       }
     }
-  
-  
   };
 
   useEffect(() => {

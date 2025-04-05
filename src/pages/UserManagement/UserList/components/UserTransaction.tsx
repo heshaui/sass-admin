@@ -5,10 +5,11 @@ import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
 import { userTransactionLogList, userTransactionCount } from '@/services/ant-design-pro/UserManagement';
-
+import { getCurrencyCoinList } from '@/services/ant-design-pro/inviteFriends';
+import { currencyCoinList } from '@/services/ant-design-pro/spot';
 interface TransactionItem {
   id: string;
-  type: 'in' | 'out';
+  type: number;
   businessType: string;
   currency: string;
   amount: number;
@@ -22,6 +23,8 @@ interface UserTransactionProps {
 
 const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  const [currencyList, setCurrencyList] = useState<any[]>([]);
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [statistics, setStatistics] = useState({
     currentAssets:0,
     netInflow:0,
@@ -30,20 +33,23 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
     totalOutflow:0
   });
 
-  const businessTypes = [
-    { label: '全部', value: 'all' },
-    { label: '充币', value: '充币' },
-    { label: '提币', value: '提币' },
-    { label: 'C2C', value: 'C2C' },
-    { label: '内部转账', value: '内部转账' },
-  ];
 
-  const currencies = [
-    { label: '全部', value: 'all' },
-    { label: 'USDT', value: 'USDT' },
-    { label: 'BTC', value: 'BTC' },
-    { label: 'ETH', value: 'ETH' },
-  ];
+  const getCurrencyList=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    let res
+    if(isAdmin){
+       res=await currencyCoinList(data)
+    }else{
+       res=await getCurrencyCoinList(data)
+    }
+    if(res.code==='0'){
+      setCurrencyList(res.data.list)
+    }
+  }
+
 
   const columns: ProColumns<TransactionItem>[] = [
     {
@@ -51,29 +57,34 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
       dataIndex: 'type',
       width: 100,
       valueEnum: {
-        in: { text: '流入', status: 'Success' },
-        out: { text: '流出', status: 'Error' },
+        // 1 增加 2 扣减 3 冻结 4 解冻
+        1: { text: '增加', status: 'Success' },
+        2: { text: '扣减', status: 'Error' },
+        3: { text: '冻结', status: 'Warning' },
+        4: { text: '解冻', status: 'Success' },
+
+
       },
       render: (_, record) => (
-        <Tag color={record.type === 'in' ? '#52c41a' : '#f5222d'}>
-          {record.type === 'in' ? '流入' : '流出'}
-        </Tag>
+         // 1 增加 2 扣减 3 冻结 4 解冻
+         record.type === 1 ? '增加' : record.type === 2 ? '扣减' : record.type === 3 ? '冻结' : '解冻'
+       
       ),
+
     },
     {
       title: '业务',
-      dataIndex: 'businessType',
+      dataIndex: 'sceneType',
       width: 120,
-      valueEnum: businessTypes.reduce((prev, curr) => {
-        if (curr.value !== 'all') {
-          prev[curr.value] = { text: curr.label };
-        }
-        return prev;
-      }, {}),
+      search: false,
     },
     {
       title: '币种',
       dataIndex: 'coinId',
+      valueEnum:currencyList.reduce((prev, curr) => {
+        prev[curr.coinId] = { text: curr.coinName };
+        return prev;
+      }, {}),
     },
     {
       title: '数量',
@@ -138,6 +149,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
   };
 
   useEffect(() => {
+    getCurrencyList();
     getStatistics();
   }, []);
   return (
