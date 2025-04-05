@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Card, Input, Select, DatePicker, Button, Space, Row, Col } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { assetAccountReviewList } from '@/services/ant-design-pro/risk';
+import {Select, DatePicker } from 'antd';
+import { assetAccountReviewList} from '@/services/ant-design-pro/risk';
 import type { ProColumns } from '@ant-design/pro-components';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -14,6 +13,9 @@ const RiskControlAlerts: React.FC = () => {
     alertType: '全部',
     dateRange: [],
   });
+
+
+  
 
   // 表格列定义
   const columns: ProColumns[] = [
