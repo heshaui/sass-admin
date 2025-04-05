@@ -66,7 +66,6 @@ const RiskControlConfig: React.FC = () => {
   const moneyFinish = async(values: any) => {
     let conditionId1
     let conditionId2
-    console.log(moneyTemplate);
     if(moneyTemplate?.riskConditions[0].conditionId!==2){
       conditionId1=moneyTemplate?.riskConditions[0].conditionId;
     }
@@ -75,8 +74,9 @@ const RiskControlConfig: React.FC = () => {
     }
     let riskConditionVos=[
       { 
-       
         conditionId:conditionId1,
+        sceneCode:'AML_STRUCTURING_DETECTION',
+        conditionCode:'AML_WITHDRAW_FREQ_10M',
         riskIncrement:values.oneRiskIncrement,
         thresholdMap:{
           time_window:values.time_window,
@@ -85,6 +85,8 @@ const RiskControlConfig: React.FC = () => {
       },
       {
         conditionId:conditionId2,
+        sceneCode:'AML_STRUCTURING_DETECTION',
+        conditionCode:'AML_RECHARGE_WITHDRAW_RATIO_24H',
         riskIncrement:values.twoRiskIncrement,
         thresholdMap:{
           time_window:'24',
@@ -104,9 +106,38 @@ const RiskControlConfig: React.FC = () => {
     }
   }
 
-  const theftFinish = (values: any) => {
-    console.log('表单提交的值:', values);
-    // 处理保存逻辑
+  const theftFinish = async(values: any) => {
+    let riskConditionVos=[
+      {
+        conditionId:theftTemplate?.riskConditions[0].conditionId,
+        sceneCode:'THEFT_WARNING',
+        conditionCode:'THEFT_WARNING_1',
+        count:values.oneCount,
+        riskIncrement:values.oneRiskIncrement,
+      },
+      {
+        conditionId:theftTemplate?.riskConditions[0].conditionId,
+        sceneCode:'THEFT_WARNING',
+        conditionCode:'THEFT_WARNING_2',
+        count:values.twoCount,
+        riskIncrement:values.twoRiskIncrement,
+      },
+      {
+        conditionId:theftTemplate?.riskConditions[0].conditionId,
+        sceneCode:'THEFT_WARNING',
+        conditionCode:'THEFT_WARNING_3',
+        count:values.multiAccountWithdrawal,
+        riskIncrement:values.threeRiskIncrement,
+      }
+    ]
+    let data={
+      googleCode:values.googleCode,
+      riskConditionVos:riskConditionVos,
+    }
+    let res= await saveRiskConditions(data);
+    if(res.code==='0'){
+      message.success('保存成功');
+    }
     setEditingSection(null); // 提交后退出编辑模式
   };
   
@@ -306,12 +337,12 @@ const RiskControlConfig: React.FC = () => {
                 name='recharge_min' 
               >
                 <Space>
-                  <InputNumber min={1}  disabled={editingSection !== 'money'} />
+                  <Input min={1}  disabled={editingSection !== 'money'} />
                   <Text>USDT 且提现金额大于</Text>
                 </Space>
               </Form.Item>
               <Form.Item name="withdraw_ratio">
-                <InputNumber min={1} max={100}  disabled={editingSection !== 'money'} />
+                <Input min={1} max={100}  disabled={editingSection !== 'money'} />
                 <Text>%的充值金额。</Text>
               </Form.Item>
               </div>
@@ -322,7 +353,7 @@ const RiskControlConfig: React.FC = () => {
                 name="twoRiskIncrement"
               >
                 <Space>
-                  <InputNumber min={1}  disabled={editingSection !== 'money'} />
+                  <Input min={1}  disabled={editingSection !== 'money'} />
                   <Text>级</Text>
                 </Space>
               </Form.Item>
