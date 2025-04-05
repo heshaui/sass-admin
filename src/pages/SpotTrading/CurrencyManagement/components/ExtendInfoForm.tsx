@@ -158,6 +158,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         <Form.Item
           name="status"
           label="状态"
+          required
           valuePropName="checked"
         >
           <Switch 

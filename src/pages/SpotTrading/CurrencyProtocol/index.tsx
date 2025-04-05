@@ -14,10 +14,16 @@ const CurrencyProtocol: React.FC = () => {
   const actionRef = React.useRef<ActionType>();
   
   const getList = async (params:any) => {
+    console.log(params);
     setLoading(true);
     let data={
       pageNo:params.current,
       pageSize:params.pageSize,
+      keyword:params.keyword,
+      protocolName:params.protocolName,
+      protocol:params.protocol,
+      symbol:params.symbol,
+      chainId:params.chainId,
     }
     const res = await protocolTypeList(data);
     if (res.code === '0') {
@@ -50,6 +56,7 @@ const CurrencyProtocol: React.FC = () => {
         const res = await deleteProtocolTypeById({id:id});
         if (res.code === '0') {
           message.success('删除成功');
+          actionRef.current?.reload();
         }
       },
     });
@@ -103,7 +110,7 @@ const CurrencyProtocol: React.FC = () => {
       title: '区块浏览器',
       dataIndex: 'browser',
       key: 'browser',
-      search: true,
+      search: false,
     },
     {
       title: '主币名称',

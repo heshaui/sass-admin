@@ -130,6 +130,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Form.Item
               name="chainCoin"
               label="币种"
+              required
             >
               { !isAdmin && (
                 <Select onChange={(value) => {
@@ -203,6 +204,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="unitScale"
               label="显示精度"
+              required
             >
               <InputNumber min={0} max={18} style={{ width: '100%' }} placeholder="现货/资产显示的币种精度" />
             </Form.Item>
@@ -212,6 +214,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="memoTag"
               label="Memo/Tag"
+              required
             >
               <Select>
                 <Select.Option value={0}>不需要标签</Select.Option>
@@ -224,6 +227,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="issuingDate"
               label="发行日期"
+              required
             >
               <DatePicker format="YYYY-MM-DD"/>
             </Form.Item>
@@ -233,6 +237,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="transactionNum"
               label="流通数量"
+              required
             >
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
@@ -242,6 +247,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="maxSupplyQuantity"
               label="最大总供应量"
+              required
             >
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
@@ -255,6 +261,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         <Form.Item
           name="status"
           label="是否启用"
+          required
         >
           <Select>
             <Select.Option value={0}>是</Select.Option>
@@ -271,6 +278,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="canRecharge"
               label="是否开放充值"
+              required
             >
               <Select>
                 <Select.Option value={1}>是</Select.Option>
@@ -283,6 +291,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="minTopUp"
               label="最低充值金额"
+              required
             >
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
@@ -296,6 +305,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="canWithdraw"
               label="是否开放提现"
+              required
             >
               <Select>
                 <Select.Option value={1}>是</Select.Option>
@@ -307,6 +317,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="minWithdrawAmount"
               label="单次提现最小值"
+              required
             >
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
@@ -316,6 +327,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Form.Item
               name="maxWithdrawAmount"
               label="单次提现最大值"
+              required
             >
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>

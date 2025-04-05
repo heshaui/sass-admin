@@ -62,10 +62,30 @@ const CurrencyManagement: React.FC = () => {
       ? await currencyCoinList({
         pageNo: current,
         pageSize: pageSize,
+        keyword:params.keyword,
+        coinName:params.coinName,
+        status:params.status,
+        symbol:params.symbol,
+        recharge:params.recharge,
+        networkType:params.networkType,
+        canWithdraw:params.canWithdraw,
+        canRecharge:params.canRecharge,
+        canTransfer:params.canTransfer,
+        canAutoWithdraw:params.canAutoWithdraw,
       })
       : await tenantCurrencyCoinList({
         pageNo: current,
         pageSize: pageSize,
+        keyword:params.keyword,
+        coinName:params.coinName,
+        status:params.status,
+        recharge:params.recharge,
+        symbol:params.symbol,
+        networkType:params.networkType,
+        canWithdraw:params.canWithdraw,
+        canRecharge:params.canRecharge,
+        canTransfer:params.canTransfer,
+        canAutoWithdraw:params.canAutoWithdraw,
       });
     if (res.code === '0') {
       return {
