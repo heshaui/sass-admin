@@ -157,6 +157,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       
       const formData = {
         ...mainValues,
+        isShow: mainValues.isShow ? 1 : 0, // 将布尔值转换为 0 或 1
         title: currentEntries.find(e => e.language === language)?.title || '',
         accessUrl: accessType === 1 ? form.getFieldValue('pcFunction') : form.getFieldValue('linkUrl'),
         imageUrl: defaultImage,
