@@ -1,33 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import type { ProColumns, ActionType } from '@ant-design/pro-table';
-import ProTable from '@ant-design/pro-table';
-import { Button, Form,  } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import React, {  useRef } from 'react';
+import { PageContainer,ProTable } from '@ant-design/pro-components';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
+import { Form } from 'antd';
 import { riskConditionList } from '@/services/ant-design-pro/risk';
 
-declare namespace API {
-  // 风控场景
-  interface RiskScene {
-    id: string | number;
-    code: string;
-    type: string;
-    description: string;
-    createdAt: string;
-  }
 
-  // 风控任务
-  interface RiskTask {
-    id: string | number;
-    code: string;
-    description: string;
-    operator: '>' | '<' | '=' | '>=' | '<=';
-    threshold: string;
-    riskLevel: number;
-    updatedAt: string;
-    sceneId: string | number;
-  }
-}
+
+ 
 
 /**
  * 风控模板页面
@@ -37,7 +16,7 @@ const TemplatesPage: React.FC = () => {
   const [form] = Form.useForm();
 
   // 场景列定义
-  const columns: ProColumns<API.RiskScene>[] = [
+  const columns: ProColumns<any>[] = [
     {
       title: '场景ID',
       dataIndex: 'conditionId',
@@ -84,7 +63,7 @@ const TemplatesPage: React.FC = () => {
 
   return (
     <PageContainer>
-      <ProTable<API.RiskScene>
+        <ProTable<any>
         headerTitle="风控模板场景"
         actionRef={actionRef}
         rowKey="id"
