@@ -35,3 +35,11 @@ export async function riskConditionList(data?: any) {
     data,
   });
 }
+
+
+export async function saveActionRiskLevel(data?: any) {
+  return request('/tenant/v1/saveActionRiskLevel', {
+    method: 'POST',
+    data,
+  });
+}

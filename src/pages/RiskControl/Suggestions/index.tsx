@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Form, Input, Button, Select, Space, Typography,message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { riskConditionTemplateList,saveRiskConditions} from '@/services/ant-design-pro/risk';
+import { riskConditionTemplateList,saveRiskConditions,saveActionRiskLevel} from '@/services/ant-design-pro/risk';
 import GoogleCode from '@/components/GoogleCode';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import { useModel } from 'umi';
@@ -30,6 +30,16 @@ const RiskControlSuggestions: React.FC = () => {
     '建议禁止提现，回访用户后在处理',
     '人工审核'
   ];
+
+  const getSugges=async()=>{
+  const res= saveActionRiskLevel();
+  console.log(res);
+  if(res.code==='0'&&res.data){ 
+    console.log(res.data);
+  }
+
+
+  }
 
   const getTemplate=async()=>{
     let res=await riskConditionTemplateList({});
@@ -164,6 +174,7 @@ const RiskControlSuggestions: React.FC = () => {
   }
 
   useEffect(()=>{
+    getSugges()
     getTemplate();
   },[]);
 

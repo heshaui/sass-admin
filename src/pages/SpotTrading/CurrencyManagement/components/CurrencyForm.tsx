@@ -271,6 +271,22 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         </Col>
         </Row>
       </Card>
+      <Card title="是否为平台币" style={{ marginBottom: 16 }}>
+      <Row gutter={24}>
+      <Col span={8}>
+        <Form.Item
+          name="isPlatformCoin"
+          label="是否为平台币"
+          required
+        >
+          <Select>
+            <Select.Option value={0}>是</Select.Option>
+            <Select.Option value={1}>否</Select.Option>
+          </Select>
+        </Form.Item>
+        </Col>
+        </Row>
+      </Card>
       
       <Card title="充值信息" style={{ marginBottom: 16 }}>
         <Row gutter={24}>
