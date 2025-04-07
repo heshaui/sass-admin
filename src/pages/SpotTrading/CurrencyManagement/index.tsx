@@ -513,14 +513,14 @@ const CurrencyManagement: React.FC = () => {
       }
     } else {
       let res;
-      if (isAdmin) {
+
         console.log(currentCurrency);
         let data={
           coinId:currentCurrency?.coinId,
           ...values
         }
         res = await adminUpdateCurrencyCoinById(data);
-      } 
+
       if (res.code === '0'&&res.data) {
         message.success(`编辑币种成功: ${values.coinName}`);
       } else {
