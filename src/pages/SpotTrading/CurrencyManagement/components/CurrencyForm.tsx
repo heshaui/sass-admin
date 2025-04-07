@@ -34,6 +34,7 @@ interface CurrencyFormProps {
 const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, onCancel }) => {
   const [form] = Form.useForm();
   const [currencyAll, setCurrencyAll] = useState([]);
+  const [mainChainValue, setMainChainValue] = useState(1);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG  === "1";
   const handleSubmit = () => {
     form.validateFields()
@@ -85,6 +86,12 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
     }
     getCurrencyAll();
   }, []);
+
+  const handleMainChainChange = (e:any) => {
+    console.log(e.target.value);
+    setMainChainValue(e.target.value);
+  };
+
   return (
     <Form
       form={form}
@@ -116,7 +123,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               label="币种类型"
               required
             >
-              <Radio.Group>
+              <Radio.Group onChange={handleMainChainChange}>
                 <Radio value={1}>主链币</Radio>
                 <Radio value={2}>Token币</Radio>
               </Radio.Group>
@@ -132,7 +139,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               label="币种"
               required
             >
-              { !isAdmin && (
+              { !isAdmin&&mainChainValue === 1 && (
                 <Select onChange={(value) => {
                   const selectedCoin = currencyAll.find(item => item.coinId === value);
                   if (selectedCoin) {
@@ -148,6 +155,12 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
                 }
               </Select>
               )
+
+              }
+              { 
+                mainChainValue === 2 && (
+                  <Input />
+                )
               }
               
             </Form.Item>
@@ -160,7 +173,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               required
               rules={[{ required: true, message: '请输入币种简称' }]}
             >
-              <Input  disabled={!isAdmin} />
+              <Input disabled={mainChainValue !== 2&&!isAdmin} />
             </Form.Item>
           </Col>
               {
