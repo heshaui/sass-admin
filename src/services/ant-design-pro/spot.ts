@@ -47,7 +47,7 @@ export async function updateExchangeCoinById(params: Record<string, any>) {
     data: params,
   });
 }
-// /tenant/v1/tenant-coin/tenantCurrencyCoinList
+
 export async function tenantCurrencyCoinList(params?: Record<string, any>) {
   return request('/tenant/v1/tenant-coin/tenantCurrencyCoinList', {
     method: 'POST',
@@ -74,7 +74,7 @@ export async function tenantCurrencyCoinAll(params?: Record<string, any>) {
 
 
 
-export async function tenantCurrencyCoinList(params?: Record<string, any>) {
+export async function tenantCoin(params?: Record<string, any>) {
   return request('/tenant/v1/coin/currencyCoinList', {
     method: 'POST',
     data: params,
