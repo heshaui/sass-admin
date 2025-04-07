@@ -73,6 +73,16 @@ export async function tenantCurrencyCoinAll(params?: Record<string, any>) {
 }
 
 
+
+export async function tenantCurrencyCoinList(params?: Record<string, any>) {
+  return request('/tenant/v1/coin/currencyCoinList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+
 //协议新增
 export async function saveProtocolType(params?: Record<string, any>) {
   return request('/tenant-admin/v1/protocol-type/saveProtocolType', {

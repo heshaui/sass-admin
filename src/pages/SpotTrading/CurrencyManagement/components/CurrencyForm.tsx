@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { Form, Input, Radio, InputNumber, Select, DatePicker, Button, Card, Row, Col, message } from 'antd';
 import dayjs from 'dayjs';
-import { tenantCurrencyCoinAll,currencyCoinParams } from '@/services/ant-design-pro/spot';
+import { tenantCurrencyCoinAll,currencyCoinParams,tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import AvatarUpload from '@/components/AvatarUpload';
 
 
@@ -56,7 +56,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         pageNo:1,
         pageSize:10000
       }
-      const res = await tenantCurrencyCoinAll(data);
+      const res = await tenantCurrencyCoinList(data);
       if(res.code==='0'){
         setCurrencyAll(res.data);
       }
