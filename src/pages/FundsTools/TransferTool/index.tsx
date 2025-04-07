@@ -74,7 +74,7 @@ if(fromAccount==='user'&&toAccount==='user'){
       googleCode:values.googleCode
     }
    const res= await tenantToWallet(data);
-   if(res.code==='0'){
+   if(res.code==='0'&&res.data){
     message.success('转账成功');
     form.resetFields();
    }else{

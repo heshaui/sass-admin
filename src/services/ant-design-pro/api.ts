@@ -60,7 +60,7 @@ export async function login(body: API.LoginParams, options?: { [key: string]: an
 }
 
 export async function tenantLogin(body: API.LoginParams, options?: { [key: string]: any }) {
-  return request<API.LoginResult>('/tenant/v1/login?', {
+  return request<API.LoginResult>('/tenant/v1/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

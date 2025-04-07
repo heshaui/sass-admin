@@ -58,10 +58,10 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
       width: 100,
       valueEnum: {
         // 1 增加 2 扣减 3 冻结 4 解冻
-        1: { text: '增加', status: 'Success' },
-        2: { text: '扣减', status: 'Error' },
-        3: { text: '冻结', status: 'Warning' },
-        4: { text: '解冻', status: 'Success' },
+        1: { text: '增加' },
+        2: { text: '扣减' },
+        3: { text: '冻结'},
+        4: { text: '解冻' },
 
 
       },
