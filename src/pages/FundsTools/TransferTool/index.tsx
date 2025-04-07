@@ -76,6 +76,7 @@ if(fromAccount==='user'&&toAccount==='user'){
    const res= await tenantToWallet(data);
    if(res.code==='0'){
     message.success('转账成功');
+    form.resetFields();
    }else{
     message.error(res.message);
    }
