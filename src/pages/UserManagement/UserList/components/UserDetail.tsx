@@ -473,7 +473,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
      
           </Descriptions.Item>
           <Descriptions.Item label="实名认证">{user.realnessStatus===1 ? '已认证' : '未认证'}</Descriptions.Item>
-          <Descriptions.Item label="证件编号">{user.idNumber || '暂无'}</Descriptions.Item>
+          <Descriptions.Item label="证件编号">{user.cardCode || '暂无'}</Descriptions.Item>
           <Descriptions.Item label="操作">
             {/* 登录状态操作按钮 */}
             {user.status === 1 ? (
