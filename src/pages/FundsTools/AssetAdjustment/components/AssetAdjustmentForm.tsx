@@ -3,6 +3,7 @@ import { Form, Button, Select, Radio, Input, Space, Modal, message } from 'antd'
 import styles from './AssetAdjustmentForm.css';
 import { walletTypeList,tenantWallet,tenantSubWallet} from '@/services/ant-design-pro/fundsTools';
 import {getCurrencyCoinList} from '@/services/ant-design-pro/inviteFriends';
+import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import { useModel } from 'umi';
 import GoogleCode from '@/components/GoogleCode';
@@ -51,7 +52,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
       pageNo:1,
       pageSize:10000
     }
-    const res=await getCurrencyCoinList(data);
+    const res=await tenantCurrencyCoinList(data);
     if(res.code==='0'){
       setCoinList(res.data.list);
     }
