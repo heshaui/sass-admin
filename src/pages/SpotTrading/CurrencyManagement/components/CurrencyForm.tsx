@@ -58,7 +58,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
       }
       const res = await tenantCoin(data);
       if(res.code==='0'){
-        setCurrencyAll(res.data);
+        setCurrencyAll(res.data.list);
       }
     }else{
       setCurrencyAll([]);
