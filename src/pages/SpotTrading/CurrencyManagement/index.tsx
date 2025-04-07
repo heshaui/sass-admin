@@ -506,6 +506,8 @@ const CurrencyManagement: React.FC = () => {
       }
       if (res.code === '0'&&res.data) {
         message.success('添加币种成功');
+        setFormVisible(false);
+        actionRef.current?.reload();
       } else {
         message.error(res.message);
       }
