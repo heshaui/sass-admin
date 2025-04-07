@@ -3,10 +3,11 @@ import { Card, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PageContainer } from '@ant-design/pro-components';
 import { useIntl } from 'umi';
+import { fundFlowDirectionOperationList } from '@/services/ant-design-pro/fundsTools';
 
 interface TransferRecord {
   key: string;
-  time: string;
+  createTime: string;
   fromAccount: string;
   fromAccountType: string;
   toAccount: string;
@@ -21,22 +22,31 @@ const TransferRecords: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<TransferRecord[]>([]);
 
-  useEffect(() => {
-    // 模拟数据加载
-
-
-  }, []);
+const getTransferRecords=async(params:any)=>{
+  const res=await fundFlowDirectionOperationList({
+    pageNo:params.current,
+    pageSize:params.pageSize,
+  });
+  if(res.code==='0'){
+    return {
+      data: res.data.list,
+      success: true,
+      total: res.data.total,
+    };
+  }
+}
 
   const columns: ColumnsType<TransferRecord> = [
     {
       title: '时间',
-      dataIndex: 'time',
-      key: 'time',
+      dataIndex: 'createTime', 
+      key: 'createTime',
+      valueType: 'dateTime',
     },
     {
       title: '转出账户',
-      dataIndex: 'fromAccount',
-      key: 'fromAccount',
+      dataIndex: 'fromAccountId',
+      key: 'fromAccountId',
     },
     {
       title: '转出账户类型',
@@ -45,8 +55,8 @@ const TransferRecords: React.FC = () => {
     },
     {
       title: '转入账户',
-      dataIndex: 'toAccount',
-      key: 'toAccount',
+      dataIndex: 'toAccountId',
+      key: 'toAccountId',
     },
     {
       title: '转入账户类型',
@@ -60,13 +70,13 @@ const TransferRecords: React.FC = () => {
     },
     {
       title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
       title: '操作人',
-      dataIndex: 'operator',
-      key: 'operator',
+      dataIndex: 'operateId',
+      key: 'operateId',
     },
   ];
 
@@ -76,7 +86,7 @@ const TransferRecords: React.FC = () => {
         <h2>转账记录</h2>
         <Table
           columns={columns}
-          dataSource={data}
+          request={getTransferRecords}
           loading={loading}
           pagination={{ pageSize: 10 }}
         />

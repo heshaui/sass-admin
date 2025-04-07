@@ -166,7 +166,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
               <Input placeholder="金额"  />
             </Form.Item>
             
-            <Form.Item label="备注" name="reason">
+            <Form.Item label="备注" name="description">
               <Input placeholder="原因"  />
             </Form.Item>
             

@@ -50,3 +50,21 @@ export async function tenantSubWallet(params: any) {
     data: params,
   });
 }
+
+
+// /tenant/v1/tenant-wallet/tenantSubWalletList
+export async function tenantSubWalletList(params: any) {
+  return request('/tenant/v1/tenant-wallet/tenantSubWalletList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// /tenant/v1/tenant-wallet/fundFlowDirectionOperationList
+export async function fundFlowDirectionOperationList(params: any) {
+  return request('/tenant/v1/tenant-wallet/fundFlowDirectionOperationList', {
+    method: 'POST',
+    data: params,
+  });
+}

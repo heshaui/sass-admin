@@ -4,12 +4,26 @@ import { Form, Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import AssetAdjustmentForm from './components/AssetAdjustmentForm';
-import {tenantSubWallet} from '@/services/ant-design-pro/fundsTools';
+import {tenantSubWallet,tenantSubWalletList} from '@/services/ant-design-pro/fundsTools';
 
 const AssetAdjustment: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const [formVisible, setFormVisible] = useState<boolean>(false);
+
+  const subWalletList=async(params:any)=>{
+    const res=await tenantSubWalletList({
+      pageNo:params.current,
+      pageSize:params.pageSize,
+    });
+    if(res.code==='0'){
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.total,
+      };
+    }
+  }
 
   const onFinish = (values: any) => {
     setLoading(true);
@@ -51,16 +65,16 @@ const AssetAdjustment: React.FC = () => {
     { title: '编号', dataIndex: 'id', key: 'id', search: false },
     { 
       title: '币种', 
-      dataIndex: 'coinName', 
-      key: 'coinName',
+      dataIndex: 'coinId', 
+      key: 'coinId',
     },
-    { title: '金额', dataIndex: 'amount', key: 'amount', search: false },
-    { title: '备注', dataIndex: 'reason', key: 'reason', search: false },
-    { title: '操作人', dataIndex: 'operator', key: 'operator' , search: false},
+    { title: '金额', dataIndex: 'count', key: 'count', search: false },
+    { title: '备注', dataIndex: 'description', key: 'description', search: false },
+    { title: '操作人', dataIndex: 'operateId', key: 'operateId' , search: false},
     { 
       title: '时间', 
-      dataIndex: 'operateTime', 
-      key: 'operateTime',
+      dataIndex: 'createTime', 
+      key: 'createTime',
       valueType: 'dateTime',
     },
   ];
@@ -75,14 +89,7 @@ const AssetAdjustment: React.FC = () => {
     <PageContainer>
       <ProTable
         columns={columns}
-        request={async (params, sorter, filter) => {
-          // 这里可以替换为实际的API请求
-          return {
-            data: mockData,
-            success: true,
-            total: mockData.length,
-          };
-        }}
+        request={subWalletList}
         rowKey="id"
         pagination={{
           pageSize: 10,

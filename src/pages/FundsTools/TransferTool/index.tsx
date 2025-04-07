@@ -226,7 +226,7 @@ if(fromAccount==='user'&&toAccount==='user'){
              </Form.Item>
                        
           <Form.Item
-            name="remark"
+            name="description"
             label="备注"
             rules={[{ required: true, message: '请输入备注' }]}
           >
