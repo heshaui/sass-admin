@@ -70,10 +70,9 @@ const AddModal: React.FC<AddModalProps> = ({ visible, onCancel, onSuccess }) => 
           rules={[{ required: true, message: '请选择类别' }]}
         >
           <Select placeholder="请选择类别">
-            <Option value="基础功能">基础功能</Option>
-            <Option value="法币交易">法币交易</Option>
-            <Option value="币币交易">币币交易</Option>
-            <Option value="系统配置">系统配置</Option>
+            <Option value="basic_functions">基础功能</Option>
+            <Option value="coin_exchange">币币交易</Option>
+            <Option value="system_configuration">系统配置</Option>
           </Select>
         </Form.Item>
         

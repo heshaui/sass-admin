@@ -137,10 +137,9 @@ const KvSetting: React.FC = () => {
       key: 'type',
       valueType:'select',
       valueEnum:{
-        '基础功能':'基础功能',
-        '法币交易':'法币交易',
-        '币币交易':'币币交易',
-        '系统配置':'系统配置',
+        'basic_functions':'基础功能',
+        'coin_exchange':'币币交易',
+        'system_configuration':'系统配置',
       }
     },
     {
