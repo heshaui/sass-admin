@@ -76,7 +76,12 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
       if (res.data.issuingDate) {
         res.data.issuingDate = dayjs(res.data.issuingDate);
       }
-      form.setFieldsValue(res.data);
+      form.setFieldsValue(
+        {
+          ...res.data,
+          chainCoin:res.data.coinId,
+        }
+      );
     }
   }
 

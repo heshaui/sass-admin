@@ -516,6 +516,7 @@ const CurrencyManagement: React.FC = () => {
 
         console.log(currentCurrency);
         let data={
+          id:currentCurrency?.id,
           coinId:currentCurrency?.coinId,
           ...values
         }
