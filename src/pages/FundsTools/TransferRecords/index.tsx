@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import { PageContainer } from '@ant-design/pro-components';
+import { Card } from 'antd';
+import { PageContainer,ProTable } from '@ant-design/pro-components';
 import { useIntl } from 'umi';
 import { fundFlowDirectionOperationList } from '@/services/ant-design-pro/fundsTools';
 
@@ -42,6 +41,7 @@ const getTransferRecords=async(params:any)=>{
       dataIndex: 'createTime', 
       key: 'createTime',
       valueType: 'dateTime',
+
     },
     {
       title: '转出账户',
@@ -52,6 +52,7 @@ const getTransferRecords=async(params:any)=>{
       title: '转出账户类型',
       dataIndex: 'fromAccountType',
       key: 'fromAccountType',
+
     },
     {
       title: '转入账户',
@@ -62,6 +63,7 @@ const getTransferRecords=async(params:any)=>{
       title: '转入账户类型',
       dataIndex: 'toAccountType',
       key: 'toAccountType',
+
     },
     {
       title: '转账金额',
@@ -72,11 +74,13 @@ const getTransferRecords=async(params:any)=>{
       title: '备注',
       dataIndex: 'description',
       key: 'description',
+
     },
     {
       title: '操作人',
       dataIndex: 'operateId',
       key: 'operateId',
+
     },
   ];
 
@@ -84,9 +88,10 @@ const getTransferRecords=async(params:any)=>{
     <PageContainer>
       <Card>
         <h2>转账记录</h2>
-        <Table
+        <ProTable
           columns={columns}
           request={getTransferRecords}
+          search={false}
           loading={loading}
           pagination={{ pageSize: 10 }}
         />
