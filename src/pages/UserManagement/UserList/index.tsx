@@ -1,7 +1,5 @@
-import { PlusOutlined } from '@ant-design/icons';
+import React ,{ useState,useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button } from 'antd';
-import { useState } from 'react';
 import type { ProColumns } from '@ant-design/pro-components';
 import { getUserList, getUserDetail } from '@/services/ant-design-pro/UserManagement';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
@@ -13,6 +11,7 @@ const UserManagement: React.FC = () => {
   const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserItem | null>(null);
 
+ 
   // 使用真实API获取用户数据
   const fetchUserList = async (params: any) => {
     setLoading(true);
@@ -128,6 +127,15 @@ const UserManagement: React.FC = () => {
 
   ];
 
+     // 从URL参数获取userId并加载用户详情
+     useEffect(() => {
+      const query = new URLSearchParams(location.search);
+      const userId = query.get('userId');
+      
+      if (userId) {
+        fetchUserDetail(userId);
+      }
+    }, [location.search]);
   if (showUserDetail) {
     return (
       <PageContainer title="用户管理">

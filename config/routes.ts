@@ -236,7 +236,6 @@ export default [
         redirect: '/user-management/user-list',
       },
     ],
-    // component: './UserManagement',
   },
   {
     path: '/merchantSystem',

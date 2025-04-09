@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Form, Input, Select, DatePicker, Button, Table, Tag, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { useNavigate } from 'react-router-dom';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -24,6 +25,7 @@ interface DepositRecord {
 const DepositManage: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   
   // 模拟数据
   const mockData: DepositRecord[] = [
@@ -81,7 +83,9 @@ const DepositManage: React.FC = () => {
       title: '用户ID',
       dataIndex: 'userId',
       key: 'userId',
-      render: (text) => <a>{text}</a>,
+      render: (userId) => (
+        <a onClick={() => navigate(`/user-management/user-list?userId=${userId}`)}>{userId}</a>
+      ),
     },
     {
       title: '币种',

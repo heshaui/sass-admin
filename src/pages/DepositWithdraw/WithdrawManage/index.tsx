@@ -4,6 +4,7 @@ import { Card, Button, Tag, Space } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { fetchWithdrawDepositList } from '@/services/ant-design-pro/depositWithdraw';
 import DetailModal from './components/DetailModal';
+import { useNavigate } from 'react-router-dom';
 
 interface WithdrawRecord {
   key: string;
@@ -27,6 +28,7 @@ const WithdrawManage: React.FC = () => {
   const [detailVisible, setDetailVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<WithdrawRecord | null>(null);
   const actionRef = useRef<ActionType>();
+  const navigate = useNavigate();
   const fetchWithdrawData = async (params: any) => {
     let data={
       pageNo:params.current,
@@ -52,6 +54,9 @@ const WithdrawManage: React.FC = () => {
     { 
       title: '用户ID', 
       dataIndex: 'userId', 
+      render: (userId) => (
+        <a onClick={() => navigate(`/user-management/user-list?userId=${userId}`)}>{userId}</a>
+      ),
     },
     { 
       title: '币种', 
