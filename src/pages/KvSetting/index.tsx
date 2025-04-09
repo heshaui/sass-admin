@@ -39,7 +39,7 @@ const KvSetting: React.FC = () => {
         pageSize: size,
         keyProperty,        // 添加搜索条件
         title,
-        category: category === '全部' ? undefined : category
+        category: category === '全部' ? '':category
       };
       const response = isAdmin 
         ? await getKvList(params)
