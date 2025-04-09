@@ -233,10 +233,7 @@ const KvSetting: React.FC = () => {
               onChange={(value) => setCategory(value)}
               style={{ width: 250 }}
             >
-              <Option value="">全部</Option>
-              <Option value="法币交易">法币交易</Option>
-              <Option value="币币交易">币币交易</Option>
-              <Option value="系统配置">系统配置</Option>
+             
             </Select>
           </Space>
           <Button
