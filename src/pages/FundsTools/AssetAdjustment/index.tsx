@@ -50,6 +50,7 @@ const AssetAdjustment: React.FC = () => {
     googleCode:values.googleCode,
     form:values?.form,
     to:values?.to,
+    description:values.description
    }
     const res=await tenantSubWallet(data);
     if(res.code==='0'){
