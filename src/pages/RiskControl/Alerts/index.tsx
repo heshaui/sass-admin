@@ -3,6 +3,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import {Select, DatePicker } from 'antd';
 import { assetAccountReviewList} from '@/services/ant-design-pro/risk';
 import type { ProColumns } from '@ant-design/pro-components';
+import dayjs from 'dayjs';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
@@ -63,6 +64,7 @@ const RiskControlAlerts: React.FC = () => {
     },
     {
       title: '触发时间',
+      dataIndex: 'dateTimeRange',
       valueType: 'dateTimeRange',
       hideInTable:true,
       fieldProps:{
@@ -72,13 +74,15 @@ const RiskControlAlerts: React.FC = () => {
   ];
   
   const getList=async(params:any)=>{
+    console.log(params);
     let   data={
       pageNo:params.current,
       pageSize:params.pageSize,
-      startTime:params.startTime,
+      startTime:dayjs(params.dateTimeRange[0]).valueOf(),
+      endTime:dayjs(params.dateTimeRange[1]).valueOf(),
       alertType:params.alertType,
       uid:params.uid,
-      endTime:params.endTime
+     
     }
     const res=await assetAccountReviewList(data);
     if(res.code==='0'){
