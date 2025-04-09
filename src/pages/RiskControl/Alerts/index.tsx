@@ -10,7 +10,7 @@ const RiskControlAlerts: React.FC = () => {
   // 筛选条件状态
   const [filters, setFilters] = useState({
     uid: '',
-    alertType: '全部',
+    alertType: '',
     dateRange: [],
   });
 
