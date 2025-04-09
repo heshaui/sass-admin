@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageContainer } from '@ant-design/pro-components';
+import { PageContainer,ProTable } from '@ant-design/pro-components';
 import { Input, Button, Table, Space, Select, message, Tooltip } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import { 
@@ -123,6 +123,7 @@ const KvSetting: React.FC = () => {
       title: '序号',
       dataIndex: 'id',
       key: 'id',
+      search:false,
     },
     ...(!isAdmin ? [] : [{
       title: '商户id',
@@ -134,6 +135,13 @@ const KvSetting: React.FC = () => {
       title: '类型',
       dataIndex: 'type',
       key: 'type',
+      valueType:'select',
+      valueEnum:{
+        '基础功能':'基础功能',
+        '法币交易':'法币交易',
+        '币币交易':'币币交易',
+        '系统配置':'系统配置',
+      }
     },
     {
       title: '唯一Key',
@@ -144,6 +152,7 @@ const KvSetting: React.FC = () => {
       title: '配置值',
       dataIndex: 'keyValue',
       key: 'keyValue',
+      search:false,
       render: (text: string, record: any) => {
         const isExpanded = expandedRows[record.id];
         return (
@@ -174,23 +183,27 @@ const KvSetting: React.FC = () => {
       title: '描述',
       dataIndex: 'describe',
       key: 'describe',
+      search:false,
     },
     ...(isAdmin ? [{
       title: '是否显示',
       dataIndex: 'show',
       key: 'show',
+      search:false,
       render: (show: number) => (show === 1 ? '是' : '否'),
     }] : []),
     {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
+      search:false,
       render: (time: number) => new Date(time).toLocaleString(),
     },
     {
       title: '操作',
       key: 'action',
       width: 180,
+      search:false,
       render: (_: any, record: any) => (
         <Space size="middle">
           <a onClick={() => handleEdit(record)}>修改</a>
@@ -206,57 +219,7 @@ const KvSetting: React.FC = () => {
 
   return (
     <PageContainer title="KV配置">
-      <div style={{ marginBottom: 16 }}>
-        <Space size="large">
-          <Space>
-            <span>Key</span>
-            <Input
-              placeholder="Key"
-              value={keyProperty}
-              onChange={(e) => setKeyProperty(e.target.value)}
-              style={{ width: 250 }}
-            />
-          </Space>
-          <Space>
-            <span>标题</span>
-            <Input
-              placeholder="标题"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              style={{ width: 250 }}
-            />
-          </Space>
-          <Space>
-            <span>类别</span>
-            <Select
-              value={category}
-              onChange={(value) => setCategory(value)}
-              style={{ width: 250 }}
-            >
-             
-            </Select>
-          </Space>
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            onClick={handleSearch}
-          >
-            查询
-          </Button>
-          
-          {isAdmin && (
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={handleAdd}
-            >
-              新增
-            </Button>
-          )}
-        </Space>
-      </div>
-
-      <Table
+      <ProTable
         loading={loading}
         columns={columns}
         dataSource={dataSource}
