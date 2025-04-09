@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Form, Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
-import type { ProColumns } from '@ant-design/pro-components';
+import type { ProColumns,ActionType } from '@ant-design/pro-components';
 import AssetAdjustmentForm from './components/AssetAdjustmentForm';
 import {tenantSubWallet,tenantSubWalletList} from '@/services/ant-design-pro/fundsTools';
 
 const AssetAdjustment: React.FC = () => {
   const [form] = Form.useForm();
+  const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState<boolean>(false);
   const [formVisible, setFormVisible] = useState<boolean>(false);
 
@@ -55,6 +56,7 @@ const AssetAdjustment: React.FC = () => {
     const res=await tenantSubWallet(data);
     if(res.code==='0'){
       message.success('资产调整操作已提交');
+      actionRef.current?.reload();
     }else{
       message.error(res.message);
     }
@@ -90,6 +92,7 @@ const AssetAdjustment: React.FC = () => {
   return (
     <PageContainer>
       <ProTable
+        actionRef={actionRef}
         columns={columns}
         request={subWalletList}
         rowKey="id"
