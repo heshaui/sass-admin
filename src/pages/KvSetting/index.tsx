@@ -18,7 +18,7 @@ const { Option } = Select;
 const KvSetting: React.FC = () => {
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [loading, setLoading] = useState<boolean>(false);
-  const [keyValue, setKeyValue] = useState<string>('');
+  const [keyProperty, setKeyProperty] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [category, setCategory] = useState<string>('全部');
   const [dataSource, setDataSource] = useState<any[]>([]);
@@ -37,7 +37,7 @@ const KvSetting: React.FC = () => {
       const params = {
         pageNo: page,
         pageSize: size,
-        keyValue,        // 添加搜索条件
+        keyProperty,        // 添加搜索条件
         title,
         category: category === '全部' ? undefined : category
       };
@@ -212,8 +212,8 @@ const KvSetting: React.FC = () => {
             <span>Key</span>
             <Input
               placeholder="Key"
-              value={keyValue}
-              onChange={(e) => setKeyValue(e.target.value)}
+              value={keyProperty}
+              onChange={(e) => setKeyProperty(e.target.value)}
               style={{ width: 250 }}
             />
           </Space>
