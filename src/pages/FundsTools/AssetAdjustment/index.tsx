@@ -65,8 +65,8 @@ const AssetAdjustment: React.FC = () => {
     { title: '编号', dataIndex: 'id', key: 'id', search: false },
     { 
       title: '币种', 
-      dataIndex: 'coinId', 
-      key: 'coinId',
+      dataIndex: 'coinName', 
+      key: 'coinName',
     },
     { title: '金额', dataIndex: 'count', key: 'count', search: false },
     { title: '备注', dataIndex: 'description', key: 'description', search: false },
@@ -76,6 +76,7 @@ const AssetAdjustment: React.FC = () => {
       dataIndex: 'createTime', 
       key: 'createTime',
       valueType: 'dateTime',
+      search: false 
     },
   ];
 

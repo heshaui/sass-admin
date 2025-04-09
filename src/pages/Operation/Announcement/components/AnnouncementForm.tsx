@@ -34,6 +34,8 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   const [contents, setContents] = useState<Record<string, string>>({});
   const [titles, setTitles] = useState<Record<string, string>>({});
   const [menuList, setMenuList] = useState<any[]>([]);
+  const [editor, setEditor] = useState<any>(null);
+
   // 获取并回显数据
   useEffect(() => {
     if(type==='create'){
@@ -103,7 +105,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   const handleContentChange = (lang: string, content: string) => {
     setContents((prev) => ({
       ...prev,
-      [lang]: content,
+      [activeLanguage]: content,
     }));
   };
 
@@ -169,6 +171,32 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
       message.error('表单校验失败');
     }
   };
+
+  const handleLanguageChange = (value) => {
+    // 先保存当前语言的内容
+    if (editor && activeLanguage) {
+      const currentContent = editor.getHtml(); // 获取当前编辑器内容
+      setContents((prev) => ({
+        ...prev,
+        [activeLanguage]: currentContent, // 保存当前语言的内容
+      }));
+    }
+    
+    // 然后切换语言
+    setActiveLanguage(value);
+    
+    // 编辑器内容将通过useEffect更新
+  };
+
+  useEffect(() => {
+    // 当activeLanguage改变时，更新编辑器内容
+    if (editor) {
+      // 强制延迟一下更新编辑器内容，确保React状态已更新
+      setTimeout(() => {
+        editor.setHtml(contents[activeLanguage] || '');
+      }, 0);
+    }
+  }, [activeLanguage, contents, editor]);
 
   useEffect(()=>{
     getMenu();
@@ -249,7 +277,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         >
           <Radio.Group 
             value={activeLanguage} 
-            onChange={(e) => setActiveLanguage(e.target.value)}
+            onChange={(e) => handleLanguageChange(e.target.value)}
           >
             {languages.map(lang => (
               <Radio.Button key={lang.key} value={lang.key}>{lang.label}</Radio.Button>
@@ -288,6 +316,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           <SeedEditor 
             initialContent={contents[activeLanguage] || ''}
             onChange={(content) => handleContentChange(activeLanguage, content)}
+            ref={(node) => setEditor(node)}
           />
           {activeLanguage === 'en_US' && !contents.en_US && (
             <div style={{ color: 'red' }}>英文内容为必填项</div>
