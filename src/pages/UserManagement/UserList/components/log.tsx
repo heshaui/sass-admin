@@ -5,7 +5,7 @@ import type { ProFormInstance } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { SearchOutlined, ReloadOutlined } from '@ant-design/icons';
 import { gatewayAccessLogList } from '@/services/ant-design-pro/UserManagement';
-
+import dayjs from 'dayjs';
 interface LogRecord {
   id: string;
   path: string;
@@ -26,10 +26,14 @@ const Log: React.FC<LogProps> = ({ userId }) => {
 
 
   const fetchLogData = async (params: any) => {
+    console.log(params,'params')
         let data={
             pageNo:params.current,
             pageSize:params.pageSize,
-            userId:userId
+            userId:userId,
+            //传时间戳
+            startTime:dayjs(params.dateRange[0]).valueOf(),
+            endTime:dayjs(params.dateRange[1]).valueOf()
         }
             const res=await gatewayAccessLogList(data)
                     if(res.code==='0'){
@@ -88,7 +92,7 @@ const Log: React.FC<LogProps> = ({ userId }) => {
     {
       title: '开始日期',
       dataIndex: 'dateRange',
-      valueType: 'dateRange',
+      valueType: 'dateTimeRange',
       hideInTable: true,
       fieldProps: {
         placeholder: ['开始日期', '结束日期'],
