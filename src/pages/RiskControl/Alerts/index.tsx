@@ -31,28 +31,33 @@ const RiskControlAlerts: React.FC = () => {
     {
       title: '触发原因',
       dataIndex: 'resultContent',
+      search:false
     },
     {
       title: '触发后风控等级',
       dataIndex: 'riskLevel',
       key: 'riskLevel',
+      search:false
     },
     {
       title: '风控周期',
       dataIndex: 'riskCycle',
       key: 'riskCycle',
       valueType: 'text',
+      search:false
     },
     {
       title: '处理建议',
       dataIndex: 'code',
       key: 'code',
       valueType: 'text',
+      search:false
     },
     {
       title: '触发时间',
       dataIndex: 'createTime',
       valueType: 'dateTime',
+      search:false
     },
   ];
   
