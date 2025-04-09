@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState,useRef} from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
-import { Input, Button, Table, Space, Select, message, Tooltip } from 'antd';
-import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
+import {  Space, Select, message} from 'antd';
 import { 
   getKvList, 
   updateKv, 
@@ -18,10 +17,7 @@ const { Option } = Select;
 const KvSetting: React.FC = () => {
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [loading, setLoading] = useState<boolean>(false);
-  const [keyProperty, setKeyProperty] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [category, setCategory] = useState<string>('全部');
-  const [dataSource, setDataSource] = useState<any[]>([]);
+
   const [isAddModalVisible, setIsAddModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] = useState<any>(null);
@@ -29,25 +25,28 @@ const KvSetting: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(10);
   const [total, setTotal] = useState<number>(0);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const actionRef = useRef<ActionType>();
 
   // 获取KV配置列表
-  const fetchKvList = async (page = current, size = pageSize) => {
+  const fetchKvList = async (params:any) => {
     setLoading(true);
     try {
-      const params = {
-        pageNo: page,
-        pageSize: size,
-        keyProperty,        // 添加搜索条件
-        title,
-        category: category === '全部' ? '':category
+      const data = {
+        pageNo: params.current,
+        pageSize: params.pageSize,
+        ...params
+
       };
       const response = isAdmin 
-        ? await getKvList(params)
-        : await getTenantKvList(params);
+        ? await getKvList(data)
+        : await getTenantKvList(data);
 
       if (response.code === '0') {
-        setDataSource(response.data.list);
-        setTotal(response.data.count); // 设置总数
+        return {
+          data: response.data.list,
+          success: true,
+          total: response.data.count,
+        };
       }
     } catch (error) {
       console.error('获取KV配置列表失败:', error);
@@ -57,14 +56,7 @@ const KvSetting: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchKvList();
-  }, []);
 
-  // 处理查询
-  const handleSearch = () => {
-    fetchKvList();
-  };
 
   // 处理修改
   const handleEdit = (record: any) => {
@@ -88,7 +80,7 @@ const KvSetting: React.FC = () => {
 
       if (response.code === '0'&&response.data) {
         message.success(`${record.status === 1 ? '下线' : '发布上线'}成功`);
-        fetchKvList(); // 刷新列表
+        
       } else {
         message.error(`操作失败: ${response.message}`);
       }
@@ -103,12 +95,10 @@ const KvSetting: React.FC = () => {
     setIsAddModalVisible(true);
   };
 
-  // 处理页码变化
-  const handleTableChange = (pagination: any) => {
-    setCurrent(pagination.current);
-    setPageSize(pagination.pageSize);
-    fetchKvList(pagination.current, pagination.pageSize);
-  };
+  const reload = () => {
+    actionRef.current?.reload();
+  }
+
 
   const toggleExpand = (id: string) => {
     setExpandedRows(prev => ({
@@ -220,33 +210,23 @@ const KvSetting: React.FC = () => {
     <PageContainer title="KV配置">
       <ProTable
         loading={loading}
-        columns={columns}
-        dataSource={dataSource}
+        columns={columns as any}
+        actionRef={actionRef}
+        request={fetchKvList}
         rowKey="id"
-        pagination={{
-          current,
-          pageSize,
-          total,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条记录`,
-          pageSizeOptions: ['10', '20', '50', '100']
-        }}
-        onChange={handleTableChange}
-        bordered
       />
       
       <AddModal
         visible={isAddModalVisible}
         onCancel={() => setIsAddModalVisible(false)}
-        onSuccess={fetchKvList}
+        onSuccess={reload}
       />
       
       {currentRecord && (
         <EditModal
           visible={isEditModalVisible}
           onCancel={() => setIsEditModalVisible(false)}
-          onSuccess={fetchKvList}
+          onSuccess={reload}
           record={currentRecord}
         />
       )}
