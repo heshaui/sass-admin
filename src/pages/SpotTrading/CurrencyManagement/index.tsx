@@ -225,31 +225,41 @@ const CurrencyManagement: React.FC = () => {
     let data
       if(type==='canRecharge'){
         data={
+          id:record.id,
           coinId:record.coinId,
           canRecharge:record.canRecharge===1?0:1
         }
       }else if(type==='canWithdraw'){
         data={
+          id:record.id,
           coinId:record.coinId,
           canWithdraw:record.canWithdraw===1?0:1
         }
       }else if(type==='canTransfer'){
         data={
+          id:record.id,
           coinId:record.coinId,
           canTransfer:record.canTransfer===1?0:1
         }
       }else if(type==='canAutoWithdraw'){
         data={
+          id:record.id,
           coinId:record.coinId,
           canAutoWithdraw:record.canAutoWithdraw===1?0:1
         }
       }
+      const tip={
+        canRecharge:'充值'+(record.canRecharge===1?'关闭':'开启'),
+        canWithdraw:'提现'+(record.canWithdraw===1?'关闭':'开启'),
+        canTransfer:'转账'+(record.canTransfer===1?'关闭':'开启'),
+        canAutoWithdraw:'自动提币'+(record.canAutoWithdraw===1?'关闭':'开启'),
+      }
     let res=await adminUpdateCurrencyCoinById(data);
-    if(res.code==='0'){
-      message.success(`${type}成功`);
+    if(res.code==='0'&&res.data){
+      message.success(`${tip[type]}成功`);
       actionRef.current?.reload();
     }else{
-      message.error(res.message);
+      message.error(`${tip[type]}失败`);
     }
   }
 
