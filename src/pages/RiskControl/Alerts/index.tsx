@@ -78,8 +78,8 @@ const RiskControlAlerts: React.FC = () => {
     let   data={
       pageNo:params.current,
       pageSize:params.pageSize,
-      startTime:dayjs(params.dateTimeRange[0]).valueOf(),
-      endTime:dayjs(params.dateTimeRange[1]).valueOf(),
+      startTime:params?.dateTimeRange?.[0]?dayjs(params?.dateTimeRange?.[0]).valueOf():'',
+      endTime:params?.dateTimeRange?.[1]?dayjs(params?.dateTimeRange?.[1]).valueOf():'',
       alertType:params.alertType,
       uid:params.uid,
      
