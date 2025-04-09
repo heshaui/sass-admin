@@ -11,7 +11,9 @@ const RiskControlAlerts: React.FC = () => {
   const [filters, setFilters] = useState({
     uid: '',
     alertType: '',
-    dateRange: [],
+    startTime: '',
+    endTime: '',
+
   });
 
 
@@ -59,15 +61,37 @@ const RiskControlAlerts: React.FC = () => {
       valueType: 'dateTime',
       search:false
     },
+    {
+      title: '触发时间',
+      valueType: 'dateTimeRange',
+      hideInTable:true,
+      fieldProps:{
+        placeholder:['开始日期','结束日期']
+      }
+    },
   ];
   
   const getList=async(params:any)=>{
-    const res=await assetAccountReviewList(filters);
+    let   data={
+      pageNo:params.current,
+      pageSize:params.pageSize,
+      startTime:params.startTime,
+      alertType:params.alertType,
+      uid:params.uid,
+      endTime:params.endTime
+    }
+    const res=await assetAccountReviewList(data);
     if(res.code==='0'){
       return {
         data: res.data.list,
         success: true,
         total: res.data.count
+      };
+    }else{
+      return {
+        data: [],
+        success: false,
+        total: 0
       };
     }
   }
