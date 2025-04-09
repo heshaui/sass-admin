@@ -114,8 +114,10 @@ const UserLevel: React.FC = () => {
   const columns = [
     {
       title: '等级',
-      dataIndex: 'levelName',
-      key: 'levelName',
+      dataIndex: 'levelValue',
+      key: 'levelValue',
+      render: (text: string | null) => 
+        text === 'L0' ? '未认证' : '标准身份认证'
     },
     {
       title: '要求',

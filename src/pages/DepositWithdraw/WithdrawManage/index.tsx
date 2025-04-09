@@ -48,7 +48,7 @@ const WithdrawManage: React.FC = () => {
   const columns: ProColumns<WithdrawRecord>[] = [
     { 
       title: '提现单号', 
-      dataIndex: 'orderNo',
+      dataIndex: 'withdrawalId',
       hideInSearch: true
     },
     { 
@@ -60,8 +60,8 @@ const WithdrawManage: React.FC = () => {
     },
     { 
       title: '币种', 
-      dataIndex: 'coinId', 
-      key: 'coinId',
+      dataIndex: 'coinName', 
+      key: 'coinName',
     },
     { 
       title: '网络名称', 
