@@ -103,11 +103,16 @@ const WithdrawManage: React.FC = () => {
       hideInTable: true
     },
     { 
-      title: '地址', 
-      dataIndex: 'address', 
-      key: 'address',
-      render: (text) => <a>{text}</a>,
-      hideInSearch: true
+      title: '发送地址', 
+      dataIndex: 'fromAddress', 
+      key: 'fromAddress',
+      search:false
+    },
+    { 
+      title: '接收地址', 
+      dataIndex: 'toAddress', 
+      key: 'toAddress',
+      search:false
     },
     { 
       title: 'TxID', 
