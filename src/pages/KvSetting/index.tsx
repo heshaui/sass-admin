@@ -80,7 +80,7 @@ const KvSetting: React.FC = () => {
 
       if (response.code === '0'&&response.data) {
         message.success(`${record.status === 1 ? '下线' : '发布上线'}成功`);
-        
+        reload();
       } else {
         message.error(`操作失败: ${response.message}`);
       }
