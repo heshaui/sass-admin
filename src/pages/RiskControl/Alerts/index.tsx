@@ -80,7 +80,7 @@ const RiskControlAlerts: React.FC = () => {
       startTime:params?.dateTimeRange?.[0]?dayjs(params?.dateTimeRange?.[0]).valueOf():'',
       endTime:params?.dateTimeRange?.[1]?dayjs(params?.dateTimeRange?.[1]).valueOf():'',
       alertType:params.alertType,
-      uid:params.uid,
+      uid:params.id,
      
     }
     const res=await assetAccountReviewList(data);
