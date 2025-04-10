@@ -128,16 +128,32 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
   };
 
   const handleRevoke = async () => {
-    const res = await updateUserIdentityVerificationById({
-      id: record.id,
-      authStatus: '2',
+    // const res = await updateUserIdentityVerificationById({
+    //   id: record.id,
+    //   authStatus: '2',
+    // });
+    // if (res.code === '0') {
+    //   message.success('撤销成功');
+    //   onSuccess();
+    // } else {
+    //   message.error('操作失败');
+    // }
+    Modal.confirm({
+      title: '确认撤销',
+      content: '确认撤销后，该用户将需要重新审核身份信息',
+      onOk: async () => {
+        const res = await updateUserIdentityVerificationById({
+          id: record.id,
+          authStatus: '2',
+        });
+        if (res.code === '0') {
+          message.success('撤销成功');
+          onSuccess();
+        } else {
+          message.error('操作失败');
+        }
+      },
     });
-    if (res.code === '0') {
-      message.success('撤销成功');
-      onSuccess();
-    } else {
-      message.error('操作失败');
-    }
   };
 
   if (!visible) {
