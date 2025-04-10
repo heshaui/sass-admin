@@ -288,11 +288,11 @@ const CurrencyManagement: React.FC = () => {
       title: '币种状态',
       dataIndex: 'status',
       valueEnum:{
-        0:'正常',
-        1:'禁用'
+        1:'正常',
+        0:'禁用'
       },
       renderText: (text: number) => {
-        return text === 0 ? '正常' : '禁用';
+        return text === 1 ? '正常' : '禁用';
       },
     },
     {

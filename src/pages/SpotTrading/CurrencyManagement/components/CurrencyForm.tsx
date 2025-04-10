@@ -282,8 +282,8 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           required
         >
           <Select>
-            <Select.Option value={0}>是</Select.Option>
-            <Select.Option value={1}>否</Select.Option>
+            <Select.Option value={1}>是</Select.Option>
+            <Select.Option value={0}>否</Select.Option>
           </Select>
         </Form.Item>
         </Col>
