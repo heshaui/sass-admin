@@ -42,7 +42,7 @@ const cardType=(cardType:number)=>{
       return '-';
   }
 }
-const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
+const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
   visible,
   onClose,
   onSuccess,
@@ -128,16 +128,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
   };
 
   const handleRevoke = async () => {
-    // const res = await updateUserIdentityVerificationById({
-    //   id: record.id,
-    //   authStatus: '2',
-    // });
-    // if (res.code === '0') {
-    //   message.success('撤销成功');
-    //   onSuccess();
-    // } else {
-    //   message.error('操作失败');
-    // }
+    // 
     Modal.confirm({
       title: '确认撤销',
       content: '确认撤销后，该用户将需要重新审核身份信息',
@@ -203,7 +194,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
         </Descriptions>
 
         <div className={styles.actionButtons}>
-          {record?.authStatus === 3||record?.authStatus === 2||record?.authStatus === 0 && (
+          {(record?.authStatus === 3 || record?.authStatus === 2 || record?.authStatus === 0) && (
             <Space size="middle">
               <Button type="primary" onClick={handleApprove}>
                 通过
@@ -227,7 +218,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
           <div className={styles.rejectReasonSection}>
             <h3>拒绝原因：</h3>
             <div className={styles.rejectReasonContent}>
-              {record.remark.split('&&').map((reason:string, index:number) => (
+              {record?.remark?.split('&&').map((reason:string, index:number) => (
                 <div key={index} className={styles.rejectReasonItem}>
                   <span className={styles.bulletPoint}>•</span> {reason}
                 </div>
@@ -307,4 +298,4 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
   );
 };
 
-export default AuditDetailCard;
+export default AuditDetailModal;
