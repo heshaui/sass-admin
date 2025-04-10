@@ -82,9 +82,10 @@ const WithdrawManage: React.FC = () => {
     },
     { 
       title: '实际到账', 
-      dataIndex: 'actualAmount', 
+      dataIndex: 'actualAmount',
       key: 'actualAmount',
-      hideInSearch: true
+      hideInSearch: true,
+      render: (_, record) => (Number(record.amount) - Number(record.fee))
     },
     { 
       title: '实际矿工费', 

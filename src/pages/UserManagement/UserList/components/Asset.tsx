@@ -24,8 +24,7 @@ interface AssetProps {
 }
 
 const Asset: React.FC<AssetProps> = ({ userId }) => {
-  const [currency, setCurrency] = useState<string>('');
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [currency, setCurrency] = useState<string>();
   const [hideZeroAssets, setHideZeroAssets] = useState<boolean>(false);
   const [totalAsset, setTotalAsset] = useState<string>('0');
   const [currencyList, setCurrencyList] = useState<any[]>([]);
@@ -66,7 +65,6 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
       title: '可用',
       dataIndex: 'balance',
       key: 'balance',
-
     },
     {
       title: '冻结',

@@ -21,9 +21,6 @@ const KvSetting: React.FC = () => {
   const [isAddModalVisible, setIsAddModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] = useState<any>(null);
-  const [current, setCurrent] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
-  const [total, setTotal] = useState<number>(0);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const actionRef = useRef<ActionType>();
 
