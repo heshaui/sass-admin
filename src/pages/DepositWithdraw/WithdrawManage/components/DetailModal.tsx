@@ -97,6 +97,7 @@ const handleUpdate = async () => {
       width={1000}
       destroyOnClose
     >
+      <div>{currentRecord?.userId}</div>
       {currentRecord && (
         <>
           <ProDescriptions

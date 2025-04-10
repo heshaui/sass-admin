@@ -232,7 +232,7 @@ const WithdrawManage: React.FC = () => {
       {/* 引入详情模态框组件 */}
       <DetailModal 
         visible={detailVisible}
-        record={currentRecord}
+        record={currentRecord as any}
         onClose={() => {
           setDetailVisible(false);
           setCurrentRecord(null);

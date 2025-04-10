@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { Button, Space,message } from 'antd';
+import React, { useRef,useEffect} from 'react';
+import { message } from 'antd';
 import {ProTable} from '@ant-design/pro-components';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
@@ -42,6 +42,10 @@ const Log: React.FC<LogProps> = ({ userId }) => {
     }
   }
 
+  useEffect(()=>{
+    actionRef.current?.reload();
+  },[userId])
+
   const columns: ProColumns<any>[] = [
     {
       title: '操作时间',
@@ -82,6 +86,7 @@ const Log: React.FC<LogProps> = ({ userId }) => {
   ];
 
   return (
+
     <ProTable
     columns={columns}
     rowKey="id"

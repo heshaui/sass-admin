@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-import { Button, Space } from 'antd';
+import React, { useRef,useEffect } from 'react';
 import {ProTable} from '@ant-design/pro-components';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
@@ -22,29 +21,34 @@ interface LogProps {
 const Log: React.FC<LogProps> = ({ userId }) => {
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
-
+  const userIdRef = useRef(userId);
+  
+  useEffect(() => {
+    userIdRef.current = userId;
+    actionRef.current?.reload();
+  }, [userId]);
 
   const fetchLogData = async (params: any) => {
-        let data={
-            pageNo:params.current,
-            pageSize:params.pageSize,
-            userId:userId
-        }
-            const res=await assetAccountReviewList(data)
-                    if(res.code==='0'){
-                        return {
-                            data: res.data.list,
-                            success: true,
-                            total: res.data.count,
-                        }
-                    }else{
-                        return {
-                            data: [],
-                            success: false,
-                            total: 0,
-                        }
-                    }
-  
+    console.log(userIdRef.current, 'fetchLogDatauserId')
+    let data = {
+      pageNo: params.current,
+      pageSize: params.pageSize,
+      userId: userIdRef.current
+    }
+    const res = await assetAccountReviewList(data)
+    if (res.code === '0') {
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.count,
+      }
+    } else {
+      return {
+        data: [],
+        success: false,
+        total: 0,
+      }
+    }
   };
 
   const columns: ProColumns<LogRecord>[] = [
@@ -84,6 +88,8 @@ const Log: React.FC<LogProps> = ({ userId }) => {
   ];
 
   return (
+    <div>
+      <div>{userId}</div>
     <ProTable<LogRecord>
       actionRef={actionRef}
       formRef={formRef}
@@ -100,6 +106,7 @@ const Log: React.FC<LogProps> = ({ userId }) => {
       dateFormatter="string"
       bordered
     />
+    </div>
   );
 };
 
