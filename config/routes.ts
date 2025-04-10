@@ -359,6 +359,21 @@ export default [
         component: './SpotTrading/TradingPairManagement',
       },
       {
+        path: '/spot-trading/trading-fees',
+        name: 'tradingFees',
+        component: './SpotTrading/TradingFees',
+      },
+      {
+        path: '/spot-trading/order-management',
+        name: 'orderManagement',
+        component: './SpotTrading/OrderManagement',
+      },
+      {
+        path: '/spot-trading/trading-risk-control',
+        name: 'tradingRiskControl',
+        component: './SpotTrading/TradingRiskControl',
+      },
+      {
         path: '/spot-trading',
         redirect: '/spot-trading/currency-management',
       },

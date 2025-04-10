@@ -104,6 +104,9 @@ export default {
   'menu.spotTrading.currencyManagement': '币种管理',
   'menu.spotTrading.tradingPairManagement': '币对管理',
   'menu.spotTrading.currencyProtocol': '币种协议',
+  'menu.spotTrading.orderManagement': '订单管理',
+  'menu.spotTrading.tradingFees': '手续费管理',
+  'menu.spotTrading.tradingRiskControl': '风控管理',
   'menu.fundsTools': '资金工具',
   'menu.fundsTools.assetAdjustment': '资产调整',
   'menu.fundsTools.transferTool': '转账工具',
@@ -113,5 +116,5 @@ export default {
   'menu.riskControl.suggestions': '处理建议',
   'menu.riskControl.alerts': '报警记录',
   'menu.riskControl.templates': '风控模板',
-
+ 
 };
