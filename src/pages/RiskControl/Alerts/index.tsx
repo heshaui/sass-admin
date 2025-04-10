@@ -74,7 +74,6 @@ const RiskControlAlerts: React.FC = () => {
   ];
   
   const getList=async(params:any)=>{
-    console.log(params);
     let   data={
       pageNo:params.current,
       pageSize:params.pageSize,

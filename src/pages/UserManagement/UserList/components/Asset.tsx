@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { Select, Radio, Typography } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
@@ -30,6 +30,7 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
   const [totalAsset, setTotalAsset] = useState<string>('0');
   const [currencyList, setCurrencyList] = useState<any[]>([]);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+  const actionRef = useRef<ActionType>();
 
   const getCurrencyList=async()=>{
     let data={
@@ -122,6 +123,7 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
           value={currency} 
           onChange={(value) => {
             setCurrency(value);
+            actionRef.current?.reload();
           }} 
           style={{ width: 120, marginRight: '16px' }}
         >
@@ -146,6 +148,7 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
       
       <ProTable<AssetItem>
         columns={columns}
+        actionRef={actionRef}
         request={fetchAssetData}
         rowKey="currency"
         search={false}
