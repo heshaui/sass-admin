@@ -187,7 +187,7 @@ const AuditDetailCard: React.FC<AuditDetailModalProps> = ({
         </Descriptions>
 
         <div className={styles.actionButtons}>
-          {record?.authStatus === 3||record?.authStatus === 2 && (
+          {record?.authStatus === 3||record?.authStatus === 2||record?.authStatus === 0 && (
             <Space size="middle">
               <Button type="primary" onClick={handleApprove}>
                 通过
