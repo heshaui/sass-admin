@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Tag, Tabs, Table, Radio,Input,Button,message } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
-import { fetchWithdrawDepositDetail,updateWithdrawDeposit } from '@/services/ant-design-pro/depositWithdraw';
+import { fetchWithdrawDepositDetail,updateWithdrawDeposit,manualProcessing } from '@/services/ant-design-pro/depositWithdraw';
 import OperaLog from './OperaLog';
 import RiskLog from './RiskLog';
 interface WithdrawRecord {
@@ -72,12 +72,20 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
 
 const handleUpdate = async () => {
 
-    const res = await updateWithdrawDeposit({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee});
+    // const res = await updateWithdrawDeposit({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee});
+    // if (res.code === '0') {
+    //   message.success('更新成功');
+    //   onClose();
+    // }else{
+    //   message.error('更新失败');
+    // }
+
+    const res = await manualProcessing({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee});
     if (res.code === '0') {
-      message.success('更新成功');
+      message.success('人工处理成功');
       onClose();
     }else{
-      message.error('更新失败');
+      message.error('人工处理失败');
     }
 
 }
@@ -97,7 +105,6 @@ const handleUpdate = async () => {
       width={1000}
       destroyOnClose
     >
-      <div>{currentRecord?.userId}</div>
       {currentRecord && (
         <>
           <ProDescriptions

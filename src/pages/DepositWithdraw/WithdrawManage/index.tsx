@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Card, Button, Tag, Space } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
-import { fetchWithdrawDepositList } from '@/services/ant-design-pro/depositWithdraw';
+import { fetchWithdrawDepositList,manualProcessing } from '@/services/ant-design-pro/depositWithdraw';
 import DetailModal from './components/DetailModal';
 import { useNavigate } from 'react-router-dom';
 

@@ -24,5 +24,13 @@ export async function updateWithdrawDeposit(params: any) {
   });
 }
 
+// 手动处理
+export async function manualProcessing(params: any) {
+  return request('/tenant/v1/manualProcessing', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 
 

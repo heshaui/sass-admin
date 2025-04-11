@@ -89,7 +89,6 @@ const Log: React.FC<LogProps> = ({ userId }) => {
 
   return (
     <div>
-      <div>{userId}</div>
     <ProTable<LogRecord>
       actionRef={actionRef}
       formRef={formRef}
