@@ -116,8 +116,12 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      setLoading(true);
-      
+      if(language==='en_US'){
+       if(values.text.trim()===''){
+        message.error('英文内容为必填项，请添加英文内容');
+        return;
+      }
+    }
       // 更新当前语言内容到contentList
       const updatedContentList = [...contentList];
       const existingIndex = updatedContentList.findIndex(item => item.languageCode === language);
@@ -129,6 +133,15 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
           languageContent: values.text
         });
       }
+      
+      // 检查是否包含英文内容
+      const englishContent = updatedContentList.find(item => item.languageCode === 'en_US')?.languageContent || '';
+      if (!englishContent.trim()) {
+        message.error('英文内容为必填项，请添加英文内容');
+        return;
+      }
+      
+      setLoading(true);
       
       if (editingId) {
         // 更新操作
@@ -162,7 +175,8 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
       onSuccess();
       resetFormAndState();
     } catch (error) {
-      message.error('操作失败');
+      console.log(error);
+
     } finally {
       setLoading(false);
     }
