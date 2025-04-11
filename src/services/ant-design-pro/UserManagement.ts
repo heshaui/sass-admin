@@ -218,3 +218,10 @@ export async function userTransactionCount(params: any) {
     data: params,
   });
 }
+
+export async function userWalletCount(params: any) {
+  return request(isAdmin ?'/tenant-admin/v1/user/userWalletCount' :'/tenant/v1/userWalletCount', {
+    method: 'POST',
+    data: params,
+  });
+}

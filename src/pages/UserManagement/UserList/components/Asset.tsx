@@ -2,7 +2,7 @@ import React, { useState, useEffect,useRef } from 'react';
 import { Select, Radio, Typography } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { userWalletList } from '@/services/ant-design-pro/UserManagement';
+import { userWalletList,userWalletCount} from '@/services/ant-design-pro/UserManagement';
 import { getCurrencyCoinList } from '@/services/ant-design-pro/inviteFriends';
 import { currencyCoinList } from '@/services/ant-design-pro/spot';
 const { Option } = Select;
@@ -30,6 +30,16 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
   const [currencyList, setCurrencyList] = useState<any[]>([]);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const actionRef = useRef<ActionType>();
+
+  const getTotalAsset=async()=>{
+    let data={
+      userId:userId,
+    }
+    const res = await userWalletCount(data);
+    if(res.code==='0'){
+      setTotalAsset(res.data);
+    }
+  }
 
   const getCurrencyList=async()=>{
     let data={
@@ -103,6 +113,7 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
   useEffect(() => {
     // 获取总资产
     getCurrencyList()
+    getTotalAsset()
   }, []);
 
   const handleRadioChange = (e: any) => {
