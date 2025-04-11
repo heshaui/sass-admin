@@ -156,10 +156,10 @@ const AuditList: React.FC = () => {
         0:'驳回',
         1:'通过',
         2:'未审核',
-        3:'审核中'
+        3:'未审核'
       },
       renderText: (text: number) => {
-        return text === 0 ? '驳回' : text === 1 ? '通过' : text === 2 ? '未审核':text === 3 ? '审核中':'';
+        return text === 0 ? '驳回' : text === 1 ? '通过' : text === 2 ? '未审核':text === 3 ? '未审核':'';
       },
     },
     {
