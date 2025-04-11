@@ -24,7 +24,8 @@ const RiskControlAlerts: React.FC = () => {
   const columns: ProColumns[] = [
     {
       title: 'UID',
-      dataIndex: 'id',
+      dataIndex: 'userId',
+      key: 'userId',
     },
     {
       title: '触发类型',
