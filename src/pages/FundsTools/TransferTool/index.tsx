@@ -69,7 +69,7 @@ if(fromAccount==='user'&&toAccount==='user'){
       to:values.to,
       coinId:values.coinId,
       count:values.count,
-      remark:values.remark,
+      description:values.description,
       sceneTypeEnum:sceneTypeEnum,
       googleCode:values.googleCode
     }
