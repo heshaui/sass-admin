@@ -221,3 +221,11 @@ export async function updateTenantCurrencyCoinExtById(params?: Record<string, an
     data: params,
   });
 }
+
+// /tenant/v1/tenant-coin/tenantCurrencyCoinParams
+export async function tenantCurrencyCoinParams(params?: Record<string, any>) {
+  return request(`/tenant/v1/tenant-coin/tenantCurrencyCoinParams?idString=${params.id}`, {
+    method: 'POST',
+    data: params,
+  });
+}

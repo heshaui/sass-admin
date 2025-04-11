@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from 'react';
 import { Form, Input, Radio, InputNumber, Select, DatePicker, Button, Card, Row, Col, message } from 'antd';
 import dayjs from 'dayjs';
-import { tenantCurrencyCoinAll,currencyCoinParams,tenantCoin } from '@/services/ant-design-pro/spot';
+import { tenantCurrencyCoinAll,currencyCoinParams,tenantCoin,tenantCurrencyCoinParams } from '@/services/ant-design-pro/spot';
 import AvatarUpload from '@/components/AvatarUpload';
 
 
@@ -70,7 +70,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
     let data={
       id:coinId
     }
-    const res = await currencyCoinParams(data);
+    const res = isAdmin ?await currencyCoinParams(data):await tenantCurrencyCoinParams(data);
     if(res.code==='0'){
       console.log(res.data);
       if (res.data.issuingDate) {
@@ -99,7 +99,12 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
 
   useEffect(() => {
     if(initialValues){
-      getEditInfo(initialValues.coinId);
+      if(isAdmin){
+        getEditInfo(initialValues?.coinId);
+      }else{
+        getEditInfo(initialValues?.id);
+      }
+      
     }
     getCurrencyAll();
   }, []);
