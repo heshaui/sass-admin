@@ -45,6 +45,7 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
   const [txId, setTxId] = useState<string>('');
   const [remark, setRemark] = useState<string>('');
   const [realityFee, setRealityFee] = useState<string>('');
+  const [formAddress, setFormAddress] = useState<string>('');
   // 获取详情数据
   const fetchDetailData = async (orderId: string) => {
     setDetailLoading(true);
@@ -80,7 +81,7 @@ const handleUpdate = async () => {
     //   message.error('更新失败');
     // }
 
-    const res = await manualProcessing({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee});
+    const res = await manualProcessing({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee,fromAddress:formAddress});
     if (res.code === '0') {
       message.success('人工处理成功');
       onClose();
@@ -165,6 +166,7 @@ const handleUpdate = async () => {
             {
               currentRecord.status === 1 && (
                 <>
+                <ProDescriptions.Item label="转账地址" span={1} ><Input value={formAddress} onChange={(e) => setFormAddress(e.target.value)}/></ProDescriptions.Item>
                 <ProDescriptions.Item label="TXID" span={1} ><Input value={txId} onChange={(e) => setTxId(e.target.value)}/></ProDescriptions.Item>
                 <ProDescriptions.Item label="实际矿工费" span={1} ><Input value={realityFee} onChange={(e) => setRealityFee(e.target.value)}/></ProDescriptions.Item>
                 <ProDescriptions.Item label="审核备注" span={1}><Input value={remark} onChange={(e) => setRemark(e.target.value)}/></ProDescriptions.Item>
