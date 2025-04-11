@@ -10,7 +10,7 @@ const { Option } = Select;
 const RiskControlAlerts: React.FC = () => {
   // 筛选条件状态
   const [filters, setFilters] = useState({
-    uid: '',
+    userId: '',
     alertType: '',
     startTime: '',
     endTime: '',
@@ -81,7 +81,7 @@ const RiskControlAlerts: React.FC = () => {
       startTime:params?.dateTimeRange?.[0]?dayjs(params?.dateTimeRange?.[0]).valueOf():'',
       endTime:params?.dateTimeRange?.[1]?dayjs(params?.dateTimeRange?.[1]).valueOf():'',
       alertType:params.alertType,
-      uid:params.id,
+      userId:params.userId,
      
     }
     const res=await assetAccountReviewList(data);
