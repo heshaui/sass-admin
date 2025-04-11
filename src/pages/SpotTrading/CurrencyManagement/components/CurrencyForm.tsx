@@ -76,12 +76,24 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
       if (res.data.issuingDate) {
         res.data.issuingDate = dayjs(res.data.issuingDate);
       }
+     
+
       form.setFieldsValue(
         {
           ...res.data,
           chainCoin:res.data.coinId,
         }
       );
+
+      if(res.data.mianChain===2){
+        const selectedCoin = currencyAll.find(item => item.coinId === res.data.coinId);
+        console.log(selectedCoin);
+        if (selectedCoin) {
+          form.setFieldsValue({
+            mainChainValue: selectedCoin.coinName
+          });
+        }
+      }
     }
   }
 
@@ -95,7 +107,21 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
   const handleMainChainChange = (e:any) => {
     console.log(e.target.value);
     setMainChainValue(e.target.value);
+    if(e.target.value===2){
+      //获取表单chainCoin参数
+      const chainCoin = form.getFieldValue('chainCoin');
+      console.log(chainCoin);
+      if(chainCoin){
+        const selectedCoin = currencyAll.find(item => item.coinId === chainCoin);
+        console.log(selectedCoin);
+        if (selectedCoin) {
+          form.setFieldsValue({
+            chainCoin: selectedCoin.coinName
+          });
+      }
+    }
   };
+}
 
   return (
     <Form
@@ -164,7 +190,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               }
               { 
                 mainChainValue === 2 && (
-                  <Input />
+                  <Input/>
                 )
               }
               

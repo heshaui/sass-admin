@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Table, Button, message, Popconfirm, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
-import { useIntl, FormattedMessage } from 'umi';
+import { useIntl } from 'umi';
 import RiskControlForm from './components/RiskControlForm';
 
 

@@ -13,7 +13,7 @@ import {
 import { EditOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Descriptions, message, Modal, Space, Spin, Switch } from 'antd';
+import { Button, Descriptions, message, Modal, Space, Spin, Switch, Typography } from 'antd';
 import React, { useRef, useState } from 'react';
 import CurrencyForm from './components/CurrencyForm';
 import ExtendInfoForm, { ExtendInfoFormData } from './components/ExtendInfoForm';
@@ -161,9 +161,47 @@ const CurrencyManagement: React.FC = () => {
     setExtendInfoVisible(true);
   };
 
+  // 处理扩展信息的开关切换
+  const handleExtSwtich = async (record: any, type: string) => {
+    let data = {
+      id: record.id,
+      coinId: record.coinId,
+    };
+
+    if (type === 'status') {
+      data['status'] = record.status === 1 ? 0 : 1;
+    } else if (type === 'recharge') {
+      data['recharge'] = record.recharge === 1 ? 0 : 1;
+    } else if (type === 'autoWithdraw') {
+      data['autoWithdraw'] = record.autoWithdraw === 1 ? 0 : 1;
+    }
+
+    const tip = {
+      status: '状态' + (record.status === 1 ? '禁用' : '启用'),
+      recharge: '充值开关' + (record.recharge === 1 ? '关闭' : '开启'),
+      autoWithdraw: '自动提现开关' + (record.autoWithdraw === 1 ? '关闭' : '开启'),
+    };
+
+    let res;
+    if (isAdmin) {
+      res = await adminUpdateCurrencyCoinExtById(data);
+    } else {
+      res = await updateTenantCurrencyCoinExtById(data);
+    }
+
+    if (res.code === '0' && res.data) {
+      message.success(`${tip[type]}成功`);
+      // 更新扩展数据
+      fetchExtendInfo(record.coinId);
+    } else {
+      message.error(`${tip[type]}失败`);
+    }
+  };
+
   // 渲染展开行
   const renderExpandedRow = (record: CurrencyItem) => {
     const extInfo = expandedData[record.coinId];
+    const { Text } = Typography;
 
     if (expandLoading[record.coinId]) {
       return <Spin tip="加载中..." />;
@@ -179,32 +217,125 @@ const CurrencyManagement: React.FC = () => {
       );
     }
 
+    const columns = [
+      { title: '协议ID', dataIndex: 'protocolId', key: 'protocolId' },
+      { 
+        title: '主地址', 
+        dataIndex: 'mainAddress', 
+        key: 'mainAddress',
+        width: 120,
+        ellipsis: true,
+        render: (text: string) => (
+          text ? (
+            <Typography.Text 
+              style={{ width: 120 }} 
+              ellipsis={{ tooltip: text }}
+            >
+              {text}
+            </Typography.Text>
+          ) : '-'
+        )
+      },
+      { 
+        title: '合约地址', 
+        dataIndex: 'token', 
+        key: 'token',
+        width: 120,
+        ellipsis: true,
+        render: (text: string) => (
+          text ? (
+            <Typography.Text 
+              style={{ width: 120 }} 
+              ellipsis={{ tooltip: text }}
+            >
+              {text}
+            </Typography.Text>
+          ) : '-'
+        )
+      },
+      { title: '小数位数', dataIndex: 'decimals', key: 'decimals' },
+      { 
+        title: '状态', 
+        dataIndex: 'status', 
+        key: 'status',
+        render: (text: number, extRecord: any) => (
+          <Switch
+            checked={extRecord.status === 1}
+            onChange={(checked) => {
+              Modal.confirm({
+                title: `确定要${checked ? '启用' : '禁用'}该币种吗？`,
+                onOk: () => {
+                  handleExtSwtich(extRecord, 'status');
+                },
+              });
+            }}
+          />
+        )
+      },
+      { title: '提现手续费', dataIndex: 'withdrawFee', key: 'withdrawFee' },
+      { title: '最小提现手续费', dataIndex: 'minWithdrawFee', key: 'minWithdrawFee' },
+      { 
+        title: '充值开关', 
+        dataIndex: 'recharge', 
+        key: 'recharge',
+        render: (text: number, extRecord: any) => (
+          <Switch
+            checked={extRecord.recharge === 1}
+            onChange={(checked) => {
+              Modal.confirm({
+                title: `确定要${checked ? '开启' : '关闭'}充值开关吗？`,
+                onOk: () => {
+                  handleExtSwtich(extRecord, 'recharge');
+                },
+              });
+            }}
+          />
+        )
+      },
+      { 
+        title: '自动提现开关', 
+        dataIndex: 'autoWithdraw', 
+        key: 'autoWithdraw',
+        render: (text: number, extRecord: any) => (
+          <Switch
+            checked={extRecord.autoWithdraw === 1}
+            onChange={(checked) => {
+              Modal.confirm({
+                title: `确定要${checked ? '开启' : '关闭'}自动提现开关吗？`,
+                onOk: () => {
+                  handleExtSwtich(extRecord, 'autoWithdraw');
+                },
+              });
+            }}
+          />
+        )
+      },
+      { title: '最小提现量', dataIndex: 'minWithdraw', key: 'minWithdraw' },
+      { title: '最大提现量', dataIndex: 'maxWithdraw', key: 'maxWithdraw' },
+      { title: '最小充值量', dataIndex: 'minRecharge', key: 'minRecharge' },
+      { title: '确认数', dataIndex: 'confirms', key: 'confirms' },
+    ];
+
     return (
       <div style={{ position: 'relative', padding: '0 16px' }}>
-        <Descriptions title="币种拓展信息" bordered column={2} size="small">
-          <Descriptions.Item label="协议ID">{extInfo.protocolId}</Descriptions.Item>
-          <Descriptions.Item label="主地址">{extInfo.mainAddress}</Descriptions.Item>
-          <Descriptions.Item label="合约地址">{extInfo.token}</Descriptions.Item>
-          <Descriptions.Item label="小数位数">{extInfo.decimals}</Descriptions.Item>
-          <Descriptions.Item label="状态">{extInfo.status===1 ? '启用' : '禁用'}</Descriptions.Item>
-          <Descriptions.Item label="提现手续费">{extInfo.withdrawFee}</Descriptions.Item>
-          <Descriptions.Item label="最小提现手续费">{extInfo.minWithdrawFee}</Descriptions.Item>
-          <Descriptions.Item label="充值开关">{extInfo.recharge===1 ? '启用' : '禁用'}</Descriptions.Item>
-          <Descriptions.Item label="自动提现开关">{extInfo.autoWithdraw===1 ? '启用' : '禁用'}</Descriptions.Item>
-          <Descriptions.Item label="最小提现量">{extInfo.minWithdraw}</Descriptions.Item>
-          <Descriptions.Item label="最大提现量">{extInfo.maxWithdraw}</Descriptions.Item>
-          <Descriptions.Item label="最小充值量">{extInfo.minRecharge}</Descriptions.Item>
-          <Descriptions.Item label="确认数">{extInfo.confirms}</Descriptions.Item>
-        </Descriptions>
-
-        <Button
-          type="primary"
-          icon={<EditOutlined />}
-          style={{ position: 'absolute', top: 5, right: 16 }}
-          onClick={() => handleEditExtendInfo(record, extInfo)}
-        >
-          编辑
-        </Button>
+        <ProTable
+          headerTitle="币种拓展信息"
+          columns={columns}
+          dataSource={[extInfo]}
+          search={false}
+          options={false}
+          pagination={false}
+          rowKey="id"
+          toolBarRender={() => [
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              onClick={() => handleEditExtendInfo(record, extInfo)}
+            >
+              编辑
+            </Button>
+          ]}
+        />
       </div>
     );
   };

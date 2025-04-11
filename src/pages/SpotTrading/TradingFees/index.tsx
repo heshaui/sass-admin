@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import {  Button, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { request } from 'umi';
 import EditForm from './components/EditForm';
 
 interface TradingFee {
