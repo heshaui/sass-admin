@@ -6,9 +6,9 @@ import {
   ActionType,
   ProColumns,
 } from '@ant-design/pro-components';
-import { Button, message, Modal, Space, Tag, Switch } from 'antd';
+import { Button, message, Modal, Space, Tag, Switch, Radio } from 'antd';
 import TradingPairForm from './components/TradingPairForm';
-import { exchangeCoinList,saveExchangeCoin } from '@/services/ant-design-pro/spot';
+import { exchangeCoinList,saveExchangeCoinm,updateExchangeGroup } from '@/services/ant-design-pro/spot';
 /**
  * 币对类型定义
  */
@@ -38,6 +38,9 @@ const TradingPairManagement: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [visible, setVisible] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<TradingPair | undefined>(undefined);
+  const [matchingTypeVisible, setMatchingTypeVisible] = useState<boolean>(false);
+  const [matchingType, setMatchingType] = useState<number>(1);
+  const [currentMatchingRow, setCurrentMatchingRow] = useState<TradingPair | undefined>(undefined);
 
   // 模拟数据获取
   const fetchTradingPairs = async (params: any) => {
@@ -77,6 +80,26 @@ const TradingPairManagement: React.FC = () => {
     actionRef.current?.reload();
     setVisible(false);
     setCurrentRow(undefined);
+  };
+
+  // 处理撮合类型选择
+  const handleMatchingTypeSubmit = async () => {
+
+    try {
+    const res = await updateExchangeGroup({
+        id:currentMatchingRow?.id,
+        group:matchingType
+      })
+      if(res.code==='0'&&res.data){
+        message.success('撮合类型设置成功');
+        setMatchingTypeVisible(false);
+        actionRef.current?.reload();
+      }else{
+        message.error(res.message);
+      }
+    } catch (error) {
+      message.error('撮合类型设置失败');
+    }
   };
 
   // 表格列定义
@@ -174,8 +197,12 @@ const TradingPairManagement: React.FC = () => {
         </a>,
         <a 
           key="mergeType"
+          onClick={() => {
+            setCurrentMatchingRow(record);
+            setMatchingTypeVisible(true);
+          }}
         >
-          提合类型
+          撮合类型
         </a>,
       ],
     },
@@ -212,6 +239,28 @@ const TradingPairManagement: React.FC = () => {
         onSubmit={handleAddOrEdit}
         values={currentRow}
       />
+
+      {/* 撮合类型选择弹窗 */}
+      <Modal
+        title="撮合类型"
+        open={matchingTypeVisible}
+        onCancel={() => setMatchingTypeVisible(false)}
+        footer={null}
+        width={300}
+      >
+        <Radio.Group 
+          value={matchingType} 
+          onChange={(e) => setMatchingType(e.target.value)}
+          style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}
+        >
+          <Radio value={1}>集中撮合</Radio>
+          <Radio value={2}>独立撮合</Radio>
+        </Radio.Group>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
+          <Button onClick={() => setMatchingTypeVisible(false)}>取消</Button>
+          <Button type="primary" onClick={handleMatchingTypeSubmit}>确定</Button>
+        </div>
+      </Modal>
     </PageContainer>
   );
 };

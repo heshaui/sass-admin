@@ -1,18 +1,19 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, DatePicker, Input, Select, Tag, message } from 'antd';
 import React, { useRef, useState } from 'react';
-
+import { exchangeOrderList } from '@/services/ant-design-pro/spot';
+import dayjs from 'dayjs';
 type OrderItem = {
   id: string;
   orderId: string;
   userId: string;
   tradingPair: string;
   type: string;
-  direction: 'buy' | 'sell';
+  direction: 0 | 1;
   price: number;
   amount: number;
   total: number;
-  status: 'new' | 'rejected' | 'partialFilled' | 'canceled' | 'filled';
+  status: 0 | 1 | 2 | 3 
   createTime: Date;
   filledAmount: number;
   avgPrice: number;
@@ -95,53 +96,68 @@ const OrderManagement: React.FC = () => {
   };
 
   const statusMap = {
-    new: { text: '新订单', color: 'blue' },
-    rejected: { text: '拒绝', color: 'red' },
-    partialFilled: { text: '部分成交', color: 'orange' },
-    canceled: { text: '已撤销', color: 'default' },
-    filled: { text: '完全成交', color: 'green' },
+    0: { text: '交易中', color: 'blue' },
+    1: { text: '完成', color: 'red' },
+    2: { text: '取消', color: 'orange' },
+    3: { text: '超时', color: 'default' },
+
   };
+
 
   const columns = [
     {
       title: '委托单号',
       dataIndex: 'orderId',
       copyable: true,
-      ellipsis: true,
       search: false,
     },
     {
       title: '币对',
-      dataIndex: 'tradingPair',
+      dataIndex: 'symbol',
 
     },
     {
       title: 'UID',
       dataIndex: 'userId',
+      key: 'userId',
       render: (val: string) => <a>{val}</a>,
     },
     {
       title: '类型',
       dataIndex: 'type',
-      render: (val: string) => (val === 'limit' ? '限价' : '市价'),
+      valueType: 'select',
+      valueEnum:{
+        0:'市价',
+        1:'限价',
+      },
+
+      render: (val: number) => (val === 0 ? '市价' : '限价'),
     },
     {
       title: '方向',
       dataIndex: 'direction',
       search: false,
 
-      render: (val: string) => (
-        <Tag color={val === 'buy' ? 'green' : 'red'}>
-          {val === 'buy' ? '买' : '卖'}
+      render: (val: number) => (
+        <Tag color={val === 0 ? 'green' : 'red'}>
+          {val === 0 ? '买' : '卖'}
         </Tag>
       ),
     },
     {
       title: '订单状态',
       dataIndex: 'status',
-      render: (val: string) => (
-        <span>{statusMap[val as keyof typeof statusMap].text}</span>
-      ),
+      key: 'status',
+      valueType: 'select',
+      valueEnum: statusMap,
+      renderText: (val: number) => {
+        const status = statusMap[val as keyof typeof statusMap] || { text: '未知', color: 'default' };
+        return (
+          <Tag color={status.color}>
+            {status.text}
+          </Tag>
+        );
+      },
     },
     {
       title: '委托时间',
@@ -151,7 +167,7 @@ const OrderManagement: React.FC = () => {
     },
     {
         title: '委托时间',
-        dataIndex: 'createTime',
+        dataIndex: 'dateTimeRange',
         valueType: 'dateTimeRange',
         hideInTable: true,
       },
@@ -171,7 +187,7 @@ const OrderManagement: React.FC = () => {
       title: '委托金额',
       dataIndex: 'total',
       search: false,
-
+      render: (_, record) => record.amount * record.price,
     },
     {
       title: '成交数量',
@@ -187,9 +203,8 @@ const OrderManagement: React.FC = () => {
     },
     {
       title: '成交金额',
-      dataIndex: 'filledTotal',
+      dataIndex: 'baseSymbolCount',
       search: false,
-
     },
     {
       title: '操作',
@@ -252,6 +267,30 @@ const OrderManagement: React.FC = () => {
     },
   ];
 
+
+  const getList=async(params:any)=>{
+    console.log(params);
+    const data={
+      pageNo:params.current,
+      pageSize:params.pageSize,
+      symbol:params.symbol,
+      userId:params.userId,
+      status:params.status,
+      direction:params.direction,
+      type:params.type,
+      startTime:params?.dateTimeRange?.[0]?dayjs(params.dateTimeRange[0]).valueOf():undefined,
+      endTime:params?.dateTimeRange?.[1]?dayjs(params.dateTimeRange[1]).valueOf():undefined,
+    }
+    const res=await exchangeOrderList(data);
+    if(res.code==='0'){
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.count
+      };
+    }
+  }
+
   return (
     <PageContainer>
       
@@ -285,97 +324,7 @@ const OrderManagement: React.FC = () => {
             }
           }
         }}
-        request={async () => {
-          // 模拟数据
-          const mockData = [
-            {
-              id: '1',
-              orderId: '123123',
-              userId: '1232',
-              tradingPair: 'BTC/USDT',
-              type: 'limit',
-              direction: 'buy',
-              price: 123,
-              amount: 1,
-              total: 123,
-              status: 'new',
-              createTime: new Date('2022-12-12 12:12:12'),
-              filledAmount: 0,
-              avgPrice: 0,
-              filledTotal: 0,
-            },
-            {
-              id: '2',
-              orderId: '312312',
-              userId: '4569',
-              tradingPair: 'ETH/USDT',
-              type: 'limit',
-              direction: 'sell',
-              price: 123,
-              amount: 1,
-              total: 123,
-              status: 'rejected',
-              createTime: new Date('2022-12-12 12:12:12'),
-              filledAmount: 0,
-              avgPrice: 0,
-              filledTotal: 0,
-            },
-            {
-              id: '3',
-              orderId: '123123',
-              userId: '1232',
-              tradingPair: 'BTC/USDT',
-              type: 'limit',
-              direction: 'buy',
-              price: 123,
-              amount: 1,
-              total: 123,
-              status: 'partialFilled',
-              createTime: new Date('2022-12-12 12:12:12'),
-              filledAmount: 0.5,
-              avgPrice: 123,
-              filledTotal: 61.5,
-            },
-            {
-              id: '4',
-              orderId: '312312',
-              userId: '4569',
-              tradingPair: 'ETH/USDT',
-              type: 'limit',
-              direction: 'sell',
-              price: 123,
-              amount: 1,
-              total: 123,
-              status: 'canceled',
-              createTime: new Date('2022-12-12 12:12:12'),
-              filledAmount: 0,
-              avgPrice: 0,
-              filledTotal: 0,
-            },
-            {
-              id: '5',
-              orderId: '123123',
-              userId: '1232',
-              tradingPair: 'BTC/USDT',
-              type: 'limit',
-              direction: 'buy',
-              price: 123,
-              amount: 1,
-              total: 123,
-              status: 'filled',
-              createTime: new Date('2022-12-12 12:12:12'),
-              filledAmount: 1,
-              avgPrice: 123,
-              filledTotal: 123,
-            },
-          ];
-          
-          return {
-            data: mockData,
-            success: true,
-            total: mockData.length,
-          };
-        }}
+        request={getList}
         columns={columns}
         pagination={{ pageSize: 10 }}
       />

@@ -291,7 +291,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
           </Form.Item>
 
           <Form.Item
-            name="priceDeviationPercentage"
+            name="priceOffset"
             label="下单价格偏离"
             style={{ width: 'calc(50% - 10px)' }}
           >

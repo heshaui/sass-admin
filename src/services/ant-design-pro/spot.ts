@@ -34,7 +34,7 @@ export async function saveExchangeCoin(params: Record<string, any>) {
 
 // 更新交易币种组
 export async function updateExchangeGroup(params: Record<string, any>) {
-  return request('/tenant/v1/exchange-coin/updateExchangeGroup', {
+  return request(`/tenant/v1/exchange-coin/updateExchangeGroup?id=${params.id}&group=${params.group}`, {
     method: 'POST',
     data: params,
   });
@@ -225,6 +225,15 @@ export async function updateTenantCurrencyCoinExtById(params?: Record<string, an
 // /tenant/v1/tenant-coin/tenantCurrencyCoinParams
 export async function tenantCurrencyCoinParams(params?: Record<string, any>) {
   return request(`/tenant/v1/tenant-coin/tenantCurrencyCoinParams?idString=${params.id}`, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+//订单列表
+export async function exchangeOrderList(params?: Record<string, any>) {
+  return request('/tenant/v1/exchange-order/exchangeOrderList', {
     method: 'POST',
     data: params,
   });
