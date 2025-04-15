@@ -44,12 +44,12 @@ const AccountPage: React.FC = () => {
       valueType: 'dateTime',
       search: false,
     },
-    {
-      title: '更新时间',
-      dataIndex: 'updateTime',
-      valueType: 'dateTime',
-      sorter: true,
-    },
+    // {
+    //   title: '更新时间',
+    //   dataIndex: 'updateTime',
+    //   valueType: 'dateTime',
+    //   sorter: true,
+    // },
     // {
     //   title: '操作',
     //   valueType: 'option',

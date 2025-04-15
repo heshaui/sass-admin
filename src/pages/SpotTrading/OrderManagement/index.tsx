@@ -3,6 +3,8 @@ import { Button, DatePicker, Input, Select, Tag, message } from 'antd';
 import React, { useRef, useState } from 'react';
 import { exchangeOrderList } from '@/services/ant-design-pro/spot';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
+
 type OrderItem = {
   id: string;
   orderId: string;
@@ -38,7 +40,9 @@ const OrderManagement: React.FC = () => {
   const [selectedRowsState, setSelectedRows] = useState<OrderItem[]>([]);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [tradeRecords, setTradeRecords] = useState<TradeRecord[]>([]);
-  const actionRef = useRef<any>();
+  const actionRef = useRef<any>();  
+  const navigate = useNavigate();
+
 
   const handleCancel = async (id: string) => {
     try {
@@ -120,7 +124,9 @@ const OrderManagement: React.FC = () => {
       title: 'UID',
       dataIndex: 'userId',
       key: 'userId',
-      render: (val: string) => <a>{val}</a>,
+      render: (userId:any) => (
+        <a onClick={() => navigate(`/user-management/user-list?userId=${userId}`)}>{userId}</a>
+      ),
     },
     {
       title: '类型',
