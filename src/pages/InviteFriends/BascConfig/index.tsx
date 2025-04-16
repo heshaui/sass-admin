@@ -60,6 +60,23 @@ const BasicConfig: React.FC = () => {
     setIsEditing(!isEditing);
   }
 
+
+
+  //获取图片配置详情
+  const getImageDetail = async () => {
+    const res = await getImageConfigurationDetail();
+    if (res.code === '0') {
+      const imageConfigObj: Record<string, {backgroundImage: string, posterImage: string}> = {};
+      res.data.forEach((item: any) => {
+        imageConfigObj[item.languageCode] = {
+          backgroundImage: item.backgroundImageUrl,
+          posterImage: item.posterBackgroundUrl
+        };
+      });
+      setImagesConfig(imageConfigObj);
+    }
+  };
+
  const saveImage=async(backgroundImage:string,posterImage:string)=>{
   let data={
     images:[
@@ -76,6 +93,7 @@ const BasicConfig: React.FC = () => {
   }else{
     message.error(res.message);
   }
+  await getImageDetail();
  }
  
 
@@ -102,20 +120,6 @@ const BasicConfig: React.FC = () => {
     }
   };
 
-  //获取图片配置详情
-  const getImageDetail = async () => {
-    const res = await getImageConfigurationDetail();
-    if (res.code === '0') {
-      const imageConfigObj: Record<string, {backgroundImage: string, posterImage: string}> = {};
-      res.data.forEach((item: any) => {
-        imageConfigObj[item.languageCode] = {
-          backgroundImage: item.backgroundImageUrl,
-          posterImage: item.posterBackgroundUrl
-        };
-      });
-      setImagesConfig(imageConfigObj);
-    }
-  };
 
   //获取用户邀请详情列表
   const getUserList = async () => {
