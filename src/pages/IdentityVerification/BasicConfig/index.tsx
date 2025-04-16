@@ -18,6 +18,7 @@ interface UserLevelItem {
     rule: string | null;
     value: string | null;
     params: any | null;
+    status:number;
     updateTime: string | null;
   }[];
   updateTime: string | null;
@@ -138,7 +139,7 @@ const UserLevel: React.FC = () => {
             {benefitResps.map((item) => (
               <li key={item.levelBenefitId}>
                 {item.benefitName}
-                {item.status ? ` 状态: ${item.status===1 ? '允许' : '不允许'}` : ''}
+                {` 状态: ${item.status===1 ? '允许' : '不允许'}`}
                 {item.params && (
                   <span style={{ color: '#999', marginLeft: 8 }}>
                     {item.params.amountLimit ? `限额: ${item.params.amountLimit}` : ''}

@@ -21,11 +21,11 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
       
       // 从benefitResps找到对应的配置项
       const cryptoWithdrawalBenefit = record.benefitResps?.find(
-        (item: any) => item.benefitId === 2
+        (item: any) => item.benefitValue === 'cyptocurrency_withdrawal'
       );
       
       const cryptoDepositBenefit = record.benefitResps?.find(
-        (item: any) => item.benefitId === 3
+        (item: any) => item.benefitValue === 'cyptocurrency_recharge'
       );
       console.log(cryptoDepositBenefit);
       // 设置加密货币提现状态
@@ -58,7 +58,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
     // 更新加密货币提现配置
     if (record?.benefitResps) {
       const withdrawalBenefit = record.benefitResps.find(
-        (item: any) => item.benefitId ===2
+        (item: any) => item.benefitValue ==='cyptocurrency_withdrawal'
       );
       
       if (withdrawalBenefit) {
@@ -74,7 +74,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
       
       // 更新加密货币充值配置
       const depositBenefit = record.benefitResps.find(
-        (item: any) => item.benefitId === 3
+        (item: any) => item.benefitValue === 'cyptocurrency_recharge'
       );
       
       if (depositBenefit) {
