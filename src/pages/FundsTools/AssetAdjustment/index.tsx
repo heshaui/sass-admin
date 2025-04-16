@@ -18,6 +18,7 @@ const AssetAdjustment: React.FC = () => {
     const res=await tenantSubWalletList({
       pageNo:params.current,
       pageSize:params.pageSize,
+      coinId:params.coinId
     });
     if(res.code==='0'){
       return {
