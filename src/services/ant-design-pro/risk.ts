@@ -43,3 +43,11 @@ export async function saveActionRiskLevel(data?: any) {
     data,
   });
 }
+
+
+export async function riskSceneList(data?: any) {
+  return request('/tenant/v1/riskSceneList', {
+    method: 'POST',
+    data,
+  });
+}

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import {Select, DatePicker } from 'antd';
-import { assetAccountReviewList} from '@/services/ant-design-pro/risk';
+import { assetAccountReviewList,riskSceneList} from '@/services/ant-design-pro/risk';
 import type { ProColumns } from '@ant-design/pro-components';
 import dayjs from 'dayjs';
 const { RangePicker } = DatePicker;
@@ -16,6 +16,7 @@ const RiskControlAlerts: React.FC = () => {
     endTime: '',
 
   });
+  const [sceneList, setSceneList] = useState<any[]>([]);
 
 
   
@@ -31,6 +32,13 @@ const RiskControlAlerts: React.FC = () => {
       title: '触发类型',
       dataIndex: 'sceneCode',
       key: 'sceneCode',
+      valueType:'select',
+      fieldProps:{
+        options:sceneList.map((item:any)=>({
+          label:item.sceneName,
+          value:item.sceneCode
+        }))
+      }
     },
     {
       title: '触发原因',
@@ -73,6 +81,17 @@ const RiskControlAlerts: React.FC = () => {
       }
     },
   ];
+
+  const getRiskSceneList=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    const res=await riskSceneList(data);
+    if(res.code==='0'){
+      setSceneList(res.data);
+    }
+  }
   
   const getList=async(params:any)=>{
     let   data={
@@ -80,7 +99,7 @@ const RiskControlAlerts: React.FC = () => {
       pageSize:params.pageSize,
       startTime:params?.dateTimeRange?.[0]?dayjs(params?.dateTimeRange?.[0]).valueOf():'',
       endTime:params?.dateTimeRange?.[1]?dayjs(params?.dateTimeRange?.[1]).valueOf():'',
-      alertType:params.alertType,
+      sceneCode:params.sceneCode,
       userId:params.userId,
      
     }
@@ -100,6 +119,9 @@ const RiskControlAlerts: React.FC = () => {
     }
   }
 
+  useEffect(()=>{
+    getRiskSceneList();
+  },[])
   return (
     <PageContainer>
 
