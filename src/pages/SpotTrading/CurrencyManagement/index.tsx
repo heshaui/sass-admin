@@ -116,7 +116,7 @@ const CurrencyManagement: React.FC = () => {
       });
 
       if (res.code === '0') {
-        setExpandedData((prev) => ({ ...prev, [coinId]: res.data.list[0] }));
+        setExpandedData(res.data.list );
       } else {
         message.error(res.message || '获取拓展信息失败');
       }
@@ -143,16 +143,16 @@ const CurrencyManagement: React.FC = () => {
 
     // 使用扩展信息填充表单的初始值
     const initialValues = {
-      id: extInfo.id,
+      id: record.id,
       coinId: record.coinId,
-      protocolId: extInfo.protocolId,
-      mainAddress: extInfo.mainAddress,
-      token: extInfo.token,
-      decimals: extInfo.decimals,
-      status: extInfo.status,
-      withdrawFee: extInfo.withdrawFee,
-      minWithdrawFee: extInfo.minWithdrawFee,
-      confirms: extInfo.confirms,
+      protocolId: record.protocolId,
+      mainAddress: record.mainAddress,
+      token: record.token,
+      decimals: record.decimals,
+      status: record.status,
+      withdrawFee: record.withdrawFee,
+      minWithdrawFee: record.minWithdrawFee,
+      confirms: record.confirms,
     };
 
     // 设置当前表单初始值，模式为编辑，并显示表单
@@ -200,7 +200,7 @@ const CurrencyManagement: React.FC = () => {
 
   // 渲染展开行
   const renderExpandedRow = (record: CurrencyItem) => {
-    const extInfo = expandedData[record.coinId];
+    const extInfo = expandedData
     const { Text } = Typography;
 
     if (expandLoading[record.coinId]) {
@@ -314,6 +314,14 @@ const CurrencyManagement: React.FC = () => {
       { title: '最大提现量', dataIndex: 'maxWithdraw', key: 'maxWithdraw' },
       { title: '最小充值量', dataIndex: 'minRecharge', key: 'minRecharge' },
       { title: '确认数', dataIndex: 'confirms', key: 'confirms' },
+      {
+        title:'操作',
+        dataIndex:'action',
+        key:'action',
+        render:(text:string,record:any)=>(
+          <Button type='link' onClick={()=>handleEditExtendInfo(record,extInfo)}>编辑</Button>
+        )
+      }
     ];
 
     return (
@@ -321,20 +329,20 @@ const CurrencyManagement: React.FC = () => {
         <ProTable
           headerTitle="币种拓展信息"
           columns={columns}
-          dataSource={[extInfo]}
+          dataSource={extInfo}
           search={false}
           options={false}
           pagination={false}
           rowKey="id"
-          toolBarRender={() => [
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              onClick={() => handleEditExtendInfo(record, extInfo)}
-            >
-              编辑
-            </Button>
-          ]}
+          // toolBarRender={() => [
+          //   <Button
+          //     type="primary"
+          //     icon={<EditOutlined />}
+          //     onClick={() => handleEditExtendInfo(record, extInfo)}
+          //   >
+          //     编辑
+          //   </Button>
+          // ]}
         />
       </div>
     );

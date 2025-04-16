@@ -212,21 +212,20 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               <Input disabled={mainChainValue !== 2&&!isAdmin} />
             </Form.Item>
           </Col>
-              {
-                isAdmin && (
+            
              
           <Col span={12}>
             <Form.Item
               name="iconUrl"
               label="币种图标"
               required
-              rules={[{ required: true, message: '请输入币种简称' }]}
+              rules={[{ required: true, message: '请上传币种简称' }]}
             >
               <AvatarUpload />
             </Form.Item>
           </Col>
-                )
-           }
+
+
           
           <Col span={12}>
             <Form.Item
@@ -259,9 +258,11 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             </Form.Item>
           </Col>
           
+          {
+          mainChainValue === 1 && (
           <Col span={12}>
             <Form.Item
-              name="memoTag"
+              name="memoTag"  
               label="Memo/Tag"
               required
             >
@@ -271,6 +272,8 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               </Select>
             </Form.Item>
           </Col>
+           )}
+            
           
           <Col span={24}>
             <Form.Item
