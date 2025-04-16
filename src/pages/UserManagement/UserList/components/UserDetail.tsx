@@ -315,6 +315,11 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         message.error('请输入谷歌验证码');
         return;
       }
+
+      if(!phoneRemark.trim()){
+        message.error('请输入备注');
+        return;
+      }
       
      const res= await updatePhone({ 
         userId: user.userId, 
@@ -350,6 +355,10 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         return;
       }
       
+      if(!emailRemark.trim()){
+        message.error('请输入备注');
+        return;
+      }
      const res= await updateEmail({ 
         userId: user.userId, 
         email:user.email,

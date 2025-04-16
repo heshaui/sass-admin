@@ -5,10 +5,11 @@ import { fetchWithdrawDepositDetail,updateWithdrawDeposit,manualProcessing } fro
 import OperaLog from './OperaLog';
 import RiskLog from './RiskLog';
 interface WithdrawRecord {
+  orderNo:string;
   key: string;
   withdrawalId: string;
   userId: string;
-  coinType: string;
+  coinName: string;
   network: string;
   amount: number;
   fee: number;
@@ -20,6 +21,8 @@ interface WithdrawRecord {
   riskDesc: string;
   status: string;
   withdrawTime: string;
+  protocolName:string;
+  fromAddress:string;
 }
 
 interface RiskLogRecord {
@@ -117,9 +120,9 @@ const handleUpdate = async () => {
             <ProDescriptions.Item label="提现单号" span={1}>{currentRecord.orderNo}</ProDescriptions.Item>
             <ProDescriptions.Item label="UID" span={1}>{currentRecord.userId}</ProDescriptions.Item>
             <ProDescriptions.Item label="风控等级" span={1}>{currentRecord.riskLevel}</ProDescriptions.Item>
-            <ProDescriptions.Item label="提现金额" span={1}>{currentRecord.amount} {currentRecord.coinType}</ProDescriptions.Item>
-            <ProDescriptions.Item label="手续费" span={1}>{currentRecord.fee} {currentRecord.coinType}</ProDescriptions.Item>
-            <ProDescriptions.Item label="应到金额" span={1}>{currentRecord.actualAmount} {currentRecord.coinType}</ProDescriptions.Item>
+            <ProDescriptions.Item label="提现金额" span={1}>{currentRecord.amount} {currentRecord.coinName}</ProDescriptions.Item>
+            <ProDescriptions.Item label="手续费" span={1}>{currentRecord.fee} {currentRecord.coinName}</ProDescriptions.Item>
+            <ProDescriptions.Item label="应到金额" span={1}>{currentRecord.actualAmount} {currentRecord.actualAmount?currentRecord.coinName:''}</ProDescriptions.Item>
             <ProDescriptions.Item label="提币协议" span={1}>{currentRecord.protocolName}</ProDescriptions.Item>
             <ProDescriptions.Item label="收款地址" span={1}>{currentRecord.fromAddress}</ProDescriptions.Item>
             <ProDescriptions.Item label="审核状态" span={1}>
