@@ -109,10 +109,8 @@ const RewardRecords: React.FC = () => {
       key: 'type',
       valueEnum: {
         // 1 增加 2 扣减 3 冻结 4 解冻
-        '1': { text: '增加' },
-        '2': { text: '扣减' },
-        '3': { text: '冻结' },
-        '4': { text: '解冻' },
+        '1': { text: '自动' },
+        '2': { text: '手动' },
       },
       formItemProps: {
         label: '发放类型',
