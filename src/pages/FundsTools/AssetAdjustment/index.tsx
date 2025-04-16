@@ -1,16 +1,18 @@
-import React, { useState,useRef } from 'react';
+import React, { useState,useRef,useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Form, Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns,ActionType } from '@ant-design/pro-components';
 import AssetAdjustmentForm from './components/AssetAdjustmentForm';
 import {tenantSubWallet,tenantSubWalletList} from '@/services/ant-design-pro/fundsTools';
+import { getCurrencyCoinList } from '@/services/ant-design-pro/inviteFriends';
 
 const AssetAdjustment: React.FC = () => {
   const [form] = Form.useForm();
   const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState<boolean>(false);
   const [formVisible, setFormVisible] = useState<boolean>(false);
+  const [currencyList, setCurrencyList] = useState<any[]>([]);
 
   const subWalletList=async(params:any)=>{
     const res=await tenantSubWalletList({
@@ -26,17 +28,16 @@ const AssetAdjustment: React.FC = () => {
     }
   }
 
-  const onFinish = (values: any) => {
-    setLoading(true);
-    console.log('提交的数据:', values);
-    
-    // 这里添加调用API的逻辑
-    setTimeout(() => {
-      message.success('资产调整成功');
-      form.resetFields();
-      setLoading(false);
-    }, 1000);
-  };
+  const getCoinList=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    const res=await getCurrencyCoinList(data);
+    if(res.code==='0'){
+      setCurrencyList(res.data.list)
+    }
+  }
 
   const handleFormSubmit = async(values: any) => {
     if(values.direction==='increase'){
@@ -70,7 +71,21 @@ const AssetAdjustment: React.FC = () => {
       title: '币种', 
       dataIndex: 'coinName', 
       key: 'coinName',
+      search: false,
     },
+    {
+      title: '币种', 
+      dataIndex: 'coinId', 
+      key: 'coinId',
+      valueType:'select',
+      fieldProps:{
+        options:currencyList.map((item:any)=>({
+          label:item.coinName,
+          value:item.coinId
+        }))
+      }
+    },
+
     { title: '金额', dataIndex: 'count', key: 'count', search: false },
     { title: '备注', dataIndex: 'description', key: 'description', search: false },
     { title: '操作人', dataIndex: 'operateId', key: 'operateId' , search: false},
@@ -83,12 +98,10 @@ const AssetAdjustment: React.FC = () => {
     },
   ];
 
-  // 模拟数据
-  const mockData = [
-  
-    // 可以添加更多模拟数据
-  ];
 
+useEffect(()=>{
+  getCoinList();
+},[])
   return (
     <PageContainer>
       <ProTable
