@@ -29,6 +29,9 @@ const RewardRecords: React.FC = () => {
     let data={
       pageNo:params.current,
       pageSize:params.pageSize,
+      account:params.account,
+      startTime:params.dateTimeRange[0]?params.dateTimeRange[0]:null,
+      endTime:params.dateTimeRange[1]?params.dateTimeRange[1]:null,
     }
     const res=await getGrantRecordList(data);
     if(res.code==='0'){
@@ -58,6 +61,11 @@ const RewardRecords: React.FC = () => {
       dataIndex: 'account',
       key: 'account',
       search: false,
+    },
+    {
+      title: '帐号信息',
+      dataIndex: 'account',
+      key: 'account',
     },
     {
       title: '邀请人ID',
@@ -121,6 +129,12 @@ const RewardRecords: React.FC = () => {
       dataIndex: 'createTime',
       key: 'createTime',
       valueType: 'dateTime',
+      search: false,
+      
+    },
+    {
+      title: '发放时间',
+      valueType: 'dateTimeRange',
       
     },
   ];
