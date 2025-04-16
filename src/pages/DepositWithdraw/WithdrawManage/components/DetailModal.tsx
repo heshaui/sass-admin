@@ -75,14 +75,21 @@ const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) =
   const currentRecord = detailData || record;
 
 const handleUpdate = async () => {
-
-    // const res = await updateWithdrawDeposit({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee});
-    // if (res.code === '0') {
-    //   message.success('更新成功');
-    //   onClose();
-    // }else{
-    //   message.error('更新失败');
-    // }
+    // 添加必填字段验证
+    if (!formAddress) {
+      message.error('转账地址为必填项');
+      return;
+    }
+    
+    if (!txId) {
+      message.error('TXID为必填项');
+      return;
+    }
+    
+    if (!realityFee) {
+      message.error('实际矿工费为必填项');
+      return;
+    }
 
     const res = await manualProcessing({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee,fromAddress:formAddress});
     if (res.code === '0') {
@@ -91,7 +98,6 @@ const handleUpdate = async () => {
     }else{
       message.error('人工处理失败');
     }
-
 }
 
 
@@ -169,9 +175,9 @@ const handleUpdate = async () => {
             {
               currentRecord.status === 1 && (
                 <>
-                <ProDescriptions.Item label="转账地址" span={1} ><Input value={formAddress} onChange={(e) => setFormAddress(e.target.value)}/></ProDescriptions.Item>
-                <ProDescriptions.Item label="TXID" span={1} ><Input value={txId} onChange={(e) => setTxId(e.target.value)}/></ProDescriptions.Item>
-                <ProDescriptions.Item label="实际矿工费" span={1} ><Input value={realityFee} onChange={(e) => setRealityFee(e.target.value)}/></ProDescriptions.Item>
+                <ProDescriptions.Item label="转账地址" span={1}><Input value={formAddress} onChange={(e) => setFormAddress(e.target.value)} placeholder="请输入转账地址（必填）"/></ProDescriptions.Item>
+                <ProDescriptions.Item label="TXID" span={1}><Input value={txId} onChange={(e) => setTxId(e.target.value)} placeholder="请输入TXID（必填）"/></ProDescriptions.Item>
+                <ProDescriptions.Item label="实际矿工费" span={1}><Input value={realityFee} onChange={(e) => setRealityFee(e.target.value)} placeholder="请输入实际矿工费（必填）"/></ProDescriptions.Item>
                 <ProDescriptions.Item label="审核备注" span={1}><Input value={remark} onChange={(e) => setRemark(e.target.value)}/></ProDescriptions.Item>
                 </>
               )
