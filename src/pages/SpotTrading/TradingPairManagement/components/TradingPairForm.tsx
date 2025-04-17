@@ -32,6 +32,8 @@ type TradingPair = {
   depthPrecision3?: string;
   depthPrecision4?: string;
   depthPrecision5?: string;
+  coinScale?:number;
+  baseCoinScale?:number;
 };
 
 interface TradingPairFormProps {
@@ -158,6 +160,22 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
               ))}
             </Select>
           </Form.Item>
+          <Form.Item
+            name="coinScale"
+            label="基础币种精度"
+            required
+            style={{ width: 'calc(50% - 10px)' }}
+          >
+            <Input placeholder="请输入基础币种精度" />
+          </Form.Item>
+          <Form.Item
+            name="baseCoinScale"
+            label="计价币精度"
+            required
+            style={{ width: 'calc(50% - 10px)' }}
+          >
+            <Input placeholder="请输入计价币精度" />
+          </Form.Item>
 
           <Form.Item
             name="classLabel"
@@ -178,6 +196,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
           <Form.Item
             name="enable"
             label="开启交易"
+            required
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
@@ -196,6 +215,28 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
               <Select.Option value={0}>否</Select.Option>
             </Select>
           </Form.Item>
+          {/* <Form.Item
+            name="enableBuy"
+            label="是否开启买"
+            required
+            style={{ width: 'calc(50% - 10px)' }}
+          >
+            <Select>
+              <Select.Option value={1}>是</Select.Option>
+              <Select.Option value={0}>否</Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item
+            name="enableSell"
+            label="是否开启卖"
+            required
+            style={{ width: 'calc(50% - 10px)' }}
+          >
+            <Select>
+              <Select.Option value={1}>是</Select.Option>
+              <Select.Option value={0}>否</Select.Option>
+            </Select>
+          </Form.Item> */}
 
           <Form.Item
             name="buyFee"
@@ -203,7 +244,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             rules={[{ required: true, message: '请输入Maker手续费' }]}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} min={0} max={1} precision={4} addonAfter="%" />
+            <Input style={{ width: '100%' }}  />
           </Form.Item>
 
           <Form.Item
@@ -212,7 +253,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             rules={[{ required: true, message: '请输入Taker手续费' }]}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} min={0} max={1} precision={4} addonAfter="%" />
+            <Input style={{ width: '100%' }}  />
           </Form.Item>
 
           <Form.Item
@@ -258,7 +299,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             <InputNumber style={{ width: '100%' }}  />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             name="baseCoinScale"
             label="价格精度"
             style={{ width: 'calc(50% - 10px)' }}
@@ -272,7 +313,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }} max={18} />
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item
             name="maxMarketPrice"

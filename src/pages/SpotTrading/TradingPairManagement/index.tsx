@@ -8,7 +8,7 @@ import {
 } from '@ant-design/pro-components';
 import { Button, message, Modal, Space, Tag, Switch, Radio } from 'antd';
 import TradingPairForm from './components/TradingPairForm';
-import { exchangeCoinList,saveExchangeCoinm,updateExchangeGroup } from '@/services/ant-design-pro/spot';
+import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup } from '@/services/ant-design-pro/spot';
 /**
  * 币对类型定义
  */
