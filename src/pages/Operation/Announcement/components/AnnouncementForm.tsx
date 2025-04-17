@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Form, Input, Select, DatePicker, Modal, Radio, Button, message } from 'antd';
 import { 
   addAnnouncement, 
@@ -34,7 +34,9 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   const [contents, setContents] = useState<Record<string, string>>({});
   const [titles, setTitles] = useState<Record<string, string>>({});
   const [menuList, setMenuList] = useState<any[]>([]);
-  const [editor, setEditor] = useState<any>(null);
+  
+  // 使用 useRef 代替 useState 来存储编辑器引用
+  const editorRef = useRef<any>(null);
 
   // 获取并回显数据
   useEffect(() => {
@@ -174,8 +176,8 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
 
   const handleLanguageChange = (value) => {
     // 先保存当前语言的内容
-    if (editor && activeLanguage) {
-      const currentContent = editor.getHtml(); // 获取当前编辑器内容
+    if (editorRef.current && activeLanguage) {
+      const currentContent = editorRef.current.getHtml ? editorRef.current.getHtml() : ''; // 获取当前编辑器内容
       setContents((prev) => ({
         ...prev,
         [activeLanguage]: currentContent, // 保存当前语言的内容
@@ -184,19 +186,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
     
     // 然后切换语言
     setActiveLanguage(value);
-    
-    // 编辑器内容将通过useEffect更新
   };
-
-  useEffect(() => {
-    // 当activeLanguage改变时，更新编辑器内容
-    if (editor) {
-      // 强制延迟一下更新编辑器内容，确保React状态已更新
-      setTimeout(() => {
-        editor.setHtml(contents[activeLanguage] || '');
-      }, 0);
-    }
-  }, [activeLanguage, contents, editor]);
 
   useEffect(()=>{
     getMenu();
@@ -316,7 +306,8 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           <SeedEditor 
             initialContent={contents[activeLanguage] || ''}
             onChange={(content) => handleContentChange(activeLanguage, content)}
-            ref={(node) => setEditor(node)}
+            ref={(node) => { editorRef.current = node; }}
+            key={activeLanguage}
           />
           {activeLanguage === 'en_US' && !contents.en_US && (
             <div style={{ color: 'red' }}>英文内容为必填项</div>
