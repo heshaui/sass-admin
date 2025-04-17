@@ -29,6 +29,13 @@ type TradingPair = {
   createdAt: string;
   updatedAt: string;
   sortOrder: string;
+  baseSymbol:string;
+  coinSymbol:string;
+  enable:number;
+  show:number;
+  coinScale:number;
+  baseCoinScale:number;
+  
 };
 
 /**
@@ -110,7 +117,12 @@ const TradingPairManagement: React.FC = () => {
     },
     {
       title: '币对',
-      dataIndex: 'symbol',
+      render: (_, record) => (
+        <div>
+          <span>{record.coinSymbol}</span>/
+          <span>{record.baseSymbol}</span>
+        </div>
+      ),
     },
     {
       title: '是否开放交易',
