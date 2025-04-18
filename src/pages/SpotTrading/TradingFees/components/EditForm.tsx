@@ -4,8 +4,10 @@ import { Form, Input, Select, InputNumber, Button, Modal } from 'antd';
 interface TradingFee {
   id: string;
   pairName: string;
-  makerFee: number;
-  takerFee: number;
+  buyFee: number;
+  sellFee: number;
+  coinSymbol: string;
+  baseSymbol: string;
 }
 
 interface EditFormProps {
@@ -21,9 +23,9 @@ const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit
   React.useEffect(() => {
     if (record && visible) {
       form.setFieldsValue({
-        pairName: record.pairName,
-        makerFee: record.makerFee * 100, // 转换为百分比显示
-        takerFee: record.takerFee * 100,
+        pairName: record.coinSymbol + '/' + record.baseSymbol,
+        buyFee: record.buyFee , // 转换为百分比显示
+        sellFee: record.sellFee ,
       });
     }
   }, [record, visible, form]);
@@ -54,19 +56,16 @@ const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit
       <Form form={form} layout="vertical">
         <Form.Item
           name="pairName"
-          label="市对"
+          label="币对"
         >
-          <Select disabled>
-            <Select.Option value="BTC/USDT">BTC/USDT</Select.Option>
-            <Select.Option value="ETH/USDT">ETH/USDT</Select.Option>
-          </Select>
+         <Input disabled />
         </Form.Item>
         
         <Form.Item
-          name="takerFee"
-          label="Taker手续费"
+          name="buyFee"
+          label="Maker手续费"
           rules={[
-            { required: true, message: '请输入Taker手续费' },
+            { required: true, message: '请输入Maker手续费' },
             { type: 'number', min: 0, max: 1, message: '手续费必须在0-1%之间' }
           ]}
         >
@@ -80,7 +79,7 @@ const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit
         </Form.Item>
         
         <Form.Item
-          name="makerFee"
+          name="sellFee"
           label="Maker手续费"
           rules={[
             { required: true, message: '请输入Maker手续费' },

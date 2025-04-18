@@ -217,8 +217,8 @@ const OrderManagement: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => {
-        if (record.status === 'new' || record.status === 'partialFilled') {
-          return (
+          if (record.status === 0 ) {
+            return (
             <Button type="link" onClick={() => handleCancel(record.id)}>撤销订单</Button>
           );
         }

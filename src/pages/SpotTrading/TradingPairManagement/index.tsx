@@ -49,7 +49,7 @@ const TradingPairManagement: React.FC = () => {
   const [matchingType, setMatchingType] = useState<number>(1);
   const [currentMatchingRow, setCurrentMatchingRow] = useState<TradingPair | undefined>(undefined);
 
-  // 模拟数据获取
+
   const fetchTradingPairs = async (params: any) => {
 
     const res = await exchangeCoinList({

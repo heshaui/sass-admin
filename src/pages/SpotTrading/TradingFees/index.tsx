@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import {  Button, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import EditForm from './components/EditForm';
+import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup } from '@/services/ant-design-pro/spot';
 
 interface TradingFee {
   id: string;
   pairName: string;
-  makerFee: number;
-  takerFee: number;
+  buyFee: number;
+  sellFee: number;
+  coinSymbol: string;
+  baseSymbol: string;
+  sortOrder: number;
+  search: boolean;
 }
 
 const TradingFees: React.FC = () => {
+  const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState<boolean>(false);
   const [tradingFees, setTradingFees] = useState<TradingFee[]>([]);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -20,21 +26,30 @@ const TradingFees: React.FC = () => {
   // 模拟数据，实际项目中应从API获取
   useEffect(() => {
     // 这里模拟从API获取数据
-    setTradingFees([
-      {
-        id: '1',
-        pairName: 'BTC/USDT',
-        makerFee: 0.001,
-        takerFee: 0.001,
-      },
-      {
-        id: '2',
-        pairName: 'ETH/USDT',
-        makerFee: 0.001,
-        takerFee: 0.001,
-      },
-    ]);
+  
   }, []);
+
+
+  const fetchTradingPairs = async (params: any) => {
+
+    const res = await exchangeCoinList({
+      pageNo: params.current,
+      pageSize: params.pageSize,
+    });
+    if(res.code==='0'){
+      return {
+        data: res.data.list,
+        success: true,
+        total: res.data.count,
+      };
+    }else{
+      message.error(res.message);
+      return {
+        data: [],
+        success: false,
+      };
+    }
+  };
 
   const handleEdit = (record: TradingFee) => {
     setCurrentRecord(record);
@@ -46,48 +61,50 @@ const TradingFees: React.FC = () => {
     setCurrentRecord(null);
   };
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = async (values: any) => {
     // 实际项目中，这里应该调用API更新数据
-    message.success(`已更新 ${values.pairName} 的手续费设置`);
-    
-    // 更新本地数据（模拟）
-    if (currentRecord) {
-      const newTradingFees = tradingFees.map((item) => {
-        if (item.id === currentRecord.id) {
-          return {
-            ...item,
-            makerFee: values.makerFee / 100, // 转换回小数存储
-            takerFee: values.takerFee / 100,
-          };
-        }
-        return item;
-      });
-      setTradingFees(newTradingFees);
+  let res = await updateExchangeGroup({
+      id: currentRecord?.id,
+      buyFee: values.buyFee,
+      sellFee: values.sellFee,
+    });
+    if(res.code==='0'&&res.data){
+      message.success('更新成功');
+      setIsModalVisible(false);
+      setCurrentRecord(null);
+      actionRef.current?.reload();
+    }else{
+      message.error(res.message);
     }
-    
-    setIsModalVisible(false);
-    setCurrentRecord(null);
   };
 
   const columns: ColumnsType<TradingFee> = [
     {
-      title: '市对',
-      dataIndex: 'pairName',
-      key: 'pairName',
+      title: '币对',
+      search: false,
+      render: (_, record) => (
+        <div>
+          <span>{record.coinSymbol}</span>/
+          <span>{record.baseSymbol}</span>
+        </div>
+      ),
     },
     {
       title: 'Maker手续费',
-      dataIndex: 'makerFee',
-      key: 'makerFee',
+      dataIndex: 'buyFee',
+      key: 'buyFee',
+      search: false,
     },
     {
       title: 'Taker手续费',
-      dataIndex: 'takerFee',
-      key: 'takerFee',
+      dataIndex: 'sellFee',
+      key: 'sellFee',
+      search: false,
     },
     {
       title: '操作',
       key: 'action',
+      search: false,
       render: (_, record) => (
         <Button 
           type="link" 
@@ -103,11 +120,13 @@ const TradingFees: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<TradingFee>
+        actionRef={actionRef}
         columns={columns}
-        dataSource={tradingFees}
+        search={false}
+        request={fetchTradingPairs}
         rowKey="id"
         loading={loading}
-        pagination={false}
+        pagination={true}
       />
       
       <EditForm
