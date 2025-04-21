@@ -17,6 +17,7 @@ import { Button, Descriptions, message, Modal, Space, Spin, Switch, Typography }
 import React, { useRef, useState } from 'react';
 import CurrencyForm from './components/CurrencyForm';
 import ExtendInfoForm, { ExtendInfoFormData } from './components/ExtendInfoForm';
+import CurrencyIntroForm, { CurrencyIntroFormData } from './components/CurrencyIntroForm';
 // 币种类型定义
 type CurrencyItem = {
   id: number;
@@ -54,6 +55,8 @@ const CurrencyManagement: React.FC = () => {
   const [expandedRowKeys, setExpandedRowKeys] = useState<string[]>([]);
   const [expandLoading, setExpandLoading] = useState<Record<string, boolean>>({});
   const [expandedData, setExpandedData] = useState<Record<string, any>>({});
+  const [introFormVisible, setIntroFormVisible] = useState<boolean>(false);
+  const [currentIntroData, setCurrentIntroData] = useState<CurrencyIntroFormData | null>(null);
 
   const fetchData = async (params: any) => {
     setLoading(true);
@@ -575,9 +578,16 @@ const CurrencyManagement: React.FC = () => {
     // 实现添加同币异链逻辑
   };
 
-  const handleDetail = (record: CurrencyItem) => {
-    message.success(`查看币种简介: ${record.name}`);
-    // 实现查看币种简介逻辑
+  const handleDetail = async (record: CurrencyItem) => {
+
+      
+
+        setCurrentIntroData(record);
+        setIntroFormVisible(true);
+
+
+
+
   };
 
   const handleExtendInfo = (record: CurrencyItem) => {
@@ -689,6 +699,30 @@ const CurrencyManagement: React.FC = () => {
     setFormVisible(false);
   };
 
+  // 处理币种简介表单提交
+  const handleIntroFormSubmit = async (values: CurrencyIntroFormData) => {
+    try {
+      // 这里应该是保存币种简介的API调用
+      // 示例代码，需要替换为实际API
+      const res = await saveCurrencyIntro(values);
+      
+      if (res.code === '0') {
+        message.success('币种简介保存成功');
+        setIntroFormVisible(false);
+      } else {
+        message.error(res.message || '币种简介保存失败');
+      }
+    } catch (error) {
+      console.error('保存币种简介失败:', error);
+      message.error('保存币种简介失败');
+    }
+  };
+
+  // 处理币种简介表单取消
+  const handleIntroFormCancel = () => {
+    setIntroFormVisible(false);
+  };
+
   return (
     <PageContainer>
       {!formVisible ? (
@@ -731,6 +765,13 @@ const CurrencyManagement: React.FC = () => {
         onSubmit={handleExtendInfoSubmit}
         onCancel={handleExtendInfoCancel}
         mode={extendInfoMode}
+      />
+
+      <CurrencyIntroForm
+        visible={introFormVisible}
+        initialValues={currentIntroData || undefined}
+        onSubmit={handleIntroFormSubmit}
+        onCancel={handleIntroFormCancel}
       />
     </PageContainer>
   );

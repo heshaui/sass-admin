@@ -247,3 +247,22 @@ export async function revocationOrder(params?: Record<string, any>) {
     data: params,
   });
 }
+
+
+
+// 保存币种简介
+export async function saveIntroductionVo(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-coin/saveIntroductionVo', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+// 获取币种简介
+export async function findIntroductionVo(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-coin/findIntroductionVo', {
+    method: 'POST',
+    data: params,
+  });
+}

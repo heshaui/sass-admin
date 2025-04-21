@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState,useEffect } from "react";
 import { Form, Input, Button, Select, Typography } from "antd";
-
+import { getAreaCodeList } from "@/services/ant-design-pro/merchant";
 const { Option } = Select;
 
 const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (values: any) => void; onCancel: () => void }> = ({
@@ -10,15 +10,25 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
   onCancel,
 }) => {
   const [form] = Form.useForm();
+  const [areaList, setAreaList] = useState([]);
 
+  const getAreaList = async () => {
+    const res = await getAreaCodeList();
+    console.log(res);
+    if (res.code === '0') {
+      setAreaList(res.data);
+    }
+  }
   // 监听 record 和 isCreating 变化，重置表单
-  React.useEffect(() => {
+  useEffect(() => {
+    getAreaList();
     if (isCreating) {
       form.setFieldsValue({
         tenantName: "",
         tenantContact: "",
         tenantPhone: "",
         tenantEmail: "",
+        areaCode: "",
       });
     } else {
       form.resetFields();
@@ -43,6 +53,7 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
               tenantContact: "",
               tenantPhone: "",
               tenantEmail: "",
+              areaCode: "",
             }
           : {
               tenantId: record?.tenantId || "",
@@ -50,6 +61,7 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
               tenantContact: record?.tenantContact || "",
               tenantPhone: record?.tenantPhone || "",
               tenantEmail: record?.tenantEmail || "",
+              areaCode: record?.areaCode || "",
             }
       }
     >
@@ -71,12 +83,13 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
         <Input />
       </Form.Item>
 
-      {/* <Form.Item label="国家编码" name="tenantContact">
+      <Form.Item label="国家编码" name="areaCode">
         <Select>
-          <Option value="+86 中国">+86 中国</Option>
-          <Option value="+1 美国">+1 美国</Option>
+          {areaList.map((item: any) => (  
+            <Option key={item.areaCode} value={item.areaCode}>+{item.areaCode} {item.countryName}</Option>
+          ))}
         </Select>
-      </Form.Item> */}
+      </Form.Item>
 
       <Form.Item label="手机号" name="tenantPhone">
         <Input />

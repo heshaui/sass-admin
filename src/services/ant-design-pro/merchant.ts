@@ -425,4 +425,15 @@ export async function saveTenant(
   }
 
 
-  
+  // 获取国家编码列表
+  export async function getAreaCodeList(
+    options?: { [key: string]: any },
+  ) {
+    return request<API.AreaCodeList>('/tenant-admin/v1/country/selectHomeCountryList', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
