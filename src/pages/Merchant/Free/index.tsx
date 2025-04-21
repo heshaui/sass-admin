@@ -231,7 +231,7 @@ const Free: React.FC = () => {
           <a onClick={() => handleEdit(record)}>修改</a>
           {record.paymentStatus !== 1 ? <a onClick={() => handleConvertToPaid(record)}>转为正式商户</a> : ""}
           <a onClick={() => handleServerConfig(record)}>服务器配置</a>
-          <a onClick={() => handleSave(record)}>创建Root账号</a>
+          { !record.isRootTenant && <a onClick={() => handleSave(record)}>创建Root账号</a>}
         </Space>
       ),
     },

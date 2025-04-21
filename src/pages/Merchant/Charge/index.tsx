@@ -3,7 +3,8 @@ import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components"
 import { Tabs, Button, Modal } from "antd";
 import { tenantList } from "@/services/ant-design-pro/merchant";
 import MerchantDetail from "./component/MerchantDetail"; // 引入详情组件
-
+import { getUserOperationLogs } from "@/services/ant-design-pro/UserManagement";
+import { t } from "@wangeditor/editor";
 const Charge: React.FC = () => {
     const [activeTab, setActiveTab] = useState("basic");
     const [merchantData, setMerchantData] = useState<any[]>([]);
@@ -56,6 +57,19 @@ const Charge: React.FC = () => {
             setLoading(false); // 确保无论成功失败都会关闭loading
         }
     };
+
+
+    // 获取操作日志
+    const getLogList = async (params: any = {}) => {
+    let data={
+        pageNo: params.current || 1,
+        pageSize: params.pageSize || 10,
+    }
+        const res = await getUserOperationLogs(data);
+        if (res.code === "0") {
+            setLogData(res.data.list);
+        }
+    };
     // 处理编辑按钮点击
     const handleEdit = (record: any) => {
         setEditRecord(record);
@@ -75,7 +89,7 @@ const Charge: React.FC = () => {
     
 
     useEffect(() => {
-
+        getLogList();
     }, []);
 
     // **基本信息表格的列**
@@ -151,33 +165,33 @@ const Charge: React.FC = () => {
     const logColumns: ProColumns<any>[] = [
         {
             title: "操作时间",
-            dataIndex: "time",
+            dataIndex: "createTime",
             valueType: "dateTime",
             search: false,
         },
         {
             title: "操作管理员",
-            dataIndex: "admin",
+            dataIndex: "userId",
             search: false,
         },
         {
             title: "操作行为",
-            dataIndex: "action",
+            dataIndex: "operationType",
             search: false,
         },
         {
             title: "操作前",
-            dataIndex: "before",
+            dataIndex: "beforeValue",
             search: false,
         },
         {
             title: "操作后",
-            dataIndex: "after",
+            dataIndex: "afterValue",
             search: false,
         },
         {
             title: "备注信息",
-            dataIndex: "remark",
+            dataIndex: "remarkMsg",
             search: false,
         },
     ];
@@ -187,29 +201,10 @@ const Charge: React.FC = () => {
     return (
         <PageContainer>
             {/* Tab 切换 */}
-            {/* <Tabs activeKey={activeTab} onChange={setActiveTab} style={{ marginBottom: 16 }}>
+            <Tabs activeKey={activeTab} onChange={setActiveTab} style={{ marginBottom: 16 }}>
                 <Tabs.TabPane tab="基本信息" key="basic" />
                 <Tabs.TabPane tab="操作日志" key="logs" />
-            </Tabs> */}
-
-            {/* ProTable 组件 */}
-            {/* <ProTable
-                rowKey="id"
-                columns={activeTab === "basic" ? basicColumns : logColumns}
-                dataSource={activeTab === "basic" ? merchantData : logData}
-                loading={loading}
-                pagination={{ pageSize: 10 }}
-                search={{ labelWidth: "auto" }} // **ProTable 自带的搜索**
-                request={async (params) => {
-                    if (activeTab === "logs") return { data: logData, success: true };
-                    await getList();
-                    return { data: merchantData, success: true };
-                }}
-                toolBarRender={() => [
-
-                ]}
-                options={{ density: false, fullScreen: false, reload: false, setting: false }} // 关闭 ProTable 右上角的操作按钮
-            /> */}
+            </Tabs>
 
 {showDetail ? (
                 <MerchantDetail tenantId={selectedTenantId} onBack={handleBackToList} />
@@ -220,13 +215,13 @@ const Charge: React.FC = () => {
                     dataSource={activeTab === "basic" ? merchantData : logData}
                     request={getList}
                     loading={loading}
+                    search={activeTab === "basic" ? true : false}
                     pagination={{
                         ...pagination,
                         showSizeChanger: true,
                         showQuickJumper: true,
                         showTotal: (total) => `共 ${total} 条记录`
                     }}
-                    search={{ labelWidth: "auto" }}
                     toolBarRender={() => []}
                     options={{ density: false, fullScreen: false, reload: false, setting: false }}
                 />
