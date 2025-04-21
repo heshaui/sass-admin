@@ -99,7 +99,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
 
   return (
     <Modal
-      title="币种拓展信息"
+      title="添加同币异链"
       open={visible}
       onOk={handleSubmit}
       onCancel={handleCancel}
