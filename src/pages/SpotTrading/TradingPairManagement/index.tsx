@@ -114,9 +114,11 @@ const TradingPairManagement: React.FC = () => {
     {
       title: '排序',
       dataIndex: 'sortOrder',
+      search: false,
     },
     {
       title: '币对',
+      search: false,
       render: (_, record) => (
         <div>
           <span>{record.coinSymbol}</span>/
@@ -127,6 +129,10 @@ const TradingPairManagement: React.FC = () => {
     {
       title: '是否开放交易',
       dataIndex: 'enable',
+      valueEnum:{
+        0:'禁用',
+        1:'启用'
+      },
       render: (_, record) => (
         <Switch
           checked={record.enable === 1}
@@ -145,6 +151,10 @@ const TradingPairManagement: React.FC = () => {
     {
       title: '是否显示',
       dataIndex: 'show',
+      valueEnum:{
+        0:'隐藏',
+        1:'显示'
+      },
       render: (_, record) => (
         <Switch
           checked={record.show===1}
@@ -163,28 +173,34 @@ const TradingPairManagement: React.FC = () => {
     {
       title: '开盘价',
       dataIndex: 'openingPrice',
+      search: false,
     },
     {
       title: '价格精度',
       dataIndex: 'baseCoinScale',
+      search: false,
     },
     {
       title: '数量精度',
       dataIndex: 'coinScale',
+      search: false,
     },
     {
       title: '币对标签',
       dataIndex: 'classLabel',
+      search: false,
     },
     {
       title: '添加时间',
       dataIndex: 'createdAt',
+      search: false,
       sorter: true,
     },
     {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
+      search: false,
       render: (_, record) => [
         <a
           key="edit"
