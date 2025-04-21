@@ -137,7 +137,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         status: 1,
         canRecharge: 0,
         canWithdraw: 0,
-        unitScale: 8,
+
 
       }}
     >
