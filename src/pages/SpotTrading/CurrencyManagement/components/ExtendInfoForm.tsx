@@ -144,8 +144,8 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
 
         <Form.Item
           name="protocolId"
-          label="协议ID"
-          rules={[{ required: true, message: '请输入协议ID' }]}
+          label="网络类型"
+          rules={[{ required: true, message: '请选择网络类型' }]}
         >
             <Select>
                 {
