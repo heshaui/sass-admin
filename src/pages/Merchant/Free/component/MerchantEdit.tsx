@@ -86,7 +86,7 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
       <Form.Item label="国家编码" name="areaCode">
         <Select>
           {areaList.map((item: any) => (  
-            <Option key={item.areaCode} value={item.areaCode}>+{item.areaCode} {item.countryName}</Option>
+            <Option key={item.areaCode} value={item.areaCode}>+{item.areaCode} {item.areaName}</Option>
           ))}
         </Select>
       </Form.Item>
