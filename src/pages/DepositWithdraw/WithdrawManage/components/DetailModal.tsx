@@ -130,7 +130,7 @@ const handleUpdate = async () => {
             <ProDescriptions.Item label="手续费" span={1}>{currentRecord.fee} {currentRecord.coinName}</ProDescriptions.Item>
             <ProDescriptions.Item label="应到金额" span={1}>{currentRecord.actualAmount} {currentRecord.actualAmount?currentRecord.coinName:''}</ProDescriptions.Item>
             <ProDescriptions.Item label="提币协议" span={1}>{currentRecord.protocolName}</ProDescriptions.Item>
-            <ProDescriptions.Item label="收款地址" span={1}>{currentRecord.fromAddress}</ProDescriptions.Item>
+            <ProDescriptions.Item label="收款地址" span={1}>{currentRecord.toAddress}</ProDescriptions.Item>
             <ProDescriptions.Item label="审核状态" span={1}>
               <Tag color={
                 currentRecord.status === 3 || currentRecord.status === '3' ? 'red' : 
