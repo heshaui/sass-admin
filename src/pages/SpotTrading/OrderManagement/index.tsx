@@ -1,7 +1,7 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, DatePicker, Input, Select, Tag, message } from 'antd';
 import React, { useRef, useState } from 'react';
-import { exchangeOrderList } from '@/services/ant-design-pro/spot';
+import { exchangeOrderList, revocationOrder } from '@/services/ant-design-pro/spot';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 
@@ -44,16 +44,20 @@ const OrderManagement: React.FC = () => {
   const navigate = useNavigate();
 
 
-  const handleCancel = async (id: string) => {
+  const handleCancel = async (orderId: string) => {
     try {
       // 这里添加取消订单的API调用
-      // await cancelOrder(id);
-      message.success('订单已取消');
-      if (actionRef.current) {
-        actionRef.current.reload();
+     const res= await revocationOrder({orderId:orderId});
+      if(res.code==='0'&&res.data){
+        message.success('撤销成功');
+        if (actionRef.current) {
+          actionRef.current.reload();
+        }
+      }else{
+        message.error('撤销失败');
       }
     } catch (error) {
-      message.error('取消订单失败');
+      message.error('撤销失败');
     }
   };
   
@@ -219,7 +223,7 @@ const OrderManagement: React.FC = () => {
       render: (_, record) => {
           if (record.status === 0 ) {
             return (
-            <Button type="link" onClick={() => handleCancel(record.id)}>撤销订单</Button>
+            <Button type="link" onClick={() => handleCancel(record.orderId)}>撤销订单</Button>
           );
         }
         return (

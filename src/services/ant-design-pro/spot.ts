@@ -238,3 +238,12 @@ export async function exchangeOrderList(params?: Record<string, any>) {
     data: params,
   });
 }
+
+
+// 撤销订单
+export async function revocationOrder(params?: Record<string, any>) {
+  return request('/tenant/v1/exchange-order/revocationOrder', {
+    method: 'POST',
+    data: params,
+  });
+}

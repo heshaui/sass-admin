@@ -196,12 +196,6 @@ const TradingPairManagement: React.FC = () => {
           修改
         </a>,
         <a 
-          key="publish" 
-          style={{ color: '#1890ff' }}
-        >
-          发布上线
-        </a>,
-        <a 
           key="cancelOrders" 
           style={{ color: '#ff4d4f' }}
         >
