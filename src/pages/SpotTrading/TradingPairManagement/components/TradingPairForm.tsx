@@ -34,6 +34,8 @@ type TradingPair = {
   depthPrecision5?: string;
   coinScale?:number;
   baseCoinScale?:number;
+  show?:number;
+  enable?:number;
 };
 
 interface TradingPairFormProps {
@@ -125,13 +127,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
       <Form
         form={form}
         layout="vertical"
-        initialValues={{
-          status: 'enabled',
-          enableTrading: false,
-          showInFrontend: true,
-          makerFee: 0.001,
-          takerFee: 0.001,
-        }}
+      
       >
         <h3>基本信息</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -205,16 +201,16 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             </Select>
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             name="show"
             label="是否前台显示"
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <Select>
+            <Select disabled={true}>
               <Select.Option value={1}>是</Select.Option>
               <Select.Option value={0}>否</Select.Option>
             </Select>
-          </Form.Item>
+          </Form.Item> */}
           {/* <Form.Item
             name="enableBuy"
             label="是否开启买"

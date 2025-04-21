@@ -8,7 +8,7 @@ import {
 } from '@ant-design/pro-components';
 import { Button, message, Modal, Space, Tag, Switch, Radio } from 'antd';
 import TradingPairForm from './components/TradingPairForm';
-import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup } from '@/services/ant-design-pro/spot';
+import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup,updateExchangeCoinById } from '@/services/ant-design-pro/spot';
 /**
  * 币对类型定义
  */
@@ -77,6 +77,7 @@ const TradingPairManagement: React.FC = () => {
      
     } else {
       // 添加新币对
+      values.show=0;
       const res = await saveExchangeCoin(values);
       if(res.code==='0'){
         message.success('币对添加成功');
@@ -88,6 +89,38 @@ const TradingPairManagement: React.FC = () => {
     setVisible(false);
     setCurrentRow(undefined);
   };
+
+  //设置币对显示状态
+  const handleShowOrHide = async (values:any,checked:boolean) => {
+    let data={
+      id:values.id,
+      show:checked?1:0
+    }
+    const res = await updateExchangeCoinById(data);
+    if(res.code==='0'){
+      message.success('币对显示状态设置成功');
+    }else{
+      message.error(res.message);
+    }
+    actionRef.current?.reload();
+  }
+
+
+
+  //设置币对交易状态
+  const handleEnableOrDisable = async (values:any,checked:boolean) => {
+    let data={
+      id:values.id,
+      enable:checked?1:0
+    }
+    const res = await updateExchangeCoinById(data);
+    if(res.code==='0'){
+      message.success('币对交易状态设置成功');
+    }else{
+      message.error(res.message);
+    }
+    actionRef.current?.reload();
+  }
 
   // 处理撮合类型选择
   const handleMatchingTypeSubmit = async () => {
@@ -135,13 +168,12 @@ const TradingPairManagement: React.FC = () => {
       },
       render: (_, record) => (
         <Switch
-          checked={record.enable === 1}
+          checked={record.enable===1}
           onChange={(checked) => {
             Modal.confirm({
               title: `确定要${checked ? '启用' : '禁用'}该币对交易吗？`,
               onOk: () => {
-                message.success(`币对交易${checked ? '启用' : '禁用'}成功`);
-                actionRef.current?.reload();
+                handleEnableOrDisable(record,checked);
               },
             });
           }}
@@ -162,8 +194,7 @@ const TradingPairManagement: React.FC = () => {
             Modal.confirm({
               title: `确定要${checked ? '显示' : '隐藏'}该币对吗？`,
               onOk: () => {
-                message.success(`币对${checked ? '显示' : '隐藏'}成功`);
-                actionRef.current?.reload();
+                handleShowOrHide(record,checked);
               },
             });
           }}
