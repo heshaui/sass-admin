@@ -1,9 +1,10 @@
+import React, { useRef, useState,useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, DatePicker, Input, Select, Tag, message } from 'antd';
-import React, { useRef, useState } from 'react';
+import { Button, Tag, message } from 'antd';
 import { exchangeOrderList, revocationOrder } from '@/services/ant-design-pro/spot';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { exchangeCoinList} from '@/services/ant-design-pro/spot';
 
 type OrderItem = {
   id: string;
@@ -43,6 +44,18 @@ const OrderManagement: React.FC = () => {
   const actionRef = useRef<any>();  
   const navigate = useNavigate();
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+  const [coinList,setCoinList]=useState<any[]>([]);
+
+  const getCoinPair=async()=>{
+    let data={
+      pageNo:1,
+      pageSize:100000,
+    }
+    const res=await exchangeCoinList(data);
+    if(res.code==='0'){
+      setCoinList(res.data.list);
+    }
+  }
 
 
   const handleCancel = async (orderId: string) => {
@@ -117,7 +130,6 @@ const OrderManagement: React.FC = () => {
     isAdmin&&{
       title: '商户id',
       dataIndex: 'tenantId',
-      search: false,
     },
     {
       title: '委托单号',
@@ -128,7 +140,12 @@ const OrderManagement: React.FC = () => {
     {
       title: '币对',
       dataIndex: 'symbol',
-
+      search: !isAdmin,
+      valueType: 'select',
+      valueEnum: coinList.reduce((acc:any, item: any) => {
+        acc[item.coinSymbol+'/'+item.baseSymbol] = item.coinSymbol + '/' + item.baseSymbol;
+        return acc;
+      }, {}),
     },
     {
       title: 'UID',
@@ -294,6 +311,7 @@ const OrderManagement: React.FC = () => {
       status:params.status,
       direction:params.direction,
       type:params.type,
+      tenantId:params.tenantId,
       startTime:params?.dateTimeRange?.[0]?dayjs(params.dateTimeRange[0]).valueOf():undefined,
       endTime:params?.dateTimeRange?.[1]?dayjs(params.dateTimeRange[1]).valueOf():undefined,
     }
@@ -306,6 +324,13 @@ const OrderManagement: React.FC = () => {
       };
     }
   }
+
+  useEffect(()=>{
+    if(!isAdmin){
+      getCoinPair()
+    
+    }
+  },[]);
 
   return (
     <PageContainer>
