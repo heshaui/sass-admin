@@ -173,7 +173,7 @@ const WithdrawManage: React.FC = () => {
       valueEnum: {
         '': { text: '全部' },
         '0': { text: '创建', status: 'Processing' },
-        '1': { text: '待审核', status: 'Processing' },
+        '1': { text: '审核', status: 'Processing' },
         '2': { text: '完成', status: 'Success' },
         '3': { text: '拒绝', status: 'Error' },
         '4': { text: '用户撤销', status: 'Default' }
