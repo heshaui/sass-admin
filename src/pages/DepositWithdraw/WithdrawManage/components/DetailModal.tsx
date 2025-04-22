@@ -118,7 +118,7 @@ const handleUpdate = async () => {
       {currentRecord && (
         <>
           <ProDescriptions
-            title={ currentRecord.status !== 1 ? '提现详情' : '提现记录' }
+            title={ currentRecord.status !== 1 ? '提现详情' : '提现审核' }
             loading={detailLoading}
             column={2}
             dataSource={currentRecord}
