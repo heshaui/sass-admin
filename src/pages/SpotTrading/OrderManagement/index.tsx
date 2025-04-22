@@ -227,7 +227,7 @@ const OrderManagement: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => {
-          if (record.status === 0 ) {
+          if (record.status === 0 && !isAdmin) {
             return (
             <Button type="link" onClick={() => handleCancel(record.orderId)}>撤销订单</Button>
           );
