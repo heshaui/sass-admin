@@ -119,9 +119,12 @@ const OrderManagement: React.FC = () => {
 
   const statusMap = {
     0: { text: '交易中', color: 'blue' },
-    1: { text: '完成', color: 'red' },
-    2: { text: '取消', color: 'orange' },
-    3: { text: '超时', color: 'default' },
+    1: { text: '完全成交', color: 'green' },
+    2: { text: '拒绝', color: 'orange' },
+    3: { text: '已经撤销', color: 'red' },
+    4: { text: '创建订单', color: 'blue' },
+    5: { text: '部分成交', color: 'blue' },
+    6: { text: '订单已经撤销-戳和未撤销', color: 'blue' },
 
   };
 
