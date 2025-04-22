@@ -55,6 +55,8 @@ const TradingPairManagement: React.FC = () => {
     const res = await exchangeCoinList({
       pageNo: params.current,
       pageSize: params.pageSize,
+      enable:params.enable,
+      show:params.show,
     });
     if(res.code==='0'){
       return {
