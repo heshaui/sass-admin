@@ -233,7 +233,7 @@ export async function tenantCurrencyCoinParams(params?: Record<string, any>) {
 
 //订单列表
 export async function exchangeOrderList(params?: Record<string, any>) {
-  return request('/tenant/v1/exchange-order/exchangeOrderList', {
+  return request(isAdmin ? '/tenant-admin/v1/exchangeOrder/exchangeOrderList' : '/tenant/v1/exchange-order/exchangeOrderList', {
     method: 'POST',
     data: params,
   });
