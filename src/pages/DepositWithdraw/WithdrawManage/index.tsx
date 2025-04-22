@@ -148,7 +148,7 @@ const WithdrawManage: React.FC = () => {
             color = 'blue';
             break;
           case 1:
-            statusText = '待审核';
+            statusText = '审核';
             color = 'blue';
             break;
           case 2:
