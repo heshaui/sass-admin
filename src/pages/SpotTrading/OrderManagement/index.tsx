@@ -42,6 +42,7 @@ const OrderManagement: React.FC = () => {
   const [tradeRecords, setTradeRecords] = useState<TradeRecord[]>([]);
   const actionRef = useRef<any>();  
   const navigate = useNavigate();
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
 
 
   const handleCancel = async (orderId: string) => {
@@ -113,6 +114,11 @@ const OrderManagement: React.FC = () => {
 
 
   const columns = [
+    isAdmin&&{
+      title: '商户id',
+      dataIndex: 'tenantId',
+      search: false,
+    },
     {
       title: '委托单号',
       dataIndex: 'orderId',
