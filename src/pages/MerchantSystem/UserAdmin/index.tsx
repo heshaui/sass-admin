@@ -224,7 +224,7 @@ const UserAdmin: React.FC = () => {
           if(res.code==='0'){
             message.success('用户编辑成功');
           }else{
-            message.error('用户编辑失败');
+            message.error(res.message||'用户编辑失败');
           }
         } else {
           // 新建用户
@@ -232,7 +232,7 @@ const UserAdmin: React.FC = () => {
           if(res.code==='0'){
             message.success('用户新建成功');
           }else{
-            message.error('用户新建失败');
+            message.error(res.message||'用户新建失败');
           }
 
           
