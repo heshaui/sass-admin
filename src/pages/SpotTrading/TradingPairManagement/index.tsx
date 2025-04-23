@@ -226,6 +226,7 @@ const TradingPairManagement: React.FC = () => {
     {
       title: '添加时间',
       dataIndex: 'createTime',
+      valueType:'dateTime',
       search: false,
       sorter: true,
     },
