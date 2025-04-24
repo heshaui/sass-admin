@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Table, Button, message, Popconfirm, Space } from 'antd';
+import React, { useState } from 'react';
+import { Card, Button, message, Popconfirm, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer,ProTable} from '@ant-design/pro-components';
 import { useIntl } from 'umi';
 import RiskControlForm from './components/RiskControlForm';
-
+import { tradingRiskControlList,updateTradingRiskControlById } from '@/services/ant-design-pro/spot';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
 
 const TradingRiskControl: React.FC = () => {
   const intl = useIntl();
-  const [loading, setLoading] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [editingRecord, setEditingRecord] = useState<any>(null);
-  const [dataSource, setDataSource] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   
-  const fetchData = async () => {
-    setLoading(true);
- 
-    setLoading(false);
-  };
-  
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const actionRef = React.useRef<ActionType>();
   
   const handleEdit = (record: any) => {
     setEditingRecord(record);
@@ -35,11 +27,34 @@ const TradingRiskControl: React.FC = () => {
   
   const handleFormSubmit = async (values: any) => {
     setLoading(true);
-    
+    values.id=editingRecord.id;
+    let data={
+      id:values.id,
+      coinSymbol:values.coinSymbol,
+      baseSymbol:values.baseSymbol,
+      transactionPriceDeviation:JSON.stringify({
+        percentage:values.priceDeviationPercent,
+        time:values.priceDeviationMinutes,
+      }),
+      priceFluctuation:JSON.stringify({ 
+        percentage:values.priceFluctuationPercent,
+        time:values.priceFluctuationMinutes,
+      }),
+      alarmNotifyEmail:values.alarmNotifyEmail,
+    }
+    const res = await updateTradingRiskControlById(data);
+    if(res.code==='0'){
+      message.success('修改成功');
+      actionRef.current?.reload();
+    }else{
+      message.error(res.message);
+    }
+    setVisible(false);
     setLoading(false);
+    
   };
   
-  const columns = [
+  const columns: ProColumns[] = [
     {
       title: '编号',
       dataIndex: 'id',
@@ -47,47 +62,57 @@ const TradingRiskControl: React.FC = () => {
     },
     {
       title: '币对',
-      dataIndex: 'symbol',
-      key: 'symbol',
+      renderText: (record: any) => {
+        return record.coinSymbol+'/'+record.baseSymbol;
+      },
     },
     {
       title: '交易价格偏离',
-      dataIndex: 'priceDeviation',
-      key: 'priceDeviation',
+      dataIndex: 'transactionPriceDeviation',
+      key: 'transactionPriceDeviation',
+      renderText: (record: any) => {
+        let data=JSON.parse(record);
+        if(data.percentage){
+          return data.percentage+'%'+' / '+(data.time)+'min';
+        }else{
+          return '--'
+        }
+      },
     },
     {
       title: '近30分钟内价格波动',
       dataIndex: 'priceFluctuation',
       key: 'priceFluctuation',
+      renderText: (record: any) => {
+        let data=JSON.parse(record);
+        if(data.percentage){
+          return data.percentage+'%'+' / '+(data.time)+'min';
+        }else{
+          return '--'
+        }
+      },
     },
     {
       title: '报警通知',
-      dataIndex: 'notificationEmail',
-      key: 'notificationEmail',
+      dataIndex: 'alarmNotifyEmail',
+      key: 'alarmNotifyEmail',
     },
     {
       title: '修改时间',
       dataIndex: 'updateTime',
       key: 'updateTime',
+      valueType: 'dateTime',
+      
     },
     {
       title: '操作',
       key: 'action',
+      valueType: 'option',
       render: (_, record) => (
         <Space>
           <Button type="link" onClick={() => handleEdit(record)}>
             修改
           </Button>
-          <Popconfirm
-            title="确定要删除此规则吗？"
-            onConfirm={() => handleDelete(record.id)}
-            okText="确定"
-            cancelText="取消"
-          >
-            <Button type="link" danger>
-              删除
-            </Button>
-          </Popconfirm>
         </Space>
       ),
     },
@@ -96,9 +121,9 @@ const TradingRiskControl: React.FC = () => {
   const handleDelete = async (id: number) => {
     setLoading(true);
     try {
-     
+      // 删除逻辑
       message.success('删除成功');
-      fetchData();
+      actionRef.current?.reload();
     } catch (error) {
       message.error('删除失败');
     }
@@ -107,20 +132,36 @@ const TradingRiskControl: React.FC = () => {
 
   return (
     <PageContainer>
-      <Card>
-        <div style={{ marginBottom: 16 }}>
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-            添加风控规则
-          </Button>
-        </div>
-        <Table
-          rowKey="id"
-          loading={loading}
-          dataSource={dataSource}
-          columns={columns}
-          pagination={{ showSizeChanger: true }}
-        />
-      </Card>
+      <ProTable
+        headerTitle="交易风控列表"
+        actionRef={actionRef}
+        rowKey="id"
+        search={false}
+        options={{ reload: true }}
+        request={async (params) => {
+          const { current, pageSize, ...rest } = params;
+          const data = {
+            pageNo: current || 1,
+            pageSize: pageSize || 10,
+            ...rest,
+          };
+          const res = await tradingRiskControlList(data);
+          if (res.code === '0' && res.data) {
+            return {
+              data: res.data.list,
+              success: true,
+              total: res.data.total || res.data.list.length,
+            };
+          }
+          return {
+            data: [],
+            success: false,
+            total: 0,
+          };
+        }}
+        columns={columns}
+        pagination={{ showSizeChanger: true }}
+      />
       
       <RiskControlForm
         visible={visible}

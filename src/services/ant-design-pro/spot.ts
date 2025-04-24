@@ -266,3 +266,21 @@ export async function findIntroductionVo(params?: Record<string, any>) {
     data: params,
   });
 }
+
+
+
+export async function tradingRiskControlList(params?: Record<string, any>) {
+  return request('/tenant/v1/trading-risk-control/tradingRiskControlList', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+
+
+export async function updateTradingRiskControlById(params?: Record<string, any>) {
+  return request('/tenant/v1/trading-risk-control/updateTradingRiskControlById', {
+    method: 'POST',
+    data: params,
+  });
+}

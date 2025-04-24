@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { Modal, Form, Input, Select, InputNumber, Space, Button, Row, Col } from 'antd';
-
+import React, { useEffect,useState } from 'react';
+import { Modal, Form, Input, Select, InputNumber, Button, Row, Col } from 'antd';
 interface RiskControlFormProps {
   visible: boolean;
   onCancel: () => void;
@@ -17,31 +16,50 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
   loading,
 }) => {
   const [form] = Form.useForm();
+  const [priceDeviationPercent, setPriceDeviationPercent] = useState<number>(0);
+  const [priceDeviationMinutes, setPriceDeviationMinutes] = useState<number>(0);
+  const [priceFluctuationPercent, setPriceFluctuationPercent] = useState<number>(0);
+  const [priceFluctuationMinutes, setPriceFluctuationMinutes] = useState<number>(0);
 
   useEffect(() => {
     if (visible) {
       form.resetFields();
       if (initialValues) {
+
+        console.log(initialValues, 'initialValues');
         // 处理初始值格式转换
         const formattedValues = { ...initialValues };
-        if (initialValues.priceDeviation) {
-          const match = initialValues.priceDeviation.match(/(\d+)%\/(\d+)min/);
-          if (match) {
-            formattedValues.priceDeviationPercent = parseFloat(match[1]);
-            formattedValues.priceDeviationMinutes = parseFloat(match[2]);
-          }
+        if(initialValues.transactionPriceDeviation){
+          let data=JSON.parse(initialValues.transactionPriceDeviation);
+          formattedValues.priceDeviationPercent=data.percentage;
+          formattedValues.priceDeviationMinutes=data.time;
+          setPriceDeviationPercent(data.percentage);
+          setPriceDeviationMinutes(data.time);
         }
-        if (initialValues.priceFluctuation) {
-          const match = initialValues.priceFluctuation.match(/(\d+)%\/(\d+)min/);
-          if (match) {
-            formattedValues.priceFluctuationPercent = parseFloat(match[1]);
-            formattedValues.priceFluctuationMinutes = parseFloat(match[2]);
-          }
+        if(initialValues.priceFluctuation){
+          let data=JSON.parse(initialValues.priceFluctuation);
+          formattedValues.priceFluctuationPercent=data.percentage;
+          formattedValues.priceFluctuationMinutes=data.time;
+          setPriceFluctuationPercent(data.percentage);
+          setPriceFluctuationMinutes(data.time);
+        }
+        if(initialValues.coinSymbol&&initialValues.baseSymbol){
+          formattedValues.symbol=initialValues.coinSymbol+'/'+initialValues.baseSymbol;
+        }
+        if(initialValues.alarmNotifyEmail){
+          formattedValues.alarmNotifyEmail=initialValues.alarmNotifyEmail;
         }
         form.setFieldsValue(formattedValues);
       }
     }
   }, [visible, initialValues, form]);
+
+  const handleValuesChange = (changedValues: any, allValues: any) => {
+    setPriceDeviationPercent(allValues.priceDeviationPercent || 0);
+    setPriceDeviationMinutes(allValues.priceDeviationMinutes || 0);
+    setPriceFluctuationPercent(allValues.priceFluctuationPercent || 0);
+    setPriceFluctuationMinutes(allValues.priceFluctuationMinutes || 0);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -49,8 +67,6 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
       // 格式化为后端需要的格式
       const formattedValues = {
         ...values,
-        priceDeviation: `${values.priceDeviationPercent}%/${values.priceDeviationMinutes}min`,
-        priceFluctuation: `${values.priceFluctuationPercent}%/${values.priceFluctuationMinutes}min`,
       };
       onSubmit(formattedValues);
     } catch (error) {
@@ -60,7 +76,7 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
 
   return (
     <Modal
-      title={initialValues ? '修改风控规则' : '添加风控规则'}
+      title={'修改风控规则' }
       open={visible}
       onOk={handleSubmit}
       onCancel={onCancel}
@@ -80,29 +96,19 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
         form={form}
         layout="vertical"
         initialValues={{
-          priceDeviationPercent: 3,
-          priceDeviationMinutes: 30,
-          priceFluctuationPercent: 3,
-          priceFluctuationMinutes: 30,
         }}
+        onValuesChange={handleValuesChange}
       >
         <Form.Item
           name="symbol"
           label="币对"
           rules={[{ required: true, message: '请选择币对' }]}
         >
-          <Select
-            placeholder="请选择币对"
-            options={[
-              { label: 'BTC/USDT', value: 'BTC/USDT' },
-              { label: 'ETH/USDT', value: 'ETH/USDT' },
-              { label: 'BNB/USDT', value: 'BNB/USDT' },
-            ]}
-          />
+         <Input placeholder="请输入币对" value={initialValues?.symbol} disabled={true} />
         </Form.Item>
         
         <Form.Item
-          label={<span style={{ color: '#ff4d4f' }}>* 交易价格偏离</span>}
+          label={<span style={{ color: '#ff4d4f' }}>交易价格偏离</span>}
           required
         >
           <Row gutter={8} align="middle">
@@ -135,12 +141,12 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
             </Col>
           </Row>
           <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
-            任意一笔交易与前一笔交易价格偏离&gt;3%时报警，报警后30分钟内不在发送
+            任意一笔交易与前一笔交易价格偏离&gt;{priceDeviationPercent}%时报警，报警后{priceDeviationMinutes}分钟内不在发送
           </div>
         </Form.Item>
         
         <Form.Item
-          label={<span style={{ color: '#ff4d4f' }}>* 近30分钟内价格波动</span>}
+          label={<span style={{ color: '#ff4d4f' }}>近30分钟内价格波动</span>}
           required
         >
           <Row gutter={8} align="middle">
@@ -173,13 +179,13 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
             </Col>
           </Row>
           <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
-            币对近半小时内价格波动&gt;3%时报警，报警后30分钟内不在发送
+            币对近半小时内价格波动&gt;{priceFluctuationPercent}%时报警，报警后{priceFluctuationMinutes}分钟内不在发送
           </div>
         </Form.Item>
         
         <Form.Item
-          name="notificationEmail"
-          label={<span style={{ color: '#ff4d4f' }}>* 报警通知</span>}
+          name="alarmNotifyEmail"
+          label={<span style={{ color: '#ff4d4f' }}> 报警通知</span>}
           rules={[
             { required: true, message: '请输入报警通知邮箱' },
             { type: 'email', message: '请输入有效的邮箱地址' }
