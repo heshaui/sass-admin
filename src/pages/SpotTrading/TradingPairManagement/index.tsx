@@ -77,6 +77,7 @@ const TradingPairManagement: React.FC = () => {
   const handleAddOrEdit = async (values: any) => {
     if (currentRow) {
       values.id=currentRow.id;
+      values.show=currentRow.show;
       const res = await updateExchangeCoinById(values);
       if(res.code==='0'){
         message.success('币对修改成功');
