@@ -148,7 +148,7 @@ const WithdrawManage: React.FC = () => {
             color = 'blue';
             break;
           case 1:
-            statusText = '审核';
+            statusText = '待审核';
             color = 'blue';
             break;
           case 2:
@@ -173,7 +173,7 @@ const WithdrawManage: React.FC = () => {
       valueEnum: {
         '': { text: '全部' },
         '0': { text: '创建', status: 'Processing' },
-        '1': { text: '审核', status: 'Processing' },
+        '1': { text: '待审核', status: 'Processing' },
         '2': { text: '完成', status: 'Success' },
         '3': { text: '拒绝', status: 'Error' },
         '4': { text: '用户撤销', status: 'Default' }
@@ -192,8 +192,8 @@ const WithdrawManage: React.FC = () => {
       hideInSearch: true,
       render: (_, record) => (
         <Space size="middle">
-          {record.status === '待审核' ? 
-            <Button type="primary" size="small">审核</Button> : 
+          {record.status === 1 ? 
+            <Button type="primary" size="small" onClick={() => showDetailModal(record)}>审核</Button> : 
             <Button type="link" onClick={() => showDetailModal(record)}>详情</Button>}
         </Space>
       ),
