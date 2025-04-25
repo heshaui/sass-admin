@@ -7,6 +7,7 @@ import {getCurrencyCoinList} from '@/services/ant-design-pro/inviteFriends';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import { useModel } from 'umi';
 import GoogleCode from '@/components/GoogleCode';
+import { tenantCurrencyCoinList} from '@/services/ant-design-pro/spot';
 const { Option } = Select;
 
 const TransferTool: React.FC = () => {
@@ -37,7 +38,7 @@ const TransferTool: React.FC = () => {
       pageNo:1,
       pageSize:10000
     }
-    const res=await getCurrencyCoinList(data);
+    const res=await tenantCurrencyCoinList(data);
     if(res.code==='0'){
       setCoinList(res.data.list);
     }
