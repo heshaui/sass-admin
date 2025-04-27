@@ -126,6 +126,11 @@ const OrderManagement: React.FC = () => {
       }, {}),
     },
     {
+      title: '交易对',
+      dataIndex: 'tradingPair',
+      search: false,
+    },
+    {
       title: 'UID',
       dataIndex: 'userId',
       key: 'userId',
