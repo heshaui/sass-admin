@@ -284,3 +284,13 @@ export async function updateTradingRiskControlById(params?: Record<string, any>)
     data: params,
   });
 }
+
+
+
+
+export async function tradesInfo(params?: Record<string, any>) {
+  return request('/tenant/v1/tenant-trade/trades', {
+    method: 'POST',
+    data: params,
+  });
+}

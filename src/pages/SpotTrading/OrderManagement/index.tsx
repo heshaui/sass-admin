@@ -4,7 +4,7 @@ import { Button, Tag, message } from 'antd';
 import { exchangeOrderList, revocationOrder } from '@/services/ant-design-pro/spot';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
-import { exchangeCoinList} from '@/services/ant-design-pro/spot';
+import { exchangeCoinList,tradesInfo} from '@/services/ant-design-pro/spot';
 
 type OrderItem = {
   id: string;
@@ -75,45 +75,19 @@ const OrderManagement: React.FC = () => {
     }
   };
   
-  const showTradeDetails = (record: OrderItem) => {
+  const showTradeDetails = async (record: OrderItem) => {
     // 如果当前记录已经展开，则收起
     if (expandedOrderId === record.id) {
       setExpandedOrderId(null);
       return;
     }
     
-    // 否则展开当前记录
-    // 模拟获取成交明细数据
-    const mockTradeRecords = [
-      {
-        tradeId: '1231',
-        buyerUid: '123',
-        buyerRole: 'Taker',
-        sellerUid: '123',
-        sellerRole: 'Maker',
-        tradeTime: new Date('2025-02-25 12:12:12'),
-        price: 12003.32,
-        amount: 0.5,
-        total: 12003.32,
-        buyerFee: '0.021 BTC',
-        sellerFee: '1USDT',
-      },
-      {
-        tradeId: '3123',
-        buyerUid: '123',
-        buyerRole: 'Taker',
-        sellerUid: '123',
-        sellerRole: 'Maker',
-        tradeTime: new Date('2025-02-25 12:12:12'),
-        price: 12003.32,
-        amount: 0.5,
-        total: 12003.32,
-        buyerFee: '0.021 BTC',
-        sellerFee: '1USDT',
-      },
-    ];
+    const res=await tradesInfo({orderId:record.orderId});
+    console.log(res);
+    if(res.code==='0'){
+      setTradeRecords(res.data.list);
+    }
     
-    setTradeRecords(mockTradeRecords);
     setExpandedOrderId(record.id);
   };
 
@@ -130,15 +104,16 @@ const OrderManagement: React.FC = () => {
 
 
   const columns = [
-    isAdmin&&{
+    ...(isAdmin ? [] : [{
       title: '商户id',
       dataIndex: 'tenantId',
-    },
+      key: 'tenantId',
+      search:false, 
+    }]),
     {
       title: '委托单号',
       dataIndex: 'orderId',
       copyable: true,
-      search: false,
     },
     {
       title: '币对',
