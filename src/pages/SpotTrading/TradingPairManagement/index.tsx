@@ -1,14 +1,15 @@
-import React, { useRef, useState } from 'react';
-import { PageContainer } from '@ant-design/pro-layout';
-import { PlusOutlined } from '@ant-design/icons';
 import {
-  ProTable,
-  ActionType,
-  ProColumns,
-} from '@ant-design/pro-components';
-import { Button, message, Modal, Space, Tag, Switch, Radio } from 'antd';
+  exchangeCoinList,
+  saveExchangeCoin,
+  updateExchangeCoinById,
+  updateExchangeGroup,
+} from '@/services/ant-design-pro/spot';
+import { PlusOutlined } from '@ant-design/icons';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Button, message, Modal, Radio, Switch } from 'antd';
+import React, { useRef, useState } from 'react';
 import TradingPairForm from './components/TradingPairForm';
-import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup,updateExchangeCoinById } from '@/services/ant-design-pro/spot';
 /**
  * 币对类型定义
  */
@@ -29,13 +30,12 @@ type TradingPair = {
   createdAt: string;
   updatedAt: string;
   sortOrder: string;
-  baseSymbol:string;
-  coinSymbol:string;
-  enable:number;
-  show:number;
-  coinScale:number;
-  baseCoinScale:number;
-  
+  baseSymbol: string;
+  coinSymbol: string;
+  enable: number;
+  show: number;
+  coinScale: number;
+  baseCoinScale: number;
 };
 
 /**
@@ -49,22 +49,20 @@ const TradingPairManagement: React.FC = () => {
   const [matchingType, setMatchingType] = useState<number>(1);
   const [currentMatchingRow, setCurrentMatchingRow] = useState<TradingPair | undefined>(undefined);
 
-
   const fetchTradingPairs = async (params: any) => {
-
     const res = await exchangeCoinList({
       pageNo: params.current,
       pageSize: params.pageSize,
-      enable:params.enable,
-      show:params.show,
+      enable: params.enable,
+      show: params.show,
     });
-    if(res.code==='0'){
+    if (res.code === '0') {
       return {
         data: res.data.list,
         success: true,
         total: res.data.count,
       };
-    }else{
+    } else {
       message.error(res.message);
       return {
         data: [],
@@ -76,12 +74,12 @@ const TradingPairManagement: React.FC = () => {
   // 处理添加或编辑币对
   const handleAddOrEdit = async (values: any) => {
     if (currentRow) {
-      values.id=currentRow.id;
-      values.show=currentRow.show;
+      values.id = currentRow.id;
+      values.show = currentRow.show;
       const res = await updateExchangeCoinById(values);
-      if(res.code==='0'){
+      if (res.code === '0') {
         message.success('币对修改成功');
-      }else{
+      } else {
         message.error(res.message);
       }
       actionRef.current?.reload();
@@ -89,11 +87,11 @@ const TradingPairManagement: React.FC = () => {
       setCurrentRow(undefined);
     } else {
       // 添加新币对
-      values.show=0;
+      values.show = 0;
       const res = await saveExchangeCoin(values);
-      if(res.code==='0'){
+      if (res.code === '0') {
         message.success('币对添加成功');
-      }else{
+      } else {
         message.error(res.message);
       }
     }
@@ -103,50 +101,47 @@ const TradingPairManagement: React.FC = () => {
   };
 
   //设置币对显示状态
-  const handleShowOrHide = async (values:any,checked:boolean) => {
-    let data={
-      id:values.id,
-      show:checked?1:0
-    }
+  const handleShowOrHide = async (values: any, checked: boolean) => {
+    let data = {
+      id: values.id,
+      show: checked ? 1 : 0,
+    };
     const res = await updateExchangeCoinById(data);
-    if(res.code==='0'){
+    if (res.code === '0') {
       message.success('币对显示状态设置成功');
-    }else{
+    } else {
       message.error(res.message);
     }
     actionRef.current?.reload();
-  }
-
-
+  };
 
   //设置币对交易状态
-  const handleEnableOrDisable = async (values:any,checked:boolean) => {
-    let data={
-      id:values.id,
-      enable:checked?1:0
-    }
+  const handleEnableOrDisable = async (values: any, checked: boolean) => {
+    let data = {
+      id: values.id,
+      enable: checked ? 1 : 0,
+    };
     const res = await updateExchangeCoinById(data);
-    if(res.code==='0'){
+    if (res.code === '0') {
       message.success('币对交易状态设置成功');
-    }else{
+    } else {
       message.error(res.message);
     }
     actionRef.current?.reload();
-  }
+  };
 
   // 处理撮合类型选择
   const handleMatchingTypeSubmit = async () => {
-
     try {
-    const res = await updateExchangeGroup({
-        id:currentMatchingRow?.id,
-        group:matchingType
-      })
-      if(res.code==='0'&&res.data){
+      const res = await updateExchangeGroup({
+        id: currentMatchingRow?.id,
+        group: matchingType,
+      });
+      if (res.code === '0' && res.data) {
         message.success('撮合类型设置成功');
         setMatchingTypeVisible(false);
         actionRef.current?.reload();
-      }else{
+      } else {
         message.error(res.message);
       }
     } catch (error) {
@@ -166,26 +161,25 @@ const TradingPairManagement: React.FC = () => {
       search: false,
       render: (_, record) => (
         <div>
-          <span>{record.coinSymbol}</span>/
-          <span>{record.baseSymbol}</span>
+          <span>{record.coinSymbol}</span>/<span>{record.baseSymbol}</span>
         </div>
       ),
     },
     {
       title: '是否开放交易',
       dataIndex: 'enable',
-      valueEnum:{
-        0:'禁用',
-        1:'启用'
+      valueEnum: {
+        0: '禁用',
+        1: '启用',
       },
       render: (_, record) => (
         <Switch
-          checked={record.enable===1}
+          checked={record.enable === 1}
           onChange={(checked) => {
             Modal.confirm({
               title: `确定要${checked ? '启用' : '禁用'}该币对交易吗？`,
               onOk: () => {
-                handleEnableOrDisable(record,checked);
+                handleEnableOrDisable(record, checked);
               },
             });
           }}
@@ -195,18 +189,18 @@ const TradingPairManagement: React.FC = () => {
     {
       title: '是否显示',
       dataIndex: 'show',
-      valueEnum:{
-        0:'隐藏',
-        1:'显示'
+      valueEnum: {
+        0: '隐藏',
+        1: '显示',
       },
       render: (_, record) => (
         <Switch
-          checked={record.show===1}
+          checked={record.show === 1}
           onChange={(checked) => {
             Modal.confirm({
               title: `确定要${checked ? '显示' : '隐藏'}该币对吗？`,
               onOk: () => {
-                handleShowOrHide(record,checked);
+                handleShowOrHide(record, checked);
               },
             });
           }}
@@ -220,11 +214,11 @@ const TradingPairManagement: React.FC = () => {
     },
     {
       title: '价格精度',
-      dataIndex: 'baseCoinScale',
+      dataIndex: '计价币精度',
       search: false,
     },
     {
-      title: '数量精度',
+      title: '基础币种精度',
       dataIndex: 'coinScale',
       search: false,
     },
@@ -236,7 +230,7 @@ const TradingPairManagement: React.FC = () => {
     {
       title: '添加时间',
       dataIndex: 'createTime',
-      valueType:'dateTime',
+      valueType: 'dateTime',
       search: false,
       sorter: true,
     },
@@ -255,13 +249,10 @@ const TradingPairManagement: React.FC = () => {
         >
           修改
         </a>,
-        <a 
-          key="cancelOrders" 
-          style={{ color: '#ff4d4f' }}
-        >
+        <a key="cancelOrders" style={{ color: '#ff4d4f' }}>
           撤销全部订单
         </a>,
-        <a 
+        <a
           key="mergeType"
           onClick={() => {
             setCurrentMatchingRow(record);
@@ -314,8 +305,8 @@ const TradingPairManagement: React.FC = () => {
         footer={null}
         width={300}
       >
-        <Radio.Group 
-          value={matchingType} 
+        <Radio.Group
+          value={matchingType}
           onChange={(e) => setMatchingType(e.target.value)}
           style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}
         >
@@ -324,11 +315,13 @@ const TradingPairManagement: React.FC = () => {
         </Radio.Group>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
           <Button onClick={() => setMatchingTypeVisible(false)}>取消</Button>
-          <Button type="primary" onClick={handleMatchingTypeSubmit}>确定</Button>
+          <Button type="primary" onClick={handleMatchingTypeSubmit}>
+            确定
+          </Button>
         </div>
       </Modal>
     </PageContainer>
   );
 };
 
-export default TradingPairManagement; 
+export default TradingPairManagement;
