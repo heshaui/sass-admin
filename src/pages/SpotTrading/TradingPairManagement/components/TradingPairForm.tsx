@@ -178,6 +178,8 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label="币对标签"
             style={{ width: 'calc(50% - 10px)' }}
           >
+            
+
             <Select>
             <Select.Option value="1">主流区</Select.Option>
             <Select.Option value="2">创新区</Select.Option>
@@ -186,15 +188,15 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             <Select.Option value="5">Meme</Select.Option>
             <Select.Option value="6">NFT</Select.Option>
             <Select.Option value="7">DeFi</Select.Option>
-            <Select.Option value="8">NFT</Select.Option>
-            <Select.Option value="9">Web3</Select.Option>
-            <Select.Option value="10">Payments</Select.Option>
-            <Select.Option value="11">Launchpad</Select.Option>
-            <Select.Option value="12">Layer2</Select.Option>
-            <Select.Option value="13">Solana</Select.Option>
-            <Select.Option value="14">RWA</Select.Option>
-            <Select.Option value="15">Launchpool</Select.Option>
-            <Select.Option value="16">游戏元宇宙</Select.Option>
+            <Select.Option value="8">Web3</Select.Option>
+            <Select.Option value="9">Payments</Select.Option>
+            <Select.Option value="10">Launchpad</Select.Option>
+            <Select.Option value="11">Layer2</Select.Option>
+            <Select.Option value="12">Solana</Select.Option>
+            <Select.Option value="13">RWA</Select.Option>
+            <Select.Option value="14">Launchpool</Select.Option>
+            <Select.Option value="15">游戏元宇宙</Select.Option>
+            <Select.Option value="16">存储</Select.Option>
             </Select>
           </Form.Item>
 
