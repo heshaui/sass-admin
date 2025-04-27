@@ -11,6 +11,9 @@ type OrderItem = {
   orderId: string;
   userId: string;
   tradingPair: string;
+  coinSymbol: string;
+  baseSymbol: string;
+  groupStatus: string;
   type: string;
   direction: 0 | 1;
   price: number;
@@ -33,8 +36,10 @@ type TradeRecord = {
   price: number;
   amount: number;
   total: number;
-  buyerFee: string;
-  sellerFee: string;
+  buyFee: string;
+  sellFee: string;
+  quantity: number;
+  tradePrice: number;
 };
 
 const OrderManagement: React.FC = () => {
@@ -81,10 +86,13 @@ const OrderManagement: React.FC = () => {
       setExpandedOrderId(null);
       return;
     }
-    
-    const res=await tradesInfo({orderId:record.orderId});
+    if(!record.coinSymbol || !record.baseSymbol || !record.groupStatus) {
+      message.error('订单信息不完整');
+      return;
+    }
+    const res=await tradesInfo({orderId:record.orderId,symbol:record.coinSymbol+"_"+record.baseSymbol+"_"+record.groupStatus,pageNo:1,pageSize:1});
     console.log(res);
-    if(res.code==='0'){
+    if(res.code==='0'&&res.data){
       setTradeRecords(res.data.list);
     }
     
@@ -205,23 +213,23 @@ const OrderManagement: React.FC = () => {
       search: false,
       render: (_, record) => record.amount * record.price,
     },
-    {
-      title: '成交数量',
-      dataIndex: 'filledAmount',
-      search: false,
+    // {
+    //   title: '成交数量',
+    //   dataIndex: 'filledAmount',
+    //   search: false,
 
-    },
-    {
-      title: '成交均价',
-      dataIndex: 'avgPrice',
-      search: false,
+    // },
+    // {
+    //   title: '成交均价',
+    //   dataIndex: 'avgPrice',
+    //   search: false,
 
-    },
-    {
-      title: '成交金额',
-      dataIndex: 'baseSymbolCount',
-      search: false,
-    },
+    // },
+    // {
+    //   title: '成交金额',
+    //   dataIndex: 'baseSymbolCount',
+    //   search: false,
+    // },
     {
       title: '操作',
       dataIndex: 'option',
@@ -248,38 +256,38 @@ const OrderManagement: React.FC = () => {
     },
     {
       title: '买方UID/角色',
-      dataIndex: 'buyerUid',
+      dataIndex: 'buyerUserId',
       render: (text: string, record: TradeRecord) => `${text}/${record.buyerRole}`,
     },
     {
       title: '卖方UID/角色',
-      dataIndex: 'sellerUid',
+      dataIndex: 'sellerUserId',
       render: (text: string, record: TradeRecord) => `${text}/${record.sellerRole}`,
     },
     {
       title: '成交时间',
-      dataIndex: 'tradeTime',
-      valueType: 'dateTime',
+      dataIndex: 'ctime',
+      valueType: 'ctime',
     },
     {
       title: '成交价',
-      dataIndex: 'price',
+      dataIndex: 'tradePrice',
     },
     {
       title: '成交数量',
-      dataIndex: 'amount',
+      dataIndex: 'quantity',
     },
     {
       title: '成交金额',
-      dataIndex: 'total',
+      render: (text: string, record: TradeRecord) => record.tradePrice * record.quantity,
     },
     {
       title: '手续费（买）',
-      dataIndex: 'buyerFee',
+      dataIndex: 'buyFee',
     },
     {
       title: '手续费（卖）',
-      dataIndex: 'sellerFee',
+      dataIndex: 'sellFee',
     },
   ];
 
@@ -297,6 +305,7 @@ const OrderManagement: React.FC = () => {
       tenantId:params.tenantId,
       startTime:params?.dateTimeRange?.[0]?dayjs(params.dateTimeRange[0]).valueOf():undefined,
       endTime:params?.dateTimeRange?.[1]?dayjs(params.dateTimeRange[1]).valueOf():undefined,
+      orderId:params.orderId,
     }
     const res=await exchangeOrderList(data);
     if(res.code==='0'){
