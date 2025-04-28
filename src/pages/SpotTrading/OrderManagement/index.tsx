@@ -5,7 +5,7 @@ import {
   tradesInfo,
 } from '@/services/ant-design-pro/spot';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Tag, message } from 'antd';
+import { Button, Empty, message, Tag } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -339,15 +339,23 @@ const OrderManagement: React.FC = () => {
           expandedRowRender: (record) => {
             if (record.id === expandedOrderId) {
               return (
-                <ProTable<TradeRecord>
-                  headerTitle="成交明细"
-                  rowKey="tradeId"
-                  search={false}
-                  options={false}
-                  dataSource={tradeRecords}
-                  columns={tradeColumns}
-                  pagination={false}
-                />
+                <>
+                  {tradeRecords.length > 0 ? (
+                    <ProTable<TradeRecord>
+                      headerTitle="成交明细"
+                      rowKey="tradeId"
+                      search={false}
+                      options={false}
+                      dataSource={tradeRecords}
+                      columns={tradeColumns}
+                      pagination={false}
+                    />
+                  ) : (
+                    <div style={{ padding: '16px', textAlign: 'center' }}>
+                      <Empty description="暂无成交记录" />
+                    </div>
+                  )}
+                </>
               );
             }
             return null;
