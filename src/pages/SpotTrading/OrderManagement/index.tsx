@@ -1,10 +1,14 @@
-import React, { useRef, useState,useEffect } from 'react';
+import {
+  exchangeCoinList,
+  exchangeOrderList,
+  revocationOrder,
+  tradesInfo,
+} from '@/services/ant-design-pro/spot';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Tag, message } from 'antd';
-import { exchangeOrderList, revocationOrder } from '@/services/ant-design-pro/spot';
 import dayjs from 'dayjs';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { exchangeCoinList,tradesInfo} from '@/services/ant-design-pro/spot';
 
 type OrderItem = {
   id: string;
@@ -19,7 +23,7 @@ type OrderItem = {
   price: number;
   amount: number;
   total: number;
-  status: 0 | 1 | 2 | 3 
+  status: 0 | 1 | 2 | 3;
   createTime: Date;
   filledAmount: number;
   avgPrice: number;
@@ -43,59 +47,62 @@ type TradeRecord = {
 };
 
 const OrderManagement: React.FC = () => {
-  const [selectedRowsState, setSelectedRows] = useState<OrderItem[]>([]);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [tradeRecords, setTradeRecords] = useState<TradeRecord[]>([]);
-  const actionRef = useRef<any>();  
+  const actionRef = useRef<any>();
   const navigate = useNavigate();
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
-  const [coinList,setCoinList]=useState<any[]>([]);
+  const [coinList, setCoinList] = useState<any[]>([]);
 
-  const getCoinPair=async()=>{
-    let data={
-      pageNo:1,
-      pageSize:100000,
-    }
-    const res=await exchangeCoinList(data);
-    if(res.code==='0'){
+  const getCoinPair = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 100000,
+    };
+    const res = await exchangeCoinList(data);
+    if (res.code === '0') {
       setCoinList(res.data.list);
     }
-  }
-
+  };
 
   const handleCancel = async (orderId: string) => {
     try {
       // 这里添加取消订单的API调用
-     const res= await revocationOrder({orderId:orderId});
-      if(res.code==='0'&&res.data){
+      const res = await revocationOrder({ orderId: orderId });
+      if (res.code === '0' && res.data) {
         message.success('撤销成功');
         if (actionRef.current) {
           actionRef.current.reload();
         }
-      }else{
+      } else {
         message.error('撤销失败');
       }
     } catch (error) {
       message.error('撤销失败');
     }
   };
-  
+
   const showTradeDetails = async (record: OrderItem) => {
     // 如果当前记录已经展开，则收起
     if (expandedOrderId === record.id) {
       setExpandedOrderId(null);
       return;
     }
-    if(!record.coinSymbol || !record.baseSymbol || !record.groupStatus) {
+    if (!record.coinSymbol || !record.baseSymbol || !record.groupStatus) {
       message.error('订单信息不完整');
       return;
     }
-    const res=await tradesInfo({orderId:record.orderId,symbol:record.coinSymbol+"_"+record.baseSymbol+"_"+record.groupStatus,pageNo:1,pageSize:1});
+    const res = await tradesInfo({
+      orderId: record.orderId,
+      symbol: record.coinSymbol + '_' + record.baseSymbol + '_' + record.groupStatus,
+      page: 1,
+      pageSize: 1,
+    });
     console.log(res);
-    if(res.code==='0'&&res.data){
+    if (res.code === '0' && res.data) {
       setTradeRecords(res.data.list);
     }
-    
+
     setExpandedOrderId(record.id);
   };
 
@@ -107,17 +114,19 @@ const OrderManagement: React.FC = () => {
     4: { text: '创建订单', color: 'blue' },
     5: { text: '部分成交', color: 'blue' },
     6: { text: '订单已经撤销-戳和未撤销', color: 'blue' },
-
   };
 
-
   const columns = [
-    ...(isAdmin ? [] : [{
-      title: '商户id',
-      dataIndex: 'tenantId',
-      key: 'tenantId',
-      search:false, 
-    }]),
+    ...(isAdmin
+      ? []
+      : [
+          {
+            title: '商户id',
+            dataIndex: 'tenantId',
+            key: 'tenantId',
+            search: false,
+          },
+        ]),
     {
       title: '委托单号',
       dataIndex: 'orderId',
@@ -128,8 +137,8 @@ const OrderManagement: React.FC = () => {
       dataIndex: 'symbol',
       search: !isAdmin,
       valueType: 'select',
-      valueEnum: coinList.reduce((acc:any, item: any) => {
-        acc[item.coinSymbol+'/'+item.baseSymbol] = item.coinSymbol + '/' + item.baseSymbol;
+      valueEnum: coinList.reduce((acc: any, item: any) => {
+        acc[item.coinSymbol + '/' + item.baseSymbol] = item.coinSymbol + '/' + item.baseSymbol;
         return acc;
       }, {}),
     },
@@ -142,7 +151,7 @@ const OrderManagement: React.FC = () => {
       title: 'UID',
       dataIndex: 'userId',
       key: 'userId',
-      render: (userId:any) => (
+      render: (userId: any) => (
         <a onClick={() => navigate(`/user-management/user-list?userId=${userId}`)}>{userId}</a>
       ),
     },
@@ -150,9 +159,9 @@ const OrderManagement: React.FC = () => {
       title: '类型',
       dataIndex: 'type',
       valueType: 'select',
-      valueEnum:{
-        0:'市价',
-        1:'限价',
+      valueEnum: {
+        0: '市价',
+        1: '限价',
       },
 
       render: (val: number) => (val === 0 ? '市价' : '限价'),
@@ -163,9 +172,7 @@ const OrderManagement: React.FC = () => {
       search: false,
 
       render: (val: number) => (
-        <Tag color={val === 0 ? 'green' : 'red'}>
-          {val === 0 ? '买' : '卖'}
-        </Tag>
+        <Tag color={val === 0 ? 'green' : 'red'}>{val === 0 ? '买' : '卖'}</Tag>
       ),
     },
     {
@@ -175,12 +182,11 @@ const OrderManagement: React.FC = () => {
       valueType: 'select',
       valueEnum: statusMap,
       renderText: (val: number) => {
-        const status = statusMap[val as keyof typeof statusMap] || { text: '未知', color: 'default' };
-        return (
-          <Tag color={status.color}>
-            {status.text}
-          </Tag>
-        );
+        const status = statusMap[val as keyof typeof statusMap] || {
+          text: '未知',
+          color: 'default',
+        };
+        return <Tag color={status.color}>{status.text}</Tag>;
       },
     },
     {
@@ -190,22 +196,20 @@ const OrderManagement: React.FC = () => {
       search: false,
     },
     {
-        title: '委托时间',
-        dataIndex: 'dateTimeRange',
-        valueType: 'dateTimeRange',
-        hideInTable: true,
-      },
+      title: '委托时间',
+      dataIndex: 'dateTimeRange',
+      valueType: 'dateTimeRange',
+      hideInTable: true,
+    },
     {
       title: '委托数量',
       dataIndex: 'amount',
       search: false,
-
     },
     {
       title: '委托价格',
       dataIndex: 'price',
       search: false,
-
     },
     {
       title: '委托金额',
@@ -235,19 +239,21 @@ const OrderManagement: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => {
-          if (record.status === 0 && !isAdmin) {
-            return (
-            <Button type="link" onClick={() => handleCancel(record.orderId)}>撤销订单</Button>
+        if (record.status === 0 && !isAdmin) {
+          return (
+            <Button type="link" onClick={() => handleCancel(record.orderId)}>
+              撤销订单
+            </Button>
           );
         }
         return (
-          <Button type="link" onClick={() => showTradeDetails(record)}>展开</Button>
+          <Button type="link" onClick={() => showTradeDetails(record)}>
+            展开
+          </Button>
         );
       },
     },
   ];
-
-
 
   const tradeColumns = [
     {
@@ -291,42 +297,39 @@ const OrderManagement: React.FC = () => {
     },
   ];
 
-
-  const getList=async(params:any)=>{
+  const getList = async (params: any) => {
     console.log(params);
-    const data={
-      pageNo:params.current,
-      pageSize:params.pageSize,
-      symbol:params.symbol,
-      userId:params.userId,
-      status:params.status,
-      direction:params.direction,
-      type:params.type,
-      tenantId:params.tenantId,
-      startTime:params?.dateTimeRange?.[0]?dayjs(params.dateTimeRange[0]).valueOf():undefined,
-      endTime:params?.dateTimeRange?.[1]?dayjs(params.dateTimeRange[1]).valueOf():undefined,
-      orderId:params.orderId,
-    }
-    const res=await exchangeOrderList(data);
-    if(res.code==='0'){
+    const data = {
+      pageNo: params.current,
+      pageSize: params.pageSize,
+      symbol: params.symbol,
+      userId: params.userId,
+      status: params.status,
+      direction: params.direction,
+      type: params.type,
+      tenantId: params.tenantId,
+      startTime: params?.dateTimeRange?.[0] ? dayjs(params.dateTimeRange[0]).valueOf() : undefined,
+      endTime: params?.dateTimeRange?.[1] ? dayjs(params.dateTimeRange[1]).valueOf() : undefined,
+      orderId: params.orderId,
+    };
+    const res = await exchangeOrderList(data);
+    if (res.code === '0') {
       return {
         data: res.data.list,
         success: true,
-        total: res.data.count
+        total: res.data.count,
       };
     }
-  }
+  };
 
-  useEffect(()=>{
-    if(!isAdmin){
-      getCoinPair()
-    
+  useEffect(() => {
+    if (!isAdmin) {
+      getCoinPair();
     }
-  },[]);
+  }, []);
 
   return (
     <PageContainer>
-      
       <ProTable<OrderItem>
         headerTitle="订单列表"
         actionRef={actionRef}
@@ -355,7 +358,7 @@ const OrderManagement: React.FC = () => {
             } else {
               setExpandedOrderId(null);
             }
-          }
+          },
         }}
         request={getList}
         columns={columns}
@@ -365,4 +368,4 @@ const OrderManagement: React.FC = () => {
   );
 };
 
-export default OrderManagement; 
+export default OrderManagement;
