@@ -100,7 +100,7 @@ const OrderManagement: React.FC = () => {
     });
     console.log(res);
     if (res.code === '0' && res.data) {
-      setTradeRecords(res.data.list);
+      setTradeRecords(res.data.records);
     }
 
     setExpandedOrderId(record.id);
