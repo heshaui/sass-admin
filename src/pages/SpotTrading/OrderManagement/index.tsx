@@ -94,7 +94,7 @@ const OrderManagement: React.FC = () => {
     }
     const res = await tradesInfo({
       orderId: record.orderId,
-      symbol: record.coinSymbol + '_' + record.baseSymbol + '_' + record.groupStatus,
+      symbol: record.coinSymbol + '_' + record.baseSymbol,
       page: 1,
       pageSize: 1,
     });
