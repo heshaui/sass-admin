@@ -124,7 +124,7 @@ const OrderManagement: React.FC = () => {
             title: '商户id',
             dataIndex: 'tenantId',
             key: 'tenantId',
-            search: false,
+            search: isAdmin,
           },
         ]),
     {
