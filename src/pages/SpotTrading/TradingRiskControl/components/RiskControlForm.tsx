@@ -188,7 +188,6 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
           label={<span style={{ color: '#ff4d4f' }}> 报警通知</span>}
           rules={[
             { required: true, message: '请输入报警通知邮箱' },
-            { type: 'email', message: '请输入有效的邮箱地址' }
           ]}
         >
           <Input placeholder="邮箱账号，以英文逗号隔开" />
