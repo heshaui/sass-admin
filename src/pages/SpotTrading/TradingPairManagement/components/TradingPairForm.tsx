@@ -389,18 +389,13 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             <InputNumber style={{ width: '100%' }}   />
           </Form.Item>
 
-          {/* <Form.Item
-            name="depthPrecision5"
+          <Form.Item
+            name="depthFive"
             label="深度精度5"
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <Select>
-              <Select.Option value="1">1</Select.Option>
-              <Select.Option value="0.1">0.1</Select.Option>
-              <Select.Option value="0.01">0.01</Select.Option>
-              <Select.Option value="0.001">0.001</Select.Option>
-            </Select>
-          </Form.Item> */}
+            <InputNumber style={{ width: '100%' }}   />
+          </Form.Item>
         </div>
 
       </Form>

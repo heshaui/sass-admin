@@ -245,8 +245,16 @@ const OrderManagement: React.FC = () => {
           );
         }
         return (
-          <Button type="link" onClick={() => showTradeDetails(record)}>
-            展开
+          <Button type="link" onClick={() => { 
+            if (expandedOrderId === record.orderId) {
+              // 已展开，点击收起
+              setExpandedOrderId(null);
+            } else {
+              // 未展开，点击展开
+              showTradeDetails(record);
+            }
+          }}>
+            {expandedOrderId === record.orderId ? '收起' : '展开'}
           </Button>
         );
       },
