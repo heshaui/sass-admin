@@ -113,7 +113,7 @@ const OrderManagement: React.FC = () => {
   };
 
   const columns = [
-    ...(isAdmin
+    ...(!isAdmin
       ? []
       : [
           {
@@ -138,11 +138,11 @@ const OrderManagement: React.FC = () => {
         return acc;
       }, {}),
     },
-    {
-      title: '交易对',
-      dataIndex: 'tradingPair',
-      search: false,
-    },
+    // {
+    //   title: '交易对',
+    //   dataIndex: 'tradingPair',
+    //   search: false,
+    // },
     {
       title: 'UID',
       dataIndex: 'userId',
