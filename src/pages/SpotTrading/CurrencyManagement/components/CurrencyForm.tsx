@@ -219,9 +219,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               name="iconUrl"
               label="币种图标"
               required
-              rules={[{ required: true, message: '请上传币种简称' }]}
+              rules={[{ required: true, message: '请上传币种图标' }]}
             >
-              <AvatarUpload />
+              <AvatarUpload /><span>前台显示币种logo</span>
             </Form.Item>
           </Col>
 
@@ -235,6 +235,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               rules={[{ required: true, message: '请输入币种英文全称' }]}
             >
               <Input placeholder="例如: Ethereum" />
+              <span>例如：Tether</span>
             </Form.Item>
           </Col>
           
@@ -254,7 +255,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               label="显示精度"
               required
             >
-              <InputNumber min={0} max={18} style={{ width: '100%' }} placeholder="现货/资产显示的币种精度" />
+              <InputNumber min={0} max={18} style={{ width: '100%' }} placeholder="现货/资产显示的币种精度" /><span>现货/资产显示的币种精度</span>
             </Form.Item>
           </Col>
           
@@ -270,6 +271,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
                 <Select.Option value={0}>不需要标签</Select.Option>
                 <Select.Option value={1}>需要标签</Select.Option>
               </Select>
+              <span>若需要标签，前台用户需要标签才可以进行提币</span>
             </Form.Item>
           </Col>
            )}
@@ -319,6 +321,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Select.Option value={1}>是</Select.Option>
             <Select.Option value={0}>否</Select.Option>
           </Select>
+          <span>启用后，前台将显示该币种，反之不显示</span>
         </Form.Item>
         </Col>
         </Row>
@@ -352,6 +355,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
                 <Select.Option value={1}>是</Select.Option>
                 <Select.Option value={0}>否</Select.Option>
               </Select>
+              <span>状态将同时影响从币</span>
             </Form.Item>
           </Col>
           
@@ -379,6 +383,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
                 <Select.Option value={1}>是</Select.Option>
                 <Select.Option value={0}>否</Select.Option>
               </Select>
+              <span>状态将同时影响从币</span>
             </Form.Item>
           </Col>
           <Col span={12}>

@@ -178,8 +178,6 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label="币对标签"
             style={{ width: 'calc(50% - 10px)' }}
           >
-            
-
             <Select>
             <Select.Option value="1">主流区</Select.Option>
             <Select.Option value="2">创新区</Select.Option>

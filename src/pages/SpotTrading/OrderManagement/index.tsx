@@ -46,6 +46,8 @@ type TradeRecord = {
   tradePrice: number;
   buyFeeSymbol: string;
   sellFeeSymbol: string;
+  parentUserId?: string; // 父级表格中的用户ID
+  takerSide: number
 };
 
 const OrderManagement: React.FC = () => {
@@ -261,6 +263,25 @@ const OrderManagement: React.FC = () => {
     },
   ];
 
+  // const filterTable=(record: any) => {
+  //  console.log(record);
+  //    if(record.takerSide === 0){
+  //       if(record.parentUserId === record.buyerUserId){
+  //         return 'taker';
+  //       }else{
+  //         return 'maker';
+  //       }
+  //     }else if(record.takerSide === 1){
+  //       if(record.parentUserId === record.sellerUserId){
+  //         return 'maker';
+  //       }else{
+  //         return 'taker';
+  //       }
+  //    }
+    
+
+  // };
+
   const tradeColumns = [
     {
       title: '成交单号',
@@ -269,12 +290,12 @@ const OrderManagement: React.FC = () => {
     {
       title: '买方UID/角色',
       dataIndex: 'buyerUserId',
-      render: (text: string, record: TradeRecord) => `${text}/Taker`,
+      render: (text: string, record: TradeRecord) => `${text}/${record.takerSide === 0 ? 'taker' : 'maker'}`,
     },
     {
       title: '卖方UID/角色',
       dataIndex: 'sellerUserId',
-      render: (text: string, record: TradeRecord) => `${text}/Maker`,
+      render: (text: string, record: TradeRecord) => `${text}/${record.takerSide === 1 ? 'taker' : 'maker'}`,
     },
     {
       title: '成交时间',
@@ -358,7 +379,7 @@ const OrderManagement: React.FC = () => {
                       rowKey="idStr"
                       search={false}
                       options={false}
-                      dataSource={tradeRecords}
+                      dataSource={tradeRecords.map(item => ({ ...item, parentUserId: record.userId }))}
                       columns={tradeColumns}
                       pagination={false}
                     />
