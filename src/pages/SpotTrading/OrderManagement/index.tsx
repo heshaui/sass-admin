@@ -160,7 +160,7 @@ const OrderManagement: React.FC = () => {
         1: '限价',
       },
 
-      render: (val: number) => (val === 0 ? '市价' : '限价'),
+      renderText: (val: number) => (val === 0 ? '市价' : '限价'),
     },
     {
       title: '方向',
