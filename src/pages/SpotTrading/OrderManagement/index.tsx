@@ -44,6 +44,8 @@ type TradeRecord = {
   sellFee: string;
   quantity: number;
   tradePrice: number;
+  buyFeeSymbol: string;
+  sellFeeSymbol: string;
 };
 
 const OrderManagement: React.FC = () => {
@@ -286,10 +288,16 @@ const OrderManagement: React.FC = () => {
     {
       title: '手续费（买）',
       dataIndex: 'buyFee',
+      renderText: (text: any, record: TradeRecord) => {
+        return record.buyFee.toString() + record.buyFeeSymbol;
+      }
     },
     {
       title: '手续费（卖）',
       dataIndex: 'sellFee',
+      renderText: (text: any, record: TradeRecord) => {
+        return record.sellFee.toString() + record.sellFeeSymbol;
+      }
     },
   ];
 
