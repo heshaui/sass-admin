@@ -116,12 +116,12 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
     }
   }
 
-  const fetchTransactionData = async (params: any, sort: any, filter: any) => {
+  const fetchTransactionData = async (params: any) => {
     setLoading(true);
     try {
       const requestParams = {
         userId,
-        pageNO: params.current,
+        pageNo: params.current,
         pageSize: params.pageSize
       };
 

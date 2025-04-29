@@ -289,7 +289,7 @@ export async function updateTradingRiskControlById(params?: Record<string, any>)
 
 
 export async function tradesInfo(params?: Record<string, any>) {
-  return request('/tenant/v1/tenant-trade/trades', {
+  return request(isAdmin ? '/tenant-admin/v1/tenant-trade/trades' : '/tenant/v1/tenant-trade/trades', {
     method: 'POST',
     data: params,
   });

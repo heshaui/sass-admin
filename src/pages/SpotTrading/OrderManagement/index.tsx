@@ -254,17 +254,17 @@ const OrderManagement: React.FC = () => {
   const tradeColumns = [
     {
       title: '成交单号',
-      dataIndex: 'tradeId',
+      dataIndex: 'id',
     },
     {
       title: '买方UID/角色',
       dataIndex: 'buyerUserId',
-      render: (text: string, record: TradeRecord) => `${text}/${record.buyerRole}`,
+      render: (text: string, record: TradeRecord) => `${text}/Taker`,
     },
     {
       title: '卖方UID/角色',
       dataIndex: 'sellerUserId',
-      render: (text: string, record: TradeRecord) => `${text}/${record.sellerRole}`,
+      render: (text: string, record: TradeRecord) => `${text}/Maker`,
     },
     {
       title: '成交时间',
