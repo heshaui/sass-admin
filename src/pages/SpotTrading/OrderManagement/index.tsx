@@ -83,11 +83,7 @@ const OrderManagement: React.FC = () => {
   };
 
   const showTradeDetails = async (record: OrderItem) => {
-    // 如果当前记录已经展开，则收起
-    if (expandedOrderId === record.id) {
-      setExpandedOrderId(null);
-      return;
-    }
+    // 不再在这里处理收起逻辑，避免与表格的onExpand事件冲突
     if (!record.coinSymbol || !record.baseSymbol || !record.groupStatus) {
       message.error('订单信息不完整');
       return;
@@ -103,7 +99,7 @@ const OrderManagement: React.FC = () => {
       setTradeRecords(res.data.records);
     }
 
-    setExpandedOrderId(record.id);
+    setExpandedOrderId(record.orderId);
   };
 
   const statusMap = {
@@ -273,7 +269,7 @@ const OrderManagement: React.FC = () => {
     {
       title: '成交时间',
       dataIndex: 'ctime',
-      valueType: 'ctime',
+      valueType: 'dateTime',
     },
     {
       title: '成交价',
@@ -333,11 +329,11 @@ const OrderManagement: React.FC = () => {
       <ProTable<OrderItem>
         headerTitle="订单列表"
         actionRef={actionRef}
-        rowKey="id"
+        rowKey="orderId"
         expandable={{
           expandedRowKeys: expandedOrderId ? [expandedOrderId] : [],
           expandedRowRender: (record) => {
-            if (record.id === expandedOrderId) {
+            if (record.orderId === expandedOrderId) {
               return (
                 <>
                   {tradeRecords.length > 0 ? (
