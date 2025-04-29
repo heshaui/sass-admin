@@ -264,7 +264,7 @@ const OrderManagement: React.FC = () => {
   const tradeColumns = [
     {
       title: '成交单号',
-      dataIndex: 'id',
+      dataIndex: 'idStr',
     },
     {
       title: '买方UID/角色',
@@ -355,7 +355,7 @@ const OrderManagement: React.FC = () => {
                   {tradeRecords.length > 0 ? (
                     <ProTable<TradeRecord>
                       headerTitle="成交明细"
-                      rowKey="tradeId"
+                      rowKey="idStr"
                       search={false}
                       options={false}
                       dataSource={tradeRecords}
