@@ -33,6 +33,11 @@ const WithdrawManage: React.FC = () => {
     let data={
       pageNo:params.current,
       pageSize:params.pageSize,
+      addressTxId:params.addressTxId,
+      startTime:params.dateTimeRange[0]?params.dateTimeRange[0]:null,
+      endTime:params.dateTimeRange[1]?params.dateTimeRange[1]:null,
+      userId:params.userId,
+
     }
     const res = await fetchWithdrawDepositList(data);
     if(res.code==='0'){
@@ -95,8 +100,8 @@ const WithdrawManage: React.FC = () => {
     },
     { 
       title: '地址/TxId', 
-      dataIndex: 'txHash', 
-      key: 'txHash',
+      dataIndex: 'addressTxId', 
+      key: 'addressTxId',
       render: (text) => <a>{text}</a>,
       fieldProps: {
         placeholder: '到账地址、TxID'
@@ -144,7 +149,7 @@ const WithdrawManage: React.FC = () => {
         
         switch(Number(record)) {
           case 0:
-            statusText = '创建';
+            statusText = '待审核';
             color = 'blue';
             break;
           case 1:
@@ -160,7 +165,7 @@ const WithdrawManage: React.FC = () => {
             color = 'red';
             break;
           case 4:
-            statusText = '用户撤销';
+            statusText = '已撤销';
             color = 'gray';
             break;
           default:
@@ -181,9 +186,8 @@ const WithdrawManage: React.FC = () => {
     },
     { 
       title: '提现时间', 
-      dataIndex: 'createTime', 
-      key: 'createTime',
-      valueType: 'dateTime',
+      dataIndex: 'dateTimeRange',
+      valueType: 'dateTimeRange',
       hideInTable: true
     },
     { 
