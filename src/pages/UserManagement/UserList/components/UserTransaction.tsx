@@ -15,6 +15,7 @@ interface TransactionItem {
   amount: number;
   usdtValue: number;
   time: string;
+  transactionType: number;
 }
 
 interface UserTransactionProps {
@@ -54,7 +55,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
   const columns: ProColumns<TransactionItem>[] = [
     {
       title: '类型',
-      dataIndex: 'type',
+      dataIndex: 'transactionType',
       width: 100,
       valueEnum: {
         // 1 增加 2 扣减 3 冻结 4 解冻
@@ -67,7 +68,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
       },
       render: (_, record) => (
          // 1 增加 2 扣减 3 冻结 4 解冻
-         record.type === 1 ? '增加' : record.type === 2 ? '扣减' : record.type === 3 ? '冻结' : '解冻'
+         record.transactionType === 1 ? '增加' : record.transactionType === 2 ? '扣减' : record.transactionType === 3 ? '冻结' : '解冻'
        
       ),
 
