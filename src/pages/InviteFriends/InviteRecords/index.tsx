@@ -75,11 +75,20 @@ const InviteRecords: React.FC = () => {
       title: '邀请状态',
       dataIndex: 'inviteStatus',
       key: 'inviteStatus',
+      // 邀请状态:1成功，0失败
+      valueEnum: {
+        1: { text: '成功' },
+        0: { text: '失败' },
+      },
     },
     {
       title: '发放状态',
       dataIndex: 'distributeStatus',
       key: 'distributeStatus',
+      valueEnum: {
+        1: { text: '已发放' },
+        0: { text: '未发放' },
+      },
     },
     {
       title: '操作',

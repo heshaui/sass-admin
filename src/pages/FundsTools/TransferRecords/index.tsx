@@ -56,13 +56,13 @@ const getTransferRecords=async(params:any)=>{
     },
     {
       title: '转入账户',
-      dataIndex: 'toAccountId',
-      key: 'toAccountId',
+      dataIndex: 'toAccountType',
+      key: 'toAccountType',
     },
     {
       title: '转入账户类型',
-      dataIndex: 'toAccountType',
-      key: 'toAccountType',
+      dataIndex: 'sceneType',
+      key: 'sceneType',
 
     },
     {
