@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { Card } from 'antd';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
-import { useIntl } from 'umi';
 import { fundFlowDirectionOperationList } from '@/services/ant-design-pro/fundsTools';
 
 interface TransferRecord {
@@ -17,9 +16,6 @@ interface TransferRecord {
 }
 
 const TransferRecords: React.FC = () => {
-  const intl = useIntl();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [data, setData] = useState<TransferRecord[]>([]);
 
 const getTransferRecords=async(params:any)=>{
   const res=await fundFlowDirectionOperationList({
