@@ -16,6 +16,7 @@ interface TransferRecord {
 }
 
 const TransferRecords: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
 
 const getTransferRecords=async(params:any)=>{
   const res=await fundFlowDirectionOperationList({
