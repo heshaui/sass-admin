@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Card, Checkbox, Spin, Empty, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { userReconciliation } from '@/services/ant-design-pro/UserManagement';
+
 
 interface ReconciliationItem {
   currency: string;
@@ -28,18 +30,20 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
   const [reconciliationData, setReconciliationData] = useState<ReconciliationItem[]>([]);
   const [hideZeroAssets, setHideZeroAssets] = useState<boolean>(false);
 
+
+  
   const columns: ColumnsType<ReconciliationItem> = [
     {
       title: '币种',
-      dataIndex: 'currency',
-      key: 'currency',
+      dataIndex: 'coinName',
+      key: 'coinName',
       fixed: 'left',
       width: 100,
     },
     {
       title: '对账',
-      dataIndex: 'balance',
-      key: 'balance',
+      dataIndex: 'reconciliation',
+      key: 'reconciliation',
       width: 100,
       align: 'right',
     },
@@ -52,36 +56,36 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
     },
     {
       title: '充币',
-      dataIndex: 'deposit',
-      key: 'deposit',
+      dataIndex: 'rechargeCoin',
+      key: 'rechargeCoin',
       width: 100,
       align: 'right',
     },
     {
       title: 'M积分兑换',
-      dataIndex: 'pointsExchange',
-      key: 'pointsExchange',
+      dataIndex: 'pointsRedeem',
+      key: 'pointsRedeem',
       width: 120,
       align: 'right',
     },
     {
       title: 'MFIL兑换',
-      dataIndex: 'mfilExchange',
-      key: 'mfilExchange',
+      dataIndex: 'mfilRedeem',
+      key: 'mfilRedeem',
       width: 120,
       align: 'right',
     },
     {
       title: '收益兑入',
-      dataIndex: 'incomeExchange',
-      key: 'incomeExchange',
+      dataIndex: 'incomeImport',
+      key: 'incomeImport',
       width: 120,
       align: 'right',
     },
     {
       title: '发放代币',
-      dataIndex: 'tokenDistribution',
-      key: 'tokenDistribution',
+      dataIndex: 'distributeTokens',
+      key: 'distributeTokens',
       width: 120,
       align: 'right',
     },
@@ -94,22 +98,22 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
     },
     {
       title: '红包收入',
-      dataIndex: 'redPacketIncome',
-      key: 'redPacketIncome',
+      dataIndex: 'redEnvelopeIncome',
+      key: 'redEnvelopeIncome',
       width: 120,
       align: 'right',
     },
     {
       title: '挖矿返还',
-      dataIndex: 'miningRebate',
-      key: 'miningRebate',
+      dataIndex: 'miningReturn',
+      key: 'miningReturn',
       width: 120,
       align: 'right',
     },
     {
       title: '邀请返佣',
-      dataIndex: 'invitationRebate',
-      key: 'invitationRebate',
+      dataIndex: 'inviteRebate',
+      key: 'inviteRebate',
       width: 120,
       align: 'right',
     },
@@ -122,11 +126,50 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
     },
     {
       title: '持仓分红',
-      dataIndex: 'positionDividend',
-      key: 'positionDividend',
+      dataIndex: 'positionDividends',
+      key: 'positionDividends',
       width: 120,
       align: 'right',
     },
+    {
+      title: '现货买入',
+      dataIndex: 'spotBuying',
+      key: 'spotBuying',
+      width: 120,
+      align: 'right',
+    },
+    {
+      title: '杠杆买入',
+      dataIndex: 'leveragedBuying',
+      key: 'leveragedBuying',
+      width: 120,
+      align: 'right',
+    },
+    {
+      title: '提现成功',
+      dataIndex: 'withdrawal',
+      key: 'withdrawal',
+      width: 120,
+      align: 'right',
+    },
+    {
+      title: '提现手续费',
+      dataIndex: 'withdrawalFee',
+      key: 'withdrawalFee',
+      width: 120,
+      align: 'right',
+    },
+    {
+      title: '现货手续费',
+      dataIndex: 'spotFee',
+      key: 'spotFee',
+      width: 120,
+      align: 'right',
+    },
+
+
+
+
   ];
 
   useEffect(() => {
@@ -135,69 +178,14 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
       
       setLoading(true);
       try {
-        // 这里替换为实际API调用
-        // const response = await getUserReconciliation(userId);
-        // if (response.code === '0') {
-        //   setReconciliationData(response.data);
-        // } else {
-        //   message.error(response.message || '获取对账数据失败');
-        // }
-        
-        // 模拟数据
-        setTimeout(() => {
-          const mockData: ReconciliationItem[] = [
-            {
-              currency: 'USDT',
-              balance: '+0',
-              recharge: '+0',
-              deposit: '+0',
-              pointsExchange: '+0',
-              mfilExchange: '+0',
-              incomeExchange: '+0',
-              tokenDistribution: '+0',
-              dividendIncome: '+0',
-              redPacketIncome: '+0',
-              miningRebate: '+0',
-              invitationRebate: '+0',
-              brokerIncome: '+0',
-              positionDividend: '+0',
-            },
-            {
-              currency: 'BTC',
-              balance: '+0',
-              recharge: '+0',
-              deposit: '+0',
-              pointsExchange: '+0',
-              mfilExchange: '+0',
-              incomeExchange: '+0',
-              tokenDistribution: '+0',
-              dividendIncome: '+0',
-              redPacketIncome: '+0',
-              miningRebate: '+0',
-              invitationRebate: '+0',
-              brokerIncome: '+0',
-              positionDividend: '+0',
-            },
-            {
-              currency: 'ETH',
-              balance: '+0',
-              recharge: '+0',
-              deposit: '+0',
-              pointsExchange: '+0',
-              mfilExchange: '+0',
-              incomeExchange: '+0',
-              tokenDistribution: '+0',
-              dividendIncome: '+0',
-              redPacketIncome: '+0',
-              miningRebate: '+0',
-              invitationRebate: '+0',
-              brokerIncome: '+0',
-              positionDividend: '+0',
-            },
-          ];
-          setReconciliationData(mockData);
-          setLoading(false);
-        }, 500);
+        // 调用对账接口
+        const response = await userReconciliation({ userId });
+        if (response.code === '0') {
+          setReconciliationData(response.data || []);
+        } else {
+          message.error(response.message || '获取对账数据失败');
+        }
+        setLoading(false);
       } catch (error) {
         console.error('获取对账数据失败:', error);
         message.error('获取对账数据失败，请稍后重试');
@@ -213,7 +201,7 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
     ? reconciliationData.filter(item => {
         // 检查是否所有值都是"0"或"+0"
         const allZeros = Object.entries(item)
-          .filter(([key]) => key !== 'currency')
+          .filter(([key]) => key !== 'coinName')
           .every(([_, value]) => value === '0' || value === '+0');
         return !allZeros;
       })
@@ -243,7 +231,7 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
         <Table
           columns={columns}
           dataSource={filteredData}
-          rowKey="currency"
+          rowKey="coinName"
           bordered
           pagination={false}
           scroll={{ x: 'max-content' }}

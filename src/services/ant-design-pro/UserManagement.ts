@@ -225,3 +225,13 @@ export async function userWalletCount(params: any) {
     data: params,
   });
 }
+
+
+
+
+export async function userReconciliation(params: any) {
+  return request(isAdmin ?'/tenant-admin/v1/userReconciliationList' :'/tenant/v1/userReconciliationList', {
+    method: 'POST',
+    data: params,
+  });
+}
