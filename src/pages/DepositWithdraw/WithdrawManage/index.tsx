@@ -34,8 +34,8 @@ const WithdrawManage: React.FC = () => {
       pageNo:params.current,
       pageSize:params.pageSize,
       addressTxId:params.addressTxId,
-      startTime:params.dateTimeRange[0]?params.dateTimeRange[0]:null,
-      endTime:params.dateTimeRange[1]?params.dateTimeRange[1]:null,
+      startTime: params.dateTimeRange && params.dateTimeRange[0] ? params.dateTimeRange[0] : null,
+      endTime: params.dateTimeRange && params.dateTimeRange[1] ? params.dateTimeRange[1] : null,
       userId:params.userId,
 
     }
