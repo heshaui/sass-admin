@@ -99,6 +99,7 @@ const Header: React.FC = () => {
 
   // 处理表单提交
   const handleSubmit = async (values: any) => {
+    console.log(values)
     let displayStatus
     if(values.values.displayStatus){
       displayStatus=1

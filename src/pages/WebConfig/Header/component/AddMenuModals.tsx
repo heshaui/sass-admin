@@ -125,6 +125,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   };
 
   const onFinish = async (values: any) => {
+
     let data = {
       values,
       uploadedImageUrl,
@@ -146,7 +147,6 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
     //     iconUrlNight,
     //   };
     // }
-
     setIconUrlDay(null);
     setIconUrlNight(null);
     setUploadedImageUrl(null);
@@ -159,7 +159,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
       <Form form={formModal3} layout="vertical" onFinish={onFinish}>
         {/* 标签/菜单选择 */}
         {parentId && (
-          <Form.Item label="标签/菜单" rules={[{ required: true, message: '请选择类型' }]}>
+          <Form.Item label="标签/菜单" rules={[{ required: true, message: '请选择类型' }]} name="typeId">
             <Radio.Group
               onChange={(e) => {
                 setTypeId(e.target.value);
