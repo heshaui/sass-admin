@@ -25,7 +25,8 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   const [displayType, setDisplayType] = useState('vertical'); // 默认选中"竖排"
   const [typeId, setTypeId] = useState<number>(1); // Default to 1 (标签) for new form instances
   const [accessPaths, setAccessPaths] = useState<any[]>([]);
-
+  // displayStatus
+  const [displayStatus, setDisplayStatus] = useState(0);
   const tops = selectedStyle === 'custom' ? 80 : 20;
   const iconNew =
     'https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/02/20/c667acb2-89a1-407c-9e03-3017eb222f7f.png';
@@ -34,13 +35,23 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [iconUrlDay, setIconUrlDay] = useState<string | null>(null);
   const [iconUrlNight, setIconUrlNight] = useState<string | null>(null);
-
+  console.log(parentId);
+  // 当visible或parentId变化时重新初始化表单
   useEffect(() => {
-    if (!parentId) {
-      setTypeId(2);
+    if (visible) {
+      if (!parentId) {
+        setTypeId(2); // 如果没有parentId，设置为菜单模式
+      } else {
+        setTypeId(1); // 如果有parentId，设置为标签模式
+      }
+      formModal3.setFieldsValue({ parentId: parentId?.menuName });
     }
-    formModal3.setFieldsValue({ parentId: parentId?.menuName });
-  }, [parentId]);
+  }, [visible, parentId]);
+  
+  // 监听typeId变化，便于调试
+  useEffect(() => {
+    console.log('typeId changed to:', typeId);
+  }, [typeId]);
 
   // 获取访问路径数据
   useEffect(() => {
@@ -279,7 +290,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
               )}
             </Form.Item>
             <Form.Item label="是否显示" name="displayStatus" style={{ marginTop: tops }}>
-              <Switch />
+              <Switch onChange={(checked) => setDisplayStatus(checked ? 1 : 0)} checked={displayStatus === 1} />
             </Form.Item>
           </>
         )}

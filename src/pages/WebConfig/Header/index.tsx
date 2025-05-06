@@ -85,6 +85,7 @@ const Header: React.FC = () => {
 
   // 打开弹窗
   const handleModal = (item: any = null) => {
+    console.log(item)
     setParentId(item);
     setEditingMenu(null); // 重置编辑状态
     setModalType(true);
