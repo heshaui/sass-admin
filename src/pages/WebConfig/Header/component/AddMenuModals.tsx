@@ -155,7 +155,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   };
 
   return (
-    <Modal title="添加菜单" visible={visible} onCancel={handleCancelAndReset} footer={null}>
+    <Modal title={editingMenu ? '编辑菜单' : '添加菜单'} visible={visible} onCancel={handleCancelAndReset} footer={null}>
       <Form form={formModal3} layout="vertical" onFinish={onFinish}>
         {/* 标签/菜单选择 */}
         {parentId && (
