@@ -1,8 +1,8 @@
 import { PageContainer } from "@ant-design/pro-components";
 import { Button, message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
-import { HomeMenuTranslationList, saveHomeMenu, homeMenuParams,updateHomeMenuById } from "@/services/ant-design-pro/WebConfig";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { HomeMenuTranslationList, saveHomeMenu, homeMenuParams,updateHomeMenuById,updateHomeMenuTranslationById } from "@/services/ant-design-pro/WebConfig";
+import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import AddMenuModals from "./component/AddMenuModals";
 import { languages } from '@/config/language';
 const languageOptions = languages
@@ -109,27 +109,38 @@ const Header: React.FC = () => {
     }
     
     try {
-    
       
+    
       if (editingMenu) {
-        console.log(editingMenu)
-        const data = {
+
+        const data1 = {
           id:editingMenu.homeMenu.id,
           menuDescription:values.values.menuDescription,
           parentId:editingMenu.homeMenu.parentId,
-          typeId:values.values.typeId,
+          typeId:editingMenu.homeMenu.typeId,
           iconUrlDay:values.iconUrlDay,
           iconUrlNight:values.iconUrlNight,
-          cornerMarkOne:values.uploadedImageUrl,
+          cornerMarkOne:editingMenu.homeMenu.cornerMarkOne,
           cornerMarkTwo:"",
           displayStatus:displayStatus,
-          spreadPattern:values.values.spreadPattern,
-          accessType:values.values.accessType,
-          accessPath:values.values.accessPath,
+          spreadPattern:editingMenu.homeMenu.spreadPattern,
+          // accessPath:values.values.accessPath
         }
-       const response = await updateHomeMenuById(data);
 
-      if (response.code === "0"&&response.data) {
+       const response = await updateHomeMenuById(data1);
+
+
+      const data2 = {
+        id:editingMenu.homeMenuTranslation.id,
+        menuId:editingMenu.homeMenuTranslation.menuId,
+        languagePath:values.values.accessPath,
+        menuName:values.values.menuName,
+        menuViceName:values.values.menuViceName,
+      }
+
+       const response2 = await updateHomeMenuTranslationById(data2);
+
+      if (response.code === "0"&&response2.code === "0"&&response2.data&&response.data) {
         message.success( "菜单更新成功" );
         handleCancel();
         getMenu(); // 重新获取菜单数据

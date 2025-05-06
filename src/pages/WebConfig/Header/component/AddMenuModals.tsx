@@ -1,7 +1,7 @@
-import React, { useState,useEffect } from "react";
-import { Modal, Form, Input, Button, Radio, Switch, Select, Image, Flex } from "antd";
-import AvatarUpload from "@/components/AvatarUpload/index";
-import { pcAccessPathAll } from "@/services/ant-design-pro/WebConfig";
+import AvatarUpload from '@/components/AvatarUpload/index';
+import { pcAccessPathAll } from '@/services/ant-design-pro/WebConfig';
+import { Button, Flex, Form, Image, Input, Modal, Radio, Select, Switch } from 'antd';
+import React, { useEffect, useState } from 'react';
 const { Option } = Select;
 
 interface AddMenuModalsProps {
@@ -12,57 +12,68 @@ interface AddMenuModalsProps {
   onCancel: () => void;
 }
 
-const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCancel,parentId,editingMenu }) => {
-  const [accessType, setAccessType] = useState("1");
+const AddMenuModals: React.FC<AddMenuModalsProps> = ({
+  visible,
+  onSubmit,
+  onCancel,
+  parentId,
+  editingMenu,
+}) => {
+  const [accessType, setAccessType] = useState('1');
   const [formModal3] = Form.useForm();
-  const [selectedStyle, setSelectedStyle] = useState("new");
-  const [displayType, setDisplayType] = useState("vertical"); // 默认选中"竖排"
-    const [typeId, setTypeId] = useState<number>(2);
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
+  const [displayType, setDisplayType] = useState('vertical'); // 默认选中"竖排"
+  const [typeId, setTypeId] = useState<number>(1); // Default to 1 (标签) for new form instances
   const [accessPaths, setAccessPaths] = useState<any[]>([]);
 
-  const tops = selectedStyle === "custom" ? 80 : 20;
-  const iconNew = "https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/02/20/c667acb2-89a1-407c-9e03-3017eb222f7f.png";
-  const iconHot = "https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/02/20/3dbef6d2-b329-4770-89ce-6ebdd67f4df8.png";
+  const tops = selectedStyle === 'custom' ? 80 : 20;
+  const iconNew =
+    'https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/02/20/c667acb2-89a1-407c-9e03-3017eb222f7f.png';
+  const iconHot =
+    'https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/02/20/3dbef6d2-b329-4770-89ce-6ebdd67f4df8.png';
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [iconUrlDay, setIconUrlDay] = useState<string | null>(null);
   const [iconUrlNight, setIconUrlNight] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!parentId) {
+      setTypeId(2);
+    }
     formModal3.setFieldsValue({ parentId: parentId?.menuName });
-  },[parentId]);
+  }, [parentId]);
 
   // 获取访问路径数据
   useEffect(() => {
     const fetchAccessPaths = async () => {
       try {
         const result = await pcAccessPathAll();
-        if (result.code==="0" && result.data) {
+        if (result.code === '0' && result.data) {
           setAccessPaths(JSON.parse(result.data));
         }
       } catch (error) {
         console.error('获取访问路径失败:', error);
       }
     };
-    
+
     fetchAccessPaths();
-    if(editingMenu){
+    if (editingMenu) {
       // 正确处理嵌套的数据结构
       const { homeMenu, homeMenuTranslation } = editingMenu;
-      
+
       // 设置状态变量
       setTypeId(homeMenu.typeId);
-      setAccessType(homeMenu.accessType || "1");
-      setDisplayType(homeMenu.spreadPattern?.toString() || "0");
-      
+      setAccessType(homeMenu.accessType || '1');
+      setDisplayType(homeMenu.spreadPattern?.toString() || '0');
+
       // 设置图标状态
       setIconUrlDay(homeMenu.iconUrlDay);
       setIconUrlNight(homeMenu.iconUrlNight);
       setUploadedImageUrl(homeMenu.cornerMarkOne);
-      
+
       if (homeMenu.cornerMarkOne) {
-        setSelectedStyle("custom");
+        setSelectedStyle('custom');
       }
-      
+
       // 填充表单数据
       formModal3.setFieldsValue({
         typeId: homeMenu.typeId,
@@ -93,6 +104,10 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
     setIconUrlDay(null);
     setIconUrlNight(null);
     setUploadedImageUrl(null);
+    setSelectedStyle(null);
+    setAccessType('1');
+    setDisplayType('vertical');
+    setTypeId(1);
     formModal3.resetFields();
     // 调用传入的onCancel函数
     onCancel();
@@ -105,11 +120,11 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
       iconUrlDay,
       iconUrlNight,
     };
-   
+
     // if (typeId === 1) {
     //   // 仅提交标签相关字段
     //   data = {
-       
+
     //   };
     // } else {
     //   // 菜单相关字段
@@ -120,8 +135,6 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
     //     iconUrlNight,
     //   };
     // }
-
-    
 
     setIconUrlDay(null);
     setIconUrlNight(null);
@@ -134,26 +147,26 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
     <Modal title="添加菜单" visible={visible} onCancel={handleCancelAndReset} footer={null}>
       <Form form={formModal3} layout="vertical" onFinish={onFinish}>
         {/* 标签/菜单选择 */}
-        {
-           parentId&& <Form.Item label="标签/菜单" name="typeId" rules={[{ required: true, message: "请选择类型" }]}>
-            <Radio.Group value={typeId} defaultValue={1}
-              onChange={(e) => setTypeId(e.target.value)}>
+        {parentId && (
+          <Form.Item label="标签/菜单" rules={[{ required: true, message: '请选择类型' }]}>
+            <Radio.Group
+              onChange={(e) => {
+                setTypeId(e.target.value);
+              }}
+              value={typeId}
+            >
               <Radio value={1}>标签</Radio>
               <Radio value={2}>菜单</Radio>
             </Radio.Group>
           </Form.Item>
-        }
-      
-        {
-            typeId === 2&&parentId&&<Form.Item
-            label="父级菜单"
-            name="parentId"
-           
-          >
+        )}
+
+        {typeId === 2 && parentId && (
+          <Form.Item label="父级菜单" name="parentId">
             <Input disabled />
-      </Form.Item>
-        }
-        
+          </Form.Item>
+        )}
+
         {/* 动态渲染字段 */}
         {typeId === 1 ? (
           <>
@@ -161,26 +174,21 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
             <Form.Item
               label="展现形式"
               name="spreadPattern"
-              rules={[{ required: true, message: "请选择展现形式" }]}
+              rules={[{ required: true, message: '请选择展现形式' }]}
             >
-            <Radio.Group
-                value={displayType}
-                onChange={(e) => setDisplayType(e.target.value)}
-              >
+              <Radio.Group value={displayType} onChange={(e) => setDisplayType(e.target.value)}>
                 <Radio value="0">
-                  竖排{" "}
-                  <a style={{ color: "#1890ff", marginLeft: 4 }}>查看示例图</a>
+                  竖排 <a style={{ color: '#1890ff', marginLeft: 4 }}>查看示例图</a>
                 </Radio>
                 <Radio value="1">
-                  横排{" "}
-                  <a style={{ color: "#1890ff", marginLeft: 4 }}>查看示例图</a>
+                  横排 <a style={{ color: '#1890ff', marginLeft: 4 }}>查看示例图</a>
                 </Radio>
               </Radio.Group>
             </Form.Item>
             <Form.Item
               label="标签名"
               name="menuName"
-              rules={[{ required: true, message: "请输入标签名" }]}
+              rules={[{ required: true, message: '请输入标签名' }]}
             >
               <Input placeholder="标签" />
             </Form.Item>
@@ -191,14 +199,14 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
             <Form.Item
               label="主标题"
               name="menuName"
-              rules={[{ required: true, message: "请输入菜单名称" }]}
+              rules={[{ required: true, message: '请输入菜单名称' }]}
             >
               <Input placeholder="菜单名称" />
             </Form.Item>
             <Form.Item
               label="副标题"
               name="menuViceName"
-              rules={[{ required: true, message: "请输入副标题" }]}
+              rules={[{ required: true, message: '请输入副标题' }]}
             >
               <Input placeholder="副标题" />
             </Form.Item>
@@ -210,7 +218,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
                 <Radio value="1">PC功能</Radio>
                 <Radio value="2">自定义URL</Radio>
               </Radio.Group>
-              {accessType === "1" ? (
+              {accessType === '1' ? (
                 <Form.Item name="accessPath" style={{ marginTop: 10 }}>
                   <Select placeholder="请选择">
                     {accessPaths.map((item) => (
@@ -226,23 +234,31 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
                 </Form.Item>
               )}
             </Form.Item>
-            {
-            parentId&&  <Form.Item label="icon">
-              <Flex gap="middle" wrap>
-                <div>
-                  <div style={{ textAlign: "center" }}>夜间</div>
-                  <AvatarUpload onChange={handleDayChange} value={iconUrlNight} />
-                  <div style={{fontSize: 12, color: '#999'}}>请上传小于500k<br/>142*72png图片</div>
-                </div>
-                <div>
-                  <div style={{ textAlign: "center" }}>日间</div>
-                  <AvatarUpload onChange={handleNightChange} value={iconUrlDay} />
-                  <div style={{fontSize: 12, color: '#999'}}>请上传小于500k<br/>142*72png图片</div>
-                </div>
-              </Flex>
-            </Form.Item>
-            }
-            
+            {parentId && (
+              <Form.Item label="icon">
+                <Flex gap="middle" wrap>
+                  <div>
+                    <div style={{ textAlign: 'center' }}>夜间</div>
+                    <AvatarUpload onChange={handleDayChange} value={iconUrlNight} />
+                    <div style={{ fontSize: 12, color: '#999' }}>
+                      请上传小于500k
+                      <br />
+                      142*72png图片
+                    </div>
+                  </div>
+                  <div>
+                    <div style={{ textAlign: 'center' }}>日间</div>
+                    <AvatarUpload onChange={handleNightChange} value={iconUrlDay} />
+                    <div style={{ fontSize: 12, color: '#999' }}>
+                      请上传小于500k
+                      <br />
+                      142*72png图片
+                    </div>
+                  </div>
+                </Flex>
+              </Form.Item>
+            )}
+
             <Form.Item label="角标">
               <Radio.Group value={selectedStyle} onChange={(e) => setSelectedStyle(e.target.value)}>
                 <Radio value="new">样式一</Radio>
@@ -250,13 +266,17 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
                 <Radio value="custom">使用自定义</Radio>
               </Radio.Group>
               <div style={{ marginTop: 10, height: 40 }}>
-                {selectedStyle === "new" && <Image src={iconNew} width={40} height={20} />}
-                {selectedStyle === "hot" && <Image src={iconHot} width={24} height={24} />}
-                {selectedStyle === "custom" && <AvatarUpload onChange={handleImageChange} />}
+                {selectedStyle === 'new' && <Image src={iconNew} width={40} height={20} />}
+                {selectedStyle === 'hot' && <Image src={iconHot} width={24} height={24} />}
+                {selectedStyle === 'custom' && <AvatarUpload onChange={handleImageChange} />}
               </div>
-              {
-                selectedStyle === "custom"&&<div style={{fontSize: 12, color: '#999'}}>请上传小于500k<br/>142*72png图片</div>
-              }
+              {selectedStyle === 'custom' && (
+                <div style={{ fontSize: 12, color: '#999' }}>
+                  请上传小于500k
+                  <br />
+                  142*72png图片
+                </div>
+              )}
             </Form.Item>
             <Form.Item label="是否显示" name="displayStatus" style={{ marginTop: tops }}>
               <Switch />
@@ -264,7 +284,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({ visible, onSubmit, onCanc
           </>
         )}
 
-        <Form.Item style={{ textAlign: "center" }}>
+        <Form.Item style={{ textAlign: 'center' }}>
           <Button onClick={handleCancelAndReset}>取消</Button>
           <Button type="primary" htmlType="submit" style={{ marginLeft: 10 }}>
             提交

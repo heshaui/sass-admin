@@ -342,3 +342,15 @@ export async function updateHomeMenuById(body: API.FackeParams, options?: { [key
     ...(options || {}),
   });
 }
+
+
+
+
+export async function updateHomeMenuTranslationById(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/updateHomeMenuTranslationById', {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+
