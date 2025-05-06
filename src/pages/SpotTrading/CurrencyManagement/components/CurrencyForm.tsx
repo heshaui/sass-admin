@@ -47,6 +47,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         onSubmit(values);
       })
       .catch(info => {
+        console.log(info);
         message.error('表单验证失败');
       });
   };
@@ -221,8 +222,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               required
               rules={[{ required: true, message: '请上传币种图标' }]}
             >
-              <AvatarUpload /><span>前台显示币种logo</span>
+              <AvatarUpload />
             </Form.Item>
+            <span>前台显示币种logo</span>
           </Col>
 
 
@@ -235,8 +237,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               rules={[{ required: true, message: '请输入币种英文全称' }]}
             >
               <Input placeholder="例如: Ethereum" />
-              <span>例如：Tether</span>
+             
             </Form.Item>
+            <span>例如：Tether</span>
           </Col>
           
           <Col span={12}>
@@ -255,8 +258,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
               label="显示精度"
               required
             >
-              <InputNumber min={0} max={18} style={{ width: '100%' }} placeholder="现货/资产显示的币种精度" /><span>现货/资产显示的币种精度</span>
+              <InputNumber min={0} max={18} style={{ width: '100%' }} placeholder="现货/资产显示的币种精度" />
             </Form.Item>
+            <span>现货/资产显示的币种精度</span>
           </Col>
           
           {
