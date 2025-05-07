@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form, Input, Select, DatePicker, Modal, Radio, Button, message } from 'antd';
-import { 
-  addAnnouncement, 
+import {
+  addAnnouncement,
   updateAnnouncement,
   getAnnouncementParams,
   getClassMenuList,
-  getAnnouncementContentList
+  updateAnnouncementContent,
 } from '@/services/ant-design-pro/operation';
 import SeedEditor from '@/components/SeedEditor';
 import { languages } from '@/config/language';
-import moment from 'moment';
+import dayjs from 'dayjs';
 const { Option } = Select;
 
 export type AnnouncementFormProps = {
@@ -34,13 +34,14 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   const [contents, setContents] = useState<Record<string, string>>({});
   const [titles, setTitles] = useState<Record<string, string>>({});
   const [menuList, setMenuList] = useState<any[]>([]);
-  
+  // 存储公告内容数据
+  const [announcementContents, setAnnouncementContents] = useState<any[]>([]);
   // 使用 useRef 代替 useState 来存储编辑器引用
   const editorRef = useRef<any>(null);
 
   // 获取并回显数据
   useEffect(() => {
-    if(type==='create'){
+    if (type === 'create') {
       //表单内容清空
       form.resetFields();
       setContents({});
@@ -53,27 +54,28 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           const response = await getAnnouncementParams(values.id);
           if (response.code === '0' && response.data) {
             const { informAnnouncement, informAnnouncementContents = [] } = response.data;
-            
+
             // 设置基本表单数据
             form.setFieldsValue({
               classMenu: informAnnouncement.classMenu,
               describeText: informAnnouncement.describeText,
               releaseType: informAnnouncement.releaseType,
-              releaseTime: informAnnouncement.releaseTime ? moment(Number(informAnnouncement.releaseTime)) : undefined,
+              releaseTime: informAnnouncement.releaseTime ? dayjs(Number(informAnnouncement.releaseTime)) : undefined,
             });
-            
+
             // 设置发送类型状态
             setSendType(informAnnouncement.releaseType);
-            
+            // 存储公告内容数据供后续使用
+            setAnnouncementContents(informAnnouncementContents);
             // 处理多语言内容和标题
             const newContents: Record<string, string> = {};
             const newTitles: Record<string, string> = {};
-            
+
             informAnnouncementContents.forEach((item: any) => {
               newContents[item.languageCode] = item.content || '';
               newTitles[item.languageCode] = item.title || '';
             });
-            
+
             setContents(newContents);
             setTitles(newTitles);
           } else {
@@ -86,20 +88,21 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           setLoading(false);
         }
       };
-      
+
       fetchAnnouncementDetail();
     }
+    console.log(values, 'values');
   }, [type, values, visible, form]);
 
 
-  const getMenu=async()=>{
-    let data={
-      pageNo:1,
-      pageSize:10000,
+  const getMenu = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
     }
-    const response=await getClassMenuList(data);
-    if(response.code==='0' && response.data){
-      console.log(response.data,'response.data');
+    const response = await getClassMenuList(data);
+    if (response.code === '0' && response.data) {
+      console.log(response.data, 'response.data');
       setMenuList(response.data.list);
     }
   }
@@ -121,7 +124,14 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   const handleSubmit = async () => {
     try {
       const fieldsValue = await form.validateFields();
-      
+
+      // 在提交前保存当前活动语言的编辑器内容
+      if (editorRef.current && activeLanguage) {
+        const currentContent = editorRef.current.getHtml ? editorRef.current.getHtml() : '';
+        // 直接更新contents对象以确保立即拿到最新值
+        contents[activeLanguage] = currentContent;
+      }
+
       if (!contents.en_US) {
         message.error('请填写英语内容');
         return;
@@ -131,38 +141,74 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         message.error('请填写英语标题');
         return;
       }
-      
+
       setLoading(true);
-      
-      const contentsList = Object.entries(contents).map(([languageCode, content]) => ({
-        languageCode,
-        title: titles[languageCode] || titles.en_US, // 如果没有对应语言的标题，使用英文标题
-        content,
-        isAdd: true
-      }));
-      
-      const submitData = {
-        "informAnnouncement": {
-          "describeText": fieldsValue.describeText,
-          "classMenu": '1',
-          "releaseType": fieldsValue.releaseType,
-          "releaseTime": fieldsValue.releaseType === 2 ? fieldsValue.releaseTime?.valueOf() : '',
-        },
-        "informAnnouncementContents": contentsList
-      };
-      
+     
+      // 准备多语言内容列表
+      const contentsList = Object.entries(contents).map(([languageCode, content]) => {
+        // 在update模式下，从已存储的announcementContents中查找匹配的ID
+        let contentId;
+        if (type === 'update' && announcementContents.length > 0) {
+          const matchedContent = announcementContents.find(
+            (item: any) => item.languageCode === languageCode
+          );
+          contentId = matchedContent?.id;
+        }
+        
+        return {
+          languageCode,
+          title: titles[languageCode] || titles.en_US,
+          content,
+          ...(type === 'update' && contentId ? { id: contentId } : {}),
+          ...(type === 'update' ? { announcementId: values?.id } : {}),
+        };
+      });
+
+      // 使用英语作为主要标题
+      const mainTitle = titles.en_US;
+
       let response;
+
       if (type === 'create') {
-        response = await addAnnouncement(submitData);
+        // 创建公告
+        const createData = {
+          informAnnouncement: {
+            title: mainTitle,
+            // content: mainContent,
+            status: 1,
+            describeText: fieldsValue.describeText,
+            classMenu: fieldsValue.classMenu, // 使用表单选择的值，不硬编码
+            releaseType: fieldsValue.releaseType,
+            releaseTime: fieldsValue.releaseType === 2 ? fieldsValue.releaseTime?.valueOf() : null,
+          }
+          ,
+          informAnnouncementContents: contentsList
+        };
+
+        response = await addAnnouncement(createData);
       } else {
-        response = await updateAnnouncement({
-          id: values?.id,
-          ...submitData,
-        });
+        // 更新公告
+        const data = {
+            id: values?.id,
+            title: mainTitle,
+            status: 1,
+            describeText: fieldsValue.describeText,
+            classMenu: fieldsValue.classMenu,
+            releaseType: fieldsValue.releaseType,
+            releaseTime: fieldsValue.releaseType === 2 ? fieldsValue.releaseTime?.valueOf() : null,
+        };
+
+        const datas = {
+          informAnnouncementContents: contentsList
+        }
+        
+        response = await updateAnnouncement(data);
+        await updateAnnouncementContent(datas); // 不需要存储返回值
       }
-      
+
       setLoading(false);
-      if (response.code==='0' && response.data) {
+
+      if (response.code === '0' && response.data) {
         message.success(type === 'create' ? '创建成功' : '更新成功');
         onSuccess();
       } else {
@@ -170,6 +216,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
       }
     } catch (error) {
       setLoading(false);
+      console.error('提交表单出错:', error);
       message.error('表单校验失败');
     }
   };
@@ -183,14 +230,14 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         [activeLanguage]: currentContent, // 保存当前语言的内容
       }));
     }
-    
+
     // 然后切换语言
     setActiveLanguage(value);
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getMenu();
-  },[]);
+  }, []);
 
   return (
     <Modal
@@ -217,8 +264,8 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           sendType: 1,
         }}
       >
-      
-        
+
+
         <Form.Item
           name="classMenu"
           label="分类"
@@ -226,21 +273,21 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           required
         >
           <Select>
-            {menuList.map((item:any)=>(
+            {menuList.map((item: any) => (
               <Option value={item.id}>{item.describe}</Option>
             ))}
           </Select>
         </Form.Item>
-        
+
         <Form.Item
           name="describeText"
           label="描述"
           rules={[{ required: true, message: '请输入描述' }]}
           required
         >
-        <Input placeholder="请输入描述" />
+          <Input placeholder="请输入描述" />
         </Form.Item>
-        
+
         <Form.Item
           name="releaseType"
           label="发送时间"
@@ -251,7 +298,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             <Radio value={2}>定时发送</Radio>
           </Radio.Group>
         </Form.Item>
-        
+
         {sendType === 2 && (
           <Form.Item
             name="releaseTime"
@@ -260,13 +307,13 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" style={{ width: '100%' }} />
           </Form.Item>
         )}
-        
+
         <Form.Item
           label="语言"
           required
         >
-          <Radio.Group 
-            value={activeLanguage} 
+          <Radio.Group
+            value={activeLanguage}
             onChange={(e) => handleLanguageChange(e.target.value)}
           >
             {languages.map(lang => (
@@ -277,6 +324,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             *支持多个语言同时编辑，英文为必填，其他语言配置则显示，不配置不显示
           </div>
         </Form.Item>
+
         <Form.Item
           name="title"
           label="标题"
@@ -284,13 +332,13 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         >
           <Input />
         </Form.Item>
-        
+
         <Form.Item
           label="标题"
           required={activeLanguage === 'en_US'}
         >
-          <Input 
-            placeholder="请输入标题" 
+          <Input
+            placeholder="请输入标题"
             value={titles[activeLanguage] || ''}
             onChange={(e) => handleTitleChange(activeLanguage, e.target.value)}
           />
@@ -298,12 +346,12 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             <div style={{ color: 'red' }}>英文标题为必填项</div>
           )}
         </Form.Item>
-        
+
         <Form.Item
           label="内容"
           required={activeLanguage === 'en_US'}
         >
-          <SeedEditor 
+          <SeedEditor
             initialContent={contents[activeLanguage] || ''}
             onChange={(content) => handleContentChange(activeLanguage, content)}
             ref={(node) => { editorRef.current = node; }}
