@@ -28,8 +28,12 @@ const CategoryManagement: React.FC = () => {
     try {
       let response;
       if (formType === 'create') {
-       
-        response = await addClassMenu(formValues);
+      let data={
+        serialNum:formValues.serialNum,
+        describe:formValues.describe,
+        languageCodes:formValues.contentList,
+      }
+        response = await addClassMenu(data);
       } else {
         let data={
           id:formValues.id,

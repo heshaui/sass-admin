@@ -36,13 +36,26 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   ]);
 
   useEffect(() => {
+    console.log(values,'values');
     if (visible && type === 'update' && values) {
       // 处理已有的多语言内容数据
       let newContentList: LanguageContent[] = [];
       
-      // 如果传入的是一个数组，直接使用
-      if (Array.isArray(values.contentList)) {
-        newContentList = [...values.contentList];
+      // 优先使用languageCodes数据，因为这是API返回的原始数据结构
+      if (Array.isArray(values.languageCodes)) {
+        newContentList = values.languageCodes.map(item => ({
+          languageCode: item.languageCode,
+          languageContent: item.languageContent,
+          id: item.id // 保留id用于更新操作
+        }));
+      }
+      // 如果没有languageCodes但有contentList，使用contentList
+      else if (Array.isArray(values.contentList)) {
+        newContentList = values.contentList.map(item => ({
+          languageCode: item.languageCode,
+          languageContent: item.languageContent,
+          id: item.id // 保留id用于更新操作
+        }));
       } 
       // 如果是旧数据结构，转换为新格式
       else {
@@ -134,7 +147,8 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         id: values?.id,
         serialNum: fieldsValue.serialNum,
         describe: fieldsValue.describe,
-        languageCodes: validContentList // 多语言内容列表
+        contentList: validContentList, // 按照表单命名存储数据
+        languageCodes: validContentList // 按照API需要的格式存储数据
       };
       
       // 记录当前已配置的语言
@@ -153,7 +167,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     <Modal
       width={600}
       title={type === 'create' ? '新建分类' : '编辑分类'}
-      open={visible}
+      visible={visible}
       onOk={handleSubmit}
       confirmLoading={confirmLoading}
       onCancel={onCancel}
@@ -212,6 +226,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
             value={getCurrentContent(activeLanguage)}
             onChange={(e) => handleContentChange(activeLanguage, e.target.value)}
           />
+          {activeLanguage === 'en_US' && !getCurrentContent('en_US') && (
+            <div style={{ color: 'red' }}>英文内容为必填项</div>
+          )}
         </Form.Item>
       </Form>
     </Modal>
