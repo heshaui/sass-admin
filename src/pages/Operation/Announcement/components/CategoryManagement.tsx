@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { Button, message, Modal, Card } from 'antd';
-import { updateAnnouncement,getClassMenuList,addClassMenu,updateClassMenu,deleteClassMenu,getClassMenuParams,getAnnouncementContentList} from '@/services/ant-design-pro/operation';
+import { Button, message, Modal } from 'antd';
+import { getClassMenuList, addClassMenu, updateClassMenu, deleteClassMenu, getClassMenuParams } from '@/services/ant-design-pro/operation';
 import CategoryForm from './CategoryForm';
 
 
@@ -27,19 +27,22 @@ const CategoryManagement: React.FC = () => {
     console.log(formValues,'formValues');
     try {
       let response;
+      // 统一使用contentList作为数据源，确保创建和更新使用相同格式的数据
+      const contentList = formValues.contentList || formValues.languageCodes || [];
+      
       if (formType === 'create') {
-      let data={
-        serialNum:formValues.serialNum,
-        describe:formValues.describe,
-        languageCodes:formValues.contentList,
-      }
+        let data = {
+          serialNum: formValues.serialNum,
+          describe: formValues.describe,
+          languageCodes: contentList,
+        }
         response = await addClassMenu(data);
       } else {
-        let data={
-          id:formValues.id,
-          serialNum:formValues.serialNum,
-          describe:formValues.describe,
-          languageCodes:formValues.languageCodes
+        let data = {
+          id: formValues.id,
+          serialNum: formValues.serialNum,
+          describe: formValues.describe,
+          languageCodes: contentList
         }
         response = await updateClassMenu(data);
       }
@@ -82,29 +85,22 @@ const CategoryManagement: React.FC = () => {
       };
     }
   };
-  const  getEditInfo=async(id:string)=>{
-    const response=await getClassMenuParams(id);
+  const getEditInfo = async(id: string) => {
+    const response = await getClassMenuParams(id);
     
-    if(response.code==='0'&& response.data){
-      setCurrentCategory(
-        {
-          ...response.data,
-          contentList:response.data.languageCodes
-        }
-      );
+    if(response.code === '0' && response.data) {
+      // 确保数据结构的一致性，将languageCodes设置为contentList和languageCodes
+      // 这样在CategoryForm中可以正确识别任一字段
+      const formattedData = {
+        ...response.data,
+        contentList: response.data.languageCodes || [],
+        languageCodes: response.data.languageCodes || []
+      };
+      
+      setCurrentCategory(formattedData);
       setFormType('update');
       setCategoryFormVisible(true);
-
-      // if(contentList.code==='0'&& contentList.data){
-      //   setCurrentCategory({
-      //     ...response.data,
-      //     contentList:contentList.data
-      //   });
-      //   setFormType('update');
-      // setCategoryFormVisible(true);
-
-      
-    }else{
+    } else {
       message.error('获取分类信息失败');
     }
   }

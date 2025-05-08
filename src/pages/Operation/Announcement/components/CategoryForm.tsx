@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, InputNumber, Modal, Button, message, Radio } from 'antd';
+import { Form, Input, InputNumber, Modal, message, Radio } from 'antd';
 import { languages } from '@/config/language';
 
 const { TextArea } = Input;
@@ -41,8 +41,9 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       // 处理已有的多语言内容数据
       let newContentList: LanguageContent[] = [];
       
-      // 优先使用languageCodes数据，因为这是API返回的原始数据结构
+      // 统一处理数据结构，尝试所有可能的字段名
       if (Array.isArray(values.languageCodes)) {
+        console.log('使用 languageCodes 数据');
         newContentList = values.languageCodes.map(item => ({
           languageCode: item.languageCode,
           languageContent: item.languageContent,
@@ -51,6 +52,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       }
       // 如果没有languageCodes但有contentList，使用contentList
       else if (Array.isArray(values.contentList)) {
+        console.log('使用 contentList 数据');
         newContentList = values.contentList.map(item => ({
           languageCode: item.languageCode,
           languageContent: item.languageContent,
@@ -59,6 +61,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       } 
       // 如果是旧数据结构，转换为新格式
       else {
+        console.log('使用旧格式数据结构');
         languages.forEach(lang => {
           const langContent = values[`content_${lang.key}`] || '';
           if (langContent) {
@@ -83,7 +86,24 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
         newContentList.push({ languageCode: 'en_US', languageContent: '' });
       }
       
+      console.log('处理后的多语言内容:', newContentList);
       setContentList(newContentList);
+      
+      // 设置当前激活的语言（如果有英文则默认英文，否则取第一个）
+      const enContent = newContentList.find(item => item.languageCode === 'en_US');
+      if (enContent) {
+        setActiveLanguage('en_US');
+        form.setFieldsValue({
+          languageContent: enContent.languageContent,
+          languageCode: 'en_US'
+        });
+      } else if (newContentList.length > 0) {
+        setActiveLanguage(newContentList[0].languageCode);
+        form.setFieldsValue({
+          languageContent: newContentList[0].languageContent,
+          languageCode: newContentList[0].languageCode
+        });
+      }
       
       // 设置基础字段
       form.setFieldsValue({
@@ -94,8 +114,19 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       form.resetFields();
       // 重置为只有英文的空内容
       setContentList([{ languageCode: 'en_US', languageContent: '' }]);
+      setActiveLanguage('en_US');
+      form.setFieldsValue({
+        languageCode: 'en_US',
+        languageContent: ''
+      });
     }
   }, [visible, form, values, type]);
+
+  // 获取当前语言的内容
+  const getCurrentContent = (langKey: string): string => {
+    const langItem = contentList.find(item => item.languageCode === langKey);
+    return langItem ? langItem.languageContent : '';
+  };
 
   // 处理语言切换
   const handleLanguageChange = (langKey: string) => {
@@ -111,12 +142,6 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
     form.setFieldsValue({
       languageContent: currentContent
     });
-  };
-
-  // 获取当前语言的内容
-  const getCurrentContent = (langKey: string): string => {
-    const langItem = contentList.find(item => item.languageCode === langKey);
-    return langItem ? langItem.languageContent : '';
   };
 
   // 处理内容变更
