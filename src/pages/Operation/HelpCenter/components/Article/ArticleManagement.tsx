@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { getHelpCenterArticleList, addHelpCenterArticle, updateHelpCenterArticle,getHelpCenterArticleContentList } from '@/services/ant-design-pro/operation';
+import { getHelpCenterArticleList, addHelpCenterArticle, updateHelpCenterArticle,updateHelpCenterArticleContent,getHelpCenterArticleContentList } from '@/services/ant-design-pro/operation';
 import ArticlePublishModal from './ArticlePublishModal';
 import dayjs from 'dayjs';
 
@@ -76,7 +76,7 @@ const ArticleManagement: React.FC = () => {
       if (isEditing && currentArticle) {
         // 编辑现有文章
         data.homeHelpCenterArticle.id = currentArticle.id;
-        res = await updateHelpCenterArticle(data);
+        const res = await updateHelpCenterArticleContent(data);
         if (res.code === '0' && res.data) {
           message.success('文章更新成功');
         } else {

@@ -227,9 +227,13 @@ const UserAdmin: React.FC = () => {
         const res=  await saveEmployee(values);
           if(res.code==='0'){
             message.success('用户新建成功');
+          }else if(res.code==='11111'){
+            message.error(res.message);
           }else{
             message.error('用户新建失败');
           }
+           
+
 
           
         }

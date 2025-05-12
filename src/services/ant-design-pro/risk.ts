@@ -38,7 +38,7 @@ export async function riskConditionList(data?: any) {
 
 
 export async function saveActionRiskLevel(data?: any) {
-  return request('/tenant/v1/saveActionRiskLevel', {
+  return request('/tenant/v1/saveActionRiskLevels', {
     method: 'POST',
     data,
   });
@@ -47,6 +47,15 @@ export async function saveActionRiskLevel(data?: any) {
 
 export async function riskSceneList(data?: any) {
   return request('/tenant/v1/riskSceneList', {
+    method: 'POST',
+    data,
+  });
+}
+
+
+//风控等级处理建议查询详情列表
+export async function actionRiskLevelParams(data?: any) {
+  return request('/tenant/v1/actionRiskLevelParams', {
     method: 'POST',
     data,
   });

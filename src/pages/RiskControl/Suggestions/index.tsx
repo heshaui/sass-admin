@@ -2,9 +2,10 @@ import React, { useState,useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Form, Input, Button, Select, Space, Typography,message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { riskConditionTemplateList,saveRiskConditions,saveActionRiskLevel} from '@/services/ant-design-pro/risk';
+import { riskConditionTemplateList,saveRiskConditions,saveActionRiskLevel,actionRiskLevelParams} from '@/services/ant-design-pro/risk';
 import GoogleCode from '@/components/GoogleCode';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
+import ValidCode from '@/components/ValidCode'
 import { useModel } from 'umi';
 const { Option } = Select;
 const { Title } = Typography;
@@ -22,26 +23,55 @@ const RiskControlSuggestions: React.FC = () => {
   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
   const [googleCode, setGoogleCode] = useState('');
+  const [sugEdit, setSugEdit] = useState<any>();
   // 处理建议选项
   const suggestionOptions = [
-    '建议回访用户后处理',
     '建议禁止提现，并回访用户后再处理',
     '建议冻结用户提现',
     '建议禁止提现，回访用户后在处理',
     '人工审核'
   ];
+  const suggestion = [
+    {
+      label:'建议禁止提现，并回访用户后再处理',
+      code:'prohibit_withdrawa'
+    },
+
+    {
+      label:'建议冻结用户提现',
+      code:'freezing_withdrawal'
+    },
+    {
+      code:'reject_withdrawal_review',
+      label:'提现审核拒绝',
+    },
+    {
+      code:'manual_review',
+      label:'人工审核',
+    }
+  ];
 
   const getSugges=async()=>{
-  const res= saveActionRiskLevel();
-  console.log(res);
+    const res= await actionRiskLevelParams();
+
   if(res.code==='0'&&res.data){ 
-    console.log(res.data);
+    suggestionsForm.setFieldsValue({
+      riskLevel1:res.data[0].riskLevel,
+      suggestion1:res.data[0].actionTipsCode,
+      riskLevel2:res.data[1].riskLevel,
+      suggestion2:res.data[1].actionTipsCode,
+      riskLevel3:res.data[2].riskLevel,
+      suggestion3:res.data[2].actionTipsCode,
+    })
+    setSugEdit(res.data)
   }
 
 
   }
 
   const getTemplate=async()=>{
+   
+    
     let res=await riskConditionTemplateList({});
     if(res.code==='0'&&res.data){
       res.data.forEach((item:any)=>{
@@ -63,21 +93,62 @@ const RiskControlSuggestions: React.FC = () => {
       })
     }
   }
-  const handleSave = (values: any) => {
-    let data={
-      riskLevel1:values.riskLevel1,
-      suggestion1:values.suggestion1,
-      riskLevel2:values.riskLevel2,
-      suggestion2:values.suggestion2,
-      riskLevel3:values.riskLevel3,
-      suggestion3:values.suggestion3,
+  const handleSave =async (values: any) => {
+    let data
+    if(sugEdit){
+      data={
+        riskLevels:[
+          { 
+            id:sugEdit[0].id,
+            riskLevel:values.riskLevel1,
+            actionTipsCode:values.suggestion1
+          },
+          {
+            id:sugEdit[1].id,
+            riskLevel:values.riskLevel2,
+            actionTipsCode:values.suggestion2
+          },
+          {
+            id:sugEdit[2].id,
+            riskLevel:values.riskLevel3,
+            actionTipsCode:values.suggestion3
+          }
+        ]
+      }
 
+      
+    }else{
+      data={
+        riskLevels:[
+          { 
+            riskLevel:values.riskLevel1,
+            actionTipsCode:values.suggestion1
+          },
+          {
+            riskLevel:values.riskLevel2,
+            actionTipsCode:values.suggestion2
+          },
+          {
+            riskLevel:values.riskLevel3,
+            actionTipsCode:values.suggestion3
+          }
+        ]
+      }
     }
-    // 保存后关闭编辑状态
-    setEditingSuggestions(false);
-    setEditingSensitive(false);
-    // 这里添加保存逻辑
-  };
+     
+
+ const res=await saveActionRiskLevel(data);
+ console.log(res)
+  // 保存后关闭编辑状态
+  setEditingSuggestions(false);
+  setEditingSensitive(false);
+  // 这里添加保存逻辑
+};
+   
+
+
+
+
 
   const handleSensitiveSave =async (values: any) => {
     
@@ -218,8 +289,8 @@ const RiskControlSuggestions: React.FC = () => {
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSuggestions}
                   >
-                    {suggestionOptions.map(option => (
-                      <Option key={option} value={option}>{option}</Option>
+                    {suggestion.map(option => (
+                      <Option key={option.code} value={option.code}>{option.label}</Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -244,8 +315,8 @@ const RiskControlSuggestions: React.FC = () => {
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSuggestions}
                   >
-                    {suggestionOptions.map(option => (
-                      <Option key={option} value={option}>{option}</Option>
+                    {suggestion.map(option => (
+                      <Option key={option.code} value={option.code}>{option.label}</Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -270,8 +341,8 @@ const RiskControlSuggestions: React.FC = () => {
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSuggestions}
                   >
-                    {suggestionOptions.map(option => (
-                      <Option key={option} value={option}>{option}</Option>
+                    {suggestion.map(option => (
+                      <Option key={option.code} value={option.code}>{option.label}</Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -411,6 +482,7 @@ const RiskControlSuggestions: React.FC = () => {
        onSubmit={handleGoogleCodeSuccess} 
        onCancel={() => setGoogleCodeVisible(false)}
       />
+
     </PageContainer>
   );
 };

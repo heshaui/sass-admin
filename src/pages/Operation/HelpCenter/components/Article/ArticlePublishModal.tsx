@@ -42,10 +42,10 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
     zh_CN: { form: {}, imgList: [], content: '', specContent: '' },
     zh_TW: { form: {}, imgList: [], content: '', specContent: '' },
     ja_JP: { form: {}, imgList: [], content: '', specContent: '' },
-
-
-
   });
+  
+  // Store content IDs by language code
+  const [contentIds, setContentIds] = useState<Record<string, string | number>>({});
 
   
   const getClassList = async() => {
@@ -73,17 +73,20 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
       // 初始化多语言内容
       const newContentMap: Record<string, string> = {};
       const newTitleMap: Record<string, string> = {};
+      const newContentIds: Record<string, string | number> = {};
       
       // 设置各语言的标题和内容
       if (Array.isArray(homeHelpCenterArticleContents)) {
         homeHelpCenterArticleContents.forEach(content => {
           newContentMap[content.languageCode] = content.articleContent || '';
           newTitleMap[content.languageCode] = content.articleTitle || '';
+          newContentIds[content.languageCode] = content.id;
         });
       }
       
       setContentMap(newContentMap);
       setTitleMap(newTitleMap);
+      setContentIds(newContentIds);
       
       // 设置默认显示的语言（使用第一个有内容的语言）
       if (homeHelpCenterArticleContents && homeHelpCenterArticleContents.length > 0) {
@@ -183,11 +186,24 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
       
       const articlesArray = Object.keys(contentMap)
         .filter(langCode => contentMap[langCode] && contentMap[langCode].trim() !== '')
-        .map(langCode => ({
-          languageCode: langCode,
-          articleTitle: titleMap[langCode] || '',
-          articleContent: contentMap[langCode] || ''
-        }));
+        .map(langCode => {
+          const baseObj = {
+            languageCode: langCode,
+            articleTitle: titleMap[langCode] || '',
+            articleContent: contentMap[langCode] || '',
+            articleId: article.id
+          };
+          
+          // 只在编辑模式下且有 id 值时才添加 id 字段
+          if (isEditing && contentIds[langCode]) {
+            return {
+              ...baseObj,
+              id: contentIds[langCode]
+            };
+          }
+          
+          return baseObj;
+        });
       
       console.log('Submitting articles:', articlesArray);
       
