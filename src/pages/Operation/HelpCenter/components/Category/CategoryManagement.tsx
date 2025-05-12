@@ -71,7 +71,7 @@ const CategoryManagement: React.FC = () => {
             helpSort: values.helpSort || 1,
             blackIcon: values.blackIcon || "",
             whiteIcon: values.whiteIcon || "",
-            parentId: 0,
+            parentId: values.parentId || "0",
             showType: values.showType || 1,
           },
           homeHelpCenterClassContents: languageContents.map((item: any) => ({

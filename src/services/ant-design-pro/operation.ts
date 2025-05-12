@@ -26,6 +26,7 @@ export interface HelpCenterClassItem {
   sort?: number;
   createTime?: string;
   updateTime?: string;
+  helpDescription?: string;
 }
 
 // 帮助中心分类内容接口定义
