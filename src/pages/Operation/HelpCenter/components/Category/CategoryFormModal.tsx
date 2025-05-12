@@ -168,7 +168,6 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           <div style={{ display: 'flex', gap: '20px' }}>
             <div>
               <div style={{ marginBottom: '8px' }}>
-                <span style={{ color: 'red', marginRight: '4px' }}>*</span>
                 夜间
               </div>
               <Form.Item name="blackIcon" noStyle>
