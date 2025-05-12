@@ -49,10 +49,14 @@ const SelfService: React.FC = () => {
       if (customizationRes.code === '0' && customizationRes.data && 
           contentRes.code === '0' && contentRes.data) {
         
+            console.log('获取数据:', customizationRes, contentRes);
         // 合并数据处理逻辑
         const customizations = customizationRes.data.list || [];
-        const contents = contentRes.data.list  || [];
-        
+        const contents = contentRes.data.list|| [];
+          if(contents.length===0){
+            setDataSource([])
+            return 
+          }
         // 可以将内容数据与对应的自定义项关联起来
         const mergedData = customizations.map(item => {
           // 查找该自定义项对应的所有内容
