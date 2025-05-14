@@ -32,8 +32,8 @@ const Footer: React.FC = () => {
       }
       const res = await homeBottomList(data);
       if (res.code === '0') {
-        setMenuData(res?.data.list);
-        setData(res?.data.list); // 同时更新data状态
+        setMenuData(res?.data);
+        setData(res?.data); // 同时更新data状态
       } else {
         message.error('获取菜单数据失败');
       }
@@ -164,7 +164,7 @@ const Footer: React.FC = () => {
                 minWidth: 100,
               }}
             >
-              {parentItem.bottomDescription}
+              {parentItem.bottomName}
             </Button>
             <Button
               onClick={() => handleModal(parentItem)}
@@ -199,7 +199,7 @@ const Footer: React.FC = () => {
                       textAlign: 'left',
                     }}
                   >
-                    • {child.bottomDescription}
+                    • {child.bottomName}
                   </Button>
                   <Button
                     onClick={() => handleModal(child)}
