@@ -1,5 +1,5 @@
+import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import React from 'react';
-import { Form, Input, Select, InputNumber, Button, Modal } from 'antd';
 
 interface TradingFee {
   id: string;
@@ -19,17 +19,17 @@ interface EditFormProps {
 
 const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit }) => {
   const [form] = Form.useForm();
-  
+
   React.useEffect(() => {
     if (record && visible) {
       form.setFieldsValue({
         pairName: record.coinSymbol + '/' + record.baseSymbol,
-        buyFee: record.buyFee , // 转换为百分比显示
-        sellFee: record.sellFee ,
+        buyFee: record.buyFee, // 转换为百分比显示
+        sellFee: record.sellFee,
       });
     }
   }, [record, visible, form]);
-  
+
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
@@ -39,7 +39,7 @@ const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit
       console.error('提交表单时出错:', error);
     }
   };
-  
+
   const handleCancel = () => {
     form.resetFields();
     onCancel();
@@ -54,51 +54,28 @@ const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit
       destroyOnClose
     >
       <Form form={form} layout="vertical">
-        <Form.Item
-          name="pairName"
-          label="币对"
-        >
-         <Input disabled />
+        <Form.Item name="pairName" label="币对">
+          <Input disabled />
         </Form.Item>
-        
+
         <Form.Item
           name="buyFee"
           label="Maker手续费"
-          rules={[
-            { required: true, message: '请输入Maker手续费' },
-            { type: 'number', min: 0, max: 1, message: '手续费必须在0-1%之间' }
-          ]}
+          rules={[{ required: true, message: '请输入Maker手续费' }]}
         >
-          <InputNumber 
-            style={{ width: '100%' }} 
-            precision={2} 
-            min={0} 
-            max={1} 
-            addonAfter="%" 
-          />
+          <InputNumber style={{ width: '100%' }} min={0} max={1} addonAfter="%" />
         </Form.Item>
-        
+
         <Form.Item
           name="sellFee"
           label="Maker手续费"
-          rules={[
-            { required: true, message: '请输入Maker手续费' },
-            { type: 'number', min: 0, max: 1, message: '手续费必须在0-1%之间' }
-          ]}
+          rules={[{ required: true, message: '请输入Maker手续费' }]}
         >
-          <InputNumber 
-            style={{ width: '100%' }} 
-            precision={2} 
-            min={0} 
-            max={1} 
-            addonAfter="%" 
-          />
+          <InputNumber style={{ width: '100%' }} min={0} max={1} addonAfter="%" />
         </Form.Item>
-        
-        <div style={{ color: 'red', marginBottom: '16px' }}>
-          Tip: 手续费范围0~1%
-        </div>
-        
+
+        <div style={{ color: 'red', marginBottom: '16px' }}>Tip: 手续费范围0~25%</div>
+
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleCancel} style={{ marginRight: '8px' }}>
             取消
@@ -112,4 +89,4 @@ const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit
   );
 };
 
-export default EditForm; 
+export default EditForm;

@@ -294,3 +294,13 @@ export async function tradesInfo(params?: Record<string, any>) {
     data: params,
   });
 }
+
+
+
+
+export async function revocationExchangeCoinOrder(params?: Record<string, any>) {
+  return request(`/tenant/v1/exchange-coin/revocationExchangeCoinOrder?symbol=${params.symbol}`, {
+    method: 'POST',
+    data: params,
+  });
+}

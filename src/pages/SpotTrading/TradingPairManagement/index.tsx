@@ -3,6 +3,7 @@ import {
   saveExchangeCoin,
   updateExchangeCoinById,
   updateExchangeGroup,
+  revocationExchangeCoinOrder
 } from '@/services/ant-design-pro/spot';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
@@ -149,6 +150,25 @@ const TradingPairManagement: React.FC = () => {
     }
   };
 
+
+  const handleCancelOrders=async (record: TradingPair) => {
+    //弹出确认框
+    Modal.confirm({
+      title: `确定要撤销所有${record.coinSymbol}/${record.baseSymbol}订单吗？`,
+      onOk: async () => {
+        const res= await revocationExchangeCoinOrder({
+          symbol: record.coinSymbol+'/'+record.baseSymbol
+        });
+        if(res.code === '0'){
+          message.success('撤销订单成功');
+        }else{
+          message.error(res.message);
+        }
+      }
+    });
+  }
+
+
   // 表格列定义
   const columns: ProColumns<TradingPair>[] = [
     {
@@ -249,7 +269,7 @@ const TradingPairManagement: React.FC = () => {
         >
           修改
         </a>,
-        <a key="cancelOrders" style={{ color: '#ff4d4f' }}>
+        <a key="cancelOrders" style={{ color: '#ff4d4f' }} onClick={() => handleCancelOrders(record)}>
           撤销全部订单
         </a>,
         <a
