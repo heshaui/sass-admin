@@ -161,11 +161,17 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         form={form}
         layout="vertical"
       >
-        <Form.Item
-          label="图标"
-          extra="夜间版Logo为必传，若未上传日间版则默认使用夜间版"
-        >
-          <div style={{ display: 'flex', gap: '20px' }}>
+        <Form.Item name='type' label="类型">
+          <Radio.Group value={form.getFieldValue('type')} defaultValue={1}> 
+          <Radio value={1}>菜单</Radio>
+          <Radio value={2}>分类</Radio>
+          </Radio.Group>
+        </Form.Item>
+          <Form.Item
+            label="图标"
+            extra="夜间版Logo为必传，若未上传日间版则默认使用夜间版"
+          >
+            <div style={{ display: 'flex', gap: '20px' }}>
             <div>
               <div style={{ marginBottom: '8px' }}>
                 夜间
@@ -200,6 +206,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         >
           <InputNumber min={1} placeholder="排序" style={{ width: '100%' }} />
         </Form.Item>
+        
 
         <Form.Item
           label="上级分类"

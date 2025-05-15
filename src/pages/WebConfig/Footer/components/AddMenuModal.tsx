@@ -105,7 +105,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
         
         <Form.Item
           label="是否显示"
-          name={['values', 'displayStatus']}
+          name={['values', 'show']}
           valuePropName="checked"
           initialValue={true}
         >

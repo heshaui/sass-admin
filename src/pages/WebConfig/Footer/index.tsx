@@ -101,11 +101,11 @@ const Footer: React.FC = () => {
 
   // 处理表单提交
   const handleSubmit = async (values: any) => {
-    let displayStatus;
-    if (values.values.displayStatus) {
-      displayStatus = 1;
+    let show;
+    if (values.values.show) {
+      show = 1;
     } else {
-      displayStatus = 0;
+      show = 0;
     }
     try {
       const data = {
@@ -114,8 +114,8 @@ const Footer: React.FC = () => {
           parentId: parentId?.id || 0,
           orderIndex: 1,
           bottomDescription:values.values.bottomDescription,
-          // displayStatus: displayStatus,
-           languageKey: currentLanguage,
+          show: show,
+          languageKey: currentLanguage,
           accessType: values.values.accessType,
           accessPath: values.values.accessPath,
         },
