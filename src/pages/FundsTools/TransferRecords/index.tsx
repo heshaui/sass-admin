@@ -27,7 +27,7 @@ const getTransferRecords=async(params:any)=>{
     return {
       data: res.data.list,
       success: true,
-      total: res.data.total,
+      total: res.data.count,
     };
   }
 }
