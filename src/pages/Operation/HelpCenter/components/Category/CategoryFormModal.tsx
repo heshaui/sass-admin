@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, InputNumber, Space, Radio, Button, message,Select} from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import  { HelpCenterClassItem,getHelpCenterClassList } from '@/services/ant-design-pro/operation';
+import { Modal, Form, Input, InputNumber, Radio, message, Select } from 'antd';
+import { HelpCenterClassItem, getHelpCenterClassList } from '@/services/ant-design-pro/operation';
 import AvatarUpload from '@/components/AvatarUpload';
 import LanguageSelector from '@/components/LanguageSelector'
 
@@ -23,12 +22,13 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   const [titleMap, setTitleMap] = useState<Record<string, string>>({});
   const [currentTitle, setCurrentTitle] = useState('');
   const [helpCenterClassList, setHelpCenterClassList] = useState<HelpCenterClassItem[]>([]);
+  const [formType, setFormType] = useState<number>(1);
 
 
-  const getClassList = async() => {
+  const getClassList = async () => {
     const response = await getHelpCenterClassList({});
-    if(response.code==='0') {
-      if(Array.isArray(response.data.list)) {
+    if (response.code === '0') {
+      if (Array.isArray(response.data.list)) {
         setHelpCenterClassList(response.data.list);
       } else {
         console.error('API返回的数据结构不是预期的数组格式:', response.data);
@@ -44,16 +44,16 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         [language]: currentTitle
       }));
     }
-    
+
     // 切换到新语言
     setLanguage(value);
-    
+
     // 设置新语言对应的标题
     const title = titleMap[value] || '';
     setCurrentTitle(title);
     form.setFieldsValue({ articleTitle: title });
   };
-  
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentTitle(e.target.value);
   };
@@ -61,18 +61,18 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      
+
       // 先保存当前选中语言的标题到titleMap
       if (language && currentTitle) {
         titleMap[language] = currentTitle;
       }
-      
+
       // 检查是否至少有一种语言有标题
       if (Object.keys(titleMap).length === 0) {
         message.error('请至少添加一种语言的标题');
         return;
       }
-      
+
       // 构建多语言内容
       const languages = Object.entries(titleMap)
         .filter(([_, title]) => title.trim() !== '') // 过滤掉空标题
@@ -80,12 +80,12 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           languageCode: code,
           articleTitle: title.trim()
         }));
-      
+
       console.log('提交的多语言数据:', languages); // 调试用
-      
+
       // 从表单中提取黑白图标
       const { blackIcon, whiteIcon, articleTitle, ...restValues } = values;
-      
+
       onSubmit({
         ...restValues,
         id: currentCategory?.id,
@@ -105,7 +105,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
       let initialTitleMap: Record<string, string> = {};
       let initialLanguage = 'en_US';
       let initialTitle = '';
-      
+
       if (currentCategory) {
         // 编辑模式 - 处理现有数据
         form.setFieldsValue({
@@ -113,14 +113,14 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           blackIcon: currentCategory.blackIcon,
           whiteIcon: currentCategory.whiteIcon,
         });
-        
+
         // 处理多语言标题
         if (currentCategory.languages && Array.isArray(currentCategory.languages)) {
           // 如果有多语言数据
           currentCategory.languages.forEach(item => {
             initialTitleMap[item.languageCode] = item.articleTitle;
           });
-          
+
           // 设置初始语言和标题
           if (currentCategory.languages.length > 0) {
             initialLanguage = currentCategory.languages[0].languageCode;
@@ -137,11 +137,11 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         form.resetFields();
         form.setFieldsValue({ languageCode: initialLanguage });
       }
-      
+
       setTitleMap(initialTitleMap);
       setLanguage(initialLanguage);
       setCurrentTitle(initialTitle);
-      form.setFieldsValue({ 
+      form.setFieldsValue({
         languageCode: initialLanguage,
         articleTitle: initialTitle
       });
@@ -162,11 +162,12 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         layout="vertical"
       >
         <Form.Item name='type' label="类型">
-          <Radio.Group value={form.getFieldValue('type')} defaultValue={1}> 
-          <Radio value={1}>菜单</Radio>
-          <Radio value={2}>分类</Radio>
+          <Radio.Group value={form.getFieldValue('type')} defaultValue={1} onChange={(e) => setFormType(e.target.value)}>
+            <Radio value={1}>菜单</Radio>
+            <Radio value={2}>分类</Radio>
           </Radio.Group>
         </Form.Item>
+        {formType === 1 &&(
           <Form.Item
             label="图标"
             extra="夜间版Logo为必传，若未上传日间版则默认使用夜间版"
@@ -190,6 +191,8 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
             </div>
           </div>
         </Form.Item>
+           
+          )}
 
         <Form.Item
           label="描述"
@@ -199,6 +202,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           <Input placeholder="描述" />
         </Form.Item>
 
+      {formType === 1 &&(
         <Form.Item
           label="排序"
           name="helpSort"
@@ -206,14 +210,15 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         >
           <InputNumber min={1} placeholder="排序" style={{ width: '100%' }} />
         </Form.Item>
-        
+
+  )}
 
         <Form.Item
           label="上级分类"
           name="parentId"
           rules={[{ required: true, message: '请选择上级分类' }]}
         >
-           <Select
+          <Select
             placeholder="请选择分类"
             options={Array.isArray(helpCenterClassList) ? helpCenterClassList.map((item) => ({
               value: item.id,
@@ -235,9 +240,9 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           name="articleTitle"
           rules={[{ required: true, message: '请输入标题' }]}
         >
-          <Input 
-            placeholder="输入当前语言的标题" 
-            maxLength={30} 
+          <Input
+            placeholder="输入当前语言的标题"
+            maxLength={30}
             value={currentTitle}
             onChange={handleTitleChange}
           />

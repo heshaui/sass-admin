@@ -67,6 +67,7 @@ const CategoryManagement: React.FC = () => {
         // 新增分类
         const submitData = {
           homeHelpCenterClass: {
+            type: values.type,
             helpDescription: values.helpDescription || "",
             helpSort: values.helpSort || 1,
             blackIcon: values.blackIcon || "",
@@ -128,6 +129,18 @@ const CategoryManagement: React.FC = () => {
       title: 'id',
       dataIndex: 'id',
       key: 'id',
+    },
+    {
+      title: '类型',
+      dataIndex: 'type',
+      key: 'type',
+      valueType: 'select',
+      fieldProps: {
+        options: [
+          { value: 1, label: '菜单' },
+          { value: 2, label: '分类' },
+        ],
+      },
     },
     {
       title: '描述',

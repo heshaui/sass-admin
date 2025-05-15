@@ -27,6 +27,17 @@ export interface HelpCenterClassItem {
   createTime?: string;
   updateTime?: string;
   helpDescription?: string;
+  type?: number; // 1: 菜单, 2: 分类
+  blackIcon?: string;
+  whiteIcon?: string;
+  languages?: Array<{
+    languageCode: string;
+    articleTitle: string;
+  }>;
+  languageCode?: string;
+  articleTitle?: string;
+  helpSort?: number;
+  parentId?: string;
 }
 
 // 帮助中心分类内容接口定义

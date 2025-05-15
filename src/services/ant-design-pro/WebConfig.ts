@@ -354,3 +354,13 @@ export async function updateHomeMenuTranslationById(body: API.FackeParams, optio
   });
 }
 
+
+// /tenant/v1/deleteHomeMenu
+export async function deleteHomeMenu(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/deleteHomeMenu?id='+body.id, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+

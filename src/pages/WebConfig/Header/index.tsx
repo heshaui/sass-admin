@@ -1,8 +1,8 @@
 import { PageContainer } from "@ant-design/pro-components";
 import { Button, message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
-import { HomeMenuTranslationList, saveHomeMenu, homeMenuParams,updateHomeMenuById,updateHomeMenuTranslationById } from "@/services/ant-design-pro/WebConfig";
-import { PlusOutlined, EditOutlined } from "@ant-design/icons";
+import { HomeMenuTranslationList, saveHomeMenu, homeMenuParams,updateHomeMenuById,updateHomeMenuTranslationById,deleteHomeMenu } from "@/services/ant-design-pro/WebConfig";
+import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import AddMenuModals from "./component/AddMenuModals";
 import { languages } from '@/config/language';
 const languageOptions = languages
@@ -71,13 +71,13 @@ const Header: React.FC = () => {
   // 处理删除功能
   const handleDelete = async (itemId: number) => {
     try {
-      // const res = await deleteHomeMenu({ id: itemId });
-      // if (res.code === "0") {
-      //   message.success("菜单删除成功");
-      //   getMenu(); // 重新获取菜单数据
-      // } else {
-      //   message.error("删除失败: " + (res.message || "未知错误"));
-      // }
+      const res = await deleteHomeMenu({ id: itemId });
+      if (res.code === "0") {
+        message.success("菜单删除成功");
+        getMenu(); // 重新获取菜单数据
+      } else {
+        message.error("删除失败: " + (res.message || "未知错误"));
+      }
     } catch (error) {
       message.error("删除失败: " + (error || "网络错误"));
     }
@@ -211,12 +211,12 @@ const Header: React.FC = () => {
             >
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Popconfirm
-                  title="确定要删除这个菜单吗？"
+                  title={`确定要删除${item.menuName}菜单吗？`}
                   onConfirm={(e) => { e?.stopPropagation(); handleDelete(item.id); }}
                   okText="确定"
                   cancelText="取消"
                 >
-                  {/* <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} /> */}
+                  <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
                 </Popconfirm>
                 {item.menuName}
               </div>
@@ -262,12 +262,12 @@ const Header: React.FC = () => {
                     >
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <Popconfirm
-                          title="确定要删除这个菜单吗？"
+                          title={`确定要删除${child.menuName}菜单吗？`}
                           onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.id); }}
                           okText="确定"
                           cancelText="取消"
                         >
-                          {/* <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} /> */}
+                          <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
                         </Popconfirm>
                         • {child.menuName}
                       </div>
