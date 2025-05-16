@@ -52,7 +52,9 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
     const response = await getHelpCenterClassList({});
     if(response.code==='0') {
       if(Array.isArray(response.data.list)) {
-        setHelpCenterClassList(response.data.list);
+        // Filter items to show only type 1
+        const filteredList = response.data.list.filter(item => item.type === 1);
+        setHelpCenterClassList(filteredList);
       } else {
         console.error('API返回的数据结构不是预期的数组格式:', response.data);
       }
