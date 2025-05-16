@@ -4,7 +4,7 @@ import {ProTable} from '@ant-design/pro-components';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { 
-getUserOperationLogs
+gatewayAccessLogList
 } from '@/services/ant-design-pro/UserManagement';
 interface LogRecord {
   id: string;
@@ -25,7 +25,7 @@ const Log: React.FC<LogProps> = ({ userId }) => {
   const formRef = useRef<ProFormInstance>();
 
   const getLog=async(params:any)=>{
-    const res=await getUserOperationLogs({ userId: userId,pageNo:params.current,pageSize:params.pageSize});
+    const res=await gatewayAccessLogList({ userId: userId,pageNo:params.current,pageSize:params.pageSize});
     if(res.code==='0'){
       return {
         data: res.data.list,
@@ -48,40 +48,35 @@ const Log: React.FC<LogProps> = ({ userId }) => {
 
   const columns: ProColumns<any>[] = [
     {
-      title: '操作时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
-      valueType: 'dateTime',
+      title: '接口路径',
+      dataIndex: 'requestPath',
+      key: 'requestPath',
     },
     {
-      title: '管理员Id',
-      dataIndex: 'tenantId',
-      key: 'tenantId',
+      title: 'ip地址',
+      dataIndex: 'clientIp',
+      key: 'clientIp',
     },
     {
-      title: '操作管理员',
-      dataIndex: 'tenantName',
-      key: 'tenantName',
+      title: '请求来源',
+      dataIndex: 'reqSource',
+      key: 'reqSource',
     },
     {
-      title: '操作行为',
-      dataIndex: 'operationType',
-      key: 'operationType',
+      title: '网络类型',
+      dataIndex: 'networkType',
+      key: 'networkType',
     },
     {
-      title: '修改前',
+      title: '名称',
       dataIndex: 'beforeValue',
       key: 'beforeValue',
     },
     {
-      title: '修改后',
-      dataIndex: 'afterValue',
-      key: 'afterValue',
-    },
-    {
-      title: '备注',
-      dataIndex: 'operationRemark',
-      key: 'operationRemark',
+      title: '请求时间',
+      dataIndex: 'timestamp',
+      key: 'timestamp',
+      valueType: 'dateTime',
     },
   ];
 
