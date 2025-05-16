@@ -56,12 +56,12 @@ const RiskControlSuggestions: React.FC = () => {
 
   if(res.code==='0'&&res.data){ 
     suggestionsForm.setFieldsValue({
-      riskLevel1:res.data[0].riskLevel,
-      suggestion1:res.data[0].actionTipsCode,
-      riskLevel2:res.data[1].riskLevel,
-      suggestion2:res.data[1].actionTipsCode,
-      riskLevel3:res.data[2].riskLevel,
-      suggestion3:res.data[2].actionTipsCode,
+      riskLevel1:res.data[0]?.riskLevel,
+      suggestion1:res.data[0]?.actionTipsCode,
+      riskLevel2:res.data[1]?.riskLevel,
+      suggestion2:res.data[1]?.actionTipsCode,
+      riskLevel3:res.data[2]?.riskLevel,
+      suggestion3:res.data[2]?.actionTipsCode,
     })
     setSugEdit(res.data)
   }
@@ -138,7 +138,11 @@ const RiskControlSuggestions: React.FC = () => {
      
 
  const res=await saveActionRiskLevel(data);
- console.log(res)
+if(res.code==='0'&&res.data){
+  getSugges();
+  getTemplate();
+  message.success('保存成功');
+}
   // 保存后关闭编辑状态
   setEditingSuggestions(false);
   setEditingSensitive(false);
@@ -213,6 +217,8 @@ const RiskControlSuggestions: React.FC = () => {
     setEditingSuggestions(false);
     sensitiveForm.resetFields();
     refresh();
+    getSugges();
+    getTemplate();  
   }else{
     message.error(res.message);
   }
@@ -382,8 +388,8 @@ const RiskControlSuggestions: React.FC = () => {
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSensitive}
                   >
-                    {suggestionOptions.map(option => (
-                      <Option key={option} value={option}>{option}</Option>
+                    {suggestion.map(option => (
+                      <Option key={option.code} value={option.code}>{option.label}</Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -402,8 +408,8 @@ const RiskControlSuggestions: React.FC = () => {
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSensitive}
                   >
-                    {suggestionOptions.map(option => (
-                      <Option key={option} value={option}>{option}</Option>
+                    {suggestion.map(option => (
+                      <Option key={option.code} value={option.code}>{option.label}</Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -422,8 +428,8 @@ const RiskControlSuggestions: React.FC = () => {
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSensitive}
                   >
-                    {suggestionOptions.map(option => (
-                      <Option key={option} value={option}>{option}</Option>
+                    {suggestion.map(option => (
+                      <Option key={option.code} value={option.code}>{option.label}</Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -442,8 +448,8 @@ const RiskControlSuggestions: React.FC = () => {
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSensitive}
                   >
-                    {suggestionOptions.map(option => (
-                      <Option key={option} value={option}>{option}</Option>
+                    {suggestion.map(option => (
+                      <Option key={option.code} value={option.code}>{option.label}</Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -462,8 +468,8 @@ const RiskControlSuggestions: React.FC = () => {
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSensitive}
                   >
-                    {suggestionOptions.map(option => (
-                      <Option key={option} value={option}>{option}</Option>
+                    {suggestion.map(option => (
+                      <Option key={option.code} value={option.code}>{option.label}</Option>
                     ))}
                   </Select>
                 </Form.Item>

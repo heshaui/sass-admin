@@ -127,7 +127,6 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
       <Form
         form={form}
         layout="vertical"
-      
       >
         <h3>基本信息</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
