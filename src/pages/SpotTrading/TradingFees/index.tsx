@@ -3,7 +3,7 @@ import { PageContainer,ProTable } from '@ant-design/pro-components';
 import {  Button, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import EditForm from './components/EditForm';
-import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup } from '@/services/ant-design-pro/spot';
+import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup,updateExchangeCoinById } from '@/services/ant-design-pro/spot';
 
 interface TradingFee {
   id: string;
@@ -63,7 +63,7 @@ const TradingFees: React.FC = () => {
 
   const handleSubmit = async (values: any) => {
     // 实际项目中，这里应该调用API更新数据
-  let res = await updateExchangeGroup({
+  let res = await updateExchangeCoinById({
       id: currentRecord?.id,
       buyFee: values.buyFee,
       sellFee: values.sellFee,
