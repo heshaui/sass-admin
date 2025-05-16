@@ -403,7 +403,7 @@ if(res.code==='0'&&res.data){
                 <span style={{ marginRight: '20px' }}>H</span>
                 
                 <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
-                <Form.Item name="2faSuggestion" style={{ margin: 0, width: '300px' }}>
+                <Form.Item name="twofaSuggestion" style={{ margin: 0, width: '300px' }}>
                   <Select 
                     suffixIcon={<DownOutlined />}
                     disabled={!editingSensitive}

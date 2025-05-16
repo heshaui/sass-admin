@@ -33,4 +33,14 @@ export async function manualProcessing(params: any) {
 }
 
 
+//提现审核-人工处理-完成
+export async function manualPass(params: any) {
+  return request('/tenant/v1/manualPass', {
+    method: 'POST',
+    data: params,
+  });
+} 
+
+
+
 
