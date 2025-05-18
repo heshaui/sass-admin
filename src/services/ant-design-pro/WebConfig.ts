@@ -364,3 +364,21 @@ export async function deleteHomeMenu(body: API.FackeParams, options?: { [key: st
   });
 }
 
+
+// /tenant/v1/deleteHomeBottom
+export async function deleteHomeBottom(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/deleteHomeBottom?id='+body.id, {
+    method: 'POST',
+    data: body,
+    ...(options || {}),
+  });
+}
+  
+
+// /tenant/v1/homeBottomParams
+export async function homeBottomParams(body: API.FackeParams, options?: { [key: string]: any }) {
+  return request<API.FackeResult>('/tenant/v1/homeBottomParams?idString='+body.id, {
+    method: 'POST',
+    ...(options || {}),
+  });
+}

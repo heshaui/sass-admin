@@ -1,9 +1,9 @@
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, message, Space, Switch, Input } from 'antd';
+import { Button, message, Space, Switch, Input, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { homeBottomList, saveHomeBottom,homeBottomTranslationList, updateHomeBottomTranslationById, updateHomeBottomById,saveHomeBottomFooter,homeBottomFooterList,updateHomeBottomFooterById} from '@/services/ant-design-pro/WebConfig';
-import { updateValue,getTenantKeyParams} from '@/services/ant-design-pro/kv';
+import { homeBottomList, saveHomeBottom, homeBottomTranslationList, updateHomeBottomTranslationById, updateHomeBottomById, saveHomeBottomFooter, homeBottomFooterList, updateHomeBottomFooterById, deleteHomeBottom, homeBottomParams } from '@/services/ant-design-pro/WebConfig';
+import { updateValue, getTenantKeyParams } from '@/services/ant-design-pro/kv';
 import AddMenuModal from './components/AddMenuModal';
 import { languages } from '@/config/language';
 const languageOptions = languages
@@ -20,15 +20,16 @@ const Footer: React.FC = () => {
   const [isCustomFooter, setIsCustomFooter] = useState(false);
   const [customCode, setCustomCode] = useState('');
   const [footerId, setFooterId] = useState<number | null>(null);
-
+    const [editingMenu, setEditingMenu] = useState<any>(null);
+  
   // 获取菜单数据
   const getMenu = async () => {
     setLoading(true);
     try {
-      let data={
-        pageNo:1,
-        pageSize:1000,
-        languageCode:currentLanguage
+      let data = {
+        pageNo: 1,
+        pageSize: 1000,
+        languageCode: currentLanguage
       }
       const res = await homeBottomList(data);
       if (res.code === '0') {
@@ -52,7 +53,7 @@ const Footer: React.FC = () => {
   useEffect(() => {
     const getCustomFooterStatus = async () => {
       try {
-        const response = await getTenantKeyParams({key:'footer_setting'});
+        const response = await getTenantKeyParams({ key: 'footer_setting' });
         if (response.code === '0') {
           setIsCustomFooter(response.data.keyValue === '1');
         } else {
@@ -113,7 +114,7 @@ const Footer: React.FC = () => {
           menuDescription: values.values.menuDescription,
           parentId: parentId?.id || 0,
           orderIndex: 1,
-          bottomDescription:values.values.bottomDescription,
+          bottomDescription: values.values.bottomDescription,
           show: show,
           languageKey: currentLanguage,
           accessType: values.values.accessType,
@@ -140,19 +141,72 @@ const Footer: React.FC = () => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      const response = await deleteHomeBottom({ id });
+      if (response.code === '0') {
+        message.success('删除成功');
+        getMenu(); // 重新获取菜单数据
+      } else {
+        message.error('删除失败: ' + (response.message || '未知错误'));
+      }
+    } catch (error) {
+      console.log(error);
+      message.error('删除失败: ' + (error || '网络错误'));
+    }
+  };
+
+  // 处理编辑功能
+  const handleEdit = async (item: any) => {
+    try {
+      const res = await homeBottomParams({ id: item.bottomId });
+      if (res.code === "0") {
+        // 查找父级菜单信息
+        let parentMenuInfo = null;
+        if (res.data.homeMenu.parentId) {
+          // 递归查找父级菜单
+          const findParentMenu = (menus: any[], parentId: number): any => {
+            for (const menu of menus) {
+              if (menu.id === parentId) {
+                return menu;
+              }
+              if (menu.children && menu.children.length > 0) {
+                const found = findParentMenu(menu.children, parentId);
+                if (found) return found;
+              }
+            }
+            return null;
+          };
+          parentMenuInfo = findParentMenu(menuData, res.data.homeMenu.parentId);
+        }
+        
+
+        setEditingMenu(res.data);
+        setParentId(parentMenuInfo);
+        setModalType(true);
+      } else {
+        message.error("获取菜单详情失败");
+      }
+    } catch (error) {
+      message.error("获取菜单详情失败");
+    }
+  };
+
   // 递归渲染菜单
   const renderMenu = (menuList: any[]) => {
     // 过滤出父级菜单（parentId === 0）
     const parentMenus = menuList.filter(item => item.parentId === 0);
-    
+
     return parentMenus.map((parentItem) => {
       // 找出当前父菜单的所有子菜单
       const childMenus = menuList.filter(item => item.parentId === parentItem.id);
-      
+
       return (
         <div key={parentItem.id} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+
           {/* 父级菜单 */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+
             <Button
               style={{
                 background: '#F5F5F5',
@@ -161,11 +215,27 @@ const Footer: React.FC = () => {
                 fontWeight: 'bold',
                 padding: '6px 12px',
                 borderRadius: 8,
-                minWidth: 100,
+                minWidth: 150,
               }}
             >
+              <Popconfirm
+                title={`确定要删除${parentItem.bottomName}菜单吗？`}
+                onConfirm={(e) => { e?.stopPropagation(); handleDelete(parentItem.bottomId); }}
+                okText="确定"
+                cancelText="取消"
+              >
+
+                <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
+              </Popconfirm>
               {parentItem.bottomName}
+              <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
+                <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(parentItem); }} style={{ color: "#1890ff" }} />
+              </div>
             </Button>
+            <div style={{ display: "flex", alignItems: "center" }}>
+
+
+            </div>
             <Button
               onClick={() => handleModal(parentItem)}
               style={{
@@ -186,8 +256,10 @@ const Footer: React.FC = () => {
           {/* 子菜单 */}
           {childMenus.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+
               {childMenus.map((child) => (
                 <div key={child.id} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+
                   <Button
                     style={{
                       background: '#F5F5F5',
@@ -199,7 +271,18 @@ const Footer: React.FC = () => {
                       textAlign: 'left',
                     }}
                   >
+                    <Popconfirm
+                      title={`确定要删除${child.menuName}菜单吗？`}
+                      onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.id); }}
+                      okText="确定"
+                      cancelText="取消"
+                    >
+                      <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
+                    </Popconfirm>
                     • {child.bottomName}
+                    <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
+                      <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(child); }} style={{ color: "#1890ff" }} />
+                    </div>
                   </Button>
                   <Button
                     onClick={() => handleModal(child)}
@@ -289,19 +372,19 @@ const Footer: React.FC = () => {
             <span>自定义Footer</span>
           </div>
         </div>
-        <div style={{marginBottom:20}}> 收否开启自定义Footer<Switch checked={isCustomFooter} onChange={handleCustomFooterChange} style={{marginLeft:10}}/></div>
+        <div style={{ marginBottom: 20 }}> 收否开启自定义Footer<Switch checked={isCustomFooter} onChange={handleCustomFooterChange} style={{ marginLeft: 10 }} /></div>
         <div style={{ marginBottom: 16 }}>
-              {languageOptions.map((lang) => (
-                <Button
-                  key={lang.key}
-                  type={currentLanguage === lang.key ? 'primary' : 'default'}
-                  onClick={() => setCurrentLanguage(lang.key)}
-                  style={{ marginRight: 8 }}
-                >
-                  {lang.label}
-                </Button>
-              ))}
-            </div>
+          {languageOptions.map((lang) => (
+            <Button
+              key={lang.key}
+              type={currentLanguage === lang.key ? 'primary' : 'default'}
+              onClick={() => setCurrentLanguage(lang.key)}
+              style={{ marginRight: 8 }}
+            >
+              {lang.label}
+            </Button>
+          ))}
+        </div>
         {isCustomFooter && (
           <>
             <div style={{ marginBottom: 16 }}>
@@ -313,7 +396,7 @@ const Footer: React.FC = () => {
             </div>
 
             {/* 语言切换 */}
-           
+
 
             {/* 代码编辑区域 */}
             <TextArea
@@ -368,7 +451,7 @@ const Footer: React.FC = () => {
         </>
       )}
 
-      <AddMenuModal 
+      <AddMenuModal
         open={modalType}
         onCancel={handleCancel}
         onSubmit={handleSubmit}
