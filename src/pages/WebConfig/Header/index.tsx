@@ -204,7 +204,7 @@ const Header: React.FC = () => {
                 fontWeight: "bold",
                 padding: "6px 12px",
                 borderRadius: 8,
-                minWidth: 100,
+                width: 180,
                 position: "relative",
                 paddingRight: 60,
               }}
@@ -243,21 +243,23 @@ const Header: React.FC = () => {
 
           {/* 递归渲染子菜单 */}
           {item.children && item.children.length > 0 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 4, marginLeft: 20 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 4,}}>
               {item.children.map((child: any) => (
                 <div key={child.id} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                     <Button
                       style={{
-                        background: "#F5F5F5",
+                        background: child.typeId === 1 ? "transparent" : "#F5F5F5",
                         color: "#000",
                         fontSize: 14,
                         padding: "6px 12px",
                         borderRadius: 8,
-                        minWidth: 80,
+                        width: 180,
                         textAlign: "left",
                         position: "relative",
                         paddingRight: 60,
+                        border: child.typeId === 1 ? "none" : undefined,
+                        boxShadow: child.typeId === 1 ? "none" : undefined
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center" }}>
@@ -269,7 +271,7 @@ const Header: React.FC = () => {
                         >
                           <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
                         </Popconfirm>
-                        • {child.menuName}
+                        {child.menuName}
                       </div>
                       <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
                         <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(child); }} style={{ color: "#1890ff" }} />
@@ -294,7 +296,7 @@ const Header: React.FC = () => {
                   
                   {/* 递归渲染更深层级的子菜单 */}
                   {child.children && child.children.length > 0 && (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4, marginLeft: 20 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 4,  }}>
                       {renderMenu(child.children)}
                     </div>
                   )}
@@ -337,8 +339,9 @@ const Header: React.FC = () => {
            
             
             {menuData && menuData.length > 0 && renderMenu(menuData)}
-
-            <Button 
+          {
+            menuData.length < 10 && (
+              <Button 
                 type="text"
                 style={{
                   background: "#FF6A00" ,
@@ -349,6 +352,7 @@ const Header: React.FC = () => {
                 }}
                 onClick={() => handleModal()}
               >添加一级菜单<PlusOutlined /></Button>
+            )}
           </div>
         </div>
       </div>

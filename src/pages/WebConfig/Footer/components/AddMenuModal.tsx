@@ -9,9 +9,10 @@ interface AddMenuModalProps {
   onCancel: () => void;
   onSubmit: (values: any) => void;
   parentId?: any;
+  editingMenu?: any;
 }
 
-const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, parentId }) => {
+const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, parentId, editingMenu }) => {
   const [form] = Form.useForm();
   const [accessType, setAccessType] = useState("1");
   const [pcOptions, setPcOptions] = useState<any[]>([]);
@@ -34,6 +35,16 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
     form.setFieldsValue({
       values: {
         bottomName: parentId?.bottomName,
+        menuName: editingMenu?.homeBottomTranslation?.menuName,
+        accessPath: editingMenu?.homeBottom?.accessPath,
+        accessType: editingMenu?.homeBottom?.accessType,
+        displayStatus: editingMenu?.homeBottom?.displayStatus,
+        orderIndex: editingMenu?.homeBottom?.orderIndex,
+        parentId: editingMenu?.homeBottom?.parentId,
+        languagePath: editingMenu?.homeBottomTranslation?.languagePath,
+        menuId: editingMenu?.homeBottomTranslation?.menuId,
+        languageCode: editingMenu?.homeBottomTranslation?.languageCode,
+        languageIcon: editingMenu?.homeBottomTranslation?.languageIcon,
       }
     });
   }, [form, parentId]);
@@ -45,7 +56,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
 
   return (
     <Modal
-      title={parentId ? "添加子菜单" : "添加菜单"}
+      title={editingMenu ? "编辑菜单" : "添加菜单"}
       open={open}
       onCancel={handleCancel}
       footer={null}

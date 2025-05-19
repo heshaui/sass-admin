@@ -158,20 +158,20 @@ const CategoryManagement: React.FC = () => {
         >
           编辑
         </a>,
-        <a
-          key="delete"
-          onClick={() => {
-            Modal.confirm({
-              title: '确认删除',
-              content: '您确定要删除这个分类吗？',
-              okText: '确认',
-              cancelText: '取消',
-              onOk: () => handleRemoveCategory(record.id),
-            });
-          }}
-        >
-          删除
-        </a>,
+        // <a
+        //   key="delete"
+        //   onClick={() => {
+        //     Modal.confirm({
+        //       title: '确认删除',
+        //       content: '您确定要删除这个分类吗？',
+        //       okText: '确认',
+        //       cancelText: '取消',
+        //       onOk: () => handleRemoveCategory(record.id),
+        //     });
+        //   }}
+        // >
+        //   删除
+        // </a>,
       ],
     },
   ];

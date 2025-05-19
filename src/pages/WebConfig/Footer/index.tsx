@@ -167,7 +167,7 @@ const Footer: React.FC = () => {
       if (res.code === "0") {
         // 查找父级菜单信息
         let parentMenuInfo = null;
-        if (res.data.homeMenu.parentId) {
+        if (res.data.homeBottom.parentId) {
           // 递归查找父级菜单
           const findParentMenu = (menus: any[], parentId: number): any => {
             for (const menu of menus) {
@@ -181,9 +181,9 @@ const Footer: React.FC = () => {
             }
             return null;
           };
-          parentMenuInfo = findParentMenu(menuData, res.data.homeMenu.parentId);
+          parentMenuInfo = findParentMenu(menuData, res.data.homeBottom.parentId);
         }
-        
+        console.log("parentMenuInfo", parentMenuInfo);
 
         setEditingMenu(res.data);
         setParentId(parentMenuInfo);
@@ -460,6 +460,7 @@ const Footer: React.FC = () => {
         onCancel={handleCancel}
         onSubmit={handleSubmit}
         parentId={parentId}
+        editingMenu={editingMenu} 
       />
     </PageContainer>
   );
