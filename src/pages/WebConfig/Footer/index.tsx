@@ -90,6 +90,7 @@ const Footer: React.FC = () => {
 
   // 打开弹窗
   const handleModal = (item: any = null) => {
+    console.log("item", item);
     setParentId(item);
     setModalType(true);
   };
@@ -108,11 +109,13 @@ const Footer: React.FC = () => {
     } else {
       show = 0;
     }
+    console.log("values", values);
+    console.log("parentId", parentId);
     try {
       const data = {
         homeBottom: {
           menuDescription: values.values.menuDescription,
-          parentId: parentId?.id || 0,
+          parentId: parentId?.bottomId || 0,
           orderIndex: 1,
           bottomDescription: values.values.bottomDescription,
           show: show,
@@ -132,6 +135,7 @@ const Footer: React.FC = () => {
         message.success('菜单添加成功');
         handleCancel();
         getMenu(); // 重新获取菜单数据
+        setParentId(null);
       } else {
         message.error('菜单添加失败: ' + (response.message || '未知错误'));
       }

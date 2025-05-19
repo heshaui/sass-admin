@@ -16,7 +16,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
   const [accessType, setAccessType] = useState("1");
   const [pcOptions, setPcOptions] = useState<any[]>([]);
 
-  useEffect(() => {
+  useEffect(() => { 
     const fetchPcOptions = async () => {
       try {
         const result = await pcAccessPathAll();
@@ -30,7 +30,13 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
     };
     
     fetchPcOptions();
-  }, []);
+    console.log("parentId", parentId);
+    form.setFieldsValue({
+      values: {
+        bottomName: parentId?.bottomName,
+      }
+    });
+  }, [form, parentId]);
 
   const handleCancel = () => {
     form.resetFields();
@@ -62,13 +68,15 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
         >
           <Input placeholder="菜单名字" />
         </Form.Item>
+        { parentId && (
         <Form.Item
-          label="菜单描述"
-          name={['values', 'bottomDescription']}
-          rules={[{ required: true, message: '请输入菜单描述' }]}
+          label="父级菜单"
+          name={['values', 'bottomName']}
         >
-          <Input placeholder="菜单描述" />
-        </Form.Item>
+          <Input placeholder="父级菜单" disabled={true}/>
+        </Form.Item> 
+       
+        )}
         <Form.Item label="跳转地址">
           <Form.Item
             name={['values', 'accessType']}
