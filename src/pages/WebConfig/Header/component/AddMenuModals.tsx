@@ -25,8 +25,8 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   const [displayType, setDisplayType] = useState('vertical'); // 默认选中"竖排"
   const [typeId, setTypeId] = useState<number>(1); // Default to 1 (标签) for new form instances
   const [accessPaths, setAccessPaths] = useState<any[]>([]);
-  // displayStatus
-  const [displayStatus, setDisplayStatus] = useState(0);
+  // displayStatus - default to 1 (enabled)
+  const [displayStatus, setDisplayStatus] = useState(1);
   const tops = selectedStyle === 'custom' ? 80 : 20;
   const iconNew =
     'https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/02/20/c667acb2-89a1-407c-9e03-3017eb222f7f.png';
@@ -75,6 +75,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
       setTypeId(homeMenu.typeId);
       setAccessType(homeMenu.accessType || '1');
       setDisplayType(homeMenu.spreadPattern?.toString() || '0');
+      setDisplayStatus(homeMenu.displayStatus ?? 1);
 
       // 设置图标状态
       setIconUrlDay(homeMenu.iconUrlDay);
@@ -125,6 +126,12 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   };
 
   const onFinish = async (values: any) => {
+    // Ensure displayStatus is set to 1 by default if not provided
+    if (values.displayStatus === undefined) {
+      values.displayStatus = 1;
+    } else {
+      values.displayStatus = values.displayStatus ? 1 : 0;
+    }
 
     let data = {
       values,
@@ -182,7 +189,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
         {typeId === 1 ? (
           <>
             {/* 标签模式：只显示展现形式和标签名 */}
-            <Form.Item
+            {/* <Form.Item
               label="展现形式"
               name="spreadPattern"
               rules={[{ required: true, message: '请选择展现形式' }]}
@@ -195,7 +202,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
                   横排 <a style={{ color: '#1890ff', marginLeft: 4 }}>查看示例图</a>
                 </Radio>
               </Radio.Group>
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item
               label="标签名"
               name="menuName"
