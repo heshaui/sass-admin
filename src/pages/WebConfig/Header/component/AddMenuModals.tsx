@@ -228,9 +228,6 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
             >
               <Input placeholder="副标题" />
             </Form.Item>
-            <Form.Item label="菜单描述" name="menuDescription">
-              <Input placeholder="菜单描述" />
-            </Form.Item>
             <Form.Item label="访问路径">
               <Radio.Group value={accessType} onChange={(e) => setAccessType(e.target.value)}>
                 <Radio value="1">PC功能</Radio>
@@ -276,7 +273,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
                 </Flex>
               </Form.Item>
             )}
-
+{/* 
             <Form.Item label="角标">
               <Radio.Group value={selectedStyle} onChange={(e) => setSelectedStyle(e.target.value)}>
                 <Radio value="new">样式一</Radio>
@@ -295,7 +292,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
                   142*72png图片
                 </div>
               )}
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item label="是否显示" name="displayStatus" style={{ marginTop: tops }}>
               <Switch onChange={(checked) => setDisplayStatus(checked ? 1 : 0)} checked={displayStatus === 1} />
             </Form.Item>
