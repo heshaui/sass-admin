@@ -23,7 +23,7 @@ export async function merchantCurrentUser(options?: { [key: string]: any }) {
 
 /** 退出登录接口 POST /api/login/outLogin */
 export async function outLogin(options?: { [key: string]: any }) {
-  return request<Record<string, any>>('/tenant-admin/v1/logout', {
+  return request<Record<string, any>>(isAdmin?'/tenant-admin/v1/logout':'/tenant/v1/logout', {
     method: 'GET',
     ...(options || {}),
   });
