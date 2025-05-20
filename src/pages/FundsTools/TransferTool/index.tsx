@@ -8,6 +8,7 @@ import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin'
 import { useModel } from 'umi';
 import GoogleCode from '@/components/GoogleCode';
 import { tenantCurrencyCoinList} from '@/services/ant-design-pro/spot';
+import { clearAllCookies } from '@/utils';
 const { Option } = Select;
 
 const TransferTool: React.FC = () => {
@@ -108,7 +109,8 @@ if(fromAccount==='user'&&toAccount==='user'){
     const res=await bindGoogleKey({ googleCode: code });
     if(res.code==='0'&&res.data){
       message.success('绑定成功');
-      refresh();
+      clearAllCookies();
+      window.location.reload();
 
 
     }else{

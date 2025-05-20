@@ -17,6 +17,7 @@ import Asset from './Asset';
 import UserTransaction from './UserTransaction';
 import Reconciliation from './Reconciliation';
 import Log from './log';
+import { clearAllCookies } from '@/utils';
 
 const { Option } = Select;
 
@@ -189,8 +190,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
     const res=await bindGoogleKey({ googleCode: code });
     if(res.code==='0'&&res.data){
       message.success('绑定成功');
-      refresh();
-      await getLog({current:1,pageSize:10})
+       clearAllCookies();
+            window.location.reload();
 
     }else{
       message.error(res.message);

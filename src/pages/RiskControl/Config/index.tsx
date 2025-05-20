@@ -5,6 +5,7 @@ import { riskConditionTemplateList,saveRiskConditions } from '@/services/ant-des
 import { useModel } from 'umi';
 import GoogleCode from '@/components/GoogleCode';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
+import { clearAllCookies } from '@/utils';
 const { Text } = Typography;
 
 const RiskControlConfig: React.FC = () => {
@@ -169,7 +170,8 @@ const RiskControlConfig: React.FC = () => {
     const res=await bindGoogleKey({ googleCode: code });
     if(res.code==='0'&&res.data){
       message.success('绑定成功');
-      refresh();
+      clearAllCookies();
+           window.location.reload();
 
 
     }else{

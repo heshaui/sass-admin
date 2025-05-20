@@ -17,8 +17,8 @@ interface GoogleCodeProps {
 }
 
 const GoogleCode: React.FC<GoogleCodeProps> = ({ 
-  secretKey = '4D5F6G7H8RTFYG', 
-  qrCodeUrl = '/qrcode.png', 
+  secretKey,
+  qrCodeUrl,
   onSubmit, 
   onCancel,
   visible = false,
@@ -33,7 +33,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   const [countdown, setCountdown] = useState<number>(30);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const isTotpUri = qrCodeUrl.startsWith('otpauth://');
+  const isTotpUri = qrCodeUrl?.startsWith('otpauth://');
 
   useEffect(() => {
     if (isTotpUri && !secretKey) {

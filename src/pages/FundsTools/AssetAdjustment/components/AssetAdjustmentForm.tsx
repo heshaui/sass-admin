@@ -7,6 +7,7 @@ import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import { useModel } from 'umi';
 import GoogleCode from '@/components/GoogleCode';
+import { clearAllCookies } from '@/utils';
 const { Option } = Select;
 
 interface AssetAdjustmentFormProps {
@@ -72,15 +73,12 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
   }
 
   const handleGoogleCodeSuccess = async (code: string) => {
-
-    
-    const res=await bindGoogleKey({ googleCode: code });
-    if(res.code==='0'&&res.data){
+    const res = await bindGoogleKey({ googleCode: code });
+    if (res.code === '0' && res.data) {
       message.success('绑定成功');
-      refresh();
-
-
-    }else{
+      clearAllCookies();
+      window.location.reload();
+    } else {
       message.error(res.message);
     }
     setGoogleCodeVisible(false);
