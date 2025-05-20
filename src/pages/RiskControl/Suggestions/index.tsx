@@ -22,7 +22,6 @@ const RiskControlSuggestions: React.FC = () => {
   const [template, setTemplate] = useState<any>({});
   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
-  const [googleCode, setGoogleCode] = useState('');
   const [sugEdit, setSugEdit] = useState<any>();
   // 处理建议选项
   const suggestionOptions = [

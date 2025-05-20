@@ -11,6 +11,10 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { Button, message, Modal, Radio, Switch } from 'antd';
 import React, { useRef, useState } from 'react';
 import TradingPairForm from './components/TradingPairForm';
+import GoogleCode from '@/components/GoogleCode';
+import { sendGoogleKey, bindGoogleKey } from '@/services/ant-design-pro/authAdmin';
+import { clearAllCookies } from '@/utils';
+import { useModel } from 'umi';
 /**
  * 币对类型定义
  */
@@ -48,7 +52,11 @@ const TradingPairManagement: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<TradingPair | undefined>(undefined);
   const [matchingTypeVisible, setMatchingTypeVisible] = useState<boolean>(false);
   const [matchingType, setMatchingType] = useState<number>(1);
+    const { initialState, refresh } = useModel('@@initialState');
+    const { currentUser } = initialState || {};
   const [currentMatchingRow, setCurrentMatchingRow] = useState<TradingPair | undefined>(undefined);
+   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
+    const [googleCodeData, setGoogleCodeData] = useState<any>(null);
 
   const fetchTradingPairs = async (params: any) => {
     const res = await exchangeCoinList({
@@ -167,7 +175,31 @@ const TradingPairManagement: React.FC = () => {
       }
     });
   }
+  const getGoogleCode = async () => {
+    const res = await sendGoogleKey();
+    if (res.code === '0') {
+      setGoogleCodeData(res.data);
+      setGoogleCodeVisible(true);
+    } else {
+      message.error(res.message);
+    }
 
+  }
+
+
+
+    const handleGoogleCodeSuccess = async (code: string) => {
+      const res = await bindGoogleKey({ googleCode: code });
+      if (res.code === '0' && res.data) {
+        message.success('绑定成功');
+        clearAllCookies();
+        window.location.reload();
+      } else {
+        message.error(res.message);
+      }
+      setGoogleCodeVisible(false);
+    }
+  
 
   // 表格列定义
   const columns: ProColumns<TradingPair>[] = [
@@ -269,9 +301,11 @@ const TradingPairManagement: React.FC = () => {
         >
           修改
         </a>,
-        <a key="cancelOrders" style={{ color: '#ff4d4f' }} onClick={() => handleCancelOrders(record)}>
+        <a key="cancelOrders" style={{ color: '#ff4d4f' }} onClick={() => currentUser?.employeeResp?.googleCode === true ? handleCancelOrders(record): getGoogleCode()}>
           撤销全部订单
         </a>,
+
+        
         // <a
         //   key="mergeType"
         //   onClick={() => {
@@ -340,6 +374,13 @@ const TradingPairManagement: React.FC = () => {
           </Button>
         </div>
       </Modal>
+      <GoogleCode
+        visible={googleCodeVisible}
+        qrCodeUrl={googleCodeData?.codeUri}
+        secretKey={googleCodeData?.secretKey}
+        onSubmit={handleGoogleCodeSuccess}
+        onCancel={() => setGoogleCodeVisible(false)}
+      />
     </PageContainer>
   );
 };
