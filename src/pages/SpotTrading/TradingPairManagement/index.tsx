@@ -272,15 +272,15 @@ const TradingPairManagement: React.FC = () => {
         <a key="cancelOrders" style={{ color: '#ff4d4f' }} onClick={() => handleCancelOrders(record)}>
           撤销全部订单
         </a>,
-        <a
-          key="mergeType"
-          onClick={() => {
-            setCurrentMatchingRow(record);
-            setMatchingTypeVisible(true);
-          }}
-        >
-          撮合类型
-        </a>,
+        // <a
+        //   key="mergeType"
+        //   onClick={() => {
+        //     setCurrentMatchingRow(record);
+        //     setMatchingTypeVisible(true);
+        //   }}
+        // >
+        //   撮合类型
+        // </a>,
       ],
     },
   ];
