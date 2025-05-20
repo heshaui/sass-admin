@@ -39,7 +39,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
   const handleSubmit = () => {
     form.validateFields()
       .then(values => {
-        console.log(values);
+        console.log("表单值",values);
         if (values.issuingDate) {
           values.unit=values.coinName
           values.issuingDate = dayjs(values.issuingDate).format('YYYY-MM-DD');
@@ -275,8 +275,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
                 <Select.Option value={0}>不需要标签</Select.Option>
                 <Select.Option value={1}>需要标签</Select.Option>
               </Select>
-              <span>若需要标签，前台用户需要标签才可以进行提币</span>
+             
             </Form.Item>
+            <span>若需要标签，前台用户需要标签才可以进行提币</span>
           </Col>
            )}
             
@@ -325,8 +326,8 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <Select.Option value={1}>是</Select.Option>
             <Select.Option value={0}>否</Select.Option>
           </Select>
-          <span>启用后，前台将显示该币种，反之不显示</span>
         </Form.Item>
+        <span>启用后，前台将显示该币种，反之不显示</span>
         </Col>
         </Row>
       </Card>
@@ -359,8 +360,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
                 <Select.Option value={1}>是</Select.Option>
                 <Select.Option value={0}>否</Select.Option>
               </Select>
-              <span>状态将同时影响从币</span>
+            
             </Form.Item>
+            <span>状态将同时影响从币</span>
           </Col>
           
           <Col span={12}>
@@ -387,8 +389,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
                 <Select.Option value={1}>是</Select.Option>
                 <Select.Option value={0}>否</Select.Option>
               </Select>
-              <span>状态将同时影响从币</span>
+             
             </Form.Item>
+            <span>状态将同时影响从币</span>
           </Col>
           <Col span={12}>
             <Form.Item
