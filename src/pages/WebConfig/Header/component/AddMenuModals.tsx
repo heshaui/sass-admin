@@ -253,8 +253,12 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
               <Form.Item label="icon">
                 <Flex gap="middle" wrap>
                   <div>
-                    <div style={{ textAlign: 'center' }}>夜间</div>
-                    <AvatarUpload onChange={handleDayChange} value={iconUrlNight} />
+                    <div style={{ textAlign: 'center' }}>日间</div>
+                    <AvatarUpload 
+                      key="day-uploader"
+                      onChange={handleDayChange} 
+                      value={iconUrlDay} 
+                    />
                     <div style={{ fontSize: 12, color: '#999' }}>
                       请上传小于500k
                       <br />
@@ -262,8 +266,12 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
                     </div>
                   </div>
                   <div>
-                    <div style={{ textAlign: 'center' }}>日间</div>
-                    <AvatarUpload onChange={handleNightChange} value={iconUrlDay} />
+                    <div style={{ textAlign: 'center' }}>夜间</div>
+                    <AvatarUpload 
+                      key="night-uploader"
+                      onChange={handleNightChange} 
+                      value={iconUrlNight} 
+                    />
                     <div style={{ fontSize: 12, color: '#999' }}>
                       请上传小于500k
                       <br />
