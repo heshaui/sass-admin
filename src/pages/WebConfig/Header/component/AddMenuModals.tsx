@@ -224,7 +224,6 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
             <Form.Item
               label="副标题"
               name="menuViceName"
-              rules={[{ required: true, message: '请输入副标题' }]}
             >
               <Input placeholder="副标题" />
             </Form.Item>
