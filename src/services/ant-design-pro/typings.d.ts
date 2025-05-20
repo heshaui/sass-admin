@@ -291,6 +291,25 @@ export type BaseResponse = {
   failMsg?: BaseResponse;
   message?: string;
   reqNo?: string;
-  [property: string]: any;
-}
-}
+};
+
+type GoogleAuthVo = {
+  /** Google Authenticator code */
+  code: string;
+  /** Google Authenticator secret key */
+  secret?: string;
+};
+
+type GoogleAuthResponse = {
+  /** Response code */
+  code: string;
+  /** Response message */
+  message?: string;
+  /** Response data */
+  data?: {
+    /** Whether the operation was successful */
+    success: boolean;
+    /** Additional message */
+    message?: string;
+  };
+};
