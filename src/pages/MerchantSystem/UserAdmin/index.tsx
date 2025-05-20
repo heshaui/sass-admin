@@ -8,9 +8,10 @@ import { getTenantEmployeeList,saveTenantEmployee,restPasswordTenantEmployee,del
 import UserModal from './component/UserModal'; // 引入UserModal
 import ResetPasswordModal from './component/ResetPasswordModal';
 import ResetGoogleModal from './component/ResetGoogleModal';
-import BindGoogleModal from './component/BindGoogleModal'; // 引入绑定谷歌验证弹框
+import GoogleCode from '@/components/GoogleCode'
 import { getTenantRoleList } from '@/services/ant-design-pro/merchantSystem';
-
+import { clearAllCookies } from '@/utils';
+import { sendGoogleKey } from '@/services/ant-design-pro/authAdmin';
 const UserAdmin: React.FC = () => {
    const [data, setData] = useState([]);
    const [loading, setLoading] = useState(false);
@@ -20,7 +21,9 @@ const UserAdmin: React.FC = () => {
    const [bindGoogleVisible, setBindGoogleVisible] = useState(false); // 控制绑定谷歌弹框
    const [editingRecord, setEditingRecord] = useState(null); // 当前操作的记录
    const [roleOptions, setRoleOptions] = useState([]); // 添加角色选项状态
- 
+    const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
+    const [googleCodeData, setGoogleCodeData] = useState<any>(null);
+  
    // 获取角色列表
    const getRoleList = async () => {
      try {
@@ -146,17 +149,6 @@ const UserAdmin: React.FC = () => {
               >
                 重置密码
               </Menu.Item>
-              {(!record.googleCode || record.googleCode === '-') && (
-                <Menu.Item
-                  key="bindGoogle"
-                  onClick={() => {
-                    setEditingRecord(record);
-                    setBindGoogleVisible(true);
-                  }}
-                >
-                  绑定谷歌
-                </Menu.Item>
-              )}
               {record.googleCode && record.googleCode !== '-' && (
                 <Menu.Item
                   key="resetGoogle"
@@ -324,6 +316,32 @@ const handleResetGoogleAuth = async () => {
     }
   };
 
+  const getGoogleCode=async()=>{
+    const res=await sendGoogleKey();
+    if(res.code==='0'){
+        
+        setGoogleCodeData(res.data);
+        setGoogleCodeVisible(true);
+    }else{
+        message.error(res.message);
+    }
+    
+  }
+  const handleGoogleCodeSuccess = async (code: string) => {
+
+    
+    const res=await bindGoogleKey({ googleCode: code });
+    if(res.code==='0'&&res.data){
+      message.success('绑定成功');
+      clearAllCookies();
+      window.location.reload();
+
+
+    }else{
+      message.error(res.message);
+    }
+    setGoogleCodeVisible(false);
+  }
   return (
     <PageContainer>
       <ProTable
@@ -397,11 +415,12 @@ const handleResetGoogleAuth = async () => {
       />
       
       {/* 绑定谷歌弹框 */}
-      <BindGoogleModal
-        visible={bindGoogleVisible}
-        onClose={() => setBindGoogleVisible(false)}
-        onSubmit={handleBindGoogleAuth}
-        userId={editingRecord?.id}
+      <GoogleCode
+       visible={googleCodeVisible} 
+       qrCodeUrl={googleCodeData?.codeUri} 
+       secretKey={googleCodeData?.secretKey} 
+       onSubmit={handleGoogleCodeSuccess} 
+       onCancel={() => setGoogleCodeVisible(false)}
       />
     </PageContainer>
   );
