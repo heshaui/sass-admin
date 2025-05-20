@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Switch, Button, Radio, Select } from 'antd';
-import { saveHomeBottom, pcAccessPathAll } from '@/services/ant-design-pro/WebConfig';
+import { saveHomeBottom, pcAccessPathAll,updateHomeBottomById,updateHomeBottomTranslationById} from '@/services/ant-design-pro/WebConfig';
 
 const { Option } = Select;
 
@@ -31,14 +31,15 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
     };
     
     fetchPcOptions();
+    console.log("editingMenu", editingMenu);
     console.log("parentId", parentId);
     form.setFieldsValue({
       values: {
         bottomName: parentId?.bottomName,
-        menuName: editingMenu?.homeBottomTranslation?.menuName,
+        menuName: editingMenu?.homeBottomTranslation?.bottomName,
         accessPath: editingMenu?.homeBottom?.accessPath,
-        accessType: editingMenu?.homeBottom?.accessType,
-        displayStatus: editingMenu?.homeBottom?.displayStatus,
+        accessType: editingMenu?.homeBottom?.accessType.toString(),
+        show: editingMenu?.homeBottom?.show,
         orderIndex: editingMenu?.homeBottom?.orderIndex,
         parentId: editingMenu?.homeBottom?.parentId,
         languagePath: editingMenu?.homeBottomTranslation?.languagePath,
@@ -47,7 +48,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
         languageIcon: editingMenu?.homeBottomTranslation?.languageIcon,
       }
     });
-  }, [form, parentId]);
+  }, [form, parentId, editingMenu]);
 
   const handleCancel = () => {
     form.resetFields();

@@ -91,6 +91,7 @@ const Footer: React.FC = () => {
   // 打开弹窗
   const handleModal = (item: any = null) => {
     console.log("item", item);
+    setEditingMenu(null)
     setParentId(item);
     setModalType(true);
   };
@@ -103,6 +104,10 @@ const Footer: React.FC = () => {
 
   // 处理表单提交
   const handleSubmit = async (values: any) => {
+    if(editingMenu!=null){
+    await handleEditSubmit(values);
+      return;
+    }
     let show;
     if (values.values.show) {
       show = 1;
@@ -143,6 +148,71 @@ const Footer: React.FC = () => {
       console.log(error);
       message.error('提交失败: ' + (error || '网络错误'));
     }
+  };
+
+
+  const handleEditSubmit = async (values: any) => {
+    let show;
+    if (values.values.show) {
+      show = 1;
+    } else {
+      show = 0;
+    }
+
+    console.log("editingMenu", editingMenu);
+
+      // const data = {
+      //   homeBottom: {
+      //     menuDescription: values.values.menuDescription,
+      //     parentId: parentId?.bottomId || 0,
+      //     orderIndex: 1,
+      //     bottomDescription: values.values.bottomDescription,
+      //     show: show,
+      //     languageKey: currentLanguage,
+      //     accessType: values.values.accessType,
+      //     accessPath: values.values.accessPath,
+      //   },
+      //   homeBottomTranslation: {
+      //     languageCode: currentLanguage,
+      //     languagePath: '/home/zh_CN',
+      //     bottomName: values.values.menuName,
+      //   },
+      // };
+      let data={
+        id:editingMenu?.homeBottom.id,
+        menuDescription: values.values.menuDescription,
+        parentId: editingMenu?.homeBottom.parentId || 0,
+        orderIndex: 1,
+        bottomDescription: values.values.bottomDescription,
+        show: show,
+        languageKey: currentLanguage,
+        accessType: values.values.accessType,
+        accessPath: values.values.accessPath,
+      }
+
+      let data1={
+        id:editingMenu?.homeBottomTranslation.id,
+        bottomId:editingMenu?.homeBottom.id,
+        languageCode:currentLanguage, 
+        languagePath: '/home/zh_CN',
+        bottomName: values.values.menuName,
+      }
+      const response = await updateHomeBottomById(data);
+      const response1 = await updateHomeBottomTranslationById(data1)
+
+      if(response.code==='0' && response.data&&response1.code==='0'&&response1.data){
+        message.success('菜单编辑成功');
+        
+
+      }else{
+        message.error('菜单编辑失败');
+      }
+      setModalType(false);
+      setEditingMenu(null);
+   
+
+
+
   };
 
   const handleDelete = async (id: number) => {
@@ -203,10 +273,10 @@ const Footer: React.FC = () => {
 
     return parentMenus.map((parentItem) => {
       // 找出当前父菜单的所有子菜单
-      const childMenus = menuList.filter(item => item.parentId === parentItem.id);
+      const childMenus = menuList.filter(item => item.parentId === parentItem.bottomId);
 
       return (
-        <div key={parentItem.id} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <div key={parentItem.bottomId} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
 
           {/* 父级菜单 */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -262,7 +332,7 @@ const Footer: React.FC = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
 
               {childMenus.map((child) => (
-                <div key={child.id} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <div key={child.bottomId} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
 
                   <Button
                     style={{
@@ -277,7 +347,7 @@ const Footer: React.FC = () => {
                   >
                     <Popconfirm
                       title={`确定要删除${child.menuName}菜单吗？`}
-                      onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.id); }}
+                      onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.bottomId); }}
                       okText="确定"
                       cancelText="取消"
                     >

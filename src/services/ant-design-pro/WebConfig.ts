@@ -228,6 +228,11 @@ export async function saveHomeBottom(body: API.FackeParams, options?: { [key: st
     ...(options || {}),
   });
 }
+
+
+
+
+
 // 获取首页图片列表
 export async function homeImageList(body: API.FackeParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/homeImageList', {

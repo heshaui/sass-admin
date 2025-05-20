@@ -104,8 +104,11 @@ const RiskControlConfig: React.FC = () => {
     let res= await saveRiskConditions(data);
     if(res.code==='0'){
       message.success('保存成功');
+    }else{
+      message.error(res.message);
     }
-  }
+    setEditingSection(null); // 提交后退出编辑模式
+  };
 
   const theftFinish = async(values: any) => {
     let riskConditionVos=[
@@ -138,6 +141,8 @@ const RiskControlConfig: React.FC = () => {
     let res= await saveRiskConditions(data);
     if(res.code==='0'){
       message.success('保存成功');
+    }else{
+      message.error(res.message);
     }
     setEditingSection(null); // 提交后退出编辑模式
   };
@@ -202,7 +207,7 @@ const RiskControlConfig: React.FC = () => {
             setMoneyTemplate(item);
             if(item.riskConditions[0].conditionId!==2){
               moneyForm.setFieldsValue({
-                time_window:Number(item.riskConditions[0].thresholdMap.count),
+                time_window:Number(item.riskConditions[0].thresholdMap.time_window),
                 count:Number(item.riskConditions[0].thresholdMap.count),
                 oneRiskIncrement:Number(item.riskConditions[0].riskIncrement),
                 twoRiskIncrement:Number(item.riskConditions[1].riskIncrement),

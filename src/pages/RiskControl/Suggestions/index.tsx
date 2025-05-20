@@ -210,6 +210,7 @@ const RiskControlSuggestions: React.FC = () => {
       googleCode: values.googleCode,
     }
     let res = await saveRiskConditions(data);
+    console.log(res);
     if (res.code === '0') {
       message.success('保存成功');
       setEditingSensitive(false);
