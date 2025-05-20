@@ -234,7 +234,7 @@ const TradingPairManagement: React.FC = () => {
     },
     {
       title: '价格精度',
-      dataIndex: '计价币精度',
+      dataIndex: 'baseCoinScale',
       search: false,
     },
     {
