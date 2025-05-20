@@ -1,6 +1,7 @@
 import { request } from '@umijs/max';
 const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
 
+
 //权限列表
 export async function AuthorityList(
   body:API.TenantAuthorityVo,

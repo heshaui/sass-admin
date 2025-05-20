@@ -16,7 +16,7 @@ import { getRewardConfigurationDetail,getCurrencyCoinList,getUserInviteDetailLis
 import LanguageSelector from '@/components/LanguageSelector';
 import type { ProColumns } from '@ant-design/pro-components';
 import AvatarUpload from "@/components/AvatarUpload/index";
-import { getTenantKeyParams,updateValue } from '@/services/ant-design-pro/kv';
+import { getTenantKeyParams,updateValue,updateAccountConfiguration} from '@/services/ant-design-pro/kv';
 import ImageConfigModal from './components/ImageConfigModal';
 import ImagePlaceholder from '@/components/ImagePlaceholder';
 const { Option } = Select;
@@ -223,7 +223,7 @@ const BasicConfig: React.FC = () => {
           valuePropName="checked"
         >
           <Switch checked={config==='1'} onChange={ async (checked)=>{
-           const res= await updateValue({keyProperty:'account_configuration',keyValue:checked?'1':'0'});
+           const res= await updateAccountConfiguration({keyProperty:'account_configuration',keyValue:checked?'1':'0'});
            if(res.code==='0'){
             message.success('配置保存成功');
            }else{

@@ -125,3 +125,11 @@ export async function updateValue(data: UpdateValueParams) {
     data,
   });
 }
+
+
+export async function updateAccountConfiguration(data: UpdateValueParams) {
+  return request('/tenant/v1/updateAccountConfiguration', {
+    method: 'POST',
+    data,
+  });
+}
