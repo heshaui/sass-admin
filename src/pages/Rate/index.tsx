@@ -1,7 +1,7 @@
 import React, { useRef, useState, createRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns, FormInstance } from '@ant-design/pro-components';
-import { Button, message, Switch } from 'antd';
+import { Button, message, Switch,Image } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch, ProFormItem } from '@ant-design/pro-components';
 import { queryRateList, updateRate, queryTenantRateList,updateExchangeRateById,updateTenantExchangeRate } from '../../services/ant-design-pro/Rate';
@@ -77,10 +77,11 @@ const Rate: React.FC = () => {
       title: '图标',
       dataIndex: 'iconUrl',
       search: false,
-      render: (_, record) => (
-        <img 
+      render: (_, record: any) => (
+        <Image 
           src={record.iconUrl} 
-          style={{ maxWidth: '200px', maxHeight: '100px' }}
+          width={50} 
+          height={50} 
         />
       ),
     },
