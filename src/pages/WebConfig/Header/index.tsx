@@ -341,8 +341,8 @@ const Header: React.FC = () => {
            
             
             {menuData && menuData.length > 0 && renderMenu(menuData)}
-          {
-            menuData.length < 10 && (
+          
+
               <Button 
                 type="text"
                 style={{
@@ -354,7 +354,7 @@ const Header: React.FC = () => {
                 }}
                 onClick={() => handleModal()}
               >添加一级菜单<PlusOutlined /></Button>
-            )}
+            
           </div>
         </div>
       </div>
