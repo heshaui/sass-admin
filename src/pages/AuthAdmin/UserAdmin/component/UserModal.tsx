@@ -43,7 +43,11 @@ const UserModal: React.FC<UserModalProps> = ({
   // 编辑时填充初始值
   useEffect(() => {
     if (initialValues) {
-      form.setFieldsValue(initialValues);
+      const formValues = {
+        ...initialValues,
+        role: initialValues.role ? initialValues.role.split(',') : []
+      };
+      form.setFieldsValue(formValues);
     }
   }, [initialValues, form]);
 
@@ -52,7 +56,11 @@ const UserModal: React.FC<UserModalProps> = ({
     form
       .validateFields()
       .then((values) => {
-        onSubmit(values); // 调用提交函数
+        const submitValues = {
+          ...values,
+          role: values.role ? values.role.join(',') : ''
+        };
+        onSubmit(submitValues); // 调用提交函数
         form.resetFields();
       })
       .catch((info) => {
@@ -110,7 +118,15 @@ const UserModal: React.FC<UserModalProps> = ({
         <Form.Item
           name="role"
           label="角色"
-          rules={[{ required: true, message: '请选择角色', type: 'array' }]}
+          rules={[
+            { required: true, message: '请选择角色' },
+            {
+              validator: (_, value) =>
+                !value || value.length === 0
+                  ? Promise.reject(new Error('请至少选择一个角色'))
+                  : Promise.resolve(),
+            },
+          ]}
         >
            <Select 
              mode="multiple" 

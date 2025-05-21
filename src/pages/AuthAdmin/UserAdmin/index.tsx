@@ -10,6 +10,7 @@ import BindGoogleModal from './component/BindGoogleModal'; // 引入绑定谷歌
 import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
 
 
+
 const UserAdmin: React.FC = () => {
    const [data, setData] = useState([]);
    const [loading, setLoading] = useState(false);
@@ -23,9 +24,13 @@ const UserAdmin: React.FC = () => {
    // 获取角色列表
    const getRoleList = async () => {
      try {
-       const res = await fetchRoleListApi();
+      let data={
+        pageNo:1,
+        pageSize:10000
+      }
+       const res = await fetchRoleListApi(data);
        if (res?.data) {
-         setRoleOptions(res.data || []);
+         setRoleOptions(res.data.list || []);
        }
      } catch (error) {
        console.error('获取角色列表失败:', error);
@@ -59,12 +64,18 @@ const UserAdmin: React.FC = () => {
       title: '角色',
       dataIndex: 'role',
       key: 'role',
-      search:false,
-      filters: roleOptions.map(role => ({ text: role.roleName, value: role.roleId })),
-      onFilter: (value, record) => Number(record.role) === Number(value),
-      render: (roleId) => {
-        const role = roleOptions.find(r => Number(r.roleId)=== Number(roleId));
-        return role ? role.roleName : roleId;
+      search: false,
+      filters: roleOptions.map(role => ({ text: role.roleName, value: String(role.roleId) })),
+      onFilter: (value, record) => {
+        if (!record.role) return false;
+        const userRoles = String(record.role).split(',').map(Number);
+        return userRoles.includes(Number(value));
+      },
+      render: (roleIds) => {
+        if (!roleIds) return '-';
+        const ids = String(roleIds).split(',').map(Number);
+        const roles = roleOptions.filter(r => ids.includes(Number(r.roleId)));
+        return roles.map(r => r.roleName).join(', ') || '-';
       },
     },
     {
@@ -82,6 +93,7 @@ const UserAdmin: React.FC = () => {
       title: '2FA',
       dataIndex: 'googleCode',
       key: 'googleCode',
+      search:false,
       render: (text) => {
         return text && text !== '-' ? (
           <Tag color="green">已开启</Tag>
