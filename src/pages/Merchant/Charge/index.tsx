@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
-import { Tabs, Button, Modal } from "antd";
+import { Tabs, Button } from "antd";
 import { tenantList } from "@/services/ant-design-pro/merchant";
-import MerchantDetail from "./component/MerchantDetail"; // 引入详情组件
+import MerchantDetail from "./component/MerchantDetail";
 import { getUserOperationLogs } from "@/services/ant-design-pro/UserManagement";
-import { t } from "@wangeditor/editor";
 const Charge: React.FC = () => {
-    const [activeTab, setActiveTab] = useState("basic");
+    const [activeTab, setActiveTab] = useState<string>("basic");
     const [merchantData, setMerchantData] = useState<any[]>([]);
     const [logData, setLogData] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
-    const [editModalVisible, setEditModalVisible] = useState(false);
-    const [editRecord, setEditRecord] = useState<any>(null);
-    const [detailVisible, setDetailVisible] = useState(false);
     const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
     const [showDetail, setShowDetail] = useState(false); // 控制详情显示
     const [pagination, setPagination] = useState({
@@ -22,7 +18,7 @@ const Charge: React.FC = () => {
     });
 
     // 获取商户列表数据
-    const getList = async (params: any = {}) => {
+    const getList = async (params: any = {}): Promise<any> => {
         setLoading(true);
         try {
             const requestData = {
@@ -60,7 +56,7 @@ const Charge: React.FC = () => {
 
 
     // 获取操作日志
-    const getLogList = async (params: any = {}) => {
+    const getLogList = async (params: any = {}): Promise<void> => {
     let data={
         pageNo: params.current || 1,
         pageSize: params.pageSize || 10,
@@ -70,19 +66,13 @@ const Charge: React.FC = () => {
             setLogData(res.data.list);
         }
     };
-    // 处理编辑按钮点击
-    const handleEdit = (record: any) => {
-        setEditRecord(record);
-        setEditModalVisible(true);
-    };
-
-    const handleViewDetails = (tenantId: string) => {
+    const handleViewDetails = (tenantId: string): void => {
         setSelectedTenantId(tenantId);
         setShowDetail(true); // 隐藏表格，显示详情
     };
 
     // 返回列表
-    const handleBackToList = () => {
+    const handleBackToList = (): void => {
         setShowDetail(false);
         setSelectedTenantId(null);
     };
@@ -206,16 +196,32 @@ const Charge: React.FC = () => {
                 <Tabs.TabPane tab="操作日志" key="logs" />
             </Tabs>
 
-{showDetail ? (
+            {showDetail ? (
                 <MerchantDetail tenantId={selectedTenantId} onBack={handleBackToList} />
-            ) : (
+            ) : activeTab === 'basic' ? (
                 <ProTable
                     rowKey="tenantId"
-                    columns={activeTab === "basic" ? basicColumns : logColumns}
-                    dataSource={activeTab === "basic" ? merchantData : logData}
+                    columns={basicColumns}
+                    dataSource={merchantData}
                     request={getList}
                     loading={loading}
-                    search={activeTab === "basic" ? true : false}
+                    pagination={{
+                        ...pagination,
+                        showSizeChanger: true,
+                        showQuickJumper: true,
+                        showTotal: (total) => `共 ${total} 条记录`
+                    }}
+                    toolBarRender={() => []}
+                    options={{ density: false, fullScreen: false, reload: false, setting: false }}
+                />
+            ) : (
+                <ProTable
+                    rowKey="id"
+                    columns={logColumns}
+                    dataSource={logData}
+                    request={getList}
+                    loading={loading}
+                    search={false}
                     pagination={{
                         ...pagination,
                         showSizeChanger: true,
