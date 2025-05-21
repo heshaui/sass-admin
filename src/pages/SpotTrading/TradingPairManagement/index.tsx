@@ -15,6 +15,7 @@ import GoogleCode from '@/components/GoogleCode';
 import { sendGoogleKey, bindGoogleKey } from '@/services/ant-design-pro/authAdmin';
 import { clearAllCookies } from '@/utils';
 import { useModel } from 'umi';
+import ValidCode from '@/components/ValidCode';
 /**
  * 币对类型定义
  */
@@ -52,11 +53,13 @@ const TradingPairManagement: React.FC = () => {
   const [currentRow, setCurrentRow] = useState<TradingPair | undefined>(undefined);
   const [matchingTypeVisible, setMatchingTypeVisible] = useState<boolean>(false);
   const [matchingType, setMatchingType] = useState<number>(1);
-    const { initialState, refresh } = useModel('@@initialState');
-    const { currentUser } = initialState || {};
+  const { initialState, refresh } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
   const [currentMatchingRow, setCurrentMatchingRow] = useState<TradingPair | undefined>(undefined);
-   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
-    const [googleCodeData, setGoogleCodeData] = useState<any>(null);
+  const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
+  const [googleCodeData, setGoogleCodeData] = useState<any>(null);
+  const [validCodeVisible, setValidCodeVisible] = useState(false);
+  const [cancelOrder, setCancelOrder] = useState();
 
   const fetchTradingPairs = async (params: any) => {
     const res = await exchangeCoinList({
@@ -159,21 +162,32 @@ const TradingPairManagement: React.FC = () => {
   };
 
 
-  const handleCancelOrders=async (record: TradingPair) => {
+  const handleCancelOrders = async (record: TradingPair) => {
+    setValidCodeVisible(true)
+    setCancelOrder(record)
+
+  }
+
+
+  const handleOk = async (code: string) => {
+    setValidCodeVisible(false)
     //弹出确认框
     Modal.confirm({
-      title: `确定要撤销所有${record.coinSymbol}/${record.baseSymbol}订单吗？`,
+      title: `确定要撤销所有${cancelOrder?.coinSymbol}/${cancelOrder?.baseSymbol}订单吗？`,
       onOk: async () => {
-        const res= await revocationExchangeCoinOrder({
-          symbol: record.coinSymbol+'/'+record.baseSymbol
+        const res = await revocationExchangeCoinOrder({
+          symbol: cancelOrder?.coinSymbol + '/' + cancelOrder?.baseSymbol,
+          googleCode: code
         });
-        if(res.code === '0'){
+        if (res.code === '0') {
           message.success('撤销订单成功');
-        }else{
+        } else {
           message.error(res.message);
         }
       }
+     
     });
+    
   }
   const getGoogleCode = async () => {
     const res = await sendGoogleKey();
@@ -188,18 +202,18 @@ const TradingPairManagement: React.FC = () => {
 
 
 
-    const handleGoogleCodeSuccess = async (code: string) => {
-      const res = await bindGoogleKey({ googleCode: code });
-      if (res.code === '0' && res.data) {
-        message.success('绑定成功');
-        clearAllCookies();
-        window.location.reload();
-      } else {
-        message.error(res.message);
-      }
-      setGoogleCodeVisible(false);
+  const handleGoogleCodeSuccess = async (code: string) => {
+    const res = await bindGoogleKey({ googleCode: code });
+    if (res.code === '0' && res.data) {
+      message.success('绑定成功');
+      clearAllCookies();
+      window.location.reload();
+    } else {
+      message.error(res.message);
     }
-  
+    setGoogleCodeVisible(false);
+  }
+
 
   // 表格列定义
   const columns: ProColumns<TradingPair>[] = [
@@ -301,11 +315,11 @@ const TradingPairManagement: React.FC = () => {
         >
           修改
         </a>,
-        <a key="cancelOrders" style={{ color: '#ff4d4f' }} onClick={() => currentUser?.employeeResp?.googleCode === true ? handleCancelOrders(record): getGoogleCode()}>
+        <a key="cancelOrders" style={{ color: '#ff4d4f' }} onClick={() => currentUser?.employeeResp?.googleCode === true ? handleCancelOrders(record) : getGoogleCode()}>
           撤销全部订单
         </a>,
 
-        
+
         // <a
         //   key="mergeType"
         //   onClick={() => {
@@ -381,6 +395,7 @@ const TradingPairManagement: React.FC = () => {
         onSubmit={handleGoogleCodeSuccess}
         onCancel={() => setGoogleCodeVisible(false)}
       />
+      <ValidCode visible={validCodeVisible} onCancel={() => setValidCodeVisible(false)} onOk={handleOk} />
     </PageContainer>
   );
 };
