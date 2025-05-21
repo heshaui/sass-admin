@@ -225,7 +225,14 @@ const AnnouncementManagement: React.FC = () => {
     {
       title: '发送时间',
       dataIndex: 'releaseTime',
+      valueType: 'dateTime',
+      search:false
+    },
+    {
+      title: '发送时间',
+      dataIndex: 'releaseTime',
       valueType: 'dateTimeRange',
+      hideInTable: true,
       search: {
         transform: (value) => {
           // 确保日期值是有效的
