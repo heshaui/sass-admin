@@ -280,6 +280,7 @@ const handleResetGoogleAuth = async () => {
     const res=await relieveGoogleKey({ id: editingRecord.id});
     if(res.code==='0'){
       message.success('谷歌身份验证重置成功');
+      getUserList();  // 刷新用户列表
     }else{
       message.error('谷歌身份验证重置失败');
     }

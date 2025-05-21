@@ -19,7 +19,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   parentId,
   editingMenu,
 }) => {
-  const [accessType, setAccessType] = useState('1');
+  const [accessType, setAccessType] = useState(1);
   const [formModal3] = Form.useForm();
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   const [displayType, setDisplayType] = useState('vertical'); // 默认选中"竖排"
@@ -73,7 +73,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
 
       // 设置状态变量
       setTypeId(homeMenu.typeId);
-      setAccessType(homeMenu.accessType || '1');
+      setAccessType(homeMenu.accessType || 1);
       setDisplayType(homeMenu.spreadPattern?.toString() || '0');
       setDisplayStatus(homeMenu.displayStatus ?? 1);
 
@@ -117,7 +117,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
     setIconUrlNight(null);
     setUploadedImageUrl(null);
     setSelectedStyle(null);
-    setAccessType('1');
+    setAccessType(1);
     setDisplayType('vertical');
     setTypeId(1);
     formModal3.resetFields();
@@ -135,6 +135,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
 
     let data = {
       values,
+      accessType,
       uploadedImageUrl,
       iconUrlDay,
       iconUrlNight,
@@ -229,10 +230,10 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
             </Form.Item>
             <Form.Item label="访问路径">
               <Radio.Group value={accessType} onChange={(e) => setAccessType(e.target.value)}>
-                <Radio value="1">PC功能</Radio>
-                <Radio value="2">自定义URL</Radio>
+                <Radio value={1}>PC功能</Radio>
+                <Radio value={2}>自定义URL</Radio>
               </Radio.Group>
-              {accessType === '1' ? (
+              {accessType === 1 ? (
                 <Form.Item name="accessPath" style={{ marginTop: 10 }}>
                   <Select placeholder="请选择">
                     {accessPaths.map((item) => (

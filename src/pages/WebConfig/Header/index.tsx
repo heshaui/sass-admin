@@ -126,7 +126,8 @@ const Header: React.FC = () => {
           cornerMarkTwo:"",
           displayStatus:displayStatus,
           spreadPattern:editingMenu.homeMenu.spreadPattern,
-          // accessPath:values.values.accessPath
+          accessType:values.accessType,
+          accessPath:values.values.accessPath
         }
 
        const response = await updateHomeMenuById(data1);
@@ -150,6 +151,7 @@ const Header: React.FC = () => {
         message.error( "菜单更新失败" );
       }
       } else {
+          console.log('',values);
         const data = {
           homeMenu: {
             menuDescription: values.values.menuDescription,
@@ -162,7 +164,7 @@ const Header: React.FC = () => {
             cornerMarkTwo: "",
             displayStatus: displayStatus,
             spreadPattern: values.values.spreadPattern,
-            accessType: values.values.accessType,
+            accessType: values.accessType,
             accessPath: values.values.accessPath,
           },
           homeMenuTranslation: {
