@@ -360,16 +360,9 @@ export async function bindGoogleKey(
 //解除谷歌验证码绑定
 export async function relieveGoogleKey(
   body: API.GoogleAuthVo,
-  options?: { [key: string]: any },
 ) {
-  return request<API.GoogleAuthResponse>(isAdmin?'/tenant-admin/v1/google/relieveGoogleKey':'/tenant/v1/google/relieveGoogleKey?code='+body.code, {
+  return request<API.GoogleAuthResponse>(isAdmin?'/tenant-admin/v1/relieveGoogleKeyTenantEmployee?id='+body.id :'/tenant/v1/relieveGoogleKeyTenantEmployee?id='+body.id, {
     method: 'POST',
     data: body,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    ...(options || {}),
   });
 }
-
-

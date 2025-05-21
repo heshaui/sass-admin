@@ -277,7 +277,7 @@ const handleResetPassword = async (values) => {
 // 重置谷歌
 const handleResetGoogleAuth = async () => {
   try {
-    const res=await relieveGoogleKey({ code: editingRecord.googleCode});
+    const res=await relieveGoogleKey({ id: editingRecord.id});
     if(res.code==='0'){
       message.success('谷歌身份验证重置成功');
     }else{
