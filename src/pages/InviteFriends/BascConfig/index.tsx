@@ -48,6 +48,7 @@ const BasicConfig: React.FC = () => {
   const getConfig=async()=>{
     const res=await getTenantKeyParams({key:'account_configuration'});
     if(res.code==='0'){
+      console.log(res.data)
       setConfig(res.data.keyValue);
     }
   }
@@ -217,18 +218,20 @@ const BasicConfig: React.FC = () => {
 
       {/* 账户配置 */}
       <Card title="账户配置" style={{ marginBottom: 24 }}>
+        {config}
         <Form.Item
           name="enabled"
           label="是否开启"
           valuePropName="checked"
         >
-          <Switch checked={config==='1'} onChange={ async (checked)=>{
+          <Switch value={config==='1'} onChange={ async (checked)=>{
            const res= await updateAccountConfiguration({keyProperty:'account_configuration',keyValue:checked?'1':'0'});
            if(res.code==='0'){
             message.success('配置保存成功');
            }else{
             message.error(res.message);
            }
+           getConfig();
           }} />
         </Form.Item>
         <div className="tips">

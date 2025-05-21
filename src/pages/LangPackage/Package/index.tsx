@@ -3,6 +3,7 @@ import { PageContainer } from "@ant-design/pro-components";
 import { Card, Tag, Button, Space, Row, Col, Modal, Select, Typography, message, Form, Input, Spin } from "antd";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
 import { langPackageList,saveLangPackage,languageList,deleteLangPackage} from "@/services/ant-design-pro/langPackage";
+import { useIntl } from "@umijs/max";
 
 const { Option } = Select;
 const { Title } = Typography;
@@ -59,12 +60,13 @@ const Package: React.FC = () => {
   // 添加表单实例
   const [form] = Form.useForm();
 
+  const intl = useIntl();
+
   // 获取语言包列表数据
   const fetchLanguagePackages = async () => {
     setLoading(true);
     try {
       const response = await langPackageList();
-        console.log(response);
       if (response.code==='0') {
         // 处理返回的数据结构
         const packageData: PackageData[] = response.data;
@@ -87,11 +89,11 @@ const Package: React.FC = () => {
           }
         });
       } else {
-        message.error('获取语言包列表失败');
+        message.error(intl.formatMessage({ id: 'package.message.fetchFailed' }));
       }
     } catch (error) {
       console.error('获取语言包列表出错:', error);
-      message.error('获取语言包列表失败，请重试');
+      message.error(intl.formatMessage({ id: 'package.message.fetchFailed' }) + ', ' + intl.formatMessage({ id: 'package.message.retry' }));
     } finally {
       setLoading(false);
     }
@@ -123,11 +125,11 @@ const Package: React.FC = () => {
         
         setAvailableLanguages(languages);
       } else {
-        message.error('获取可用语言列表失败');
+        message.error(intl.formatMessage({ id: 'package.message.fetchFailed' }));
       }
     } catch (error) {
       console.error('获取可用语言列表出错:', error);
-      message.error('获取可用语言列表失败，请重试');
+      message.error(intl.formatMessage({ id: 'package.message.fetchFailed' }) + ', ' + intl.formatMessage({ id: 'package.message.retry' }));
     } finally {
       setLoadingLanguages(false);
     }
@@ -152,7 +154,7 @@ const Package: React.FC = () => {
       const response = await deleteLangPackage(data);
       
       if (response.code === '0') {
-        message.success('语言已从包中移除');
+        message.success(intl.formatMessage({ id: 'package.message.deleteSuccess' }));
         
         // 从本地状态中移除语言
         if (packageType === 'basic') {
@@ -163,11 +165,11 @@ const Package: React.FC = () => {
           setPremiumLanguages(premiumLanguages.filter(lang => lang.id !== id));
         }
       } else {
-        message.error(response?.message || '删除失败');
+        message.error(response?.message || intl.formatMessage({ id: 'package.message.deleteFailed' }));
       }
     } catch (error) {
       console.error('删除语言出错:', error);
-      message.error('删除语言失败，请重试');
+      message.error(intl.formatMessage({ id: 'package.message.deleteFailed' }) + ', ' + intl.formatMessage({ id: 'package.message.retry' }));
     }
   };
 
@@ -246,7 +248,7 @@ const Package: React.FC = () => {
       const selectedLanguage = availableLanguages.find(lang => lang.id === selectedLanguageId);
       
       if (!selectedLanguage) {
-        message.error('未找到选中的语言');
+        message.error(intl.formatMessage({ id: 'package.message.languageNotFound' }));
         return;
       }
       
@@ -267,14 +269,22 @@ const Package: React.FC = () => {
       const updatedLanguageIds = [...currentLanguageIds, selectedLanguageId];
       
       let data={
-        packageId:packageId,
-        langId:selectedLanguageId
+        packageId: packageId,
+        langId: selectedLanguageId
       }
 
       const response = await saveLangPackage(data);
       
       if (response.code==='0') {
-        message.success(`已添加语言到${currentPackage === 'basic' ? '基础版' : currentPackage === 'advanced' ? '进阶版' : '高级版'}`);
+        const packageName = intl.formatMessage({ 
+          id: `package.type.${currentPackage}` 
+        });
+        message.success(
+          intl.formatMessage(
+            { id: 'package.message.languageAdded' },
+            { package: packageName }
+          )
+        );
         
         // 创建要添加的语言对象（用于本地状态更新）
         const newLanguage = {
@@ -300,11 +310,15 @@ const Package: React.FC = () => {
         setModalVisible(false);
         form.resetFields();
       } else {
-        message.error(response?.message || '保存失败');
+        message.error(response?.message || intl.formatMessage({ id: 'package.message.saveFailed' }));
       }
     } catch (error) {
       console.error('添加语言出错:', error);
-      message.error('添加语言失败，请重试');
+      message.error(
+        intl.formatMessage({ id: 'package.message.saveFailed' }) + 
+        ', ' + 
+        intl.formatMessage({ id: 'package.message.retry' })
+      );
     }
   };
 
@@ -330,10 +344,13 @@ const Package: React.FC = () => {
         languageIds = premiumLanguages.map(lang => lang.id || 0);
       }
 
-
     } catch (error) {
       console.error('保存语言包配置出错:', error);
-      message.error('保存失败，请重试');
+      message.error(
+        intl.formatMessage({ id: 'package.message.saveFailed' }) + 
+        ', ' + 
+        intl.formatMessage({ id: 'package.message.retry' })
+      );
     }
   };
 
@@ -341,14 +358,16 @@ const Package: React.FC = () => {
     <PageContainer>
       {/* 基础版套餐 */}
       <Card 
-        title={<Space><span>基础版</span></Space>} 
+        title={<Space><span>{intl.formatMessage({ id: 'package.type.basic' })}</span></Space>} 
         style={{ marginBottom: 24 }}
         extra={<Space>
           <Button 
             type="primary" 
             onClick={() => toggleEditMode('basic')}
           >
-            {editingPackage === 'basic' ? '保存' : '修改'}
+            {editingPackage === 'basic' 
+              ? intl.formatMessage({ id: 'package.common.save' }) 
+              : intl.formatMessage({ id: 'package.common.edit' })}
           </Button>
         </Space>}
         loading={loading}
@@ -360,14 +379,16 @@ const Package: React.FC = () => {
 
       {/* 进阶版套餐 */}
       <Card 
-        title={<Space><span>进阶版</span></Space>} 
+        title={<Space><span>{intl.formatMessage({ id: 'package.type.advanced' })}</span></Space>} 
         style={{ marginBottom: 24 }}
         extra={<Space>
           <Button 
             type="primary" 
             onClick={() => toggleEditMode('advanced')}
           >
-            {editingPackage === 'advanced' ? '保存' : '修改'}
+            {editingPackage === 'advanced' 
+              ? intl.formatMessage({ id: 'package.common.save' }) 
+              : intl.formatMessage({ id: 'package.common.edit' })}
           </Button>
         </Space>}
         loading={loading}
@@ -379,14 +400,18 @@ const Package: React.FC = () => {
 
       {/* 高级版套餐 */}
       <Card 
-        title={<Space><span>高级版</span></Space>} 
+        title={<Space><span>{intl.formatMessage({ id: 'package.type.premium' })}</span></Space>} 
         style={{ marginBottom: 24 }}
-        extra={<Button 
-          type="primary" 
-          onClick={() => toggleEditMode('premium')}
-        >
-          {editingPackage === 'premium' ? '保存' : '修改'}
-        </Button>}
+        extra={
+          <Button 
+            type="primary" 
+            onClick={() => toggleEditMode('premium')}
+          >
+            {editingPackage === 'premium' 
+              ? intl.formatMessage({ id: 'package.common.save' }) 
+              : intl.formatMessage({ id: 'package.common.edit' })}
+          </Button>
+        }
         loading={loading}
       >
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', backgroundColor: 'white' }}>
@@ -396,12 +421,19 @@ const Package: React.FC = () => {
 
       {/* 添加语言模态框 */}
       <Modal
-        title={`添加${currentPackage === 'basic' ? '基础版' : currentPackage === 'advanced' ? '进阶版' : '高级版'}语言`}
+        title={intl.formatMessage(
+          { id: 'package.button.addLanguage' },
+          { 
+            package: intl.formatMessage({ 
+              id: `package.type.${currentPackage}` 
+            }) 
+          }
+        )}
         visible={modalVisible}
         onCancel={handleModalCancel}
         footer={[
           <Button key="cancel" onClick={handleModalCancel}>
-            取消
+            {intl.formatMessage({ id: 'package.common.cancel' })}
           </Button>,
           <Button 
             key="submit" 
@@ -409,7 +441,7 @@ const Package: React.FC = () => {
             loading={loadingLanguages}
             onClick={handleModalOk}
           >
-            添加
+            {intl.formatMessage({ id: 'package.common.add' })}
           </Button>,
         ]}
       >
@@ -417,10 +449,18 @@ const Package: React.FC = () => {
           <Form form={form} layout="vertical">
             <Form.Item
               name="languageId"
-              label="选择语言"
-              rules={[{ required: true, message: '请选择要添加的语言' }]}
+              label={intl.formatMessage({ id: 'package.common.selectLanguage' })}
+              rules={[{
+                required: true,
+                message: intl.formatMessage(
+                  { id: 'package.validation.selectRequired' },
+                  { field: intl.formatMessage({ id: 'package.common.language' }) }
+                )
+              }]}
             >
-              <Select placeholder="请选择语言">
+              <Select 
+                placeholder={intl.formatMessage({ id: 'package.common.selectLanguage.placeholder' })}
+              >
                 {getFilteredLanguages().map(lang => (
                   <Option key={lang.id} value={lang.id}>
                     {lang.lang} ({lang.name})
