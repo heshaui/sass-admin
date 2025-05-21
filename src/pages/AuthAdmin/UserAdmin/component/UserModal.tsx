@@ -72,23 +72,31 @@ const UserModal: React.FC<UserModalProps> = ({
         <Form.Item
           name="nickname"
           label="昵称"
-          rules={[{ required: true, message: '请输入昵称' }]}
+          rules={[
+            { required: true, message: '请输入昵称' },
+            { max: 20, message: '昵称最多20个字符' }
+          ]}
         >
-          <Input />
+          <Input maxLength={20} showCount />
         </Form.Item>
 
         <Form.Item
           name="phone"
           label="手机号"
-          rules={[{ required: true, message: '请输入手机号' }]}
+          rules={[
+            { max: 15, message: '手机号最多15个字符' }
+          ]}
         >
-          <Input />
+          <Input maxLength={15} />
         </Form.Item>
 
         <Form.Item
           name="email"
           label="邮箱"
-          rules={[{ required: true, message: '请输入邮箱' }]}
+          rules={[
+            { required: true, message: '请输入邮箱' },
+            { type: 'email', message: '请输入有效的邮箱格式' }
+          ]}
         >
           <Input />
         </Form.Item>
@@ -101,12 +109,21 @@ const UserModal: React.FC<UserModalProps> = ({
         </Form.Item> */}
         <Form.Item
           name="role"
-          label="权限"
-          rules={[{ required: true, message: '请选择权限' }]}
+          label="角色"
+          rules={[{ required: true, message: '请选择角色', type: 'array' }]}
         >
-           <Select>
+           <Select 
+             mode="multiple" 
+             placeholder="请选择角色"
+             optionLabelProp="label"
+             style={{ width: '100%' }}
+           >
             {roleList.map(role => (
-              <Select.Option key={role.roleId} value={String(role.roleId)}>
+              <Select.Option 
+                key={role.roleId} 
+                value={String(role.roleId)}
+                label={role.roleName}
+              >
                 {role.roleName}
               </Select.Option>
             ))}

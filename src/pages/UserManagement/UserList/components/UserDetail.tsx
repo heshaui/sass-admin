@@ -18,6 +18,7 @@ import UserTransaction from './UserTransaction';
 import Reconciliation from './Reconciliation';
 import Log from './log';
 import { clearAllCookies } from '@/utils';
+import { getTenantKeyParams } from '@/services/ant-design-pro/kv';
 
 const { Option } = Select;
 
@@ -69,6 +70,16 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const [unbindGoogleModalVisible, setUnbindGoogleModalVisible] = useState(false);
   const [unbindGoogleReason, setUnbindGoogleReason] = useState('');
   const [countryList, setCountryList] = useState<any[]>([]);
+  const [time,setTime] = useState('');
+
+
+  const getKvInfo=async ()=>{
+    const result = await getTenantKeyParams({ key: 'out_money' });
+    if(result.code==='0'){
+      setTime(result.data.keyValue);
+    }
+
+  }
 
   const columns: ProColumns<any>[] = [
     {
@@ -423,6 +434,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   useEffect(()=>{
     getCountryList();
     userDetailInfo();
+    getKvInfo()
   },[userId]);
   return (
     <>
@@ -691,7 +703,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         cancelText="取消"
       >
         <p style={{ color: '#ff4d4f', marginBottom: '24px' }}>
-          更改手机号后，24小时内无法出金，请确保已告知终端用户！
+          更改手机号后，{time}小时内无法出金，请确保已告知终端用户！
         </p>
         <Form layout="vertical">
           <Form.Item 
@@ -785,7 +797,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         cancelText="取消"
       >
         <p style={{ color: '#ff4d4f', marginBottom: '24px' }}>
-          更改邮箱后，24小时内无法出金，请确保已告知终端用户！
+          更改邮箱后，{time}小时内无法出金，请确保已告知终端用户！
         </p>
         <Form layout="vertical">
           <Form.Item 

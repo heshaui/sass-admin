@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, DatePicker, message, Card } from "antd";
+import { Form, Input, Button, DatePicker, message, Card,  Select } from "antd";
 import dayjs from "dayjs";
 import { tenantParams, updateTenantById } from "@/services/ant-design-pro/merchant";
+import { getAreaCodeList } from "@/services/ant-design-pro/merchant";
 
+const { Option } = Select;
 interface MerchantEditProps {
   tenantId: string | null;
   onBack: () => void; // 增加返回按钮
@@ -11,8 +13,16 @@ interface MerchantEditProps {
 const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-
+  const [areaList, setAreaList] = useState([]);
+    const getAreaList = async () => {
+      const res = await getAreaCodeList();
+      console.log(res);
+      if (res.code === '0') {
+        setAreaList(res.data);
+      }
+    }
   useEffect(() => {
+    getAreaList();
     const fetchMerchant = async () => {
       if (!tenantId) return;
       setLoading(true);
@@ -28,6 +38,7 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
             tenantContact: merchantData.tenantContact,
             tenantPhone: merchantData.tenantPhone,
             tenantEmail: merchantData.tenantEmail,
+            areaCode:merchantData.areaCode,
             // **时间格式转换** - 从时间戳转换成 dayjs
             tenantStartTime: merchantData.tenantStartTime ? dayjs(merchantData.tenantStartTime) : null,
             tenantEndTime: merchantData.tenantEndTime ? dayjs(merchantData.tenantEndTime) : null,
@@ -91,10 +102,16 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
         <Form.Item label="联系人" name="tenantContact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
           <Input />
         </Form.Item>
-
-        <Form.Item label="手机号" name="tenantPhone" rules={[{ required: true, message: "请输入手机号" }]}>
+        <Form.Item label="联系人" name="tenantContact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
           <Input />
         </Form.Item>
+        <Form.Item label="国家编码" name="areaCode">
+        <Select>
+          {areaList.map((item: any) => (  
+            <Option key={item.areaCode} value={item.areaCode}>+{item.areaCode} {item.areaName}</Option>
+          ))}
+        </Select>
+      </Form.Item>
 
         <Form.Item label="邮箱" name="tenantEmail" rules={[{ required: true, type: "email", message: "请输入有效的邮箱地址" }]}>
           <Input />

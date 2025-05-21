@@ -4,6 +4,7 @@ import type { ProColumns } from '@ant-design/pro-components';
 import { getUserList, getUserDetail } from '@/services/ant-design-pro/UserManagement';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
 import UserDetail from './components/UserDetail';
+
 import dayjs from 'dayjs';
 const UserManagement: React.FC = () => {
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
@@ -11,7 +12,7 @@ const UserManagement: React.FC = () => {
   const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserItem | null>(null);
 
- 
+    
   // 使用真实API获取用户数据
   const fetchUserList = async (params: any) => {
     setLoading(true);
