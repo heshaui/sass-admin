@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
 import { Button, Space, message, Modal } from "antd";
+import { useIntl } from 'umi';
 import RootModal from "./component/RootModal";
-import { tenantRootList,updatePasswordById, updateGoogleById,updateTenantRootById,updateRoleById} from "@/services/ant-design-pro/merchant";
+import { tenantRootList, updatePasswordById, updateGoogleById, updateTenantRootById, updateRoleById } from "@/services/ant-design-pro/merchant";
 
 
 
 
 const Root: React.FC = () => {
+  const intl = useIntl();
   const [dataSource, setDataSource] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<any>(null); // 选中的用户信息
+  const [currentRecord, setCurrentRecord] = useState<any>(null);
 
 
   const getList = async (params: any = {}) => {
@@ -29,7 +31,7 @@ const Root: React.FC = () => {
         total: res.data.count,
       };
     } else {
-      message.error("获取商户列表失败");
+      message.error(intl.formatMessage({ id: 'merchant.message.fetchListFailed' }));
       return {
         data: [],
         success: false,
@@ -40,16 +42,16 @@ const Root: React.FC = () => {
 
   const resetPassword=async(id:string)=>{
     Modal.confirm({
-      title: '确认重置密码',
-      content: '确定要重置该用户的密码吗？',
-      okText: '确认',
-      cancelText: '取消',
+      title: intl.formatMessage({ id: 'merchant.message.resetPassword' }),
+      content: intl.formatMessage({ id: 'merchant.message.resetPasswordConfirm' }),
+      okText: intl.formatMessage({ id: 'merchant.common.confirm' }),
+      cancelText: intl.formatMessage({ id: 'merchant.common.cancel' }),
       onOk: async () => {
         const res=await updatePasswordById(id);
         if(res.code==='0'){
-          message.success("重置密码成功")
+          message.success(intl.formatMessage({ id: 'merchant.message.resetPasswordSuccess' }))
         }else{
-          message.error("重置密码失败")
+          message.error(intl.formatMessage({ id: 'merchant.message.resetPasswordFailed' }))
         }
       }
     });
@@ -57,16 +59,16 @@ const Root: React.FC = () => {
 
   const resetGoogle=async(id:string)=>{
     Modal.confirm({
-      title: '确认重置谷歌',
-      content: '确定要重置该用户的谷歌验证吗？',
-      okText: '确认',
-      cancelText: '取消',
+      title: intl.formatMessage({ id: 'merchant.message.resetGoogle' }),
+      content: intl.formatMessage({ id: 'merchant.message.resetGoogleConfirm' }),
+      okText: intl.formatMessage({ id: 'merchant.common.confirm' }),
+      cancelText: intl.formatMessage({ id: 'merchant.common.cancel' }),
       onOk: async () => {
         const res=await updateGoogleById(id);
         if(res.code==='0'){
-          message.success("重置谷歌成功")
+          message.success(intl.formatMessage({ id: 'merchant.message.resetGoogleSuccess' }))
         }else{
-          message.error("重置谷歌失败")
+          message.error(intl.formatMessage({ id: 'merchant.message.resetGoogleFailed' }))
         }
       }
     });
@@ -74,10 +76,14 @@ const Root: React.FC = () => {
 
   const changeStatus=async(id:string,status:number)=>{
     Modal.confirm({
-      title: status === 1 ? '确认允许登录' : '确认禁止登录',
-      content: status === 1 ? '确定要允许该用户登录吗？' : '确定要禁止该用户登录吗？',
-      okText: '确认',
-      cancelText: '取消',
+      title: status === 1 
+        ? intl.formatMessage({ id: 'merchant.message.confirmEnableLogin' })
+        : intl.formatMessage({ id: 'merchant.message.confirmDisableLogin' }),
+      content: status === 1 
+        ? intl.formatMessage({ id: 'merchant.message.enableLoginConfirm' })
+        : intl.formatMessage({ id: 'merchant.message.disableLoginConfirm' }),
+      okText: intl.formatMessage({ id: 'merchant.common.confirm' }),
+      cancelText: intl.formatMessage({ id: 'merchant.common.cancel' }),
       onOk: async () => {
         let data={
           id:id,
@@ -86,14 +92,14 @@ const Root: React.FC = () => {
         const res=await updateTenantRootById(data);
         if(res.code==='0'){
           if(status===1){
-            message.success("允许登录成功")
+            message.success(intl.formatMessage({ id: 'merchant.message.enableLoginSuccess' }))
           }else{
-            message.success("禁止登录成功")
+            message.success(intl.formatMessage({ id: 'merchant.message.disableLoginSuccess' }))
           }
          await getList()
         }
         else{
-          message.error("修改状态失败")
+          message.error(intl.formatMessage({ id: 'merchant.message.updateStatusFailed' }))
         }
       }
     });
@@ -112,14 +118,14 @@ const Root: React.FC = () => {
         const res = await updateRoleById(data);
         console.log(res)
         if (res.code === "0") {
-          message.success("角色分配成功");
+          message.success(intl.formatMessage({ id: 'merchant.message.roleAssignSuccess' }));
           getList();
         } else {
-          message.error("角色分配失败");
+          message.error(intl.formatMessage({ id: 'merchant.message.roleAssignFailed' }));
         }
       } catch (error) {
         console.error( error);
-        message.error("角色分配异常");
+        message.error(intl.formatMessage({ id: 'merchant.message.roleAssignError' }));
       } finally {
         setModalVisible(false);
       }
@@ -134,11 +140,11 @@ const Root: React.FC = () => {
   // **表格列配置**
   const columns: ProColumns<any>[] = [
     {
-      title: "id",
+      title: intl.formatMessage({ id: 'merchant.table.id' }),
       dataIndex: "id",
     },
     {
-      title: "交易所名称",
+      title: intl.formatMessage({ id: 'merchant.table.exchangeName' }),
       dataIndex: "tenantName",
       search:false, 
     },
@@ -147,56 +153,76 @@ const Root: React.FC = () => {
       dataIndex: "status",
       search:false, 
       render:(_,record)=>{
-        return record.status===1?'正常':'冻结'
+        return record.status===1 
+          ? intl.formatMessage({ id: 'merchant.status.normal' })
+          : intl.formatMessage({ id: 'merchant.status.frozen' })
       }
 
     },
     {
-      title: "联系人",
+      title: intl.formatMessage({ id: 'merchant.table.contact' }),
       dataIndex: "tenantContact",
       search:false, 
     },
     {
-      title: "邮箱",
+      title: intl.formatMessage({ id: 'merchant.table.email' }),
       dataIndex: "email",
     },
     {
-      title: "手机号",
+      title: intl.formatMessage({ id: 'merchant.table.phone' }),
       dataIndex: "phone",
     },
     {
-      title: "状态",
+      title: intl.formatMessage({ id: 'merchant.common.status' }),
       dataIndex: "status",
       valueType: "select",
       render: (_,record)=>{
-        return record.status===1?'正常':'禁止'
+        return record.status===1 
+          ? intl.formatMessage({ id: 'merchant.status.normal' })
+          : intl.formatMessage({ id: 'merchant.status.banned' })
       },
       valueEnum: {
-        正常: { text: "正常", status: "1" },
-        冻结: { text: "禁止", status: "0" },
+        [intl.formatMessage({ id: 'merchant.status.normal' })]: { 
+          text: intl.formatMessage({ id: 'merchant.status.normal' }), 
+          status: "1" 
+        },
+        [intl.formatMessage({ id: 'merchant.status.banned' })]: { 
+          text: intl.formatMessage({ id: 'merchant.status.banned' }), 
+          status: "0" 
+        },
       },
     },
     {
-      title: "创建时间",
+      title: intl.formatMessage({ id: 'merchant.common.createTime' }),
       dataIndex: "createTime",
       valueType: "dateTime",
       search:false, 
     },
     {
-      title: "操作",
+      title: intl.formatMessage({ id: 'merchant.common.operation' }),
       dataIndex: "action",
       search:false, 
       render: (_, record) => (
         <Space>
 
            {record.status === 1 ? (
-              <a style={{ color: "red" }} onClick={()=>changeStatus(record.id,0)}>禁止登录</a>
+              <a style={{ color: "red" }} onClick={()=>changeStatus(record.id,0)}>
+                {intl.formatMessage({ id: 'merchant.action.banLogin' })}
+              </a>
           ) : (
-             <a style={{ color: "green" }} onClick={()=>changeStatus(record.id,1)}>允许登录</a>
+              <a style={{ color: "green" }} onClick={()=>changeStatus(record.id,1)}>
+                {intl.formatMessage({ id: 'merchant.action.allowLogin' })}
+              </a>
           )} 
-          <a onClick={()=>resetPassword(record.id)}>重置密码</a>
-          <a onClick={()=>resetGoogle(record.id)}>重置谷歌</a>
-          <a onClick={() => handleRoleAssign(record)}>角色分配</a>
+          <a onClick={()=>resetPassword(record.id)}>
+            {intl.formatMessage({ id: 'merchant.action.resetPassword' })}
+          </a>
+          <a onClick={()=>resetGoogle(record.id)}>
+            {intl.formatMessage({ id: 'merchant.action.resetGoogle' })}
+          </a>
+          <a onClick={() => handleRoleAssign(record)}>
+            {intl.formatMessage({ id: 'merchant.action.assignRole' })}
+          </a>
         </Space>
       ),
     },

@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { ProTable } from '@ant-design/pro-components';
-import {  message } from 'antd';
+import { message } from 'antd';
+import { useIntl } from 'umi';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import {walletTypeList} from '@/services/ant-design-pro/merchant';
+import { walletTypeList } from '@/services/ant-design-pro/merchant';
 // 定义表格数据接口
 interface AccountItem {
   id: string;
@@ -16,36 +17,37 @@ interface AccountItem {
 }
 
 const AccountPage: React.FC = () => {
+  const intl = useIntl();
   const actionRef = useRef<ActionType>();
   
   // 定义表格列
   const columns: ProColumns<AccountItem>[] = [
     {
-      title: 'ID',
+      title: intl.formatMessage({ id: 'account.table.id' }),
       dataIndex: 'id',
       valueType: 'text',
     },
     {
-      title: '账户唯一标识',
+      title: intl.formatMessage({ id: 'account.table.walletType' }),
       dataIndex: 'walletType',
       valueType: 'text',
     },
     {
-      title: '账户类型',
+      title: intl.formatMessage({ id: 'account.table.walletTypeDefeat' }),
       dataIndex: 'walletTypeDefeat',
     },
     // {
-    //   title: '状态',
+    //   title: intl.formatMessage({ id: 'account.table.status' }),
     //   dataIndex: 'status',
     // },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'account.table.createTime' }),
       dataIndex: 'createTime',
       valueType: 'dateTime',
       search: false,
     },
     // {
-    //   title: '更新时间',
+    //   title: intl.formatMessage({ id: 'account.table.updateTime' }),
     //   dataIndex: 'updateTime',
     //   valueType: 'dateTime',
     //   sorter: true,
@@ -54,21 +56,29 @@ const AccountPage: React.FC = () => {
     //   title: '操作',
     //   valueType: 'option',
     //   render: (_, record) => [
-    //     <a key="edit" onClick={() => handleEdit(record)}>编辑</a>,
-    //     <a key="details" onClick={() => handleDetails(record)}>详情</a>,
+    //     <a key="edit" onClick={() => handleEdit(record)}>
+    //       {intl.formatMessage({ id: 'account.action.edit' })}
+    //     </a>,
+    //     <a key="details" onClick={() => handleDetails(record)}>
+    //       {intl.formatMessage({ id: 'account.action.details' })}
+    //     </a>,
     //   ],
     // },
   ];
 
   // 处理编辑
   const handleEdit = (record: AccountItem) => {
-    message.info(`编辑账户：${record.accountName}`);
+    message.info(
+      `${intl.formatMessage({ id: 'account.message.editAccount' })}${record.accountName}`
+    );
     // 这里添加编辑逻辑
   };
 
   // 处理查看详情
   const handleDetails = (record: AccountItem) => {
-    message.info(`查看账户详情：${record.accountName}`);
+    message.info(
+      `${intl.formatMessage({ id: 'account.message.viewAccountDetails' })}${record.accountName}`
+    );
     // 这里添加查看详情逻辑
   };
 

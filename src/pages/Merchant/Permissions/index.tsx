@@ -1,9 +1,15 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Space,message } from 'antd';
+import { Button, Space, message } from 'antd';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { tenantPermissionsList,saveTenantPermissions,deleteTenantPermissionsById,updateTenantPermissionsById,permissionsParams} from '@/services/ant-design-pro/merchant';
-import PermissionModal from './component/PermissionModal.tsx'; // 引入PermissionModal
+import { useIntl } from 'umi';
+import { 
+  tenantPermissionsList,
+  saveTenantPermissions,
+  deleteTenantPermissionsById,
+  updateTenantPermissionsById
+} from '@/services/ant-design-pro/merchant';
+import PermissionModal from './component/PermissionModal';
 
 const Permissions: React.FC = () => {
   // 表格数据状态
@@ -12,87 +18,96 @@ const Permissions: React.FC = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null); // 编辑时的记录
 
+  const intl = useIntl();
+
   // 表格列配置
   const columns = [
     {
-      title: 'ID',
+      title: intl.formatMessage({ id: 'permissions.table.id' }),
       dataIndex: 'id',
       key: 'id',
       width: 100,
-       search: false,
+      search: false,
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'permissions.table.description' }),
       dataIndex: 'description',
       key: 'description',
       search: false,
     },
     {
-      title: '菜单权限',
+      title: intl.formatMessage({ id: 'permissions.table.menuPermission' }),
       dataIndex: 'type',
       key: 'type',
       search: false,
     },
     {
-      title: '操作权限',
+      title: intl.formatMessage({ id: 'permissions.table.operationPermission' }),
       dataIndex: 'optionType',
       key: 'optionType',
       search: false,
     },
     {
-      title: '中文标题',
+      title: intl.formatMessage({ id: 'permissions.table.chineseTitle' }),
       dataIndex: 'title',
       key: 'title',
     },
     {
-      title: '名称',
+      title: intl.formatMessage({ id: 'permissions.table.name' }),
       dataIndex: 'name',
       key: 'name',
       search: false,
     },
     {
-      title: '父级ID',
+      title: intl.formatMessage({ id: 'permissions.table.parentId' }),
       dataIndex: 'parentId',
       key: 'parentId',
       search: false,
     },
     {
-      title: '排序',
+      title: intl.formatMessage({ id: 'permissions.table.sort' }),
       dataIndex: 'sort',
       key: 'sort',
       search: false,
     },
     {
-      title: '标题',
+      title: intl.formatMessage({ id: 'permissions.table.title' }),
       dataIndex: 'title',
       key: 'title',
     },
     {
-      title: '页面路径',
+      title: intl.formatMessage({ id: 'permissions.table.pagePath' }),
       dataIndex: 'path',
       key: 'path',
       search: false,
     },
     {
-      title: '组件路径',
+      title: intl.formatMessage({ id: 'permissions.table.componentPath' }),
       dataIndex: 'component',
       key: 'component',
       search: false,
     },
     {
-      title: 'icon',
+      title: intl.formatMessage({ id: 'permissions.table.icon' }),
       dataIndex: 'icon',
       key: 'icon',
       search: false,
     },
     {
-      title: '选项',
+      title: intl.formatMessage({ id: 'permissions.table.actions' }),
       key: 'action',
       search: false,
       render: (_, record) => (
         <Space>
-          <a onClick={() => handleEdit(record)}>编辑</a>
-          <a style={{ color: '#ff4d4f' }} onClick={() => handleDelete(record.id)}>删除</a>
+          <a onClick={() => handleEdit(record)}>
+            {intl.formatMessage({ id: 'permissions.action.edit' })}
+          </a>
+          <a 
+            style={{ color: '#ff4d4f' }} 
+            onClick={() => handleDelete(record.id)}
+          >
+            {intl.formatMessage({ id: 'permissions.action.delete' })}
+          </a>
         </Space>
       ),
     },
@@ -118,14 +133,14 @@ const Permissions: React.FC = () => {
         if (editingRecord) {
           // 编辑
           await updateTenantById({ ...editingRecord, ...values });
-          message.success('编辑成功');
+          message.success(intl.formatMessage({ id: 'permissions.message.editSuccess' }));
         } else {
           // 新建
        const res=  await saveTenantPermissions(values);
        if(res.code==='0'){
-        message.success('新建成功');
+        message.success(intl.formatMessage({ id: 'permissions.message.createSuccess' }));
        }else{
-        message.error('新建失败');
+        message.error(intl.formatMessage({ id: 'permissions.message.createFailed' }));
        }
          
         }
@@ -133,7 +148,7 @@ const Permissions: React.FC = () => {
         setEditingRecord(null);
         getAuthorityList();
       } catch (error) {
-        message.error('操作失败');
+        message.error(intl.formatMessage({ id: 'permissions.message.operationFailed' }));
       }
     };
   
@@ -147,10 +162,10 @@ const Permissions: React.FC = () => {
     const handleDelete = async (id) => {
       try {
         await deleteTenantById(id);
-        message.success('删除成功');
+        message.success(intl.formatMessage({ id: 'permissions.message.deleteSuccess' }));
         getAuthorityList();
       } catch (error) {
-        message.error('删除失败');
+        message.error(intl.formatMessage({ id: 'permissions.message.deleteFailed' }));
       }
     };
 
@@ -187,13 +202,22 @@ const Permissions: React.FC = () => {
         }}
         toolBarRender={() => [
           <Button key="search" type="primary" onClick={() => getAuthorityList({ pageNo: 1, pageSize: 10 })}>
-            查询
+            {intl.formatMessage({ id: 'permissions.toolbar.search' })}
           </Button>,
-          <Button key="reset" icon={<ReloadOutlined />} onClick={() => getAuthorityList({ pageNo: 1, pageSize: 10 })}>
-            重置
+          <Button 
+            key="reset" 
+            icon={<ReloadOutlined />} 
+            onClick={() => getAuthorityList({ pageNo: 1, pageSize: 10 })}
+          >
+            {intl.formatMessage({ id: 'permissions.toolbar.reset' })}
           </Button>,
-          <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
-            新建
+          <Button 
+            key="create" 
+            icon={<PlusOutlined />} 
+            type="primary" 
+            onClick={() => setModalVisible(true)}
+          >
+            {intl.formatMessage({ id: 'permissions.toolbar.create' })}
           </Button>,
         ]}
       />

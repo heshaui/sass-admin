@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, Select, message } from "antd";
-import { tenantRoleList } from "@/services/ant-design-pro/merchant"; // 获取角色列表的API
+import { useIntl } from 'umi';
+import { tenantRoleList } from "@/services/ant-design-pro/merchant";
 
 const { Option } = Select;
 
@@ -11,6 +12,7 @@ interface RootModalProps {
 }
 
 const RootModal: React.FC<RootModalProps> = ({ visible, onCancel, onSubmit }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [roles, setRoles] = useState([]);
 
@@ -23,10 +25,10 @@ const RootModal: React.FC<RootModalProps> = ({ visible, onCancel, onSubmit }) =>
       if (res.code === "0") {
         setRoles(res.data.list);
       } else {
-        message.error("获取角色列表失败");
+        message.error(intl.formatMessage({ id: 'merchant.message.roleListFailed' }));
       }
     } catch (error) {
-      message.error("获取角色列表异常");
+      message.error(intl.formatMessage({ id: 'merchant.message.roleListError' }));
     }
   };
 
@@ -45,10 +47,25 @@ const RootModal: React.FC<RootModalProps> = ({ visible, onCancel, onSubmit }) =>
   };
 
   return (
-    <Modal title="角色分配" open={visible} onCancel={onCancel} onOk={handleOk} destroyOnClose>
+    <Modal 
+      title={intl.formatMessage({ id: 'merchant.message.roleAssign' })}
+      open={visible} 
+      onCancel={onCancel} 
+      onOk={handleOk} 
+      destroyOnClose
+    >
       <Form form={form} layout="vertical">
-        <Form.Item name="roleId" label="选择角色" rules={[{ required: true, message: "请选择角色" }]}>
-          <Select placeholder="请选择角色">
+        <Form.Item 
+          name="roleId" 
+          label={intl.formatMessage({ id: 'merchant.form.role.selectLabel' })}
+          rules={[{ 
+            required: true, 
+            message: intl.formatMessage({ id: 'merchant.form.role.required' }) 
+          }]}
+        >
+          <Select 
+            placeholder={intl.formatMessage({ id: 'merchant.form.role.placeholder' })}
+          >
             {roles.map((role:any) => (
               <Option key={role.roleId} value={role.roleId}>
                 {role.roleName}

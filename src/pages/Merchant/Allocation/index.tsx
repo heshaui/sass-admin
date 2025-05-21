@@ -9,25 +9,38 @@ import {
 } from '@/services/ant-design-pro/merchant'; // 角色API
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message } from 'antd';
+import { useIntl } from 'umi';
 import React, { useEffect, useState } from 'react';
 import AddCategoryModal from './component/AddCategoryModal'; // 模态框组件
 import Dispense from './component/Dispense'; // 权限分配组件
 
 // **表格列定义**
-const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: any) => void) => [
-  { title: 'ID', dataIndex: 'roleId', key: 'roleId' },
-  { title: '分类名称', dataIndex: 'roleName', key: 'roleName' },
-  { title: '分类描述', dataIndex: 'describe', key: 'describe' },
+const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: any) => void, intl: any) => [
+  { 
+    title: intl.formatMessage({ id: 'allocation.table.id' }), 
+    dataIndex: 'roleId', 
+    key: 'roleId' 
+  },
+  { 
+    title: intl.formatMessage({ id: 'allocation.table.categoryName' }), 
+    dataIndex: 'roleName', 
+    key: 'roleName' 
+  },
+  { 
+    title: intl.formatMessage({ id: 'allocation.table.categoryDescription' }), 
+    dataIndex: 'describe', 
+    key: 'describe' 
+  },
   {
-    title: '操作',
+    title: intl.formatMessage({ id: 'allocation.table.action' }),
     key: 'action',
-    render: (_, record: any) => (
+    render: (_: any, record: any) => (
       <Space>
         <Button type="link" onClick={() => handleEdit(record)}>
-          修改
+          {intl.formatMessage({ id: 'allocation.action.edit' })}
         </Button>
         <Button type="primary" onClick={() => handleDispense(record)}>
-          权限分配
+          {intl.formatMessage({ id: 'allocation.action.permissionAssign' })}
         </Button>
       </Space>
     ),
@@ -35,6 +48,7 @@ const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: 
 ];
 
 const Allocation: React.FC = () => {
+  const intl = useIntl();
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -51,7 +65,7 @@ const Allocation: React.FC = () => {
       const response = await tenantRoleList(data);
       if (response?.data) setDataSource(response.data.list);
     } catch (error) {
-      console.error('获取列表失败:', error);
+      console.error(intl.formatMessage({ id: 'allocation.message.fetchListFailed' }), error);
     } finally {
       setLoading(false);
     }
@@ -63,7 +77,7 @@ const Allocation: React.FC = () => {
       const res = await AuthorityList({ pageNo: 1, pageSize: 1000 });
       if (res?.data) setAllPermissions(res.data.list || []);
     } catch (error) {
-      console.error('获取权限失败:', error);
+      console.error(intl.formatMessage({ id: 'allocation.message.fetchPermissionsFailed' }), error);
     }
   };
 
@@ -95,17 +109,17 @@ const Allocation: React.FC = () => {
       if (editingRecord) {
         // 调用更新 API
         let resp = await updateTenantRoleById({ roleId: editingRecord.roleId, ...formData });
-        if (resp.code === '0') message.success('修改成功');
+        if (resp.code === '0') message.success(intl.formatMessage({ id: 'allocation.message.updateSuccess' }));
       } else {
         // 调用新增 API
         let res = await saveTenantRole(formData);
-        if (res.code === '0') message.success('新增成功');
+        if (res.code === '0') message.success(intl.formatMessage({ id: 'allocation.message.createSuccess' }));
       }
 
       fetchRoleList(); // 重新加载数据
       handleCancel();
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'allocation.message.operationFailed' }));
     }
   };
 
@@ -119,7 +133,7 @@ const Allocation: React.FC = () => {
         setRolePermissions(checkedKeys);
       }
     } catch (error) {
-      console.error('获取角色权限失败:', error);
+      console.error(intl.formatMessage({ id: 'allocation.message.fetchRolePermissionsFailed' }), error);
     }
   };
 
@@ -145,7 +159,7 @@ const Allocation: React.FC = () => {
       );
 
       if (newPermissions.length === 0 && removedPermissions.length === 0) {
-        message.info("没有新的权限需要分配或移除");
+        message.info(intl.formatMessage({ id: 'allocation.message.noPermissionChanges' }));
         setDisVisible(false);
         return;
       }
@@ -160,7 +174,7 @@ const Allocation: React.FC = () => {
       if (newPermissions.length > 0) {
         const res = await saveList(data);
         if (res.code !== '0') {
-          message.error('权限分配失败');
+          message.error(intl.formatMessage({ id: 'allocation.message.permissionAssignFailed' }));
           return;
         }
       }
@@ -170,16 +184,16 @@ const Allocation: React.FC = () => {
         const allID = roleId.filter(item => removedPermissions.includes(item.permissionsId));
         const deleteRes = await deleteByIds(allID.map(item => item.id));
         if (deleteRes.code !== '0') {
-          message.error('权限移除失败');
+          message.error(intl.formatMessage({ id: 'allocation.message.permissionRemoveFailed' }));
           return;
         }
       }
 
-      message.success('权限更新成功');
+      message.success(intl.formatMessage({ id: 'allocation.message.permissionUpdateSuccess' }));
       setDisVisible(false);
     } catch (error) {
       console.log(error)
-      message.error('权限分配请求失败');
+      message.error(intl.formatMessage({ id: 'allocation.message.permissionRequestFailed' }));
     }
   };
 
@@ -191,10 +205,10 @@ const Allocation: React.FC = () => {
         loading={loading}
         toolBarRender={() => [
           <Button type="primary" key="add" onClick={handleAdd}>
-            添加
+            {intl.formatMessage({ id: 'allocation.button.add' })}
           </Button>,
         ]}
-        columns={getColumns(handleEdit, handleDispense)}
+        columns={getColumns(handleEdit, handleDispense, intl)}
         dataSource={dataSource}
         pagination={false}
       />

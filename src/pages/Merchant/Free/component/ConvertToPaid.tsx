@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Modal, Form, DatePicker, Button, message } from "antd";
+import { useIntl } from 'umi';
 import dayjs from "dayjs";
 
 interface ConvertToPaidProps {
@@ -10,6 +11,7 @@ interface ConvertToPaidProps {
 }
 
 const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubmit, initialValues }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -27,24 +29,45 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
       onSubmit({ ...initialValues, tenantEndTime: values.tenantEndTime.format("YYYY-MM-DD HH:mm:ss") });
       form.resetFields();
     } catch (error) {
-      message.error("请选择服务到期时间！");
+      message.error(intl.formatMessage({ id: 'free.convertToPaid.form.required' }));
     }
   };
 
   return (
-    <Modal title="转为正式商户" open={visible} onCancel={onCancel} onOk={handleOk} width={500}>
+    <Modal 
+      title={intl.formatMessage({ id: 'free.convertToPaid.title' })} 
+      open={visible} 
+      onCancel={onCancel} 
+      onOk={handleOk} 
+      width={500}
+    >
       <Form form={form} layout="vertical">
         <Form.Item
           name="tenantEndTime"
-          label={<span style={{ fontWeight: "bold", fontSize: 16 }}>服务到期</span>}
-          rules={[{ required: true, message: "请选择服务到期时间！" }]}
+          label={
+            <span style={{ fontWeight: "bold", fontSize: 16 }}>
+              {intl.formatMessage({ id: 'free.convertToPaid.form.expiry' })}
+            </span>
+          }
+          rules={[{ 
+            required: true, 
+            message: intl.formatMessage({ id: 'free.convertToPaid.form.required' }) 
+          }]}
         >
-          <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请选择到期时间" style={{ width: "100%" }} />
+          <DatePicker 
+            showTime 
+            format="YYYY-MM-DD HH:mm:ss" 
+            placeholder={intl.formatMessage({ id: 'free.convertToPaid.form.placeholder' })} 
+            style={{ width: "100%" }} 
+          />
         </Form.Item>
         <p>
-          确定转移至付费商户后，服务开始计算，服务有效期至{" "}
-          <strong>{initialValues?.tenantEndTime?dayjs(initialValues.tenantEndTime).format("YYYY-MM-DD HH:mm:ss"):'-'}</strong>！
-         
+          {intl.formatMessage({ id: 'free.convertToPaid.message.confirm' })}{" "}
+          <strong>
+            {initialValues?.tenantEndTime 
+              ? dayjs(initialValues.tenantEndTime).format("YYYY-MM-DD HH:mm:ss")
+              : '-'}
+          </strong>！
         </p>
       </Form>
     </Modal>

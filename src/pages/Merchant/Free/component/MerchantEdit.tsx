@@ -1,5 +1,6 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Typography } from "antd";
+import { useIntl } from 'umi';
 import { getAreaCodeList } from "@/services/ant-design-pro/merchant";
 const { Option } = Select;
 
@@ -9,6 +10,7 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
   onSubmit,
   onCancel,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [areaList, setAreaList] = useState([]);
 
@@ -66,44 +68,77 @@ const MerchantEdit: React.FC<{ record?: any; isCreating?: boolean; onSubmit: (va
       }
     >
       {!isCreating && (
-        <Form.Item label="商户ID" name="tenantId">
+        <Form.Item 
+          label={intl.formatMessage({ id: 'free.merchantEdit.form.merchantId' })} 
+          name="tenantId"
+        >
           <Input disabled style={{ background: "#f5f5f5" }} />
         </Form.Item>
       )}
 
-      <Form.Item label="交易所名称" name="tenantName" rules={[{ required: true, message: "请输入交易所名称" }]}>
+      <Form.Item 
+        label={intl.formatMessage({ id: 'free.merchantEdit.form.exchangeName' })} 
+        name="tenantName" 
+        rules={[{ 
+          required: true, 
+          message: intl.formatMessage({ id: 'free.merchantEdit.form.exchangeName.required' }) 
+        }]}
+      >
         <Input />
       </Form.Item>
 
-      {/* <Form.Item label="商户ID" name="merchantId">
-        <Input disabled={!isCreating} style={{ background: "#f5f5f5" }} />
-      </Form.Item> */}
-
-      <Form.Item label="联系人" name="tenantContact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
+      <Form.Item 
+        label={intl.formatMessage({ id: 'free.merchantEdit.form.contact' })} 
+        name="tenantContact" 
+        rules={[{ 
+          required: true, 
+          message: intl.formatMessage({ id: 'free.merchantEdit.form.contact.required' }) 
+        }]}
+      >
         <Input />
       </Form.Item>
 
-      <Form.Item label="国家编码" name="areaCode">
+      <Form.Item 
+        label={intl.formatMessage({ id: 'free.merchantEdit.form.countryCode' })} 
+        name="areaCode"
+      >
         <Select>
           {areaList.map((item: any) => (  
-            <Option key={item.areaCode} value={item.areaCode}>+{item.areaCode} {item.areaName}</Option>
+            <Option key={item.areaCode} value={item.areaCode}>
+              +{item.areaCode} {item.areaName}
+            </Option>
           ))}
         </Select>
       </Form.Item>
 
-      <Form.Item label="手机号" name="tenantPhone">
+      <Form.Item 
+        label={intl.formatMessage({ id: 'free.merchantEdit.form.phone' })} 
+        name="tenantPhone"
+      >
         <Input />
       </Form.Item>
 
-      <Form.Item label="邮箱" name="tenantEmail" rules={[{ required: true, type: "email", message: "请输入有效的邮箱地址" }]}>
+      <Form.Item 
+        label={intl.formatMessage({ id: 'free.merchantEdit.form.email' })} 
+        name="tenantEmail" 
+        rules={[{ 
+          required: true, 
+          type: "email", 
+          message: intl.formatMessage({ id: 'free.merchantEdit.form.email.required' }) 
+        }]}
+      >
         <Input />
       </Form.Item>
 
       <Form.Item style={{ textAlign: "center" }}>
         <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>
-          {isCreating ? "新增" : "提交"}
+          {isCreating 
+            ? intl.formatMessage({ id: 'free.merchantEdit.button.create' })
+            : intl.formatMessage({ id: 'free.merchantEdit.button.submit' })}
         </Button>
-        <Button onClick={onCancel}>取消</Button>
+        <Button onClick={onCancel}>
+          {intl.formatMessage({ id: 'free.merchantEdit.button.cancel' })}
+        </Button>
       </Form.Item>
     </Form>
   );

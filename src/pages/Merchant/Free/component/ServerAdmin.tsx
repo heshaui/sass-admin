@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Modal, Form, Input, Button, message } from "antd";
+import { useIntl } from 'umi';
 
 interface ServerAdminProps {
   visible: boolean;
@@ -9,6 +10,7 @@ interface ServerAdminProps {
 }
 
 const ServerAdmin: React.FC<ServerAdminProps> = ({ visible, onCancel, onSubmit, initialValues }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -22,25 +24,53 @@ const ServerAdmin: React.FC<ServerAdminProps> = ({ visible, onCancel, onSubmit, 
       onSubmit(values);
       form.resetFields();
     } catch (error) {
-      message.error("请检查输入内容！");
+      message.error(intl.formatMessage({ id: 'free.serverAdmin.message.validateError' }));
     }
   };
 
   return (
-    <Modal title="服务器管理" open={visible} onCancel={onCancel} onOk={handleOk} width={600}>
+    <Modal 
+      title={intl.formatMessage({ id: 'free.serverAdmin.title' })}
+      open={visible} 
+      onCancel={onCancel} 
+      onOk={handleOk} 
+      width={600}
+    >
       <Form form={form} layout="vertical">
-        {/* IP 配置 */}
-        {/* <Form.Item name="ipWhitelist" label="服务器 IP 白名单" extra="最大不超过 10 个，多个 IP 用 ',' 隔开">
-          <Input.TextArea placeholder="请输入 IP 地址" rows={2} />
+        {/* IP Configuration - Commented out */}
+        {/* <Form.Item 
+          name="ipWhitelist" 
+          label={intl.formatMessage({ id: 'free.serverAdmin.form.ipWhitelist' })}
+          extra={intl.formatMessage({ id: 'free.serverAdmin.form.ipWhitelist.extra' })}
+        >
+          <Input.TextArea 
+            placeholder={intl.formatMessage({ id: 'free.serverAdmin.form.ipWhitelist.placeholder' })} 
+            rows={2} 
+          />
         </Form.Item> */}
 
-        {/* 域名配置 */}
-        <Form.Item name="tenantHost" label="域名" rules={[{ required: true, message: "请输入域名" }]}>
-          <Input placeholder="请输入域名" />
+        {/* Domain Configuration */}
+        <Form.Item 
+          name="tenantHost" 
+          label={intl.formatMessage({ id: 'free.serverAdmin.form.domain' })} 
+          rules={[{ 
+            required: true, 
+            message: intl.formatMessage({ id: 'free.serverAdmin.form.domain.required' }) 
+          }]}
+        >
+          <Input 
+            placeholder={intl.formatMessage({ id: 'free.serverAdmin.form.domain.placeholder' })} 
+          />
         </Form.Item>
 
-        {/* <Form.Item name="subDomain" label="子域名">
-          <Input placeholder="请输入子域名" />
+        {/* Subdomain Configuration - Commented out */}
+        {/* <Form.Item 
+          name="subDomain" 
+          label={intl.formatMessage({ id: 'free.serverAdmin.form.subdomain' })}
+        >
+          <Input 
+            placeholder={intl.formatMessage({ id: 'free.serverAdmin.form.subdomain.placeholder' })} 
+          />
         </Form.Item> */}
       </Form>
     </Modal>

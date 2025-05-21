@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ProDescriptions, ProTable } from "@ant-design/pro-components";
-import { Card, message, Button,Modal,Form,Radio,Space} from "antd";
+import { Card, message, Button, Modal, Form, Radio, Space } from "antd";
+import { useIntl } from 'umi';
 import { tenantParams,updateTenantById,updateDelayById } from "@/services/ant-design-pro/merchant";
 import MerchantEdit from "./MerchantEdit";
 import ConvertToPaid from "./ConvertToPaid"
@@ -16,6 +17,7 @@ interface MerchantDetailProps {
 
 
 const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => {
+  const intl = useIntl();
   const [merchant, setMerchant] = useState<any>({});
   const [accountData, setAccountData] = useState<any[]>([]);
   const [showEdit, setShowEdit] = useState(false); // 控制详情显示
@@ -27,12 +29,36 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
 
   // 账户表格列配置
   const columns = [
-    { title: "币种", dataIndex: "currency", key: "currency" },
-    { title: "余额", dataIndex: "balance", key: "balance" },
-    { title: "可用", dataIndex: "available", key: "available" },
-    { title: "冻结", dataIndex: "frozen", key: "frozen" },
-    { title: "提币中", dataIndex: "withdrawing", key: "withdrawing" },
-    { title: "锁仓", dataIndex: "locked", key: "locked" },
+    { 
+      title: intl.formatMessage({ id: 'merchantDetail.account.currency' }), 
+      dataIndex: "currency", 
+      key: "currency" 
+    },
+    { 
+      title: intl.formatMessage({ id: 'merchantDetail.account.balance' }), 
+      dataIndex: "balance", 
+      key: "balance" 
+    },
+    { 
+      title: intl.formatMessage({ id: 'merchantDetail.account.available' }), 
+      dataIndex: "available", 
+      key: "available" 
+    },
+    { 
+      title: intl.formatMessage({ id: 'merchantDetail.account.frozen' }), 
+      dataIndex: "frozen", 
+      key: "frozen" 
+    },
+    { 
+      title: intl.formatMessage({ id: 'merchantDetail.account.withdrawing' }), 
+      dataIndex: "withdrawing", 
+      key: "withdrawing" 
+    },
+    { 
+      title: intl.formatMessage({ id: 'merchantDetail.account.locked' }), 
+      dataIndex: "locked", 
+      key: "locked" 
+    },
   ];
   const fetchMerchant = async () => {
     if (!tenantId) return;
@@ -42,10 +68,10 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
       if (res.code === "0") {
         setMerchant(res.data || {});
       } else {
-        message.error("获取商户详情失败");
+        message.error(intl.formatMessage({ id: 'merchantDetail.message.fetchFailed' }));
       }
     } catch (error) {
-      message.error("请求出错，请稍后重试");
+      message.error(intl.formatMessage({ id: 'merchantDetail.message.requestError' }));
     }
     setLoading(false);
   };
@@ -91,14 +117,17 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
       };
       const res = await updateTenantById(data);
       if (res.code === '0') {
-        message.success('多语言服务套餐已更新');
+        message.success(intl.formatMessage({ id: 'merchantDetail.message.languageUpdateSuccess' }));
         setLanguageModalVisible(false);
         await fetchMerchant(); // 刷新商户信息
       } else {
-        message.error('更新失败：' + (res.message || '未知错误'));
+        message.error(
+          intl.formatMessage({ id: 'merchantDetail.message.languageUpdateFailed' }) + 
+          (res.message || intl.formatMessage({ id: 'merchantDetail.message.unknownError' }))
+        );
       }
     } catch (error) {
-      message.error('请求出错，请稍后重试');
+      message.error(intl.formatMessage({ id: 'merchantDetail.message.requestError' }));
     }
   };
 
@@ -110,54 +139,98 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
 
   return (
     <div>
-{
-  showEdit?  <MerchantEdit tenantId={tenantId} onBack={onBack} /> : (
-
-    <Card
-    title="商户详情"
-    extra={
-      <Button type="primary" onClick={onBack}>
-        返回列表
-      </Button>
-    }
-  >
-    {/* 基本信息 */}
-    <ProDescriptions column={3} title="基本信息">
-      <ProDescriptions.Item label="商户ID">{merchant.tenantId}</ProDescriptions.Item>
-      <ProDescriptions.Item label="交易所名称">{merchant.tenantName}</ProDescriptions.Item>
-      <ProDescriptions.Item label="联系人">{merchant.tenantContact}</ProDescriptions.Item>
-      <ProDescriptions.Item label="手机号">{merchant.tenantPhone || "无"}</ProDescriptions.Item>
-      <ProDescriptions.Item label="邮箱">{merchant.tenantEmail || "无"}</ProDescriptions.Item>
-      <ProDescriptions.Item label="商户域名">{merchant.tenantHost || "无"}</ProDescriptions.Item>
-      <ProDescriptions.Item label="注册时间">
-        {merchant.createTime ? dayjs(merchant.createTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
-      </ProDescriptions.Item>
-      <ProDescriptions.Item label="开通时间">
-        {merchant.tenantStartTime ? dayjs(merchant.tenantStartTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
-      </ProDescriptions.Item>
-      <ProDescriptions.Item label="到期时间">
-        {merchant.tenantEndTime ? dayjs(merchant.tenantEndTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
-      </ProDescriptions.Item>
-    </ProDescriptions>
-    <div>
-      <Button type="primary" onClick={() => setShowEdit(true)} style={{ marginRight: 10 }}>
-        修改
-      </Button>
-      <Button type="primary" onClick={() => handleConvertToPaid(true)} style={{ marginRight: 10 }}>
-        延期
-      </Button>
-      <Button type="primary" onClick={handleLanguageModalOpen}>
-        多语言套餐
-      </Button>
-    </div>
+      {showEdit ? (
+        <MerchantEdit tenantId={tenantId} onBack={onBack} />
+      ) : (
+        <Card
+          title={intl.formatMessage({ id: 'merchantDetail.title' })}
+          extra={
+            <Button type="primary" onClick={onBack}>
+              {intl.formatMessage({ id: 'merchantDetail.button.back' })}
+            </Button>
+          }
+        >
+          {/* 基本信息 */}
+          <ProDescriptions 
+            column={3} 
+            title={intl.formatMessage({ id: 'merchantDetail.section.basicInfo' })}
+          >
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.merchantId' })}
+            >
+              {merchant.tenantId}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.exchangeName' })}
+            >
+              {merchant.tenantName}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.contact' })}
+            >
+              {merchant.tenantContact}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.phone' })}
+            >
+              {merchant.tenantPhone || intl.formatMessage({ id: 'merchantDetail.label.none' })}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.email' })}
+            >
+              {merchant.tenantEmail || intl.formatMessage({ id: 'merchantDetail.label.none' })}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.domain' })}
+            >
+              {merchant.tenantHost || intl.formatMessage({ id: 'merchantDetail.label.none' })}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.registrationTime' })}
+            >
+              {merchant.createTime ? dayjs(merchant.createTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.activationTime' })}
+            >
+              {merchant.tenantStartTime ? dayjs(merchant.tenantStartTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
+            </ProDescriptions.Item>
+            <ProDescriptions.Item 
+              label={intl.formatMessage({ id: 'merchantDetail.label.expiryTime' })}
+            >
+              {merchant.tenantEndTime ? dayjs(merchant.tenantEndTime).format("YYYY-MM-DD HH:mm:ss") : "-"}
+            </ProDescriptions.Item>
+          </ProDescriptions>
+          <div>
+            <Button 
+              type="primary" 
+              onClick={() => setShowEdit(true)} 
+              style={{ marginRight: 10 }}
+            >
+              {intl.formatMessage({ id: 'merchantDetail.button.edit' })}
+            </Button>
+            <Button 
+              type="primary" 
+              onClick={() => handleConvertToPaid(true)} 
+              style={{ marginRight: 10 }}
+            >
+              {intl.formatMessage({ id: 'merchantDetail.button.extend' })}
+            </Button>
+            <Button 
+              type="primary" 
+              onClick={handleLanguageModalOpen}
+            >
+              {intl.formatMessage({ id: 'merchantDetail.button.languagePackage' })}
+            </Button>
+          </div>
     {/* 账户信息 */}
     <ProTable
       columns={columns}
-      dataSource={accountData} // 绑定数据
+      dataSource={accountData}
       rowKey="currency"
       search={false}
       pagination={false}
-      headerTitle="账户信息"
+      headerTitle={intl.formatMessage({ id: 'merchantDetail.section.accountInfo' })}
     />
     <ConvertToPaid
         visible={convertModalVisible}
@@ -167,20 +240,20 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
       />
     {/* 多语言套餐Modal */}
     <Modal
-      title="修改"
+      title={intl.formatMessage({ id: 'merchantDetail.languageModal.title' })}
       open={languageModalVisible}
       onCancel={handleLanguageModalClose}
       footer={[
         <Button key="cancel" onClick={handleLanguageModalClose}>
-          取消
+          {intl.formatMessage({ id: 'merchantDetail.languageModal.cancel' })}
         </Button>,
         <Button key="submit" type="primary" onClick={handleLanguageSubmit}>
-          提交
+          {intl.formatMessage({ id: 'merchantDetail.languageModal.submit' })}
         </Button>,
       ]}
     >
       <div style={{ textAlign: 'center', marginBottom: 20 }}>
-        <h3>多语言服务调整</h3>
+        <h3>{intl.formatMessage({ id: 'merchantDetail.languageModal.header' })}</h3>
       </div>
       
       <Form layout="vertical">
@@ -189,17 +262,17 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
             <Space direction="horizontal">
               <Radio value={1}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 80, height: 40, border: '1px solid #d9d9d9', borderRadius: 2 }}>
-                  基础版
+                  {intl.formatMessage({ id: 'merchantDetail.languagePackage.basic' })}
                 </div>
               </Radio>
               <Radio value={2}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 80, height: 40, border: '1px solid #d9d9d9', borderRadius: 2 }}>
-                  进阶版
+                  {intl.formatMessage({ id: 'merchantDetail.languagePackage.standard' })}
                 </div>
               </Radio>
               <Radio value={3}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 80, height: 40, border: '1px solid #d9d9d9', borderRadius: 2 }}>
-                  高级版
+                  {intl.formatMessage({ id: 'merchantDetail.languagePackage.premium' })}
                 </div>
               </Radio>
             </Space>
@@ -207,9 +280,9 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
         </Form.Item>
         
         <div style={{ marginTop: 20 }}>
-          <p>基础版: 中英日韩</p>
-          <p>进阶版: 中英日韩、繁体中文、俄语、越南语、印地语、孟加拉语</p>
-          <p>高级版: 中英日韩、繁体中文、俄语、越南语、印地语、孟加拉语、葡萄牙语、德语、爪哇语、土耳其语、意大利语、泰语</p>
+          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.basicDesc' })}</p>
+          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.standardDesc' })}</p>
+          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.premiumDesc' })}</p>
         </div>
       </Form>
     </Modal>

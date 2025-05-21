@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
 import { Button, Space, Modal, message } from "antd";
+import { useIntl } from 'umi';
 import MerchantEdit from "./component/MerchantEdit";
 import ServerAdmin from "./component/ServerAdmin";
 import ConvertToPaid from "./component/ConvertToPaid"; 
@@ -8,6 +9,7 @@ import { saveTenant, tenantList,updateTenantById,saveTenantRoot,updatePaymentSta
 import dayjs from "dayjs";
 
 const Free: React.FC = () => {
+  const intl = useIntl();
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [serverModalVisible, setServerModalVisible] = useState(false)
   const [currentRecord, setCurrentRecord] = useState<any>(null);
@@ -43,10 +45,10 @@ const Free: React.FC = () => {
           total: res.data.count || 0,
         });
       } else {
-        message.error("获取商户数据失败");
+        message.error(intl.formatMessage({ id: 'free.message.fetchMerchantFailed' }));
       }
     } catch (error) {
-      message.error("请求错误，请稍后重试");
+      message.error(intl.formatMessage({ id: 'free.message.requestError' }));
     } finally {
       setLoading(false);
     }
@@ -89,10 +91,10 @@ const Free: React.FC = () => {
     try {
       if (isCreating) {
         await saveTenant(values);
-        message.success('新增商户成功');
+        message.success(intl.formatMessage({ id: 'free.message.createSuccess' }));
       } else {
         await updateTenantById(values);
-        message.success('更新商户成功');
+        message.success(intl.formatMessage({ id: 'free.message.updateSuccess' }));
       }
       
       // 重新获取列表数据
@@ -106,7 +108,7 @@ const Free: React.FC = () => {
         formRef.current.resetFields();
       }
     } catch (error) {
-      message.error('操作失败：' + error.message);
+      message.error(intl.formatMessage({ id: 'free.message.operationFailed' }) + '：' + error.message);
     } finally {
       setLoading(false);
     }
@@ -120,7 +122,7 @@ const Free: React.FC = () => {
     }
    let res=await updateTenantById(data);
    if(res.code==='0'){
-    message.success("服务器配置已更新");
+    message.success(intl.formatMessage({ id: 'free.message.serverConfigUpdated' }));
     setServerModalVisible(false);
    }else{
     message.error(res.message);
@@ -145,7 +147,7 @@ const Free: React.FC = () => {
     } 
    let res=await updatePaymentStatusById(data);
    if(res.code==='0'){
-    message.success("商户已转为正式商户！");
+    message.success(intl.formatMessage({ id: 'free.message.convertSuccess' }));
     setConvertModalVisible(false);
     fetchMerchantList();
    }else{
@@ -157,8 +159,8 @@ const Free: React.FC = () => {
 
   const handleSave = async (record: any) => {
     Modal.confirm({
-      title: '创建Root账号',
-      content: '确认创建后，系统将根据企业信息自动生成Root管理员信息。您可以前往Root管理查看！',
+      title: intl.formatMessage({ id: 'free.modal.createRoot.title' }),
+      content: intl.formatMessage({ id: 'free.modal.createRoot.content' }),
       onOk: async () => {
         let data = {
           tenantId: record.tenantId,
@@ -168,9 +170,9 @@ const Free: React.FC = () => {
         }
         const res = await saveTenantRoot(data);
         if(res.code === '0'){
-          message.success("root账户创建成功");
+          message.success(intl.formatMessage({ id: 'free.message.rootAccountCreated' }));
         }else{
-          message.error("root账户创建失败");
+          message.error(intl.formatMessage({ id: 'free.message.rootAccountFailed' }));
         }
       },
       onCancel() {
@@ -262,14 +264,16 @@ const Free: React.FC = () => {
         }}
         toolBarRender={() => [
           <Button type="primary" key="new" onClick={handleCreate}>
-            + 新建
+            + {intl.formatMessage({ id: 'free.button.new' })}
           </Button>,
         ]}
       />
 
       {/* 商户编辑弹窗 */}
       <Modal
-        title={isCreating ? "新增商户" : "编辑商户"}
+        title={intl.formatMessage({ 
+          id: isCreating ? 'free.modal.createTitle' : 'free.modal.editTitle' 
+        })}
         open={editModalVisible}
         onCancel={handleCloseModal}
         footer={null}

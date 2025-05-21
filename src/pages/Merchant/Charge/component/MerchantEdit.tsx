@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, DatePicker, message, Card,  Select } from "antd";
+import { Form, Input, Button, DatePicker, message, Card, Select } from "antd";
+import { useIntl } from 'umi';
 import dayjs from "dayjs";
 import { tenantParams, updateTenantById } from "@/services/ant-design-pro/merchant";
 import { getAreaCodeList } from "@/services/ant-design-pro/merchant";
@@ -11,6 +12,7 @@ interface MerchantEditProps {
 }
 
 const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [areaList, setAreaList] = useState([]);
@@ -44,10 +46,10 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
             tenantEndTime: merchantData.tenantEndTime ? dayjs(merchantData.tenantEndTime) : null,
           });
         } else {
-          message.error("获取商户详情失败");
+          message.error(intl.formatMessage({ id: 'merchantEdit.message.fetchFailed' }));
         }
       } catch (error) {
-        message.error("请求出错，请稍后重试");
+        message.error(intl.formatMessage({ id: 'merchantEdit.message.requestError' }));
       }
       setLoading(false);
     };
@@ -61,7 +63,7 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
 
     // **确保 tenantId 存在**
     if (!tenantId) {
-      message.error("无效的商户ID");
+      message.error(intl.formatMessage({ id: 'merchantEdit.message.invalidMerchantId' }));
       return;
     }
 
@@ -78,10 +80,10 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
     try {
       const res = await updateTenantById(formattedData);
       if (res.code === "0") {
-        message.success("更新商户信息成功");
+        message.success(intl.formatMessage({ id: 'merchantEdit.message.updateSuccess' }));
         onBack(); // 返回上一页
       } else {
-        message.error("更新商户信息失败");
+        message.error(intl.formatMessage({ id: 'merchantEdit.message.updateFailed' }));
       }
     } catch (error) {
       message.error("请求出错，请稍后重试");
@@ -89,48 +91,90 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
   };
 
   return (
-    <Card title="编辑商户信息" extra={<Button onClick={onBack}>返回</Button>}>
+    <Card 
+      title={intl.formatMessage({ id: 'merchantEdit.title' })} 
+      extra={
+        <Button onClick={onBack}>
+          {intl.formatMessage({ id: 'merchantEdit.button.back' })}
+        </Button>
+      }
+    >
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Form.Item label="交易所名称" name="tenantName" rules={[{ required: true, message: "请输入交易所名称" }]}>
+        <Form.Item 
+          label={intl.formatMessage({ id: 'merchantEdit.form.exchangeName' })}
+          name="tenantName" 
+          rules={[{ 
+            required: true, 
+            message: intl.formatMessage({ id: 'merchantEdit.form.exchangeName.required' }) 
+          }]}
+        >
           <Input />
         </Form.Item>
 
-        <Form.Item label="商户ID" name="tenantId">
+        <Form.Item 
+          label={intl.formatMessage({ id: 'merchantEdit.form.merchantId' })} 
+          name="tenantId"
+        >
           <Input disabled />
         </Form.Item>
 
-        <Form.Item label="联系人" name="tenantContact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
+        <Form.Item 
+          label={intl.formatMessage({ id: 'merchantEdit.form.contact' })} 
+          name="tenantContact" 
+          rules={[{ 
+            required: true, 
+            message: intl.formatMessage({ id: 'merchantEdit.form.contact.required' }) 
+          }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item label="联系人" name="tenantContact" rules={[{ required: true, message: "请输入联系人姓名" }]}>
-          <Input />
+        
+        <Form.Item 
+          label={intl.formatMessage({ id: 'merchantEdit.form.countryCode' })} 
+          name="areaCode"
+        >
+          <Select>
+            {areaList.map((item: any) => (  
+              <Option key={item.areaCode} value={item.areaCode}>
+                +{item.areaCode} {item.areaName}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
-        <Form.Item label="国家编码" name="areaCode">
-        <Select>
-          {areaList.map((item: any) => (  
-            <Option key={item.areaCode} value={item.areaCode}>+{item.areaCode} {item.areaName}</Option>
-          ))}
-        </Select>
-      </Form.Item>
 
-        <Form.Item label="邮箱" name="tenantEmail" rules={[{ required: true, type: "email", message: "请输入有效的邮箱地址" }]}>
+        <Form.Item 
+          label={intl.formatMessage({ id: 'merchantEdit.form.email' })}
+          name="tenantEmail" 
+          rules={[{ 
+            required: true, 
+            type: "email", 
+            message: intl.formatMessage({ id: 'merchantEdit.form.email.required' }) 
+          }]}
+        >
           <Input />
         </Form.Item>
 
-        <Form.Item label="服务开始" name="tenantStartTime">
+        <Form.Item 
+          label={intl.formatMessage({ id: 'merchantEdit.form.serviceStart' })} 
+          name="tenantStartTime"
+        >
           <DatePicker showTime style={{ width: "100%" }} disabled />
         </Form.Item>
 
-        <Form.Item label="服务到期" name="tenantEndTime">
+        <Form.Item 
+          label={intl.formatMessage({ id: 'merchantEdit.form.serviceEnd' })} 
+          name="tenantEndTime"
+        >
           <DatePicker showTime style={{ width: "100%" }} disabled/>
         </Form.Item>
 
-        {/* ✅ 按钮居中对齐 */}
         <Form.Item style={{ textAlign: "center" }}>
           <Button type="primary" htmlType="submit" style={{ marginRight: 10 }}>
-            提交
+            {intl.formatMessage({ id: 'merchantEdit.button.submit' })}
           </Button>
-          <Button onClick={onBack}>取消</Button>
+          <Button onClick={onBack}>
+            {intl.formatMessage({ id: 'merchantEdit.button.cancel' })}
+          </Button>
         </Form.Item>
       </Form>
     </Card>

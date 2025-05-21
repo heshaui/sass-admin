@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Form, DatePicker, Button, message } from "antd";
+import { useIntl } from 'umi';
 import dayjs from "dayjs";
 
 interface ConvertToPaidProps {
@@ -10,6 +11,7 @@ interface ConvertToPaidProps {
 }
 
 const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubmit, initialValues }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [selectedTime, setSelectedTime] = useState<string>("");
 
@@ -38,29 +40,42 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
       const tenDaysLater = dayjs().add(10, 'day');
       
       if (selectedDate.isAfter(tenDaysLater)) {
-        message.error("服务到期时间不能超过10天！");
+        message.error(intl.formatMessage({ id: 'convertToPaid.validation.maxDays' }));
         return;
       }
       
       onSubmit({ ...initialValues, tenantEndTime: values.tenantEndTime.format("YYYY-MM-DD HH:mm:ss") });
       form.resetFields();
     } catch (error) {
-      message.error("请选择服务到期时间！");
+      message.error(intl.formatMessage({ id: 'convertToPaid.form.required' }));
     }
   };
 
   return (
-    <Modal title="服务延期" open={visible} onCancel={onCancel} onOk={handleOk} width={500}>
+    <Modal 
+      title={intl.formatMessage({ id: 'convertToPaid.title' })} 
+      open={visible} 
+      onCancel={onCancel} 
+      onOk={handleOk} 
+      width={500}
+    >
       <Form form={form} layout="vertical">
         <Form.Item
           name="tenantEndTime"
-          label={<span style={{ fontWeight: "bold", fontSize: 16 }}>延期时长</span>}
-          rules={[{ required: true, message: "请选择服务到期时间！" }]}
+          label={
+            <span style={{ fontWeight: "bold", fontSize: 16 }}>
+              {intl.formatMessage({ id: 'convertToPaid.form.duration' })}
+            </span>
+          }
+          rules={[{ 
+            required: true, 
+            message: intl.formatMessage({ id: 'convertToPaid.form.required' }) 
+          }]}
         >
           <DatePicker 
             showTime 
             format="YYYY-MM-DD HH:mm:ss" 
-            placeholder="请选择到期时间" 
+            placeholder={intl.formatMessage({ id: 'convertToPaid.form.placeholder' })} 
             style={{ width: "100%" }} 
             onChange={(date) => {
               if (date) {
@@ -71,11 +86,11 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
             }}
           />
         </Form.Item>
-        <p style={{ color: "#999",marginBottom:0 }}>
-          注意：仅支持交易所到期前10天进行操作
+        <p style={{ color: "#999", marginBottom: 0 }}>
+          {intl.formatMessage({ id: 'convertToPaid.note.title' })}
         </p>
-        <p style={{ color: "#999",margin:0}}>
-          时间为：{selectedTime || initialValues.tenantEndTime || ""}
+        <p style={{ color: "#999", margin: 0 }}>
+          {intl.formatMessage({ id: 'convertToPaid.note.time' })}{selectedTime || initialValues.tenantEndTime || ""}
         </p>
       </Form>
     </Modal>

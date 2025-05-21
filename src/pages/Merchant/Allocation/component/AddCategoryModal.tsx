@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Tree, Button } from "antd";
+import { useIntl } from 'umi';
 
 interface AddCategoryModalProps {
   visible: boolean;
@@ -9,6 +10,7 @@ interface AddCategoryModalProps {
 }
 
 const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ visible, onCancel, onSubmit, editingRecord }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
 
 
@@ -35,33 +37,47 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ visible, onCancel, 
 
   return (
     <Modal
-      title={editingRecord ? "修改分类" : "添加分类"}
+      title={intl.formatMessage({ 
+        id: editingRecord ? 'addCategory.modal.editTitle' : 'addCategory.modal.addTitle' 
+      })}
       open={visible}
       onCancel={onCancel}
       destroyOnClose
       footer={[
         <Button key="cancel" onClick={onCancel}>
-          取消
+          {intl.formatMessage({ id: 'addCategory.button.cancel' })}
         </Button>,
         <Button key="submit" type="primary" onClick={handleOk}>
-          提交
+          {intl.formatMessage({ id: 'addCategory.button.submit' })}
         </Button>,
       ]}
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label="分类名称"
+          label={intl.formatMessage({ id: 'addCategory.form.categoryName.label' })}
           name="roleName"
-          rules={[{ required: true, message: "请输入分类名称" }]}
+          rules={[{ 
+            required: true, 
+            message: intl.formatMessage({ id: 'addCategory.form.categoryName.required' }) 
+          }]}
         >
-          <Input maxLength={20} placeholder="20字符" />
+          <Input 
+            maxLength={20} 
+            placeholder={intl.formatMessage({ id: 'addCategory.form.categoryName.placeholder' })} 
+          />
         </Form.Item>
         <Form.Item
-          label="分类描述"
+          label={intl.formatMessage({ id: 'addCategory.form.categoryDescription.label' })}
           name="describe"
-          rules={[{ required: true, message: "请输入分类描述" }]}
+          rules={[{ 
+            required: true, 
+            message: intl.formatMessage({ id: 'addCategory.form.categoryDescription.required' }) 
+          }]}
         >
-          <Input maxLength={20} placeholder="20字符" />
+          <Input 
+            maxLength={20} 
+            placeholder={intl.formatMessage({ id: 'addCategory.form.categoryDescription.placeholder' })} 
+          />
         </Form.Item>
       </Form>
     </Modal>

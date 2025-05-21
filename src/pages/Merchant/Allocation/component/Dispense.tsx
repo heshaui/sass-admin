@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, message, Tree } from 'antd';
+import { useIntl } from 'umi';
 import { generateTreeData } from '@/utils/index';
 
 interface RoleModalProps {
@@ -56,6 +57,7 @@ const Dispense: React.FC<RoleModalProps> = ({
   initialValues,
   allPermissions,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [treeData, setTreeData] = useState<any[]>([]);
@@ -101,15 +103,19 @@ const Dispense: React.FC<RoleModalProps> = ({
         form.resetFields();
       })
       .catch(() => {
-        message.error('请填写所有必填项');
+        message.error(intl.formatMessage({ id: 'dispense.message.requiredFields' }));
       });
   };
 
   return (
-    <Modal open={visible} title="权限分配" onCancel={onClose} onOk={handleSubmit}>
+    <Modal 
+      open={visible} 
+      title={intl.formatMessage({ id: 'dispense.title' })} 
+      onCancel={onClose} 
+      onOk={handleSubmit}
+    >
       <Form form={form} initialValues={initialValues} layout="vertical">
-        {/* ✅ 角色权限列表 */}
-        <Form.Item label="权限列表">
+        <Form.Item label={intl.formatMessage({ id: 'dispense.form.permissionList' })}>
           <Tree
             checkable
             treeData={treeData}
