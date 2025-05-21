@@ -61,6 +61,29 @@ const TradingPairManagement: React.FC = () => {
   const [validCodeVisible, setValidCodeVisible] = useState(false);
   const [cancelOrder, setCancelOrder] = useState();
 
+  const tradingPairCategories = {
+    '1': '主流区',
+    '2': '创新区',
+    '3': '新币区',
+    '4': 'AI',
+    '5': 'Meme',
+    '6': 'NFT',
+    '7': 'DeFi',
+    '8': 'Web3',
+    '9': 'Payments',
+    '10': 'Launchpad',
+    '11': 'Layer2',
+    '12': 'Solana',
+    '13': 'RWA',
+    '14': 'Launchpool',
+    '15': '游戏元宇宙',
+    '16': '存储'
+  } as const;
+  
+
+
+
+
   const fetchTradingPairs = async (params: any) => {
     const res = await exchangeCoinList({
       pageNo: params.current,
@@ -292,6 +315,7 @@ const TradingPairManagement: React.FC = () => {
       title: '币对标签',
       dataIndex: 'classLabel',
       search: false,
+      render: (text) => tradingPairCategories[text],
     },
     {
       title: '添加时间',

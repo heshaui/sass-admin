@@ -8,7 +8,7 @@ import {
 } from '@/services/ant-design-pro/operation';
 import AnnouncementForm from './AnnouncementForm';
 import CategoryForm from './CategoryForm';
-
+import dayjs from 'dayjs'
 
 type AnnouncementItem = {
   id: string;
@@ -63,13 +63,13 @@ const AnnouncementManagement: React.FC = () => {
       // 处理时间范围
       let startTime, endTime;
       if (sendTime && sendTime.length === 2) {
-        startTime = sendTime[0];
-        endTime = sendTime[1];
+        startTime = dayjs(sendTime[0]).valueOf();
+        endTime = dayjs(sendTime[1]).valueOf();
       }
       
       // 获取内容列表（包含标题）
       const contentResponse = await getAnnouncementContentList({
-        current,
+        pageNo:current,
         pageSize,
         describeText: description,
         languageCode: languageCode || 'en_US',
@@ -80,7 +80,7 @@ const AnnouncementManagement: React.FC = () => {
       
       // 获取公告基础信息
       const announcementResponse = await getAnnouncementList({
-        current,
+        pageNo:current,
         pageSize,
         describeText: description,
         languageCode: languageCode || 'en_US',
@@ -225,7 +225,7 @@ const AnnouncementManagement: React.FC = () => {
     {
       title: '发送时间',
       dataIndex: 'releaseTime',
-      valueType: 'dateTime',
+      valueType: 'dateTimeRange',
       search: {
         transform: (value) => {
           // 确保日期值是有效的
@@ -248,9 +248,8 @@ const AnnouncementManagement: React.FC = () => {
       title: '发送状态',
       dataIndex: 'status',
       valueEnum: {
-        all: { text: '全部' },
-        published: { text: '已发送', status: 'Success' },
-        pending: { text: '待发布', status: 'Default' },
+        1: { text: '已发送', status: 'Success' },
+        0: { text: '待发布', status: 'Default' },
       },
       renderText: (text) => {
         return text === 0 ? '待发布' : text === 1 ? '已发送' : '待发布';
@@ -258,7 +257,7 @@ const AnnouncementManagement: React.FC = () => {
       search: {
         transform: (value) => {
           return {
-            sendStatus: value === 'all' ? undefined : value,
+            sendStatus: value === 0 ? undefined : value,
           };
         },
       },
