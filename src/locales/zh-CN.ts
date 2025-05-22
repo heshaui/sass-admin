@@ -8,6 +8,7 @@ import settings from './zh-CN/settings';
 import common from './zh-CN/common';
 import langPackage from './zh-CN/langPackage';
 import merchant from './zh-CN/merchant';
+import rate from './zh-CN/rate';
 
 export default {
   'navBar.lang': '语言',
@@ -27,4 +28,5 @@ export default {
   ...common,
   ...langPackage,
   ...merchant,
+  ...rate,
 };

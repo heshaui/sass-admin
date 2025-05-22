@@ -1,4 +1,5 @@
 import React, { useRef, useState, createRef } from 'react';
+import { useIntl } from '@umijs/max';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns, FormInstance } from '@ant-design/pro-components';
 import { Button, message, Switch,Image } from 'antd';
@@ -9,6 +10,7 @@ import AvatarUpload from "@/components/AvatarUpload/index";
 
 const Rate: React.FC = () => {
   const actionRef = useRef<ActionType>();
+  const intl = useIntl();
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<any>();
   const [editMode, setEditMode] = useState<boolean>(false);
@@ -46,7 +48,7 @@ const Rate: React.FC = () => {
       actionRef.current?.reload();
       return true;  
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'rate.message.operation.failed' }));
       return false;
     }
   };
@@ -69,12 +71,12 @@ const Rate: React.FC = () => {
 
   const columns: ProColumns[] = [
     {
-      title: '序号',
+      title: intl.formatMessage({ id: 'rate.table.id' }),
       dataIndex: 'id',
       search: false,
     },
     {
-      title: '图标',
+      title: intl.formatMessage({ id: 'rate.table.icon' }),
       dataIndex: 'iconUrl',
       search: false,
       render: (_, record: any) => (
@@ -86,22 +88,22 @@ const Rate: React.FC = () => {
       ),
     },
     {
-      title: '简称',
+      title: intl.formatMessage({ id: 'rate.table.shortName' }),
       dataIndex: 'shortName',
       valueType: 'text',
     },
     {
-      title: '符号',
+      title: intl.formatMessage({ id: 'rate.table.symbol' }),
       dataIndex: 'symbol',
       search: false,
     },
     {
-      title: '汇率',
+      title: intl.formatMessage({ id: 'rate.table.exchangeRate' }),
       dataIndex: 'exchangeRate',
       search: false,
     },
     {
-      title: '精度',
+      title: intl.formatMessage({ id: 'rate.table.accuracy' }),
       dataIndex: 'accuracy',
       search: false,
     },
@@ -115,7 +117,7 @@ const Rate: React.FC = () => {
     //   },
     // },
     ...(isAdmin ? [{
-      title: '是否显示',
+      title: intl.formatMessage({ id: 'rate.table.show' }),
       dataIndex: 'status',
       key: 'status',
       renderText: (text: number) => text === 1 ? '是' : '否',
@@ -126,7 +128,7 @@ const Rate: React.FC = () => {
     }] : []),
 
     ...(!isAdmin ? [{
-      title: '是否启用',
+      title: intl.formatMessage({ id: 'rate.table.enable' }),
       dataIndex: 'status',
       key: 'status',
       valueEnum: {
@@ -138,11 +140,11 @@ const Rate: React.FC = () => {
       ]
     }] : []),
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'rate.table.action' }),
       valueType: 'option',
       render: (_, record) => [isAdmin?
         <a key="edit" onClick={() => handleEdit(record)} style={{ color: '#1890ff' }}>
-          编辑
+          {intl.formatMessage({ id: 'rate.table.action.edit' })}
         </a>:
        ''
       ],
@@ -150,7 +152,7 @@ const Rate: React.FC = () => {
   ];
 
   return (
-    <PageContainer header={{ title: '计价单位' }}>
+    <PageContainer header={{ title: intl.formatMessage({ id: 'rate.title' }) }}>
       <ProTable
         headerTitle={false}
         actionRef={actionRef}
@@ -176,12 +178,12 @@ const Rate: React.FC = () => {
           pageSize: 20,
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `共 ${total} 条`,
+          showTotal: (total) => intl.formatMessage({ id: 'pagination.total' }, { total }),
         }}
       />
 
       <ModalForm
-        title={editMode ? '编辑计价单位' : '新增计价单位'}
+        title={editMode ? intl.formatMessage({ id: 'rate.modal.edit' }) : intl.formatMessage({ id: 'rate.modal.create' })}
         width="400px"
         open={createModalVisible}
         onOpenChange={setCreateModalVisible}
@@ -194,38 +196,38 @@ const Rate: React.FC = () => {
       >
         <ProFormText
           name="shortName"
-          label="简称"
-          placeholder="请输入币种代码，例如: USD"
-          rules={[{ required: true, message: '请输入币种代码' }]}
+          label={intl.formatMessage({ id: 'rate.form.shortName' })}
+          placeholder={intl.formatMessage({ id: 'rate.form.shortName.placeholder' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.shortName.required' }) }]}
         />
         <ProFormText
           name="symbol"
-          label="符号"
-          placeholder="请输入币种名称，例如: 美元"
-          rules={[{ required: true, message: '请输入币种名称' }]}
+          label={intl.formatMessage({ id: 'rate.form.symbol' })}
+          placeholder={intl.formatMessage({ id: 'rate.form.symbol.placeholder' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.symbol.required' }) }]}
         />
         <ProFormDigit
           name="accuracy"
-          label="精度"
-          placeholder="请输入精度"
+          label={intl.formatMessage({ id: 'rate.form.accuracy' })}
+          placeholder={intl.formatMessage({ id: 'rate.form.accuracy.placeholder' })}
           min={0}
           max={18}
           fieldProps={{ precision: 0 }}
-          rules={[{ required: true, message: '请输入精度' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.accuracy.required' }) }]}
         />
         <ProFormDigit
           name="exchangeRate"
-          label="汇率"
-          placeholder="请输入汇率"
+          label={intl.formatMessage({ id: 'rate.form.exchangeRate' })}
+          placeholder={intl.formatMessage({ id: 'rate.form.exchangeRate.placeholder' })}
           min={0}
           fieldProps={{ precision: 2 }}
-          rules={[{ required: true, message: '请输入汇率' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.exchangeRate.required' }) }]}
         />
         
         <ProFormItem
           name="iconUrl"
-          label="图标"
-          rules={[{ required: true, message: '请上传图标' }]}
+          label={intl.formatMessage({ id: 'rate.form.icon' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.icon.required' }) }]}
         >
           <AvatarUpload 
 
@@ -234,10 +236,10 @@ const Rate: React.FC = () => {
         </ProFormItem>
         <ProFormSwitch
           name="status"
-          label="是否启用"
-          checkedChildren="是"
-          unCheckedChildren="否"
-          rules={[{ required: true, message: '请选择是否启用' }]}
+          label={intl.formatMessage({ id: 'rate.form.status' })}
+          checkedChildren={intl.formatMessage({ id: 'rate.form.status.yes' })}
+          unCheckedChildren={intl.formatMessage({ id: 'rate.form.status.no' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.status.required' }) }]}
           valuePropName="checked"
           transform={(value) => ({ status: value ? 1 : 0 })}
         />
