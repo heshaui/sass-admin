@@ -1,6 +1,7 @@
-import React, { useState,useRef} from 'react';
-import { PageContainer,ProTable } from '@ant-design/pro-components';
-import {  Space, Select, message} from 'antd';
+import React, { useState, useRef } from 'react';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { Space, Select, message } from 'antd';
+import { useIntl } from 'umi';
 import { 
   getKvList, 
   updateKv, 
@@ -17,6 +18,7 @@ const { Option } = Select;
 const KvSetting: React.FC = () => {
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [loading, setLoading] = useState<boolean>(false);
+  const intl = useIntl();
 
   const [isAddModalVisible, setIsAddModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
@@ -46,8 +48,8 @@ const KvSetting: React.FC = () => {
         };
       }
     } catch (error) {
-      console.error('获取KV配置列表失败:', error);
-      message.error('获取KV配置列表失败');
+      console.error(intl.formatMessage({ id: 'kv.message.fetchListError' }), error);
+      message.error(intl.formatMessage({ id: 'kv.message.fetchListError' }));
     } finally {
       setLoading(false);
     }
@@ -76,14 +78,16 @@ const KvSetting: React.FC = () => {
       }
 
       if (response.code === '0'&&response.data) {
-        message.success(`${record.status === 1 ? '下线' : '发布上线'}成功`);
+        message.success(record.status === 1 
+          ? intl.formatMessage({ id: 'kv.message.operationSuccess' }, { action: intl.formatMessage({ id: 'kv.table.action.offline' }) })
+          : intl.formatMessage({ id: 'kv.message.operationSuccess' }, { action: intl.formatMessage({ id: 'kv.table.action.publish' }) }));
         reload();
       } else {
         message.error(`操作失败: ${response.message}`);
       }
     } catch (error) {
       console.error('操作失败:', error);
-      message.error('操作失败，请重试');
+message.error(intl.formatMessage({ id: 'kv.message.operationFailed' }));
     }
   };
 
@@ -107,35 +111,35 @@ const KvSetting: React.FC = () => {
   // 表格列定义
   const columns = [
     {
-      title: '序号',
+      title: intl.formatMessage({ id: 'kv.table.id' }),
       dataIndex: 'id',
       key: 'id',
       search:false,
     },
     ...(!isAdmin ? [] : [{
-      title: '商户id',
+      title: intl.formatMessage({ id: 'kv.table.tenantId' }),
       dataIndex: 'tenantId',
       key: 'tenantId',
       search:false, 
     }]),
     {
-      title: '类型',
+      title: intl.formatMessage({ id: 'kv.table.type' }),
       dataIndex: 'type',
       key: 'type',
-      valueType:'select',
-      valueEnum:{
-        'basic_functions':'基础功能',
-        'coin_exchange':'币币交易',
-        'system_configuration':'系统配置',
+      valueType: 'select',
+      valueEnum: {
+        'basic_functions': intl.formatMessage({ id: 'kv.table.type.basic_functions' }),
+        'coin_exchange': intl.formatMessage({ id: 'kv.table.type.coin_exchange' }),
+        'system_configuration': intl.formatMessage({ id: 'kv.table.type.system_configuration' }),
       }
     },
     {
-      title: '唯一Key',
+      title: intl.formatMessage({ id: 'kv.table.keyProperty' }),
       dataIndex: 'keyProperty',
       key: 'keyProperty',
     },
     {
-      title: '配置值',
+      title: intl.formatMessage({ id: 'kv.table.keyValue' }),
       dataIndex: 'keyValue',
       key: 'keyValue',
       search:false,
@@ -153,7 +157,9 @@ const KvSetting: React.FC = () => {
             </div>
             {text.length > 20 && (
               <a onClick={() => toggleExpand(record.id)}>
-                {isExpanded ? '收起' : '展开'}
+                {isExpanded 
+                  ? intl.formatMessage({ id: 'kv.table.collapse' }) 
+                  : intl.formatMessage({ id: 'kv.table.expand' })}
               </a>
             )}
           </div>
@@ -161,41 +167,47 @@ const KvSetting: React.FC = () => {
       },
     },
     {
-      title: '标题',
+      title: intl.formatMessage({ id: 'kv.table.theme' }),
       dataIndex: 'theme',
       key: 'theme',
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'kv.table.describe' }),
       dataIndex: 'describe',
       key: 'describe',
       search:false,
     },
     ...(isAdmin ? [{
-      title: '是否显示',
+      title: intl.formatMessage({ id: 'kv.table.show' }),
       dataIndex: 'show',
       key: 'show',
-      search:false,
-      render: (show: number) => (show === 1 ? '是' : '否'),
+      search: false,
+      render: (show: number) => (show === 1 
+        ? intl.formatMessage({ id: 'kv.table.show.yes' }) 
+        : intl.formatMessage({ id: 'kv.table.show.no' })),
     }] : []),
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'kv.table.createTime' }),
       dataIndex: 'createTime',
       key: 'createTime',
       search:false,
       render: (time: number) => new Date(time).toLocaleString(),
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'kv.table.action' }),
       key: 'action',
       width: 180,
       search:false,
       render: (_: any, record: any) => (
         <Space size="middle">
-          <a onClick={() => handleEdit(record)}>修改</a>
+          <a onClick={() => handleEdit(record)}>
+            {intl.formatMessage({ id: 'kv.table.action.edit' })}
+          </a>
           {isAdmin && (
             <a onClick={() => handlePublish(record)}>
-              {record.status === 0 ? '发布上线' : '下线'}
+              {record.status === 0 
+                ? intl.formatMessage({ id: 'kv.table.action.publish' }) 
+                : intl.formatMessage({ id: 'kv.table.action.offline' })}
             </a>
           )}
         </Space>
@@ -204,7 +216,7 @@ const KvSetting: React.FC = () => {
   ];
 
   return (
-    <PageContainer title="KV配置">
+    <PageContainer title={intl.formatMessage({ id: 'kv.title' })}>
       <ProTable
         loading={loading}
         columns={columns as any}

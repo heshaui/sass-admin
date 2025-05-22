@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Select, Radio, message } from 'antd';
+import { useIntl } from 'umi';
 import { updateKv,updateTenantKv } from '@/services/ant-design-pro/kv';
 
 const { Option } = Select;
@@ -16,6 +17,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, rec
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+  const intl = useIntl();
   useEffect(() => {
     if (visible && record) {
       form.setFieldsValue({
@@ -44,11 +46,11 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, rec
       ? await updateKv(data)
       : await updateTenantKv(data);
       if (response.code === '0') {
-        message.success('修改成功');
+        message.success(intl.formatMessage({ id: 'kv.message.editSuccess' }));
         onSuccess();
         onCancel();
       } else {
-        message.error(`修改失败: ${response.message}`);
+        message.error(intl.formatMessage({ id: 'kv.message.editFailed' }, { message: response.message }));
       }
     } catch (error) {
       console.error('表单验证或提交失败:', error);
@@ -59,7 +61,7 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, rec
 
   return (
     <Modal
-      title="修改KV配置"
+      title={intl.formatMessage({ id: 'kv.modal.edit.title' })}
       open={visible}
       onCancel={onCancel}
       onOk={handleSubmit}
@@ -73,33 +75,41 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, rec
       >
         <Form.Item
           name="theme"
-          label="标题"
-          rules={[{ required: true, message: '请输入标题' }]}
+          label={intl.formatMessage({ id: 'kv.form.theme' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'kv.form.theme.required' }) }]}
         >
-          <Input placeholder="请输入标题" />
+          <Input placeholder={intl.formatMessage({ id: 'kv.form.theme.placeholder' })} />
         </Form.Item>
 
         <Form.Item
           name="type"
-          label="类别"
-          rules={[{ required: true, message: '请选择类别' }]}
+          label={intl.formatMessage({ id: 'kv.form.type' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'kv.form.type.required' }) }]}
         >
-          <Select placeholder="请选择类别">
-            <Option value="基础功能">基础功能</Option>
-            <Option value="法币交易">法币交易</Option>
-            <Option value="币币交易">币币交易</Option>
-            <Option value="系统配置">系统配置</Option>
+          <Select placeholder={intl.formatMessage({ id: 'kv.form.type.placeholder' })}>
+            <Option value="basic_functions">
+              {intl.formatMessage({ id: 'kv.form.type.basic_functions' })}
+            </Option>
+            <Option value="fiat_exchange">
+              {intl.formatMessage({ id: 'kv.form.type.fiat_exchange' })}
+            </Option>
+            <Option value="coin_exchange">
+              {intl.formatMessage({ id: 'kv.form.type.coin_exchange' })}
+            </Option>
+            <Option value="system_configuration">
+              {intl.formatMessage({ id: 'kv.form.type.system_configuration' })}
+            </Option>
           </Select>
         </Form.Item>
         {
         isAdmin && (
           <Form.Item
             name="show"
-            label="是否对商户显示"
+            label={intl.formatMessage({ id: 'kv.form.show' })}
           >
             <Radio.Group>
-              <Radio value="1">是</Radio>
-              <Radio value="0">否</Radio>
+              <Radio value="1">{intl.formatMessage({ id: 'kv.form.show.yes' })}</Radio>
+              <Radio value="0">{intl.formatMessage({ id: 'kv.form.show.no' })}</Radio>
             </Radio.Group>
           </Form.Item>
         )
@@ -117,25 +127,25 @@ const EditModal: React.FC<EditModalProps> = ({ visible, onCancel, onSuccess, rec
 
         <Form.Item
           name="describe"
-          label="描述"
+          label={intl.formatMessage({ id: 'kv.form.describe' })}
         >
-          <TextArea rows={4} placeholder="用于描述该配置的用途" />
+          <TextArea rows={4} placeholder={intl.formatMessage({ id: 'kv.form.describe.placeholder' })} />
         </Form.Item>
 
         <Form.Item
           name="keyProperty"
-          label="唯一Key"
-          rules={[{ required: true, message: '请输入唯一Key' }]}
+          label={intl.formatMessage({ id: 'kv.form.keyProperty' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'kv.form.keyProperty.required' }) }]}
         >
-          <Input placeholder="这是一个KV" disabled />
+          <Input placeholder={intl.formatMessage({ id: 'kv.form.keyProperty.placeholder' })} disabled />
         </Form.Item>
 
         <Form.Item
           name="keyValue"
-          label="配置值"
-          rules={[{ required: true, message: '请输入配置值' }]}
+          label={intl.formatMessage({ id: 'kv.form.keyValue' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'kv.form.keyValue.required' }) }]}
         >
-          <Input placeholder="请输入配置值" />
+          <Input placeholder={intl.formatMessage({ id: 'kv.form.keyValue.placeholder' })} />
         </Form.Item>
       </Form>
     </Modal>
