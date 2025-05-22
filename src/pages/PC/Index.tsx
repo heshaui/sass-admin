@@ -2,41 +2,76 @@ import {
   PageContainer,
   ProTable,
 } from '@ant-design/pro-components';
-import { FormattedMessage, useIntl } from '@umijs/max';
-import React, { useRef, useState, useEffect } from 'react';
+import { useIntl } from '@umijs/max';
+import React, { useState, useEffect } from 'react';
 import { getPcAccessPathList, savePcAccessPath, updatePcAccessPathById, deletePcAccessPathById } from '@/services/ant-design-pro/PC';
 import { Button, Space, message, Modal, Form, Input, Switch } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 
+interface PcAccessPathItem {
+  id: string | number;
+  functionName: string;
+  accessPath: string;
+  languageKey?: string;
+  status: number;
+  [key: string]: any;
+}
+
+interface PcAccessPathListResponse {
+  success: boolean;
+  errorMessage?: string;
+  data?: {
+    list: PcAccessPathItem[];
+    total: number;
+    pageSize: number;
+  };
+}
+
 const PC: React.FC = () => {
+  const intl = useIntl();
+  
+  const [loading, setLoading] = useState(false);
+  const [pcList, setPcList] = useState<PcAccessPathItem[]>([]);
+  const [visible, setVisible] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<PcAccessPathItem | null>(null);
+  const [form] = Form.useForm();
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
-    const [loading, setLoading] = useState(false);
-    const [PCList, setPCList] = useState<API.PcAccessPathParams[]>([]);
-    const [visible, setVisible] = useState(false);
-    const [editingRecord, setEditingRecord] = useState<API.PcAccessPathParams | null>(null);
-    const [form] = Form.useForm();
-    const [pagination, setPagination] = useState({
-        current: 1,
-        pageSize: 10,
-        total: 0,
-    });
-
-    const fetchPCList = async (params = { current: pagination.current, pageSize: pagination.pageSize }) => {
-        setLoading(true);
-        const response = await getPcAccessPathList({
-            pageNum: params.current,
-            pageSize: params.pageSize,
+  const fetchPCList = async (params = { current: pagination.current, pageSize: pagination.pageSize }) => {
+    setLoading(true);
+    try {
+      const response = await getPcAccessPathList({
+        pageNum: params.current,
+        pageSize: params.pageSize,
+      }) as PcAccessPathListResponse;
+      
+      if (response.success && response.data) {
+        setPcList(response.data.list.map((item: any) => ({
+          id: item.id,
+          functionName: item.functionName || '',
+          accessPath: item.accessPath || '',
+          status: item.status || 0,
+          ...item
+        })) || []);
+        setPagination({
+          ...pagination,
+          current: params.current,
+          total: response.data.total || 0,
         });
-        if (response.code==='0') {
-            setPCList(response.data.list || []);
-            setPagination({
-                ...pagination,
-                current: params.current,
-                total: response.data.count || 0,
-            });
-        }
-        setLoading(false);
+      } else {
+        message.error(response.errorMessage || 'Failed to fetch data');
+      }
+    } catch (error) {
+      message.error('Failed to fetch data');
+      console.error('Error fetching PC list:', error);
+    } finally {
+      setLoading(false);
     }
+  };
 
     useEffect(() => {
         fetchPCList();
@@ -48,28 +83,31 @@ const PC: React.FC = () => {
         setVisible(true);
     };
     
-    const handleEdit = (record: API.PcAccessPathParams) => {
-        setEditingRecord(record);
-        form.setFieldsValue(record);
-        setVisible(true);
+    const handleEdit = (record: PcAccessPathItem) => {
+      setEditingRecord(record);
+      form.setFieldsValue({
+        ...record,
+        status: record.status === 1,
+      });
+      setVisible(true);
     };
     
-    const handleDelete = async (id: string) => {
-        try {
-            setLoading(true);
-            const response = await deletePcAccessPathById(id);
-            if (response.code === '0') {
-                message.success('删除成功');
-                fetchPCList();
-            } else {
-                message.error(response.msg || '删除失败');
-            }
-        } catch (error) {
-            message.error('删除操作发生错误');
-        } finally {
-            setLoading(false);
-        }
-    };
+  const handleDelete = async (id: string | number) => {
+    try {
+      setLoading(true);
+      const response = await deletePcAccessPathById(id) as { success: boolean; errorMessage?: string };
+      if (response.success) {
+        message.success(intl.formatMessage({ id: 'pc.message.delete.success' }));
+        fetchPCList();
+      } else {
+        message.error(response.errorMessage || intl.formatMessage({ id: 'pc.message.delete.error' }));
+      }
+    } catch (error) {
+      message.error(intl.formatMessage({ id: 'pc.message.delete.failed' }));
+    } finally {
+      setLoading(false);
+    }
+  };
     
     const handleSubmit = async () => {
         try {
@@ -79,15 +117,15 @@ const PC: React.FC = () => {
             if (editingRecord) {
                 // 更新
                 const response = await updatePcAccessPathById({
-                    ...values,
-                    id: editingRecord.id,
+                  ...values,
+                  id: editingRecord.id,
                 });
-                if (response.code === '0') {
-                    message.success('更新成功');
-                    setVisible(false);
-                    fetchPCList();
+                if (response.success) {
+                  message.success(intl.formatMessage({ id: 'pc.message.update.success' }));
+                  setVisible(false);
+                  fetchPCList();
                 } else {
-                    message.error(response.msg || '更新失败');
+                  message.error(response.errorMessage || intl.formatMessage({ id: 'pc.message.update.error' }));
                 }
             } else {
                 // 新增
@@ -96,12 +134,12 @@ const PC: React.FC = () => {
                     parentId: 0,
                 }
                 const response = await savePcAccessPath(data);
-                if (response.code === '0') {
-                    message.success('添加成功');
-                    setVisible(false);
-                    fetchPCList();
+                if (response.success) {
+                  message.success(intl.formatMessage({ id: 'pc.message.create.success' }));
+                  setVisible(false);
+                  fetchPCList();
                 } else {
-                    message.error(response.msg || '添加失败');
+                  message.error(response.errorMessage || intl.formatMessage({ id: 'pc.message.create.error' }));
                 }
             }
         } catch (error) {
@@ -111,37 +149,37 @@ const PC: React.FC = () => {
         }
     };
 
-    const columns: ProColumns<API.PcAccessPathParams>[] = [
+    const columns: ProColumns<any>[] = [
         {
-            title: '名称',
+            title: intl.formatMessage({ id: 'pc.name' }),
             dataIndex: 'functionName',
         },
         {
-            title: '路径',
+            title: intl.formatMessage({ id: 'pc.path' }),
             dataIndex: 'accessPath',
         },
         {
-            title: '多语言翻译Key',
+            title: intl.formatMessage({ id: 'pc.languageKey' }),
             dataIndex: 'languageKey',
         },
         {
-            title: '是否显示',
+            title: intl.formatMessage({ id: 'pc.status' }),
             dataIndex: 'status',
             render: (_, record) => (
-                record.status === 1 ? '显示' : '隐藏'
+                record.status === 1 ? intl.formatMessage({ id: 'pc.status.show' }) : intl.formatMessage({ id: 'pc.status.hide' })
             ),
         },
         {
-            title: '操作',
+            title: intl.formatMessage({ id: 'pc.action' }),
             key: 'action',
             render: (_, record) => (
                 <Space>
-                    <Button type="primary" onClick={() => handleEdit(record)}>编辑</Button>
+                    <Button type="primary" onClick={() => handleEdit(record)}>{intl.formatMessage({ id: 'pc.edit' })}</Button>
                     <Button danger onClick={() => Modal.confirm({
-                        title: '确认删除',
-                        content: '确定要删除这条记录吗？',
-                        onOk: () => handleDelete(record.id),
-                    })}>删除</Button>
+                        title: intl.formatMessage({ id: 'pc.delete.confirm' }),
+                        content: intl.formatMessage({ id: 'pc.delete.confirmMessage' }),
+                        onOk: () => handleDelete(record.id as string),
+                    })}>{intl.formatMessage({ id: 'pc.delete' })}</Button>
                 </Space>
             ),
         }
@@ -150,11 +188,11 @@ const PC: React.FC = () => {
 
   return (
     <PageContainer>
-        <ProTable<API.PcAccessPathParams>
+        <ProTable<PcAccessPathItem>
             rowKey="id"
             search={false}
             loading={loading}
-            dataSource={PCList}
+            dataSource={pcList}
             columns={columns}
             pagination={{
                 ...pagination,
@@ -167,48 +205,51 @@ const PC: React.FC = () => {
             })}
             toolBarRender={() => [
                 <Button type="primary" key="add" onClick={handleAdd}>
-                    新建
+                    {intl.formatMessage({ id: 'pc.create' })}
                 </Button>,
                 <Button key="refresh" onClick={() => fetchPCList({
-                    current: 1,
-                    pageSize: pagination.pageSize,
+                  current: 1,
+                  pageSize: pagination.pageSize,
                 })}>
-                    刷新
+                  {intl.formatMessage({ id: 'pc.refresh' })}
                 </Button>
             ]}
         />
         
         <Modal
-            title={editingRecord ? '编辑' : '新建'}
+            title={editingRecord ? intl.formatMessage({ id: 'pc.edit' }) : intl.formatMessage({ id: 'pc.create' })}
             open={visible}
             onCancel={() => setVisible(false)}
             footer={[
                 <Button key="cancel" onClick={() => setVisible(false)}>
-                    取消
+                    {intl.formatMessage({ id: 'pc.cancel' })}
                 </Button>,
                 <Button key="submit" type="primary" loading={loading} onClick={handleSubmit}>
-                    确定
+                    {intl.formatMessage({ id: 'pc.submit' })}
                 </Button>
             ]}
         >
             <Form form={form} layout="vertical">
-                <Form.Item name="functionName" label="名称" rules={[{ required: true, message: '请输入名称' }]}>
+                <Form.Item name="functionName" label={intl.formatMessage({ id: 'pc.name' })} rules={[{ required: true, message: intl.formatMessage({ id: 'pc.form.name.required' }) }]}>
                     <Input />
                 </Form.Item>
-                <Form.Item name="accessPath" label="路径" rules={[{ required: true, message: '请输入路径' }]}>
+                <Form.Item name="accessPath" label={intl.formatMessage({ id: 'pc.path' })} rules={[{ required: true, message: intl.formatMessage({ id: 'pc.form.path.required' }) }]}>
                     <Input />
                 </Form.Item>
-                <Form.Item name="languageKey" label="多语言翻译Key">
+                <Form.Item name="languageKey" label={intl.formatMessage({ id: 'pc.languageKey' })}>
                     <Input />
                 </Form.Item>
-                <Form.Item 
-                    name="status" 
-                    label="是否显示" 
-                    valuePropName="checked"
-                    getValueProps={(value) => ({ checked: value === 1 })}
-                    getValueFromEvent={(checked) => checked ? 1 : 0}
+                <Form.Item
+                  name="status"
+                  label={intl.formatMessage({ id: 'pc.status' })}
+                  valuePropName="checked"
+                  getValueProps={(value) => ({ checked: value === 1 })}
+                  getValueFromEvent={(checked) => checked ? 1 : 0}
                 >
-                    <Switch />
+                  <Switch 
+                    checkedChildren={intl.formatMessage({ id: 'pc.status.enable' })}
+                    unCheckedChildren={intl.formatMessage({ id: 'pc.status.disable' })} 
+                  />
                 </Form.Item>
             </Form>
         </Modal>
