@@ -207,10 +207,10 @@ const Free: React.FC = () => {
       dataIndex: "tenantStatus",
       valueType: 'select',
       valueEnum: {
-        1: { text: '服务中' },
+        1: { text: '未开始' },
         0: { text: '已欠费' }
       },
-      render: (_, record) => <div>{record.tenantStatus === 1 ? "服务中" : "已欠费"}</div>,
+      render: (_, record) => <div>{record.tenantStatus === 1 ? "未开始" : "已欠费"}</div>,
     },
     {
       title: "付费状态",
@@ -220,7 +220,7 @@ const Free: React.FC = () => {
           if(record.paymentStatus === 1){
               return <div>已付费</div>
           }else{
-              return <div>免费</div>
+              return <div>未开始</div>
           }
       },
   },

@@ -10,6 +10,7 @@ import langPackage from './zh-CN/langPackage';
 import merchant from './zh-CN/merchant';
 import rate from './zh-CN/rate';
 import pc from './zh-CN/pc';
+import user from './zh-CN/user';
 
 export default {
   'navBar.lang': '语言',
@@ -31,4 +32,5 @@ export default {
   ...merchant,
   ...rate,
   ...pc,
+  ...user,
 };

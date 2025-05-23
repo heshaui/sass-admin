@@ -1,0 +1,20 @@
+export default {
+  'user.title': '用户管理',
+  'user.list.title': '用户列表',
+  'user.id': '用户ID',
+  'user.tenantId': '商户id',
+  'user.nickname': '昵称',
+  'user.country': '国家',
+  'user.phone': '手机号',
+  'user.email': '邮箱',
+  'user.registerTime': '注册时间',
+  'user.loginIp': '登录IP',
+  'user.action': '操作',
+  'user.view': '查看',
+  'user.account': '账号',
+  'user.error.fetchList': '获取用户列表失败',
+  'user.error.fetchDetail': '获取用户详情失败',
+  'pagination.total': '共 {total} 条',
+  'common.empty': '--',
+  'datetime.format': 'YYYY-MM-DD HH:mm:ss'
+};
