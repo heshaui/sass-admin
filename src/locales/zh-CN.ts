@@ -11,6 +11,8 @@ import merchant from './zh-CN/merchant';
 import rate from './zh-CN/rate';
 import pc from './zh-CN/pc';
 import user from './zh-CN/user';
+import kv from './zh-CN/kv';
+import spot from './zh-CN/spot';
 
 export default {
   'navBar.lang': '语言',
@@ -33,4 +35,6 @@ export default {
   ...rate,
   ...pc,
   ...user,
+  ...kv,
+  ...spot,
 };
