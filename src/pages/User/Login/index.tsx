@@ -2,48 +2,155 @@ import { login, loginCheck, tenantLogin, tenantLoginCheck } from '@/services/ant
 import { emailCode, getFakeCaptcha } from '@/services/ant-design-pro/login';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { FormattedMessage, Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
-import { Button, FormInstance, Input, message, Modal } from 'antd';
+import { Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
+import { Button, FormInstance, Input, message, Modal,Image} from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
+import loginImg from './login.png'
+const useStyles = createStyles(({ token }) => ({
+  container: {
+    display: 'flex',
+    height: '100vh',
+    overflow: 'hidden',
+    backgroundColor: '#f0f2f5',
+  },
+  leftPanel: {
+    flex: '0 0 750px',
+    background: 'linear-gradient(180deg, #000 0%, #101010 100%)',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  logo: {
+    position: 'absolute',
+    top: '40px',
+    left: '40px',
+    display: 'flex',
+    alignItems: 'center',
+    '& img': {
+      height: '32px',
+      marginRight: '12px',
+    },
+    '& span': {
+      color: '#fff',
+      fontSize: '22px',
+      fontWeight: 600,
+    },
+  },
+  leftContent: {
+    textAlign: 'center',
+    color: '#fff',
+    padding: '0 100px',
+  },
+  title: {
+    fontSize: '44px',
+    fontWeight: 600,
+    marginBottom: '16px',
+    lineHeight: 1.3,
+  },
+  subtitle: {
+    fontSize: '20px',
+    opacity: 0.8,
+    marginBottom: '48px',
+    lineHeight: 1.6,
+  },
+  rightPanel: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    position: 'relative',
+  },
+  loginForm: {
+    width: '440px',
+    padding: '40px',
+    backgroundColor: '#fff',
+    borderRadius: '8px',
 
-const useStyles = createStyles(({ token }) => {
-  return {
-    action: {
-      marginLeft: '8px',
-      color: 'rgba(0, 0, 0, 0.2)',
-      fontSize: '24px',
-      verticalAlign: 'middle',
-      cursor: 'pointer',
-      transition: 'color 0.3s',
+  },
+  welcome: {
+    fontSize: '28px',
+    fontWeight: 600,
+    marginBottom: '40px',
+    color: '#1d2129',
+    textAlign: 'left',
+  },
+
+  formItem: {
+    marginBottom: '24px',
+    '& .ant-input, & .ant-input-affix-wrapper': {
+
+      borderRadius: '6px',
+      padding: '12px 16px',
+      fontSize: '15px',
+      transition: 'all 0.3s',
+    },
+    // // 普通输入框
+    // '& .ant-input:not(.ant-input-disabled)': {
+    //   '&:hover, &:focus': {
+    //     borderColor: '#FF5F1F !important',
+    //     boxShadow: '0 0 0 2px rgba(255, 95, 31, 0.1) !important',
+    //   },
+    // },
+    // 带图标的输入框
+    '& .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled)': {
+      '&:hover, &:focus-within': {
+        borderColor: '#FF5F1F !important',
+        boxShadow: '0 0 0 2px rgba(255, 95, 31, 0.1) !important',
+      },
+    },
+    '& .ant-input-prefix': {
+      marginRight: '12px',
+      color: '#c9cdd4',
+      fontSize: '18px',
+    },
+  },
+  loginBtn: {
+    width: '100%',
+    height: '48px',
+    fontSize: '16px',
+    fontWeight: 500,
+    marginTop: '8px',
+    '&.ant-btn-primary': {
+      background: '#FF5F1F',
+      borderColor: '#FF5F1F',
+      '&:not(:disabled):not(.ant-btn-disabled):hover': {
+        background: '#e65119 !important',
+        borderColor: '#e65119 !important',
+      },
+      '&:not(:disabled):not(.ant-btn-disabled):active': {
+        background: '#cc4614 !important',
+        borderColor: '#cc4614 !important',
+      },
+      '&:not(:disabled):not(.ant-btn-disabled):focus': {
+        background: '#e65119 !important',
+        borderColor: '#e65119 !important',
+      },
+    },
+  },
+  forgetPwd: {
+    textAlign: 'right',
+    marginTop: '16px',
+    '& a': {
+      color: '#86909c',
+      fontSize: '14px',
       '&:hover': {
-        color: token.colorPrimaryActive,
+        color: '#FF5F1F',
       },
     },
-    lang: {
-      width: 42,
-      height: 42,
-      lineHeight: '42px',
-      position: 'fixed',
-      right: 16,
-      borderRadius: token.borderRadius,
-      ':hover': {
-        backgroundColor: token.colorBgTextHover,
-      },
-    },
-    container: {
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      overflow: 'auto',
-      backgroundImage:
-        "url('https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/V-_oS6r-i7wAAAAAAAAAAAAAFl94AQBr')",
-      backgroundSize: '100% 100%',
-    },
-  };
-});
+  },
+  lang: {
+    position: 'absolute',
+    top: '24px',
+    right: '24px',
+    cursor: 'pointer',
+  },
+}));
 
 const Lang = () => {
   const { styles } = useStyles();
@@ -233,86 +340,86 @@ const Login: React.FC = () => {
     }
   };
 
-  const titles = isAdmin ? 'Sass总后台' : '商户后台';
-  console.log(isAdmin);
+  // Removed unused titles variable
   return (
     <div className={styles.container}>
       <Helmet>
         <title>
           {intl.formatMessage({
             id: 'menu.login',
-            defaultMessage: '登录页',
+            defaultMessage: '登录',
           })}
           - {Settings.title}
         </title>
       </Helmet>
-      <Lang />
-      <div
-        style={{
-          flex: '1',
-          padding: '32px 0',
-        }}
-      >
-        <LoginForm
-          formRef={formRef}
-          contentStyle={{
-            minWidth: 280,
-            maxWidth: '75vw',
-          }}
-          logo={<img alt="logo" src="/logo.svg" />}
-          title={titles}
-          subTitle={titles}
-          initialValues={{
-            autoLogin: true,
-          }}
-          onFinish={async (values) => {
-            await handleSubmit(values as API.LoginParams);
-          }}
-        >
-          <ProFormText
-            fieldProps={{
-              size: 'large',
-              prefix: <UserOutlined />,
+      
+      {/* Left Panel */}
+      <div className={styles.leftPanel}>
+        <div className={styles.leftContent}>
+          <Image src={loginImg} alt="login"preview={false}/>
+        </div>
+      </div>
+      
+      {/* Right Panel */}
+      <div className={styles.rightPanel}>
+        <div className={styles.loginForm}>
+          
+          <LoginForm
+            formRef={formRef}
+            logo={null}
+            title='IMBIT'
+            subTitle={isAdmin ? '总后台' : '商户后台'}
+            initialValues={{
+              autoLogin: true,
             }}
-            name="account"
-            placeholder="请输入账户"
-            rules={[
-              {
-                required: true,
-                message: '请输入账户',
-              },
-            ]}
-          />
-          <ProFormText.Password
-            name="password"
-            fieldProps={{
-              size: 'large',
-              prefix: <LockOutlined />,
+            onFinish={async (values) => {
+              await handleSubmit(values as API.LoginParams);
             }}
-            placeholder="请输入密码!"
-            rules={[
-              {
-                required: true,
-                message: (
-                  <FormattedMessage
-                    id="pages.login.password.required"
-                    defaultMessage="请输入密码!"
-                  />
-                ),
+            submitter={{
+              searchConfig: {
+                submitText: '登录',
               },
-            ]}
-          />
-
-          <div
-            style={{
-              marginBottom: 24,
+              submitButtonProps: {
+                className: styles.loginBtn,
+              },
             }}
           >
-            {/* <ProFormCheckbox noStyle name="autoLogin">
-              <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
-            </ProFormCheckbox> */}
-          </div>
-        </LoginForm>
+            <div className={styles.formItem}>
+              <ProFormText
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined style={{ color: '#bfbfbf' }} />,
+                  placeholder: '请输入用户名',
+                }}
+                name="account"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入用户名',
+                  },
+                ]}
+              />
+            </div>
+            
+            <div className={styles.formItem}>
+              <ProFormText.Password
+                name="password"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <LockOutlined style={{ color: '#bfbfbf' }} />,
+                  placeholder: '请输入密码',
+                }}
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入密码',
+                  },
+                ]}
+              />
+            </div>
+          </LoginForm>
+          <Lang />
+        </div>
       </div>
 
       {/* 短信验证码弹框 */}
