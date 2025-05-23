@@ -172,23 +172,15 @@ const Language: React.FC = () => {
     }
   };
 
-  const handleView = async (fileUrl: string) => {
-    if(currentUser?.host){
-      window.open(currentUser?.host, '_blank');
-    }else{
+  const handleView = async () => {
+    if (currentUser?.host) {
+      const url = currentUser.host.startsWith('http') 
+          ? currentUser.host 
+          : `https://${currentUser.host}`;
+      window.open(url, '_blank');
+  }else{
       message.error('请先配置host');
     }
-    // try {
-    //   const response = await readJsonFromAliyun({ fileUrl });
-    //   if (response.code === '0') {
-    //     setViewData(response.data);
-    //     setIsViewModalVisible(true);
-    //   } else {
-    //     message.error(`查看失败: ${response.message}`);
-    //   }
-    // } catch (error) {
-    //   message.error('操作失败，请重试');
-    // }
   };
 
 
