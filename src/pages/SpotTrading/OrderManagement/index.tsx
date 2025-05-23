@@ -1,3 +1,5 @@
+import GoogleCode from '@/components/GoogleCode';
+import ValidCode from '@/components/ValidCode';
 import {
   exchangeCoinList,
   exchangeOrderList,
@@ -47,7 +49,7 @@ type TradeRecord = {
   buyFeeSymbol: string;
   sellFeeSymbol: string;
   parentUserId?: string; // 父级表格中的用户ID
-  takerSide: number
+  takerSide: number;
 };
 
 const OrderManagement: React.FC = () => {
@@ -247,15 +249,18 @@ const OrderManagement: React.FC = () => {
           );
         }
         return (
-          <Button type="link" onClick={() => { 
-            if (expandedOrderId === record.orderId) {
-              // 已展开，点击收起
-              setExpandedOrderId(null);
-            } else {
-              // 未展开，点击展开
-              showTradeDetails(record);
-            }
-          }}>
+          <Button
+            type="link"
+            onClick={() => {
+              if (expandedOrderId === record.orderId) {
+                // 已展开，点击收起
+                setExpandedOrderId(null);
+              } else {
+                // 未展开，点击展开
+                showTradeDetails(record);
+              }
+            }}
+          >
             {expandedOrderId === record.orderId ? '收起' : '展开'}
           </Button>
         );
@@ -278,7 +283,6 @@ const OrderManagement: React.FC = () => {
   //         return 'taker';
   //       }
   //    }
-    
 
   // };
 
@@ -290,12 +294,14 @@ const OrderManagement: React.FC = () => {
     {
       title: '买方UID/角色',
       dataIndex: 'buyerUserId',
-      render: (text: string, record: TradeRecord) => `${text}/${record.takerSide === 0 ? 'taker' : 'maker'}`,
+      render: (text: string, record: TradeRecord) =>
+        `${text}/${record.takerSide === 0 ? 'taker' : 'maker'}`,
     },
     {
       title: '卖方UID/角色',
       dataIndex: 'sellerUserId',
-      render: (text: string, record: TradeRecord) => `${text}/${record.takerSide === 1 ? 'taker' : 'maker'}`,
+      render: (text: string, record: TradeRecord) =>
+        `${text}/${record.takerSide === 1 ? 'taker' : 'maker'}`,
     },
     {
       title: '成交时间',
@@ -319,14 +325,14 @@ const OrderManagement: React.FC = () => {
       dataIndex: 'buyFee',
       renderText: (text: any, record: TradeRecord) => {
         return record.buyFee.toString() + record.buyFeeSymbol;
-      }
+      },
     },
     {
       title: '手续费（卖）',
       dataIndex: 'sellFee',
       renderText: (text: any, record: TradeRecord) => {
         return record.sellFee.toString() + record.sellFeeSymbol;
-      }
+      },
     },
   ];
 
@@ -379,7 +385,10 @@ const OrderManagement: React.FC = () => {
                       rowKey="idStr"
                       search={false}
                       options={false}
-                      dataSource={tradeRecords.map(item => ({ ...item, parentUserId: record.userId }))}
+                      dataSource={tradeRecords.map((item) => ({
+                        ...item,
+                        parentUserId: record.userId,
+                      }))}
                       columns={tradeColumns}
                       pagination={false}
                     />
@@ -404,6 +413,18 @@ const OrderManagement: React.FC = () => {
         request={getList}
         columns={columns}
         pagination={{ pageSize: 10 }}
+      />
+      <GoogleCode
+        visible={googleCodeVisible}
+        qrCodeUrl={googleCodeData?.codeUri}
+        secretKey={googleCodeData?.secretKey}
+        onSubmit={handleGoogleCodeSuccess}
+        onCancel={() => setGoogleCodeVisible(false)}
+      />
+      <ValidCode
+        visible={validCodeVisible}
+        onCancel={() => setValidCodeVisible(false)}
+        onOk={handleOk}
       />
     </PageContainer>
   );
