@@ -75,7 +75,7 @@ const ArticleManagement: React.FC = () => {
       let res;
       if (isEditing && currentArticle) {
         // 编辑现有文章
-        data.homeHelpCenterArticle.id = currentArticle.id;
+        data.homeHelpCenterArticle.id = currentArticle?.id;
         const res = await updateHelpCenterArticleContent(data);
         if (res.code === '0' && res.data) {
           message.success('文章更新成功');

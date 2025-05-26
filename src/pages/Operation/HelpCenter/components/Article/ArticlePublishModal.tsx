@@ -193,7 +193,7 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
             languageCode: langCode,
             articleTitle: titleMap[langCode] || '',
             articleContent: contentMap[langCode] || '',
-            articleId: article.id
+            articleId: article?.id
           };
           
           // 只在编辑模式下且有 id 值时才添加 id 字段
