@@ -361,7 +361,7 @@ export async function bindGoogleKey(
 export async function relieveGoogleKey(
   body: API.GoogleAuthVo,
 ) {
-  return request<API.GoogleAuthResponse>(isAdmin?'/tenant-admin/v1/relieveGoogleKeyTenantEmployee?id='+body.id :'/tenant/v1/relieveGoogleKeyTenantEmployee?id='+body.id, {
+  return request<API.GoogleAuthResponse>(isAdmin?'/tenant-admin/v1/employee/relieveGoogleKeyEmployee?id='+body.id :'/tenant/v1/relieveGoogleKeyTenantEmployee?id='+body.id, {
     method: 'POST',
     data: body,
   });
