@@ -93,7 +93,7 @@ const PermissionAdmin: React.FC = () => {
       key: 'systemType',
       search: false,
       render: (text) => {
-        return text === '1' ? '总后台' : '商户后台';
+        return text === '1' ? '总后台' : text === '2' ? '商户后台' : '通用';
       },
     },
     {

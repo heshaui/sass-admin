@@ -57,6 +57,8 @@ const Allocation: React.FC = () => {
   const [rolePermissions, setRolePermissions] = useState<string[]>([]); // 角色已分配权限
   const [allPermissions, setAllPermissions] = useState<string[]>([]); // 所有权限数据
   const [roleId, setRoleId] = useState<string[]>([]); 
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+  const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
   // **获取角色列表**
   const fetchRoleList = async () => {
     try {
@@ -75,7 +77,12 @@ const Allocation: React.FC = () => {
   const fetchPermissions = async () => {
     try {
       const res = await AuthorityList({ pageNo: 1, pageSize: 1000 });
-      if (res?.data) setAllPermissions(res.data.list || []);
+      if (res?.data){
+        if(isAdmin){
+          const adminList=res.data.list.filter((item:any)=>item.systemType==='2'||item.systemType==='3');
+          setAllPermissions(adminList);
+        }
+      }
     } catch (error) {
       console.error(intl.formatMessage({ id: 'allocation.message.fetchPermissionsFailed' }), error);
     }

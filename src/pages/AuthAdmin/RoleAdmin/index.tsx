@@ -16,6 +16,8 @@ const RoleAdmin: React.FC = () => {
   const [disVisible, setDisVisible] = useState(false);
   const [rolePermissions, setRolePermissions] = useState<string[]>([]); // ✅ 角色已分配的权限
   const [roleId, setRoleId] = useState<string[]>([]); // ✅ 角色ID
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
   // 表格的列配置
   const columns = [
     {
@@ -83,7 +85,15 @@ const RoleAdmin: React.FC = () => {
 const fetchPermissions = async () => {
   try {
     const res = await AuthorityList({ pageNo: 1, pageSize: 1000 });
-    if (res?.data) setAllPermissions(res.data.list || []);
+    if (res?.data) {
+      if(isAdmin){
+        const adminList=res.data.list.filter((item:any)=>item.systemType==='1'||item.systemType==='3');
+        setAllPermissions(adminList);
+      }else{
+        const merchantList=res.data.list.filter((item:any)=>item.systemType==='2'||item.systemType==='3');
+        setAllPermissions(merchantList);
+      }
+    }
   } catch (error) {
     console.error('Failed to fetch permissions:', error);
   }

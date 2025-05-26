@@ -37,6 +37,7 @@ const PermissionModal: React.FC<PermissionModalProps> = ({ visible, onClose, onS
           <Select>
             <Select.Option value="1">总后台</Select.Option>
             <Select.Option value="2">商户后台</Select.Option>
+            <Select.Option value="3">通用</Select.Option>
           </Select>
         </Form.Item>
         <Form.Item
