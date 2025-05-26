@@ -212,12 +212,6 @@ const PermissionAdmin: React.FC = () => {
           },
         }}
         toolBarRender={() => [
-          <Button key="search" type="primary" onClick={() => getAuthorityList({ pageNo: 1, pageSize: 10 })}>
-            查询
-          </Button>,
-          <Button key="reset" icon={<ReloadOutlined />} onClick={() => getAuthorityList({ pageNo: 1, pageSize: 10 })}>
-            重置
-          </Button>,
           <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
             新建
           </Button>,
