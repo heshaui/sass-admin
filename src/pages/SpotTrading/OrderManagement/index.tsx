@@ -7,11 +7,12 @@ import {
   tradesInfo,
 } from '@/services/ant-design-pro/spot';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Empty, message, Tag } from 'antd';
+import { Button, Empty, message, Tag, Modal } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { clearAllCookies } from '@/utils';
+import { sendGoogleKey, bindGoogleKey } from '@/services/ant-design-pro/authAdmin';
 type OrderItem = {
   id: string;
   orderId: string;
@@ -59,6 +60,9 @@ const OrderManagement: React.FC = () => {
   const navigate = useNavigate();
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [coinList, setCoinList] = useState<any[]>([]);
+  const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
+  const [googleCodeData, setGoogleCodeData] = useState<any>(null);
+    const [validCodeVisible, setValidCodeVisible] = useState(false);
 
   const getCoinPair = async () => {
     let data = {
@@ -71,6 +75,8 @@ const OrderManagement: React.FC = () => {
     }
   };
 
+
+  
   const handleCancel = async (orderId: string) => {
     try {
       // 这里添加取消订单的API调用
@@ -87,6 +93,8 @@ const OrderManagement: React.FC = () => {
       message.error('撤销失败');
     }
   };
+
+
 
   const showTradeDetails = async (record: OrderItem) => {
     // 不再在这里处理收起逻辑，避免与表格的onExpand事件冲突
@@ -107,6 +115,11 @@ const OrderManagement: React.FC = () => {
 
     setExpandedOrderId(record.orderId);
   };
+
+
+  const handleOk=async()=>{
+    
+  }
 
   const statusMap = {
     0: { text: '交易中', color: 'blue' },
@@ -360,6 +373,18 @@ const OrderManagement: React.FC = () => {
       };
     }
   };
+
+    const handleGoogleCodeSuccess = async (code: string) => {
+      const res = await bindGoogleKey({ googleCode: code });
+      if (res.code === '0' && res.data) {
+        message.success('绑定成功');
+        clearAllCookies();
+        window.location.reload();
+      } else {
+        message.error(res.message);
+      }
+      setGoogleCodeVisible(false);
+    }
 
   useEffect(() => {
     if (!isAdmin) {

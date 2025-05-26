@@ -88,6 +88,15 @@ const PermissionAdmin: React.FC = () => {
       search: false,
     },
     {
+      title: '系统',
+      dataIndex: 'systemType',
+      key: 'systemType',
+      search: false,
+      render: (text) => {
+        return text === '1' ? '总后台' : '商户后台';
+      },
+    },
+    {
       title: '选项',
       key: 'action',
       search: false,

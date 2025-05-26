@@ -1,6 +1,6 @@
 // src/components/PermissionModal.tsx
 import React from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Select } from 'antd';
 
 interface PermissionModalProps {
   visible: boolean;
@@ -29,6 +29,16 @@ const PermissionModal: React.FC<PermissionModalProps> = ({ visible, onClose, onS
         initialValues={initialValues}
         layout="vertical"
       >
+         <Form.Item
+          name="systemType"
+          label="系统"
+          rules={[{ required: true, message: '请选择系统' }]}
+        >
+          <Select>
+            <Select.Option value="1">总后台</Select.Option>
+            <Select.Option value="2">商户后台</Select.Option>
+          </Select>
+        </Form.Item>
         <Form.Item
           name="title"
           label="中文标题"
