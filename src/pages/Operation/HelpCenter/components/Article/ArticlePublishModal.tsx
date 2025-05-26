@@ -180,7 +180,7 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
         [language]: form.getFieldValue('title') || ''
       }));
       
-      await new Promise(resolve => setTimeout(resolve, 0));
+      await new Promise(resolve => {setTimeout(resolve, 0)});
       
       const values = await form.validateFields();
       
