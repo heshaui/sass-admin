@@ -1,19 +1,20 @@
-import React ,{ useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { getUserList, getUserDetail } from '@/services/ant-design-pro/UserManagement';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
 import UserDetail from './components/UserDetail';
-
+import { useIntl } from '@umijs/max';
 import dayjs from 'dayjs';
 const UserManagement: React.FC = () => {
+  const intl = useIntl();
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [loading, setLoading] = useState<boolean>(false);
   const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserItem | null>(null);
 
     
-  // 使用真实API获取用户数据
+  // Use real API to fetch user data
   const fetchUserList = async (params: any) => {
     setLoading(true);
     try {
@@ -30,7 +31,7 @@ const UserManagement: React.FC = () => {
       };
     } catch (error) {
       setLoading(false);
-      console.error('获取用户列表失败', error);
+      console.error(intl.formatMessage({ id: 'userManagement.error.fetchList' }), error);
       return {
         data: [],
         success: false,
@@ -39,7 +40,7 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  // 获取用户详情
+  // Fetch user details
   const fetchUserDetail = async (userId: string) => {
     try {
       const response = await getUserDetail(userId);
@@ -48,79 +49,83 @@ const UserManagement: React.FC = () => {
         setShowUserDetail(true);
       }
     } catch (error) {
-      console.error('获取用户详情失败', error);
+      console.error(intl.formatMessage({ id: 'userManagement.error.fetchDetail' }), error);
     }
   };
 
-  // 定义表格列
+  // Define table columns
   const columns: ProColumns<UserItem>[] = [
     {
-      title: '用户ID',
+      title: intl.formatMessage({ id: 'userManagement.columns.userId' }),
       dataIndex: 'userId',
       key: 'userId',
       search: false,
     },
     ...(!isAdmin ? [] : [{
-      title: '商户id',
+      title: intl.formatMessage({ id: 'userManagement.columns.tenantId' }),
       dataIndex: 'tenantId',
       key: 'tenantId',
     }]),
     {
-      title: '昵称',
+      title: intl.formatMessage({ id: 'userManagement.columns.nickname' }),
       dataIndex: 'account',
       key: 'account',
       search: false,
     },
     {
-      title: '国家',
+      title: intl.formatMessage({ id: 'userManagement.columns.country' }),
       dataIndex: 'country',
       key: 'country',
-      render: (text) => text || '--',
+      render: (text) => text || intl.formatMessage({ id: 'userManagement.notAvailable' }),
       search: false,
     },
     {
-      title: '手机号',
+      title: intl.formatMessage({ id: 'userManagement.columns.phone' }),
       dataIndex: 'phone',
       key: 'phone',
       search: false,
     },
     {
-      title: '邮箱',
+      title: intl.formatMessage({ id: 'userManagement.columns.email' }),
       dataIndex: 'email',
       key: 'email',
       search: false,
     },
     {
-      title: '注册时间',
+      title: intl.formatMessage({ id: 'userManagement.columns.createTime' }),
       dataIndex: 'createTime',
       key: 'createTime',
       valueType: 'dateTimeRange',
       search: {
-        transform: (value) => {
-          return {
-            startTime: value[0] ? new Date(value[0]).getTime() : undefined,
-            endTime: value[1] ? new Date(value[1]).getTime() : undefined,
-          };
-        },
+        transform: (value) => ({
+          startTime: value[0] ? new Date(value[0]).getTime() : undefined,
+          endTime: value[1] ? new Date(value[1]).getTime() : undefined,
+        }),
       },
-      render: (_, record) => {
-        return record.createTime ? dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') : '--';
-      },
+      render: (_, record) => (
+        record.createTime 
+          ? dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') 
+          : intl.formatMessage({ id: 'userManagement.notAvailable' })
+      ),
     },
     {
-      title: '登录IP',
+      title: intl.formatMessage({ id: 'userManagement.columns.ip' }),
       dataIndex: 'ip',
       key: 'ip',
       search: false,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'userManagement.columns.actions' }),
       key: 'action',
       search: false,
-      render: (_, record) => <a onClick={() => fetchUserDetail(record.userId)}>查看</a>,
+      render: (_, record) => (
+        <a onClick={() => fetchUserDetail(record.userId)}>
+          {intl.formatMessage({ id: 'userManagement.actions.view' })}
+        </a>
+      ),
     },
     {
-      title: '账号',
+      title: intl.formatMessage({ id: 'userManagement.columns.account' }),
       key: 'account',
       hideInTable: true,
       dataIndex: 'account',
@@ -128,7 +133,7 @@ const UserManagement: React.FC = () => {
 
   ];
 
-     // 从URL参数获取userId并加载用户详情
+     // Get userId from URL parameters and load user details
      useEffect(() => {
       const query = new URLSearchParams(location.search);
       const userId = query.get('userId');
@@ -139,7 +144,7 @@ const UserManagement: React.FC = () => {
     }, [location.search]);
   if (showUserDetail) {
     return (
-      <PageContainer title="用户管理">
+      <PageContainer title={intl.formatMessage({ id: 'userManagement.title' })}>
         <UserDetail 
           visible={showUserDetail} 
           userId={currentUser?.userId} 
@@ -150,7 +155,7 @@ const UserManagement: React.FC = () => {
   }
 
   return (
-    <PageContainer title="用户管理">
+    <PageContainer title={intl.formatMessage({ id: 'userManagement.title' })}>
       <ProTable<UserItem>
         columns={columns}
         request={fetchUserList}
@@ -159,7 +164,10 @@ const UserManagement: React.FC = () => {
           pageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条`,
+          showTotal: (total) => intl.formatMessage(
+            { id: 'userManagement.pagination.total' },
+            { total }
+          ),
         }}
         search={{
           labelWidth: 'auto',
@@ -167,7 +175,7 @@ const UserManagement: React.FC = () => {
           layout: 'vertical',
         }}
         dateFormatter="string"
-        headerTitle="用户列表"
+        headerTitle={intl.formatMessage({ id: 'userManagement.list.title' })}
         options={{
           setting: {
             draggable: true,

@@ -244,7 +244,7 @@ const Root: React.FC = () => {
       />
 
 
-      <RootModal visible={modalVisible} onCancel={() => setModalVisible(false)} onSubmit={handleRoleSubmit} />
+      <RootModal visible={modalVisible} currentRecord={currentRecord} onCancel={() => setModalVisible(false)} onSubmit={handleRoleSubmit} />
 
     </PageContainer>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from '@umijs/max';
 import { Table, Card, Checkbox, Spin, Empty, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { userReconciliation } from '@/services/ant-design-pro/UserManagement';
@@ -26,6 +27,7 @@ interface ReconciliationProps {
 }
 
 const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
+  const { formatMessage } = useIntl();
   const [loading, setLoading] = useState<boolean>(false);
   const [reconciliationData, setReconciliationData] = useState<ReconciliationItem[]>([]);
   const [hideZeroAssets, setHideZeroAssets] = useState<boolean>(false);
@@ -34,21 +36,21 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
   
   const columns: ColumnsType<ReconciliationItem> = [
     {
-      title: '币种',
+      title: formatMessage({ id: 'reconciliation.columns.currency' }),
       dataIndex: 'coinName',
       key: 'coinName',
       fixed: 'left',
       width: 100,
     },
     {
-      title: '提现',
+      title: formatMessage({ id: 'reconciliation.columns.withdrawal' }),
       dataIndex: 'withdrawal',
       key: 'withdrawal',
       width: 120,
       align: 'right',
     },
     {
-      title: '邀请奖励',
+      title: formatMessage({ id: 'reconciliation.columns.inviteRebate' }),
       dataIndex: 'inviteRebate',
       key: 'inviteRebate',
       width: 120,
@@ -62,7 +64,7 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
     //   align: 'right',
     // },
     {
-      title: '充值',
+      title: formatMessage({ id: 'reconciliation.columns.recharge' }),
       dataIndex: 'recharge',
       key: 'recharge',
       width: 100,
@@ -185,12 +187,12 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
         if (response.code === '0') {
           setReconciliationData(response.data || []);
         } else {
-          message.error(response.message || '获取对账数据失败');
+          message.error(response.message || formatMessage({ id: 'reconciliation.error.fetch' }));
         }
         setLoading(false);
       } catch (error) {
         console.error('获取对账数据失败:', error);
-        message.error('获取对账数据失败，请稍后重试');
+        message.error(formatMessage({ id: 'reconciliation.error.retry' }));
         setLoading(false);
       }
     };
@@ -215,13 +217,13 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
 
   return (
     <Card
-      title="用户对账"
+      title={formatMessage({ id: 'reconciliation.title' })}
       extra={
         <Checkbox 
           checked={hideZeroAssets} 
           onChange={handleHideZeroAssetsChange}
         >
-          隐藏0资产
+          {formatMessage({ id: 'reconciliation.hideZero' })}
         </Checkbox>
       }
     >
@@ -240,7 +242,7 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
           size="middle"
         />
       ) : (
-        <Empty description="暂无对账数据" />
+        <Empty description={formatMessage({ id: 'reconciliation.noData' })} />
       )}
     </Card>
   );

@@ -2,6 +2,7 @@ import React, { useRef,useState } from 'react';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
 import { gatewayAccessLogList } from '@/services/ant-design-pro/UserManagement';
 import dayjs from 'dayjs';
 interface LogRecord {
@@ -19,6 +20,7 @@ interface LogProps {
 
 
 const Log: React.FC<LogProps> = ({ userId }) => {
+  const { formatMessage } = useIntl();
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
   const [loading, setLoading] = useState(false);
@@ -62,43 +64,46 @@ const columns: ProColumns<LogRecord>[] = [
     search: false,
   },
   {
-    title: '接口路径',
+    title: formatMessage({ id: 'log.columns.interfacePath' }),
     dataIndex: 'requestPath',
     search: false,
   },
   {
-    title: 'IP地址',
+    title: formatMessage({ id: 'log.columns.ipAddress' }),
     dataIndex: 'clientIp',
     search: false,
   },
   {
-    title: '请求来源',
+    title: formatMessage({ id: 'log.columns.requestSource' }),
     dataIndex: 'reqSource',
     ellipsis: true,
     search: false,
   },
   {
-    title: '网络类型',
+    title: formatMessage({ id: 'log.columns.networkType' }),
     dataIndex: 'networkType',
     search: false,
   },
   {
-    title: '名称',
+    title: formatMessage({ id: 'log.columns.name' }),
     dataIndex: 'requestName',
   },
   {
-    title: '请求时间',
+    title: formatMessage({ id: 'log.columns.requestTime' }),
     dataIndex: 'timestamp',
     valueType: 'dateTime',
     search: false,
   },
   {
-    title: '开始日期',
+    title: formatMessage({ id: 'log.columns.startDate' }),
     dataIndex: 'dateRange',
     valueType: 'dateTimeRange',
     hideInTable: true,
     fieldProps: {
-      placeholder: ['开始日期', '结束日期'],
+      placeholder: [
+        formatMessage({ id: 'log.columns.startDate' }), 
+        formatMessage({ id: 'log.columns.endDate' })
+      ],
     },
   },
 ];
@@ -118,7 +123,7 @@ return (
     pagination={{
       showSizeChanger: true,
       showQuickJumper: true,
-      showTotal: (total) => `共 ${total} 条记录`,
+      showTotal: (total) => formatMessage({ id: 'log.pagination.total' }, { total }),
     }}
   />
 );

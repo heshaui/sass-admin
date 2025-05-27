@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from '@umijs/max';
 import { Card, Row, Col, Statistic, Tag, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
@@ -23,6 +24,7 @@ interface UserTransactionProps {
 }
 
 const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
+  const intl = useIntl();
   const [loading, setLoading] = useState<boolean>(false);
   const [currencyList, setCurrencyList] = useState<any[]>([]);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
@@ -54,33 +56,39 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
 
   const columns: ProColumns<TransactionItem>[] = [
     {
-      title: '类型',
+      title: intl.formatMessage({ id: 'userTransaction.columns.type' }),
       dataIndex: 'transactionType',
       width: 100,
       valueEnum: {
         // 1 增加 2 扣减 3 冻结 4 解冻
-        1: { text: '增加' },
-        2: { text: '扣减' },
-        3: { text: '冻结'},
-        4: { text: '解冻' },
+        1: { text: intl.formatMessage({ id: 'userTransaction.type.increase' }) },
+        2: { text: intl.formatMessage({ id: 'userTransaction.type.decrease' }) },
+        3: { text: intl.formatMessage({ id: 'userTransaction.type.freeze' }) },
+        4: { text: intl.formatMessage({ id: 'userTransaction.type.unfreeze' }) },
 
 
       },
       render: (_, record) => (
          // 1 增加 2 扣减 3 冻结 4 解冻
-         record.transactionType === 1 ? '增加' : record.transactionType === 2 ? '扣减' : record.transactionType === 3 ? '冻结' : '解冻'
+        record.transactionType === 1 
+          ? intl.formatMessage({ id: 'userTransaction.type.increase' })
+          : record.transactionType === 2 
+            ? intl.formatMessage({ id: 'userTransaction.type.decrease' })
+            : record.transactionType === 3 
+              ? intl.formatMessage({ id: 'userTransaction.type.freeze' })
+              : intl.formatMessage({ id: 'userTransaction.type.unfreeze' })
        
       ),
 
     },
     {
-      title: '业务',
+      title: intl.formatMessage({ id: 'userTransaction.columns.business' }),
       dataIndex: 'sceneType',
       width: 120,
       search: false,
     },
     {
-      title: '币种',
+      title: intl.formatMessage({ id: 'userTransaction.columns.currency' }),
       dataIndex: 'coinId',
       valueEnum:currencyList.reduce((prev, curr) => {
         prev[curr.coinId] = { text: curr.coinName };
@@ -88,21 +96,21 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
       }, {}),
     },
     {
-      title: '数量',
+      title: intl.formatMessage({ id: 'userTransaction.columns.amount' }),
       dataIndex: 'amount',
       width: 120,
       align: 'right',
       search: false,
     },
     {
-      title: '折合USDT',
+      title: intl.formatMessage({ id: 'userTransaction.columns.usdtValue' }),
       dataIndex: 'usdtValue',
       width: 120,
       align: 'right',
       search: false,
     },
     {
-      title: '时间',
+      title: intl.formatMessage({ id: 'userTransaction.columns.time' }),
       dataIndex: 'createTime',
       width: 180,
       valueType: 'dateTime',
@@ -138,7 +146,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
 
 
     } catch (error) {
-      console.error('获取交易记录失败', error);
+      console.error(intl.formatMessage({ id: 'userTransaction.error.fetchTransactions' }), error);
       return {
         data: [],
         success: false,
@@ -158,7 +166,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
       <Row gutter={16}>
         <Col span={18}>
           <ProTable<TransactionItem>
-            headerTitle="交易流水"
+            headerTitle={intl.formatMessage({ id: 'userTransaction.title' })}
             rowKey="id"
             loading={loading}
             columns={columns}
@@ -177,17 +185,26 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
               pageSize: 10,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total) => `共 ${total} 条记录`,
+              showTotal: (total) => intl.formatMessage(
+                { id: 'userManagement.pagination.total' },
+                { total }
+              ),
             }}
           />
         </Col>
 
         <Col span={6}>
-          <Card title="流水概况(折合USDT)" bordered={false}>
+          <Card 
+            title={intl.formatMessage({ id: 'userTransaction.summary.title' })} 
+            bordered={false}
+          >
             <Statistic
               title={
                 <span>
-                  总流入 <Tooltip title="用户所有充值、转入的资金总额"><InfoCircleOutlined /></Tooltip>
+                  {intl.formatMessage({ id: 'userTransaction.stats.totalInflow' })}
+                  <Tooltip title={intl.formatMessage({ id: 'userTransaction.tooltip.totalInflow' })}>
+                    <InfoCircleOutlined />
+                  </Tooltip>
                 </span>
               }
               value={statistics.totalInflow}
@@ -200,7 +217,10 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
             <Statistic
               title={
                 <span>
-                  总流出 <Tooltip title="用户所有提现、转出的资金总额"><InfoCircleOutlined /></Tooltip>
+                  {intl.formatMessage({ id: 'userTransaction.stats.totalOutflow' })}
+                  <Tooltip title={intl.formatMessage({ id: 'userTransaction.tooltip.totalOutflow' })}>
+                    <InfoCircleOutlined />
+                  </Tooltip>
                 </span>
               }
               value={statistics.totalOutflow}
@@ -228,7 +248,10 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
             <Statistic
               title={
                 <span>
-                  净流入 <Tooltip title="总流入减去总流出的差额"><InfoCircleOutlined /></Tooltip>
+                  {intl.formatMessage({ id: 'userTransaction.stats.netInflow' })}
+                  <Tooltip title={intl.formatMessage({ id: 'userTransaction.tooltip.netInflow' })}>
+                    <InfoCircleOutlined />
+                  </Tooltip>
                 </span>
               }
               value={statistics.netInflow}
@@ -239,7 +262,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
             />
 
             <Statistic
-              title="当前资产"
+              title={intl.formatMessage({ id: 'userTransaction.stats.currentAssets' })}
               value={statistics.currentAssets}
               precision={2}
               suffix="USDT"
@@ -264,7 +287,10 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
             <Statistic
               title={
                 <span>
-                  历史盈亏 <Tooltip title="交易产生的盈亏记录"><InfoCircleOutlined /></Tooltip>
+                  {intl.formatMessage({ id: 'userTransaction.stats.profitLoss' })}
+                  <Tooltip title={intl.formatMessage({ id: 'userTransaction.tooltip.profitLoss' })}>
+                    <InfoCircleOutlined />
+                  </Tooltip>
                 </span>
               }
               value={statistics.profitLoss}

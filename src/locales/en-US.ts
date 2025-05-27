@@ -5,6 +5,12 @@ import pages from './en-US/pages';
 import pwa from './en-US/pwa';
 import settingDrawer from './en-US/settingDrawer';
 import settings from './en-US/settings';
+import merchant from './en-US/merchant';
+import pc from './en-US/pc';
+import user from './en-US/user';
+import kv from './en-US/kv';
+import rate from './en-US/rate';
+import langPackage from './en-US/langPackage';
 
 export default {
   'navBar.lang': 'Languages',
@@ -21,4 +27,10 @@ export default {
   ...pwa,
   ...component,
   ...pages,
+  ...merchant,
+  ...pc,
+  ...user,
+  ...kv,
+  ...rate,
+  ...langPackage
 };

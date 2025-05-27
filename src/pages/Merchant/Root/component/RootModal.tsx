@@ -6,12 +6,13 @@ import { tenantRoleList } from "@/services/ant-design-pro/merchant";
 const { Option } = Select;
 
 interface RootModalProps {
-  visible: boolean;
+  visible: boolean;       
   onCancel: () => void;
   onSubmit: (roleId: string) => void;
+  currentRecord: any;
 }
 
-const RootModal: React.FC<RootModalProps> = ({ visible, onCancel, onSubmit }) => {
+const RootModal: React.FC<RootModalProps> = ({ visible, onCancel, onSubmit, currentRecord  }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [roles, setRoles] = useState([]);
@@ -36,6 +37,11 @@ const RootModal: React.FC<RootModalProps> = ({ visible, onCancel, onSubmit }) =>
     if (visible) {
       fetchRoles();
       form.resetFields();
+    }
+    if (currentRecord) {
+      form.setFieldsValue({
+        roleId: Number(currentRecord.role),
+      });
     }
   }, [visible]);
 

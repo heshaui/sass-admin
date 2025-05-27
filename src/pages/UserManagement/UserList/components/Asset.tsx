@@ -1,4 +1,5 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useIntl } from '@umijs/max';
 import { Select, Radio, Typography } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
@@ -30,6 +31,7 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
   const [currencyList, setCurrencyList] = useState<any[]>([]);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const actionRef = useRef<ActionType>();
+  const { formatMessage } = useIntl();
 
   const getTotalAsset=async()=>{
     let data={
@@ -59,12 +61,12 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
 
   const columns: ProColumns<AssetItem>[] = [
     {
-      title: '币种',
+      title: formatMessage({ id: 'asset.columns.currency' }),
       dataIndex: 'coinName',
       key: 'coinName',
     },
     {
-      title: '持仓',
+      title: formatMessage({ id: 'asset.columns.position' }),
       dataIndex: 'balance',
       key: 'balance',
       render: (text:string, record: AssetItem)=>{
@@ -72,12 +74,12 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
       }
     },
     {
-      title: '可用',
+      title: formatMessage({ id: 'asset.columns.available' }),
       dataIndex: 'balance',
       key: 'balance',
     },
     {
-      title: '冻结',
+      title: formatMessage({ id: 'asset.columns.frozen' }),
       dataIndex: 'frozenBalance',
       key: 'frozenBalance',
     },
@@ -123,11 +125,11 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
   return (
     <div className="asset-component" style={{ padding: '16px' }}>
       <div style={{ marginBottom: '16px' }}>
-        <Text strong style={{ fontSize: '16px' }}>现货账户</Text>
+        <Text strong style={{ fontSize: '16px' }}>{formatMessage({ id: 'asset.title' })}</Text>
       </div>
       
       <div style={{ display: 'flex', marginBottom: '16px', alignItems: 'center' }}>
-        <span style={{ marginRight: '8px' }}>币种</span>
+        <span style={{ marginRight: '8px' }}>{formatMessage({ id: 'asset.currency' })}</span>
         <Select 
           value={currency} 
           onChange={(value) => {
@@ -136,7 +138,7 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
           }} 
           style={{ width: 120, marginRight: '16px' }}
         >
-          <Option value="">全部</Option>
+          <Option value="">{formatMessage({ id: 'asset.all' })}</Option>
           {currencyList.map((item:any)=>(
             <Option key={item.coinId} value={item.coinId}>{item.coinName}</Option>
           ))}
@@ -146,12 +148,12 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
       
       <div style={{ display: 'flex', marginBottom: '16px', alignItems: 'center' }}>
         <div style={{ marginRight: '24px' }}>
-          <Text type="secondary">总资产: </Text>
+          <Text type="secondary">{formatMessage({ id: 'asset.total' })}: </Text>
           <Text strong>{totalAsset} USDT</Text>
         </div>
         
         <Radio.Group onChange={handleRadioChange} value={hideZeroAssets}>
-          <Radio value={true}>隐藏0资产</Radio>
+          <Radio value={true}>{formatMessage({ id: 'asset.hideZero' })}</Radio>
         </Radio.Group>
       </div>
       
