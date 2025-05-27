@@ -1,17 +1,20 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Dropdown, Menu, Button, Tag, Space, message, Select, Modal } from 'antd';
-import { PlusOutlined, ReloadOutlined,DownOutlined } from '@ant-design/icons';
+import { Dropdown, Menu, Button, Tag, message, Modal } from 'antd';
+import { PlusOutlined,DownOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import { employeeList,saveEmployee,deleteEmployeeById,enableEmployee,offEmployee,resetPassword,updateEmployeeById,sendGoogleKey,bindGoogleKey,relieveGoogleKey} from '@/services/ant-design-pro/authAdmin';
+import { employeeList,saveEmployee,deleteEmployeeById,resetPassword,updateEmployeeById,bindGoogleKey,relieveGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import UserModal from './component/UserModal'; // 引入UserModal
 import ResetPasswordModal from './component/ResetPasswordModal';
 import ResetGoogleModal from './component/ResetGoogleModal';
 import BindGoogleModal from './component/BindGoogleModal'; // 引入绑定谷歌验证弹框
 import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
+import { useIntl } from 'umi';
+
 
 
 
 const UserAdmin: React.FC = () => {
+  const intl = useIntl();
    const [data, setData] = useState([]);
    const [loading, setLoading] = useState(false);
    const [modalVisible, setModalVisible] = useState(false); // 控制用户弹框
@@ -44,34 +47,34 @@ const UserAdmin: React.FC = () => {
   // 表格的列配置
   const columns = [
     {
-      title: '管理员ID',
+      title: intl.formatMessage({ id: 'userAdmin.table.id' }),
       dataIndex: 'id',
       key: 'id',
       search:false
     },
     {
-      title: '昵称',
+      title: intl.formatMessage({ id: 'userAdmin.table.nickname' }),
       dataIndex: 'nickname',
       key: 'nickname',
     },
     {
-      title: '备注',
+      title: intl.formatMessage({ id: 'userAdmin.table.remark' }),
       dataIndex: 'remark',
       key: 'remark',
       search:false
     },
     {
-      title: '角色',
+      title: intl.formatMessage({ id: 'userAdmin.table.role' }),
       dataIndex: 'role',
       key: 'role',
       search: false,
       filters: roleOptions.map(role => ({ text: role.roleName, value: String(role.roleId) })),
-      onFilter: (value, record) => {
+      onFilter: (value: string, record: any) => {
         if (!record.role) return false;
         const userRoles = String(record.role).split(',').map(Number);
         return userRoles.includes(Number(value));
       },
-      render: (roleIds) => {
+      render: (roleIds: string) => {
         if (!roleIds) return '-';
         const ids = String(roleIds).split(',').map(Number);
         const roles = roleOptions.filter(r => ids.includes(Number(r.roleId)));
@@ -79,33 +82,33 @@ const UserAdmin: React.FC = () => {
       },
     },
     {
-      title: '手机号',
+      title: intl.formatMessage({ id: 'userAdmin.table.phone' }),
       dataIndex: 'phone',
       key: 'phone',
     },
     {
-      title: '邮箱',
+      title: intl.formatMessage({ id: 'userAdmin.table.email' }),
       dataIndex: 'email',
       key: 'email',
-      render: (text) => (text ? text : '--'),
+      render: (text: string) => (text ? text : '--'),
     },
     {
       title: '2FA',
       dataIndex: 'googleCode',
       key: 'googleCode',
       search:false,
-      render: (text) => {
+      render: (text: string) => {
         return text && text !== '-' ? (
-          <Tag color="green">已开启</Tag>
+          <Tag color="green">{intl.formatMessage({ id: 'userAdmin.table.googleCode.enabled' })}</Tag>
         ) : (
-          <Tag color="red">未开启</Tag>
+          <Tag color="red">{intl.formatMessage({ id: 'userAdmin.table.googleCode.disabled' })}</Tag>
         );
       },
       filters: [
-        { text: '已开启', value: 'enabled' },
-        { text: '未开启', value: 'disabled' },
+        { text: intl.formatMessage({ id: 'userAdmin.table.googleCode.enabled' }), value: 'enabled' },
+        { text: intl.formatMessage({ id: 'userAdmin.table.googleCode.disabled' }), value: 'disabled' },
       ],
-      onFilter: (value, record) => {
+      onFilter: (value: string, record: any) => {
         if (value === 'enabled') {
           return record.googleCode && record.googleCode !== '';
         }
@@ -113,27 +116,27 @@ const UserAdmin: React.FC = () => {
       },
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: 'userAdmin.table.status' }),
       dataIndex: 'status',
       valueType: 'select',
       valueEnum: {
-        0: { text: '禁用', status: 'Error' },
-        1: { text: '正常', status: 'Success' }
+        0: { text: intl.formatMessage({ id: 'userAdmin.table.status.disabled' }), status: 'Error' },
+        1: { text: intl.formatMessage({ id: 'userAdmin.table.status.enabled' }), status: 'Success' }
       },
       filters: true,
       onFilter: true,
       width: 100,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'userAdmin.table.actions' }),
       key: 'action',
       search:false,
-      render: (_, record) => (
+      render: (_, record: any) => (
         <Dropdown
           overlay={
             <Menu>
               <Menu.Item key="edit" onClick={() => handleEdit(record)}>
-                修改
+                {intl.formatMessage({ id: 'userAdmin.table.actions.edit' })}
               </Menu.Item>
               <Menu.Item
                 key="resetPassword"

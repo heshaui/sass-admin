@@ -29,43 +29,71 @@ export default {
   'roleAdmin.messages.permissionAssignSuccess': '权限分配成功',
 
   // User Admin Translations
-  'userAdmin.table.adminId': '管理员ID',
+  // 管理员ID
+  'userAdmin.table.id': '管理员ID',
+  // 昵称
   'userAdmin.table.nickname': '昵称',
+  // 备注
   'userAdmin.table.remark': '备注',
+  // 角色
   'userAdmin.table.role': '角色',
+  // 手机号
   'userAdmin.table.phone': '手机号',
+  // 邮箱
   'userAdmin.table.email': '邮箱',
-  'userAdmin.table.googleAuth': '2FA',
-  'userAdmin.table.googleAuth.enabled': '已开启',
-  'userAdmin.table.googleAuth.disabled': '未开启',
+  // 2FA
+  'userAdmin.table.googleCode': '2FA',
+  // 已开启
+  'userAdmin.table.googleCode.enabled': '已开启',
+  // 未开启
+  'userAdmin.table.googleCode.disabled': '未开启',
+  // 状态
   'userAdmin.table.status': '状态',
-  'userAdmin.table.status.enabled': '正常',
+  // 禁用
   'userAdmin.table.status.disabled': '禁用',
+  // 正常
+  'userAdmin.table.status.enabled': '正常',
+  // 操作
   'userAdmin.table.actions': '操作',
-  
-  // Actions
-  'userAdmin.actions.create': '新建',
-  'userAdmin.actions.edit': '修改',
-  'userAdmin.actions.resetPassword': '重置密码',
-  'userAdmin.actions.bindGoogle': '绑定谷歌',
-  'userAdmin.actions.resetGoogle': '重置谷歌',
-  'userAdmin.actions.delete': '删除',
-  'userAdmin.actions.operation': '操作',
-  
-  // Messages
-  'userAdmin.messages.resetPassword.confirmTitle': '确认重置密码',
-  'userAdmin.messages.resetPassword.confirmContent': '您确定要重置该用户的密码吗？',
-  'userAdmin.messages.resetPassword.success': '密码重置成功',
-  'userAdmin.messages.resetPassword.error': '密码重置失败',
-  'userAdmin.messages.googleAuth.resetSuccess': '谷歌身份验证重置成功',
-  'userAdmin.messages.googleAuth.resetError': '谷歌身份验证重置失败',
-  'userAdmin.messages.googleAuth.bindSuccess': '谷歌验证绑定成功',
-  'userAdmin.messages.googleAuth.bindError': '谷歌验证绑定失败',
-  'userAdmin.messages.user.createSuccess': '用户新建成功',
-  'userAdmin.messages.user.createError': '用户新建失败',
-  'userAdmin.messages.user.updateSuccess': '用户编辑成功',
-  'userAdmin.messages.user.updateError': '用户编辑失败',
-  'userAdmin.messages.user.deleteSuccess': '用户删除成功',
-  'userAdmin.messages.user.deleteError': '用户删除失败',
-  'userAdmin.messages.operationError': '操作失败'
+  // 删除
+  'userAdmin.table.actions.delete': '删除',
+  // 编辑
+  'userAdmin.table.actions.edit': '编辑',
+  // 确认重置密码
+  'userAdmin.table.actions.resetPassword': '重置密码',
+  // 您确定要重置该用户的密码吗？
+  'userAdmin.table.actions.resetPassword.confirm': '您确定要重置该用户的密码吗？',
+  // 密码重置成功
+  'userAdmin.table.actions.resetPassword.success': '密码重置成功',
+  // 密码重置失败
+  'userAdmin.table.actions.resetPassword.error': '密码重置失败',
+  // 绑定谷歌
+  'userAdmin.table.actions.bindGoogle': '绑定谷歌',
+  // 重置谷歌
+  'userAdmin.table.actions.resetGoogle': '重置谷歌',
+  // 用户编辑成功
+  'userAdmin.messages.editSuccess': '用户编辑成功',
+  // 用户编辑失败
+  'userAdmin.messages.editError': '用户编辑失败',
+  // 用户新建成功
+  'userAdmin.messages.createSuccess': '用户新建成功',
+  // 用户新建失败
+  'userAdmin.messages.createError': '用户新建失败',
+  // 用户删除成功
+  'userAdmin.messages.deleteSuccess': '用户删除成功',
+  // 用户删除失败
+  'userAdmin.messages.deleteError': '用户删除失败',
+  // 用户重置密码成功
+  'userAdmin.messages.resetPasswordSuccess': '用户重置密码成功',
+  // 用户重置密码失败
+  'userAdmin.messages.resetPasswordError': '用户重置密码失败',
+  // 谷歌身份验证重置成功
+  'userAdmin.messages.resetGoogleSuccess': '谷歌身份验证重置成功',
+  // 谷歌身份验证重置失败
+  'userAdmin.messages.resetGoogleError': '谷歌身份验证重置失败',
+  // 谷歌验证绑定成功
+  'userAdmin.messages.bindGoogleSuccess': '谷歌验证绑定成功',
+  // 谷歌验证绑定失败
+  'userAdmin.messages.bindGoogleError': '谷歌验证绑定失败',
+
 };
