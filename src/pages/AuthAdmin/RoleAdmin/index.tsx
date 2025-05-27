@@ -21,48 +21,54 @@ const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
   // 表格的列配置
   const columns = [
     {
-      title: '角色ID',
+      title: intl.formatMessage({ id: 'roleAdmin.table.roleId' }),
       dataIndex: 'roleId',
       key: 'roleId',
       search: false,
     },
     {
-      title: '角色名称',
+      title: intl.formatMessage({ id: 'roleAdmin.table.roleName' }),
       dataIndex: 'roleName',
       key: 'roleName',
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'roleAdmin.table.description' }),
       dataIndex: 'describe',
       key: 'describe',
       search: false,
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'roleAdmin.table.createTime' }),
       dataIndex: 'createTime',
       key: 'createTime',
       valueType: 'dateTime',
       search: false,
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: 'roleAdmin.table.status' }),
       dataIndex: 'status',
       key: 'status',
       search: false,
       valueEnum: {
-        0: { text: '禁用', status: 'Error' },
-        1: { text: '启用', status: 'Success' },
+        0: { text: intl.formatMessage({ id: 'roleAdmin.table.status.disabled' }), status: 'Error' },
+        1: { text: intl.formatMessage({ id: 'roleAdmin.table.status.enabled' }), status: 'Success' },
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'roleAdmin.table.actions' }),
       key: 'action',
       valueType: 'option',
       render: (_, record) => (
         <Space>
-          <Button  type="primary" onClick={() => handleDispense(record)}>权限分配</Button>
-          <Button  type="primary" onClick={() => handleEdit(record)}>修改</Button>
-          <Button danger onClick={() => handleDelete(record.roleId)}>删除</Button>
+          <Button type="primary" onClick={() => handleDispense(record)}>
+            {intl.formatMessage({ id: 'roleAdmin.table.actions.dispense' })}
+          </Button>
+          <Button type="primary" onClick={() => handleEdit(record)}>
+            {intl.formatMessage({ id: 'roleAdmin.table.actions.edit' })}
+          </Button>
+          <Button danger onClick={() => handleDelete(record.roleId)}>
+            {intl.formatMessage({ id: 'roleAdmin.table.actions.delete' })}
+          </Button>
         </Space>
       ),
     },
@@ -120,25 +126,25 @@ const getRoleInfo = async (record) => {
 const handleSubmit = async (values) => {
   try {
     if (editingRecord) {
-      const res= await updateRoleById({ ...editingRecord, ...values });
-      if(res.code==='0'){
-        message.success('角色编辑成功');
-      }else{
-        message.error('角色编辑失败');
+      const res = await updateRoleById({ ...editingRecord, ...values });
+      if (res.code === '0') {
+        message.success(intl.formatMessage({ id: 'roleAdmin.messages.updateSuccess' }));
+      } else {
+        message.error(intl.formatMessage({ id: 'roleAdmin.messages.updateError' }));
       }
     } else {
-     const res= await saveRole(values);
-      if(res.code==='0'){
-        message.success('角色新建成功');
-      }else{
-        message.error('角色新建失败');
+      const res = await saveRole(values);
+      if (res.code === '0') {
+        message.success(intl.formatMessage({ id: 'roleAdmin.messages.createSuccess' }));
+      } else {
+        message.error(intl.formatMessage({ id: 'roleAdmin.messages.createError' }));
       }
     }
     setModalVisible(false);
     setEditingRecord(null);
-    await getRoleList(); // ✅ 刷新角色列表
+    await getRoleList(); // Refresh role list
   } catch (error) {
-    message.error('操作失败');
+    message.error(intl.formatMessage({ id: 'roleAdmin.messages.operationError' }));
   }
 };
 
@@ -148,30 +154,30 @@ const handleEdit = (record) => {
   setModalVisible(true);
 };
 
-// 📌 删除角色
+// 删除角色
 const handleDelete = (roleId) => {
   Modal.confirm({
-    title: '删除确认',
-    content: '确定要删除该角色吗？此操作不可恢复。',
-    okText: '确定',
-    cancelText: '取消',
+    title: intl.formatMessage({ id: 'roleAdmin.messages.deleteConfirm.title' }),
+    content: intl.formatMessage({ id: 'roleAdmin.messages.deleteConfirm.content' }),
+    okText: intl.formatMessage({ id: 'roleAdmin.messages.deleteConfirm.okText' }),
+    cancelText: intl.formatMessage({ id: 'roleAdmin.messages.deleteConfirm.cancelText' }),
     onOk: async () => {
       try {
         const res = await deleteRoleById({ roleId });
-        if(res.code === '0'){
-          message.success('角色删除成功');
+        if (res.code === '0') {
+          message.success(intl.formatMessage({ id: 'roleAdmin.messages.deleteSuccess' }));
           await getRoleList();
         } else {
-          message.error('删除失败');
+          message.error(intl.formatMessage({ id: 'roleAdmin.messages.deleteError' }));
         }
       } catch (error) {
-        message.error('删除失败');
+        message.error(intl.formatMessage({ id: 'roleAdmin.messages.deleteError' }));
       }
-    }
+    },
   });
 };
 
-// 📌 角色权限分配（打开弹框 + 获取角色权限）
+// 角色权限分配（打开弹框 + 获取角色权限）
 const handleDispense = async (record) => {
   setEditingRecord(record);
   await getRoleInfo(record);
@@ -196,7 +202,7 @@ const handleSubmitDis = async (values) => {
     
     // 如果没有变化，直接返回
     if (newPermissions.length === 0 && removedPermissions.length === 0) {
-      message.info("权限配置没有变化");
+      message.info(intl.formatMessage({ id: 'roleAdmin.messages.noPermissionChanges' }));
       setDisVisible(false);
       return;
     }
@@ -209,7 +215,7 @@ const handleSubmitDis = async (values) => {
       });
       
       if (addRes.code !== '0') {
-        message.error('新增权限失败');
+        message.error(intl.formatMessage({ id: 'roleAdmin.messages.addPermissionError' }));
         return;
       }
     }
@@ -221,16 +227,16 @@ const handleSubmitDis = async (values) => {
       const deleteRes = await deleteTenantByIdList(ids);
       
       if (deleteRes.code !== '0') {
-        message.error('移除权限失败');
+        message.error(intl.formatMessage({ id: 'roleAdmin.messages.removePermissionError' }));
         return;
       }
     }
     
-    message.success('权限分配成功');
+    message.success(intl.formatMessage({ id: 'roleAdmin.messages.permissionAssignSuccess' }));
     setDisVisible(false);
-    await getRoleList(); // ✅ 刷新角色列表，确保权限生效
+    await getRoleList(); // Refresh role list to ensure permissions take effect
   } catch (error) {
-    message.error('操作失败');
+    message.error(intl.formatMessage({ id: 'roleAdmin.messages.operationError' }));
     console.error(error);
   }
 };
@@ -280,7 +286,7 @@ return (
             setModalVisible(true);
           }}
         >
-          新建
+          {intl.formatMessage({ id: 'roleAdmin.actions.create' })}
         </Button>,
       ]}
     />

@@ -13,6 +13,7 @@ import pc from './zh-CN/pc';
 import user from './zh-CN/user';
 import kv from './zh-CN/kv';
 import spot from './zh-CN/spot';
+import auth from './zh-CN/auth';
 
 export default {
   'navBar.lang': '语言',
@@ -37,4 +38,5 @@ export default {
   ...user,
   ...kv,
   ...spot,
+  ...auth
 };
