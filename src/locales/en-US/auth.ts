@@ -25,5 +25,55 @@ export default {
   'roleAdmin.messages.noPermissionChanges': 'No permission changes',
   'roleAdmin.messages.addPermissionError': 'Failed to add permission',
   'roleAdmin.messages.removePermissionError': 'Failed to remove permission',
-  'roleAdmin.messages.permissionAssignSuccess': 'Permission allocation successful'
+  'roleAdmin.messages.permissionAssignSuccess': 'Permission allocation successful',
+
+
+  // User Admin Translations
+  'userAdmin.table.id': 'Admin ID',
+
+  'userAdmin.table.nickname': 'Nickname',
+
+  'userAdmin.table.remark': 'Remark',
+
+  'userAdmin.table.role': 'Role',
+
+  'userAdmin.table.phone': 'Phone',
+
+  'userAdmin.table.email': 'Email',
+
+  'userAdmin.table.googleCode': '2FA',
+
+  'userAdmin.table.googleCode.enabled': 'Enabled',
+
+  'userAdmin.table.googleCode.disabled': 'Disabled',
+
+  'userAdmin.table.status': 'Status',
+
+  'userAdmin.table.status.disabled': 'Disabled',
+
+  'userAdmin.table.status.enabled': 'Enabled',
+
+  'userAdmin.table.actions': 'Actions',
+
+  'userAdmin.table.actions.delete': 'Delete',
+
+  'userAdmin.table.actions.edit': 'Edit',
+  'userAdmin.table.actions.resetPassword': 'Reset Password',
+  'userAdmin.table.actions.resetPassword.confirm': 'You sure you want to reset this user\'s password?',
+  'userAdmin.table.actions.resetPassword.success': 'Password reset successfully',
+  'userAdmin.table.actions.resetPassword.error': 'Password reset failed',
+  'userAdmin.table.actions.bindGoogle': 'Bind Google',
+  'userAdmin.table.actions.resetGoogle': 'Reset Google',
+  'userAdmin.messages.editSuccess': 'User edit successfully',
+  'userAdmin.messages.editError': 'Edit failed',
+  'userAdmin.messages.createSuccess': 'Create successfully',
+  'userAdmin.messages.createError': 'Create failed',
+  'userAdmin.messages.deleteSuccess': 'Delete successfully',
+  'userAdmin.messages.deleteError': 'Delete failed',
+  'userAdmin.messages.resetPasswordSuccess': 'Reset password successfully',
+  'userAdmin.messages.resetPasswordError': 'Reset password failed',
+  'userAdmin.messages.resetGoogleSuccess': 'Reset Google successfully',
+  'userAdmin.messages.resetGoogleError': 'Reset Google failed',
+  'userAdmin.messages.bindGoogleSuccess': 'Bind Google successfully',
+  'userAdmin.messages.bindGoogleError': 'Bind Google failed',
 };
