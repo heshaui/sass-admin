@@ -1,6 +1,7 @@
 import React, { useEffect,useState } from 'react';
 import { Form, Input, InputNumber, Modal, Radio, Select, Button } from 'antd';
 import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
+import { useIntl } from 'umi';
 type TradingPair = {
   id?: string;
   pairName?: string;
@@ -45,13 +46,6 @@ interface TradingPairFormProps {
   values?: TradingPair;
 }
 
-// 模拟的可用货币列表
-const mockCurrencies = [
-  { label: 'BTC', value: 'BTC' },
-  { label: 'ETH', value: 'ETH' },
-  { label: 'USDT', value: 'USDT' },
-  { label: 'BNB', value: 'BNB' },
-];
 
 const TradingPairForm: React.FC<TradingPairFormProps> = ({
   visible,
@@ -59,6 +53,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
   onSubmit,
   values,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
 
   const [currencyList, setCurrencyList] = useState<any[]>([]);
@@ -102,13 +97,13 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
       };
       onSubmit(submitData);
     } catch (error) {
-      console.error('表单验证失败:', error);
+      console.error(intl.formatMessage({ id: 'tradingPair.form.validationFailed' }), error);
     }
   };
 
   return (
     <Modal
-      title={values ? '编辑币对' : '新增币对'}
+      title={values ? intl.formatMessage({ id: 'tradingPair.form.editTitle' }) : intl.formatMessage({ id: 'tradingPair.form.addTitle' })}
       open={visible}
       onCancel={onCancel}
       destroyOnClose
@@ -116,10 +111,10 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
       footer={
         <div style={{ textAlign: 'center' }}>
           <Button onClick={onCancel} style={{ marginRight: 8 }}>
-            取消
+            {intl.formatMessage({ id: 'tradingPair.form.cancel' })}
           </Button>
           <Button type="primary" onClick={handleSubmit}>
-            确定
+            {intl.formatMessage({ id: 'tradingPair.form.confirm' })}
           </Button>
         </div>
       }
@@ -128,12 +123,12 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
         form={form}
         layout="vertical"
       >
-        <h3>基本信息</h3>
+        <h3>{intl.formatMessage({ id: 'tradingPair.form.section.basicInfo' })}</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
           <Form.Item
             name="coinSymbol"
-            label="基础货币"
-            rules={[{ required: true, message: '请选择基础货币' }]}
+            label={intl.formatMessage({ id: 'tradingPair.form.baseCurrency' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'tradingPair.form.baseCurrency.required' }) }]}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
@@ -145,8 +140,8 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="baseSymbol"
-            label="计价货币"
-            rules={[{ required: true, message: '请选择计价货币' }]}
+            label={intl.formatMessage({ id: 'tradingPair.form.quoteCurrency' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'tradingPair.form.quoteCurrency.required' }) }]}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
@@ -157,49 +152,49 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
           </Form.Item>
           <Form.Item
             name="coinScale"
-            label="基础币种精度"
+            label={intl.formatMessage({ id: 'tradingPair.form.baseCoinDecimal' })}
             required
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <Input placeholder="请输入基础币种精度" />
+            <Input placeholder={intl.formatMessage({ id: 'tradingPair.form.baseCoinDecimal.placeholder' })} />
           </Form.Item>
           <Form.Item
             name="baseCoinScale"
-            label="计价币精度"
+            label={intl.formatMessage({ id: 'tradingPair.form.quoteCurrencyDecimal' })}
             required
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <Input placeholder="请输入计价币精度" />
+            <Input placeholder={intl.formatMessage({ id: 'tradingPair.form.quoteCurrencyDecimal.placeholder' })} />
           </Form.Item>
 
           <Form.Item
             name="classLabel"
-            label="币对标签"
+            label={intl.formatMessage({ id: 'tradingPair.form.pairTag' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
-            <Select.Option value="1">主流区</Select.Option>
-            <Select.Option value="2">创新区</Select.Option>
-            <Select.Option value="3">新币区</Select.Option>
-            <Select.Option value="4">AI</Select.Option>
-            <Select.Option value="5">Meme</Select.Option>
-            <Select.Option value="6">NFT</Select.Option>
-            <Select.Option value="7">DeFi</Select.Option>
-            <Select.Option value="8">Web3</Select.Option>
-            <Select.Option value="9">Payments</Select.Option>
-            <Select.Option value="10">Launchpad</Select.Option>
-            <Select.Option value="11">Layer2</Select.Option>
-            <Select.Option value="12">Solana</Select.Option>
-            <Select.Option value="13">RWA</Select.Option>
-            <Select.Option value="14">Launchpool</Select.Option>
-            <Select.Option value="15">游戏元宇宙</Select.Option>
-            <Select.Option value="16">存储</Select.Option>
+            <Select.Option value="1">{intl.formatMessage({ id: 'tradingPair.category.mainstream' })}</Select.Option>
+            <Select.Option value="2">{intl.formatMessage({ id: 'tradingPair.category.innovation' })}</Select.Option>
+            <Select.Option value="3">{intl.formatMessage({ id: 'tradingPair.category.new' })}</Select.Option>
+            <Select.Option value="4">{intl.formatMessage({ id: 'tradingPair.category.ai' })}</Select.Option>
+            <Select.Option value="5">{intl.formatMessage({ id: 'tradingPair.category.meme' })}</Select.Option>
+            <Select.Option value="6">{intl.formatMessage({ id: 'tradingPair.category.nft' })}</Select.Option>
+            <Select.Option value="7">{intl.formatMessage({ id: 'tradingPair.category.defi' })}</Select.Option>
+            <Select.Option value="8">{intl.formatMessage({ id: 'tradingPair.category.web3' })}</Select.Option>
+            <Select.Option value="9">{intl.formatMessage({ id: 'tradingPair.category.payments' })}</Select.Option>
+            <Select.Option value="10">{intl.formatMessage({ id: 'tradingPair.category.launchpad' })}</Select.Option>
+            <Select.Option value="11">{intl.formatMessage({ id: 'tradingPair.category.layer2' })}</Select.Option>
+            <Select.Option value="12">{intl.formatMessage({ id: 'tradingPair.category.solana' })}</Select.Option>
+            <Select.Option value="13">{intl.formatMessage({ id: 'tradingPair.category.rwa' })}</Select.Option>
+            <Select.Option value="14">{intl.formatMessage({ id: 'tradingPair.category.launchpool' })}</Select.Option>
+            <Select.Option value="15">{intl.formatMessage({ id: 'tradingPair.category.gameMetaverse' })}</Select.Option>
+            <Select.Option value="16">{intl.formatMessage({ id: 'tradingPair.category.storage' })}</Select.Option>
             </Select>
           </Form.Item>
 
           {/* <Form.Item
             name="sortOrder"
-            label="排序"
+            label={intl.formatMessage({ id: 'tradingPair.form.sortOrder' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }} min={0} />
@@ -207,53 +202,53 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="enable"
-            label="开启交易"
+            label={intl.formatMessage({ id: 'tradingPair.form.enableTrading' })}
             required
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
-              <Select.Option value={1}>是</Select.Option>
-              <Select.Option value={0}>否</Select.Option>
+              <Select.Option value={1}>{intl.formatMessage({ id: "tradingPair.form.yes" })}</Select.Option>
+              <Select.Option value={0}>{intl.formatMessage({ id: "tradingPair.form.no" })}</Select.Option>
             </Select>
           </Form.Item>
 
           {/* <Form.Item
             name="show"
-            label="是否前台显示"
+            label={intl.formatMessage({ id: 'tradingPair.form.isVisible' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select disabled={true}>
-              <Select.Option value={1}>是</Select.Option>
-              <Select.Option value={0}>否</Select.Option>
+              <Select.Option value={1}>{intl.formatMessage({ id: "tradingPair.form.yes" })}</Select.Option>
+              <Select.Option value={0}>{intl.formatMessage({ id: "tradingPair.form.no" })}</Select.Option>
             </Select>
           </Form.Item> */}
           {/* <Form.Item
             name="enableBuy"
-            label="是否开启买"
+            label={intl.formatMessage({ id: 'tradingPair.form.enableBuy' })}
             required
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
-              <Select.Option value={1}>是</Select.Option>
-              <Select.Option value={0}>否</Select.Option>
+              <Select.Option value={1}>{intl.formatMessage({ id: "tradingPair.form.yes" })}</Select.Option>
+              <Select.Option value={0}>{intl.formatMessage({ id: "tradingPair.form.no" })}</Select.Option>
             </Select>
           </Form.Item>
           <Form.Item
             name="enableSell"
-            label="是否开启卖"
+            label={intl.formatMessage({ id: 'tradingPair.form.enableSell' })}
             required
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
-              <Select.Option value={1}>是</Select.Option>
-              <Select.Option value={0}>否</Select.Option>
+              <Select.Option value={1}>{intl.formatMessage({ id: "tradingPair.form.yes" })}</Select.Option>
+              <Select.Option value={0}>{intl.formatMessage({ id: "tradingPair.form.no" })}</Select.Option>
             </Select>
           </Form.Item> */}
 
           <Form.Item
             name="buyFee"
-            label="Maker手续费"
-            rules={[{ required: true, message: '请输入Maker手续费' }]}
+            label={intl.formatMessage({ id: 'tradingPair.form.makerFee' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'tradingPair.form.makerFee.required' }) }]}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Input style={{ width: '100%' }}  />
@@ -261,8 +256,8 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="sellFee"
-            label="Taker手续费"
-            rules={[{ required: true, message: '请输入Taker手续费' }]}
+            label={intl.formatMessage({ id: 'tradingPair.form.takerFee' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'tradingPair.form.takerFee.required' }) }]}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Input style={{ width: '100%' }}  />
@@ -270,18 +265,18 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="openingPrice"
-            label="开盘价"
+            label={intl.formatMessage({ id: 'tradingPair.form.openPrice' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }}  />
           </Form.Item>
         </div>
 
-        <h3 style={{ marginTop: '20px' }}>交易规则</h3>
+        <h3 style={{ marginTop: '20px' }}>{intl.formatMessage({ id: 'tradingPair.form.tradingRules' })}</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
           <Form.Item
             name="maxBaseVolume"
-            label="最大下单金额"
+            label={intl.formatMessage({ id: 'tradingPair.form.maxOrderAmount' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }}  />
@@ -289,7 +284,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="minBaseVolume"
-            label="最小下单金额"
+            label={intl.formatMessage({ id: 'tradingPair.form.minOrderAmount' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }}  />
@@ -297,7 +292,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="maxVolume"
-            label="最大下单数量"
+            label={intl.formatMessage({ id: 'tradingPair.form.maxOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }} />
@@ -305,7 +300,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="minVolume"
-            label="最小下单数量"
+            label={intl.formatMessage({ id: 'tradingPair.form.minOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }}  />
@@ -313,7 +308,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           {/* <Form.Item
             name="baseCoinScale"
-            label="价格精度"
+            label={intl.formatMessage({ id: 'tradingPair.form.priceDecimal' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }}  max={18} />
@@ -321,7 +316,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="coinScale"
-            label="数量精度"
+            label={intl.formatMessage({ id: 'tradingPair.form.quantityDecimal' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }} max={18} />
@@ -329,7 +324,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="maxMarketPrice"
-            label="市价单单笔最大数量"
+            label={intl.formatMessage({ id: 'tradingPair.form.maxMarketOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }}  />
@@ -337,7 +332,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="maxCurrentPrice"
-            label="限价单最大挂单数量"
+            label={intl.formatMessage({ id: 'tradingPair.form.maxLimitOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }}  />
@@ -345,18 +340,18 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="priceOffset"
-            label="下单价格偏离"
+            label={intl.formatMessage({ id: 'tradingPair.form.priceDeviationPercentage' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }} addonAfter="%" />
           </Form.Item>
         </div>
 
-        <h3 style={{ marginTop: '20px' }}>深度精度设置</h3>
+        <h3 style={{ marginTop: '20px' }}>{intl.formatMessage({ id: 'tradingPair.form.section.depthPrecision' })}</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
           <Form.Item
             name="depthOne"
-            label="深度精度1"
+            label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision1' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
             <InputNumber style={{ width: '100%' }}   />
@@ -364,7 +359,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="depthTwo"
-            label="深度精度2"
+            label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision2' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
            <InputNumber style={{ width: '100%' }}   />
@@ -372,7 +367,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="depthThree"
-            label="深度精度3"
+            label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision3' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
            <InputNumber style={{ width: '100%' }}   />
@@ -380,7 +375,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="depthFour"
-            label="深度精度4"
+            label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision4' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
             <InputNumber style={{ width: '100%' }}   />
@@ -388,7 +383,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
           <Form.Item
             name="depthFive"
-            label="深度精度5"
+            label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision5' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
             <InputNumber style={{ width: '100%' }}   />

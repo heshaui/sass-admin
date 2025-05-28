@@ -55,7 +55,7 @@ const TradingRiskControl: React.FC = () => {
     }
     const res = await updateTradingRiskControlById(data);
     if(res.code==='0'){
-      message.success('修改成功');
+      message.success(intl.formatMessage({ id: 'tradingRiskControl.message.editSuccess' }));
       actionRef.current?.reload();
     }else{
       message.error(res.message);
@@ -67,13 +67,13 @@ const TradingRiskControl: React.FC = () => {
   
   const columns: ProColumns[] = [
     {
-      title: '编号',
+      title: intl.formatMessage({ id: 'tradingRiskControl.column.id' }),
       dataIndex: 'id',
       key: 'id',
       search: false,
     },
     {
-      title: '币对',
+      title: intl.formatMessage({ id: 'tradingRiskControl.column.coinPair' }),
       dataIndex: 'coinPair',
       key: 'coinPair',
       search: true,
@@ -89,7 +89,7 @@ const TradingRiskControl: React.FC = () => {
       },
     },
     {
-      title: '交易价格偏离',
+      title: intl.formatMessage({ id: 'tradingRiskControl.column.transactionPriceDeviation' }),
       search: false,
       dataIndex: 'transactionPriceDeviation',
       key: 'transactionPriceDeviation',
@@ -103,7 +103,7 @@ const TradingRiskControl: React.FC = () => {
       },
     },
     {
-      title: '近30分钟内价格波动',
+      title: intl.formatMessage({ id: 'tradingRiskControl.column.priceFluctuation' }),
       dataIndex: 'priceFluctuation',
       key: 'priceFluctuation',
       search: false,
@@ -117,13 +117,13 @@ const TradingRiskControl: React.FC = () => {
       },
     },
     {
-      title: '报警通知',
+      title: intl.formatMessage({ id: 'tradingRiskControl.column.alarmNotifyEmail' }),
       dataIndex: 'alarmNotifyEmail',
       key: 'alarmNotifyEmail',
       search: false,
     },
     {
-      title: '修改时间',
+      title: intl.formatMessage({ id: 'tradingRiskControl.column.updateTime' }),
       dataIndex: 'updateTime',
       key: 'updateTime',
       valueType: 'dateTime',
@@ -131,14 +131,14 @@ const TradingRiskControl: React.FC = () => {
       
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'tradingRiskControl.column.action' }),
       key: 'action',
       valueType: 'option',
       search: false,
       render: (_, record) => (
         <Space>
           <Button type="link" onClick={() => handleEdit(record)}>
-            修改
+            {intl.formatMessage({ id: 'tradingRiskControl.action.edit' })}
           </Button>
         </Space>
       ),
@@ -149,10 +149,10 @@ const TradingRiskControl: React.FC = () => {
     setLoading(true);
     try {
       // 删除逻辑
-      message.success('删除成功');
+      message.success(intl.formatMessage({ id: 'tradingRiskControl.message.deleteSuccess' }));
       actionRef.current?.reload();
     } catch (error) {
-      message.error('删除失败');
+      message.error(intl.formatMessage({ id: 'tradingRiskControl.message.deleteError' }));
     }
     setLoading(false);
   };
@@ -164,7 +164,7 @@ const TradingRiskControl: React.FC = () => {
   return (
     <PageContainer>
       <ProTable
-        headerTitle="交易风控列表"
+        headerTitle={intl.formatMessage({ id: 'tradingRiskControl.title' })}
         actionRef={actionRef}
         rowKey="id"
         options={{ reload: true }}

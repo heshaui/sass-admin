@@ -3,6 +3,7 @@ import { Modal, Form, Input, Tabs, Button, message } from 'antd';
 import type { TabsProps } from 'antd';
 import LanguageSelector from '@/components/LanguageSelector';
 import { saveIntroductionVo,findIntroductionVo} from '@/services/ant-design-pro/spot';
+import { useIntl } from 'umi';
 
 export interface CurrencyIntroFormData {
   id: number;
@@ -27,6 +28,7 @@ const CurrencyIntroForm: React.FC<CurrencyIntroFormProps> = ({
   onSubmit,
   onCancel,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [activeTab, setActiveTab] = useState<string>('en_US');
   const [wordCount, setWordCount] = useState<Record<string, number>>({
@@ -119,14 +121,14 @@ const getIntroductionVo = async (id:number)=>{
       // 调用API保存数据
       const res = await saveIntroductionVo(data);
       if (res.code === '0') {
-        message.success('币种简介保存成功');
+        message.success(intl.formatMessage({ id: 'currency.intro.saveSuccess' }));
         form.resetFields();
         onCancel();
       } else {
-        message.error(res.message || '币种简介保存失败');
+        message.error(res.message || intl.formatMessage({ id: 'currency.intro.saveFailed' }));
       }
     } catch (error) {
-      console.error('表单验证失败:', error);
+      console.error(intl.formatMessage({ id: 'currency.intro.formValidationFailed' }), error);
     }
   };
 
@@ -140,10 +142,10 @@ const getIntroductionVo = async (id:number)=>{
       key: 'en_US',
       label: 'English',
       children: (
-        <Form.Item name="intro_en" rules={[{ max: 1000, message: '币种简介不能超过1000字符' }]}>
+        <Form.Item name="intro_en" rules={[{ max: 1000, message: intl.formatMessage({ id: 'currency.intro.maxLength' }) }]}>
           <Input.TextArea 
             rows={10} 
-            placeholder="请输入英文币种简介" 
+            placeholder={intl.formatMessage({ id: 'currency.intro.placeholder.en' })} 
             onChange={(e) => handleTextChange(e, 'en')}
           />
         </Form.Item>
@@ -153,10 +155,10 @@ const getIntroductionVo = async (id:number)=>{
       key: 'zh_CN',
       label: '简体中文',
       children: (
-        <Form.Item name="intro_zh_CN" rules={[{ max: 1000, message: '币种简介不能超过1000字符' }]}>
+        <Form.Item name="intro_zh_CN" rules={[{ max: 1000, message: intl.formatMessage({ id: 'currency.intro.maxLength' }) }]}>
           <Input.TextArea 
             rows={10} 
-            placeholder="请输入简体中文币种简介" 
+            placeholder={intl.formatMessage({ id: 'currency.intro.placeholder.zhCN' })} 
             onChange={(e) => handleTextChange(e, 'zh_CN')}
           />
         </Form.Item>
@@ -166,10 +168,10 @@ const getIntroductionVo = async (id:number)=>{
       key: 'zh_TW',
       label: '繁體中文',
       children: (
-        <Form.Item name="intro_zh_TW" rules={[{ max: 1000, message: '币种简介不能超过1000字符' }]}>
+        <Form.Item name="intro_zh_TW" rules={[{ max: 1000, message: intl.formatMessage({ id: 'currency.intro.maxLength' }) }]}>
           <Input.TextArea 
             rows={10} 
-            placeholder="请输入繁体中文币种简介" 
+            placeholder={intl.formatMessage({ id: 'currency.intro.placeholder.zhTW' })} 
             onChange={(e) => handleTextChange(e, 'zh_TW')}
           />
         </Form.Item>
@@ -179,10 +181,10 @@ const getIntroductionVo = async (id:number)=>{
       key: 'ja_JP',
       label: '日本語',
       children: (
-        <Form.Item name="intro_ja" rules={[{ max: 1000, message: '币种简介不能超过1000字符' }]}>
+        <Form.Item name="intro_ja" rules={[{ max: 1000, message: intl.formatMessage({ id: 'currency.intro.maxLength' }) }]}>
           <Input.TextArea 
             rows={10} 
-            placeholder="请输入日语币种简介" 
+            placeholder={intl.formatMessage({ id: 'currency.intro.placeholder.ja' })} 
             onChange={(e) => handleTextChange(e, 'ja')}
           />
         </Form.Item>
@@ -192,10 +194,10 @@ const getIntroductionVo = async (id:number)=>{
       key: 'ko_KR',
       label: '한국어',
       children: (
-        <Form.Item name="intro_ko" rules={[{ max: 1000, message: '币种简介不能超过1000字符' }]}>
+        <Form.Item name="intro_ko" rules={[{ max: 1000, message: intl.formatMessage({ id: 'currency.intro.maxLength' }) }]}>
           <Input.TextArea 
             rows={10} 
-            placeholder="请输入韩语币种简介" 
+            placeholder={intl.formatMessage({ id: 'currency.intro.placeholder.ko' })} 
             onChange={(e) => handleTextChange(e, 'ko')}
           />
         </Form.Item>
@@ -205,23 +207,23 @@ const getIntroductionVo = async (id:number)=>{
 
   return (
     <Modal
-      title="币种简介"
+      title={intl.formatMessage({ id: 'currency.intro.title' })}
       open={visible}
       onCancel={handleCancel}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
-          取消
+          {intl.formatMessage({ id: 'currency.intro.cancel' })}
         </Button>,
         <Button key="submit" type="primary" onClick={handleSubmit}>
-          提交
+          {intl.formatMessage({ id: 'currency.intro.submit' })}
         </Button>,
       ]}
       width={800}
     >
       <div style={{ marginBottom: '16px' }}>
-        <span style={{ color: 'red' }}>*</span> 语言
+        <span style={{ color: 'red' }}>*</span> {intl.formatMessage({ id: 'currency.intro.language' })}
         <p style={{ fontSize: 12, color: '#999', marginTop: 8 }}>
-          *支持多个语言编辑，英文为必填，其他语言配置则默认显示英文
+          {intl.formatMessage({ id: 'currency.intro.languageNote' })}
         </p>
       </div>
 

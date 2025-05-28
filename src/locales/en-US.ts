@@ -12,6 +12,7 @@ import kv from './en-US/kv';
 import rate from './en-US/rate';
 import langPackage from './en-US/langPackage';
 import auth from './en-US/auth';
+import spot from './en-US/spot';
 
 export default {
   'navBar.lang': 'Languages',
@@ -34,5 +35,6 @@ export default {
   ...kv,
   ...rate,
   ...langPackage,
-  ...auth
+  ...auth,
+  ...spot
 };

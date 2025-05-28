@@ -14,7 +14,7 @@ import TradingPairForm from './components/TradingPairForm';
 import GoogleCode from '@/components/GoogleCode';
 import { sendGoogleKey, bindGoogleKey } from '@/services/ant-design-pro/authAdmin';
 import { clearAllCookies } from '@/utils';
-import { useModel } from 'umi';
+import { useModel, useIntl } from 'umi';
 import ValidCode from '@/components/ValidCode';
 /**
  * 币对类型定义
@@ -48,6 +48,7 @@ type TradingPair = {
  * 币对管理页面
  */
 const TradingPairManagement: React.FC = () => {
+  const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const [visible, setVisible] = useState<boolean>(false);
   const [currentRow, setCurrentRow] = useState<TradingPair | undefined>(undefined);
@@ -113,7 +114,7 @@ const TradingPairManagement: React.FC = () => {
       values.show = currentRow.show;
       const res = await updateExchangeCoinById(values);
       if (res.code === '0') {
-        message.success('币对修改成功');
+        message.success(intl.formatMessage({ id: 'tradingPair.message.editSuccess' }));
       } else {
         message.error(res.message);
       }
@@ -125,7 +126,7 @@ const TradingPairManagement: React.FC = () => {
       values.show = 0;
       const res = await saveExchangeCoin(values);
       if (res.code === '0') {
-        message.success('币对添加成功');
+        message.success(intl.formatMessage({ id: 'tradingPair.message.addSuccess' }));
       } else {
         message.error(res.message);
       }
@@ -143,7 +144,7 @@ const TradingPairManagement: React.FC = () => {
     };
     const res = await updateExchangeCoinById(data);
     if (res.code === '0') {
-      message.success('币对显示状态设置成功');
+      message.success(intl.formatMessage({ id: 'tradingPair.message.showStatusSuccess' }));
     } else {
       message.error(res.message);
     }
@@ -158,7 +159,7 @@ const TradingPairManagement: React.FC = () => {
     };
     const res = await updateExchangeCoinById(data);
     if (res.code === '0') {
-      message.success('币对交易状态设置成功');
+      message.success(intl.formatMessage({ id: 'tradingPair.message.enableStatusSuccess' }));
     } else {
       message.error(res.message);
     }
@@ -173,14 +174,14 @@ const TradingPairManagement: React.FC = () => {
         group: matchingType,
       });
       if (res.code === '0' && res.data) {
-        message.success('撮合类型设置成功');
+        message.success(intl.formatMessage({ id: 'tradingPair.message.matchingTypeSuccess' }));
         setMatchingTypeVisible(false);
         actionRef.current?.reload();
       } else {
-        message.error(res.message);
+        message.error(intl.formatMessage({ id: 'tradingPair.message.matchingTypeFailed' }));
       }
     } catch (error) {
-      message.error('撮合类型设置失败');
+      message.error(intl.formatMessage({ id: 'tradingPair.message.matchingTypeFailed' }));
     }
   };
 
@@ -196,14 +197,17 @@ const TradingPairManagement: React.FC = () => {
     setValidCodeVisible(false)
     //弹出确认框
     Modal.confirm({
-      title: `确定要撤销所有${cancelOrder?.coinSymbol}/${cancelOrder?.baseSymbol}订单吗？`,
+      title: intl.formatMessage(
+        { id: 'tradingPair.modal.confirmCancelOrders' },
+        { coinSymbol: cancelOrder?.coinSymbol, baseSymbol: cancelOrder?.baseSymbol }
+      ),
       onOk: async () => {
         const res = await revocationExchangeCoinOrder({
           symbol: cancelOrder?.coinSymbol + '/' + cancelOrder?.baseSymbol,
           googleCode: code
         });
         if (res.code === '0') {
-          message.success('撤销订单成功');
+          message.success(intl.formatMessage({ id: 'tradingPair.message.cancelOrderSuccess' }));
         } else {
           message.error(res.message);
         }
@@ -228,7 +232,7 @@ const TradingPairManagement: React.FC = () => {
   const handleGoogleCodeSuccess = async (code: string) => {
     const res = await bindGoogleKey({ googleCode: code });
     if (res.code === '0' && res.data) {
-      message.success('绑定成功');
+      message.success(intl.formatMessage({ id: 'tradingPair.message.bindSuccess' }));
       clearAllCookies();
       window.location.reload();
     } else {
@@ -241,12 +245,12 @@ const TradingPairManagement: React.FC = () => {
   // 表格列定义
   const columns: ProColumns<TradingPair>[] = [
     {
-      title: '排序',
+      title: intl.formatMessage({ id: 'tradingPair.column.sortOrder' }),
       dataIndex: 'sortOrder',
       search: false,
     },
     {
-      title: '币对',
+      title: intl.formatMessage({ id: 'tradingPair.column.tradingPair' }),
       search: false,
       render: (_, record) => (
         <div>
@@ -255,18 +259,20 @@ const TradingPairManagement: React.FC = () => {
       ),
     },
     {
-      title: '是否开放交易',
+      title: intl.formatMessage({ id: 'tradingPair.column.enableTrading' }),
       dataIndex: 'enable',
       valueEnum: {
-        0: '禁用',
-        1: '启用',
+        0: intl.formatMessage({ id: 'tradingPair.status.disabled' }),
+        1: intl.formatMessage({ id: 'tradingPair.status.enabled' }),
       },
       render: (_, record) => (
         <Switch
           checked={record.enable === 1}
           onChange={(checked) => {
             Modal.confirm({
-              title: `确定要${checked ? '启用' : '禁用'}该币对交易吗？`,
+              title: intl.formatMessage({
+                id: checked ? 'tradingPair.modal.confirmEnable' : 'tradingPair.modal.confirmDisable'
+              }),
               onOk: () => {
                 handleEnableOrDisable(record, checked);
               },
@@ -276,18 +282,20 @@ const TradingPairManagement: React.FC = () => {
       ),
     },
     {
-      title: '是否显示',
+      title: intl.formatMessage({ id: 'tradingPair.column.isVisible' }),
       dataIndex: 'show',
       valueEnum: {
-        0: '隐藏',
-        1: '显示',
+        0: intl.formatMessage({ id: 'tradingPair.status.hidden' }),
+        1: intl.formatMessage({ id: 'tradingPair.status.visible' }),
       },
       render: (_, record) => (
         <Switch
           checked={record.show === 1}
           onChange={(checked) => {
             Modal.confirm({
-              title: `确定要${checked ? '显示' : '隐藏'}该币对吗？`,
+              title: intl.formatMessage({
+                id: checked ? 'tradingPair.modal.confirmShow' : 'tradingPair.modal.confirmHide'
+              }),
               onOk: () => {
                 handleShowOrHide(record, checked);
               },
@@ -297,35 +305,35 @@ const TradingPairManagement: React.FC = () => {
       ),
     },
     {
-      title: '开盘价',
+      title: intl.formatMessage({ id: 'tradingPair.column.openPrice' }),
       dataIndex: 'openingPrice',
       search: false,
     },
     {
-      title: '价格精度',
+      title: intl.formatMessage({ id: 'tradingPair.column.priceDecimal' }),
       dataIndex: 'baseCoinScale',
       search: false,
     },
     {
-      title: '基础币种精度',
+      title: intl.formatMessage({ id: 'tradingPair.column.baseCoinDecimal' }),
       dataIndex: 'coinScale',
       search: false,
     },
     {
-      title: '币对标签',
+      title: intl.formatMessage({ id: 'tradingPair.column.tag' }),
       dataIndex: 'classLabel',
       search: false,
       render: (text) => tradingPairCategories[text],
     },
     {
-      title: '添加时间',
+      title: intl.formatMessage({ id: 'tradingPair.column.createTime' }),
       dataIndex: 'createTime',
       valueType: 'dateTime',
       search: false,
       sorter: true,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'tradingPair.column.action' }),
       dataIndex: 'option',
       valueType: 'option',
       search: false,
@@ -337,13 +345,11 @@ const TradingPairManagement: React.FC = () => {
             setVisible(true);
           }}
         >
-          修改
+          {intl.formatMessage({ id: 'tradingPair.action.edit' })}
         </a>,
         <a key="cancelOrders" style={{ color: '#ff4d4f' }} onClick={() => currentUser?.employeeResp?.googleCode === true ? handleCancelOrders(record) : getGoogleCode()}>
-          撤销全部订单
+          {intl.formatMessage({ id: 'tradingPair.action.cancelOrders' })}
         </a>,
-
-
         <a
           key="mergeType"
           onClick={() => {
@@ -351,7 +357,7 @@ const TradingPairManagement: React.FC = () => {
             setMatchingTypeVisible(true);
           }}
         >
-          撮合类型
+          {intl.formatMessage({ id: 'tradingPair.action.matchingType' })}
         </a>,
       ],
     },
@@ -360,7 +366,7 @@ const TradingPairManagement: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<TradingPair>
-        headerTitle="币对管理"
+        headerTitle={intl.formatMessage({ id: 'tradingPair.table.title' })}
         actionRef={actionRef}
         rowKey="id"
         toolBarRender={() => [
@@ -372,7 +378,7 @@ const TradingPairManagement: React.FC = () => {
               setVisible(true);
             }}
           >
-            <PlusOutlined /> 添加
+            <PlusOutlined /> {intl.formatMessage({ id: 'tradingPair.button.add' })}
           </Button>,
         ]}
         request={fetchTradingPairs}
@@ -389,9 +395,9 @@ const TradingPairManagement: React.FC = () => {
         values={currentRow}
       />
 
-      {/* 撮合类型选择弹窗 */}
+      {/* 撥合类型选择弹窗 */}
       <Modal
-        title="撮合类型"
+        title={intl.formatMessage({ id: 'tradingPair.modal.matchingType' })}
         open={matchingTypeVisible}
         onCancel={() => setMatchingTypeVisible(false)}
         footer={null}
@@ -402,13 +408,13 @@ const TradingPairManagement: React.FC = () => {
           onChange={(e) => setMatchingType(e.target.value)}
           style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}
         >
-          <Radio value={1}>集中撮合</Radio>
-          <Radio value={2}>独立撮合</Radio>
+          <Radio value={1}>{intl.formatMessage({ id: 'tradingPair.matchingType.centralized' })}</Radio>
+          <Radio value={2}>{intl.formatMessage({ id: 'tradingPair.matchingType.independent' })}</Radio>
         </Radio.Group>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
-          <Button onClick={() => setMatchingTypeVisible(false)}>取消</Button>
+          <Button onClick={() => setMatchingTypeVisible(false)}>{intl.formatMessage({ id: 'tradingPair.button.cancel' })}</Button>
           <Button type="primary" onClick={handleMatchingTypeSubmit}>
-            确定
+            {intl.formatMessage({ id: 'tradingPair.button.confirm' })}
           </Button>
         </div>
       </Modal>

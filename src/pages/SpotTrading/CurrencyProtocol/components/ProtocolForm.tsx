@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import { Form, Input } from 'antd';
 import { protocolTypeParams } from '@/services/ant-design-pro/spot';
+import { useIntl } from 'umi';
 
 
 
@@ -23,6 +24,7 @@ interface ProtocolFormProps {
 
 const ProtocolForm: React.FC<ProtocolFormProps> = ({ form, id }) => {
     console.log(id);
+    const intl = useIntl();
     const [protocol,setProtocol] = useState<ProtocolItem>();
 
     useEffect(()=>{
@@ -43,43 +45,43 @@ const ProtocolForm: React.FC<ProtocolFormProps> = ({ form, id }) => {
       
       <Form.Item
         name="protocolName"
-        label="协议名称"
-        rules={[{ required: true, message: '请输入协议名称' }]}
+        label={intl.formatMessage({ id: 'protocol.form.protocolName' })}
+        rules={[{ required: true, message: intl.formatMessage({ id: 'protocol.form.protocolName.required' }) }]}
       >
-        <Input placeholder="协议名称" />
+        <Input placeholder={intl.formatMessage({ id: 'protocol.form.protocolName.placeholder' })} />
       </Form.Item>
       
       <Form.Item
         name="protocol"
-        label="代币协议"
-        rules={[{ required: true, message: '请输入代币协议' }]}
-        extra="如：ERC20"
+        label={intl.formatMessage({ id: 'protocol.form.protocol' })}
+        rules={[{ required: true, message: intl.formatMessage({ id: 'protocol.form.protocol.required' }) }]}
+        extra={intl.formatMessage({ id: 'protocol.form.protocol.extra' })}
       >
-        <Input placeholder="代币协议" />
+        <Input placeholder={intl.formatMessage({ id: 'protocol.form.protocol.placeholder' })} />
       </Form.Item>
       
       <Form.Item
         name="browser"
-        label="区块浏览器"
-        rules={[{ required: true, message: '请输入区块浏览器地址' }]}
+        label={intl.formatMessage({ id: 'protocol.form.browser' })}
+        rules={[{ required: true, message: intl.formatMessage({ id: 'protocol.form.browser.required' }) }]}
       >
-        <Input placeholder="1~1000个字符" />
+        <Input placeholder={intl.formatMessage({ id: 'protocol.form.browser.placeholder' })} />
       </Form.Item>
       
       <Form.Item
         name="symbol"
-        label="主币名称"
-        rules={[{ required: true, message: '请选择主币名称' }]}
+        label={intl.formatMessage({ id: 'protocol.form.symbol' })}
+        rules={[{ required: true, message: intl.formatMessage({ id: 'protocol.form.symbol.required' }) }]}
       >
-        <Input placeholder="主币名称" />
+        <Input placeholder={intl.formatMessage({ id: 'protocol.form.symbol.placeholder' })} />
       </Form.Item>
       
       <Form.Item
         name="chainId"
-        label="链ID"
-        rules={[{ required: true, message: '请选择链ID' }]}
+        label={intl.formatMessage({ id: 'protocol.form.chainId' })}
+        rules={[{ required: true, message: intl.formatMessage({ id: 'protocol.form.chainId.required' }) }]}
       >
-         <Input placeholder="链ID" />
+         <Input placeholder={intl.formatMessage({ id: 'protocol.form.chainId.placeholder' })} />
       </Form.Item>
     </Form>
   );

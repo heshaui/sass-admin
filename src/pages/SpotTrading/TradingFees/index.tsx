@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import {  Button, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import type { ActionType } from '@ant-design/pro-components';
 import EditForm from './components/EditForm';
 import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup,updateExchangeCoinById } from '@/services/ant-design-pro/spot';
+import { useIntl } from 'umi';
 
 interface TradingFee {
   id: string;
@@ -17,6 +19,7 @@ interface TradingFee {
 }
 
 const TradingFees: React.FC = () => {
+  const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState<boolean>(false);
   const [tradingFees, setTradingFees] = useState<TradingFee[]>([]);
@@ -69,7 +72,7 @@ const TradingFees: React.FC = () => {
       sellFee: values.sellFee,
     });
     if(res.code==='0'&&res.data){
-      message.success('更新成功');
+      message.success(intl.formatMessage({ id: 'tradingFees.updateSuccess' }));
       setIsModalVisible(false);
       setCurrentRecord(null);
       actionRef.current?.reload();
@@ -80,7 +83,7 @@ const TradingFees: React.FC = () => {
 
   const columns: ColumnsType<TradingFee> = [
     {
-      title: '币对',
+      title: intl.formatMessage({ id: 'tradingFees.column.tradingPair' }),
       search: false,
       render: (_, record) => (
         <div>
@@ -90,19 +93,19 @@ const TradingFees: React.FC = () => {
       ),
     },
     {
-      title: 'Maker手续费',
+      title: intl.formatMessage({ id: 'tradingFees.column.makerFee' }),
       dataIndex: 'buyFee',
       key: 'buyFee',
       search: false,
     },
     {
-      title: 'Taker手续费',
+      title: intl.formatMessage({ id: 'tradingFees.column.takerFee' }),
       dataIndex: 'sellFee',
       key: 'sellFee',
       search: false,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'tradingFees.column.action' }),
       key: 'action',
       search: false,
       render: (_, record) => (
@@ -111,7 +114,7 @@ const TradingFees: React.FC = () => {
           onClick={() => handleEdit(record)}
           style={{ color: '#1890ff' }}
         >
-          编辑
+          {intl.formatMessage({ id: 'tradingFees.button.edit' })}
         </Button>
       ),
     },

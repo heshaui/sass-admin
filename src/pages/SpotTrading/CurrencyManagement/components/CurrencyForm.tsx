@@ -3,6 +3,7 @@ import { Form, Input, Radio, InputNumber, Select, DatePicker, Button, Card, Row,
 import dayjs from 'dayjs';
 import { tenantCurrencyCoinAll,currencyCoinParams,tenantCoin,tenantCurrencyCoinParams } from '@/services/ant-design-pro/spot';
 import AvatarUpload from '@/components/AvatarUpload';
+import { useIntl } from 'umi';
 
 
 // 币种表单类型
@@ -32,6 +33,7 @@ interface CurrencyFormProps {
 }
 
 const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, onCancel }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [currencyAll, setCurrencyAll] = useState([]);
   const [mainChainValue, setMainChainValue] = useState(1);
@@ -48,7 +50,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
       })
       .catch(info => {
         console.log(info);
-        message.error('表单验证失败');
+        message.error(intl.formatMessage({ id: 'currency.form.validation.failed' }));
       });
   };
 
@@ -143,12 +145,12 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
       }}
     >
       <Card 
-        title="基本信息" 
+        title={intl.formatMessage({ id: 'currency.form.basicInfo' })} 
         style={{ marginBottom: 16 }}
         extra={
           onCancel && (
             <Button type="link" onClick={onCancel}>
-              返回
+              {intl.formatMessage({ id: 'currency.form.return' })}
             </Button>
           )
         }
@@ -157,12 +159,12 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={24}> 
             <Form.Item
               name="mianChain"
-              label="币种类型"
+              label={intl.formatMessage({ id: 'currency.form.currencyType' })}
               required
             >
               <Radio.Group onChange={handleMainChainChange}>
-                <Radio value={1}>主链币</Radio>
-                <Radio value={2}>Token币</Radio>
+                <Radio value={1}>{intl.formatMessage({ id: 'currency.form.mainChainCoin' })}</Radio>
+                <Radio value={2}>{intl.formatMessage({ id: 'currency.form.tokenCoin' })}</Radio>
               </Radio.Group>
             </Form.Item>
             
@@ -173,7 +175,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
 
           <Form.Item
               name="chainCoin"
-              label="币种"
+              label={intl.formatMessage({ id: 'currency.form.currency' })}
               required
             >
               { !isAdmin&&mainChainValue === 1 && (
@@ -206,9 +208,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={12}>
             <Form.Item
               name="coinName"
-              label="币种简称"
+              label={intl.formatMessage({ id: 'currency.form.currencyAbbr' })}
               required
-              rules={[{ required: true, message: '请输入币种简称' }]}
+              rules={[{ required: true, message: intl.formatMessage({ id: 'currency.form.pleaseEnterCurrencyAbbr' }) }]}
             >
               <Input disabled={mainChainValue !== 2&&!isAdmin} />
             </Form.Item>
@@ -218,13 +220,13 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={12}>
             <Form.Item
               name="iconUrl"
-              label="币种图标"
+              label={intl.formatMessage({ id: 'currency.form.currencyIcon' })}
               required
-              rules={[{ required: true, message: '请上传币种图标' }]}
+              rules={[{ required: true, message: intl.formatMessage({ id: 'currency.form.pleaseUploadCurrencyIcon' }) }]}
             >
               <AvatarUpload />
             </Form.Item>
-            <span>前台显示币种logo</span>
+            <span>{intl.formatMessage({ id: 'currency.form.frontendDisplayLogo' })}</span>
           </Col>
 
 
@@ -232,20 +234,20 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={12}>
             <Form.Item
               name="nameDefault"
-              label="币种英文全称"
+              label={intl.formatMessage({ id: 'currency.form.currencyEnglishName' })}
               required
-              rules={[{ required: true, message: '请输入币种英文全称' }]}
+              rules={[{ required: true, message: intl.formatMessage({ id: 'currency.form.pleaseEnterCurrencyEnglishName' }) }]}
             >
-              <Input placeholder="例如: Ethereum" />
+              <Input placeholder={intl.formatMessage({ id: 'currency.form.exampleEthereum' })} />
              
             </Form.Item>
-            <span>例如：Tether</span>
+            <span>{intl.formatMessage({ id: 'currency.form.exampleTether' })}</span>
           </Col>
           
           <Col span={12}>
             <Form.Item
               name="sort"
-              label="排序"
+              label={intl.formatMessage({ id: 'currency.column.sort' })}
               required
             >
               <InputNumber min={0} style={{ width: '100%' }} />
@@ -255,12 +257,12 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={12}>
             <Form.Item
               name="unitScale"
-              label="显示精度"
+              label={intl.formatMessage({ id: 'currency.form.displayPrecision' })}
               required
             >
-              <InputNumber min={0} max={18} style={{ width: '100%' }} placeholder="现货/资产显示的币种精度" />
+              <InputNumber min={0} max={18} style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'currency.form.spotAssetDisplayPrecision' })} />
             </Form.Item>
-            <span>现货/资产显示的币种精度</span>
+            <span>{intl.formatMessage({ id: 'currency.form.spotAssetDisplayPrecision' })}</span>
           </Col>
           
           {
@@ -268,16 +270,16 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={12}>
             <Form.Item
               name="memoTag"  
-              label="Memo/Tag"
+              label={intl.formatMessage({ id: 'currency.form.memoTag' })}
               required
             >
               <Select>
-                <Select.Option value={0}>不需要标签</Select.Option>
-                <Select.Option value={1}>需要标签</Select.Option>
+                <Select.Option value={0}>{intl.formatMessage({ id: 'currency.form.noTagRequired' })}</Select.Option>
+                <Select.Option value={1}>{intl.formatMessage({ id: 'currency.form.tagRequired' })}</Select.Option>
               </Select>
              
             </Form.Item>
-            <span>若需要标签，前台用户需要标签才可以进行提币</span>
+            <span>{intl.formatMessage({ id: 'currency.form.tagRequiredForWithdrawal' })}</span>
           </Col>
            )}
             
@@ -285,7 +287,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={24}>
             <Form.Item
               name="issuingDate"
-              label="发行日期"
+              label={intl.formatMessage({ id: 'currency.form.issueDate' })}
               required
             >
               <DatePicker format="YYYY-MM-DD"/>
@@ -295,7 +297,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={12}>
             <Form.Item
               name="transactionNum"
-              label="流通数量"
+              label={intl.formatMessage({ id: 'currency.form.circulatingSupply' })}
               required
             >
               <InputNumber style={{ width: '100%' }} />
@@ -305,7 +307,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={12}>
             <Form.Item
               name="maxSupplyQuantity"
-              label="最大总供应量"
+              label={intl.formatMessage({ id: 'currency.form.maxTotalSupply' })}
               required
             >
               <InputNumber style={{ width: '100%' }} />
@@ -314,61 +316,61 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         </Row>
       </Card>
       
-      <Card title="币种开关" style={{ marginBottom: 16 }}>
+      <Card title={intl.formatMessage({ id: 'currency.form.currencySwitch' })} style={{ marginBottom: 16 }}>
       <Row gutter={24}>
       <Col span={8}>
         <Form.Item
           name="status"
-          label="是否启用"
+          label={intl.formatMessage({ id: 'currency.form.isEnabled' })}
           required
         >
           <Select>
-            <Select.Option value={1}>是</Select.Option>
-            <Select.Option value={0}>否</Select.Option>
+            <Select.Option value={1}>{intl.formatMessage({ id: 'currency.form.yes' })}</Select.Option>
+            <Select.Option value={0}>{intl.formatMessage({ id: 'currency.form.no' })}</Select.Option>
           </Select>
         </Form.Item>
-        <span>启用后，前台将显示该币种，反之不显示</span>
+        <span>{intl.formatMessage({ id: 'currency.form.enabledDisplayFrontend' })}</span>
         </Col>
         </Row>
       </Card>
-      <Card title="是否为平台币" style={{ marginBottom: 16 }}>
+      <Card title={intl.formatMessage({ id: 'currency.form.isPlatformCoin' })} style={{ marginBottom: 16 }}>
       <Row gutter={24}>
       <Col span={8}>
         <Form.Item
           name="isPlatformCoin"
-          label="是否为平台币"
+          label={intl.formatMessage({ id: 'currency.form.isPlatformCoin' })}
           required
         >
           <Select>
-            <Select.Option value={0}>是</Select.Option>
-            <Select.Option value={1}>否</Select.Option>
+            <Select.Option value={0}>{intl.formatMessage({ id: 'currency.form.yes' })}</Select.Option>
+            <Select.Option value={1}>{intl.formatMessage({ id: 'currency.form.no' })}</Select.Option>
           </Select>
         </Form.Item>
         </Col>
         </Row>
       </Card>
       
-      <Card title="充值信息" style={{ marginBottom: 16 }}>
+      <Card title={intl.formatMessage({ id: 'currency.form.depositInfo' })} style={{ marginBottom: 16 }}>
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
               name="canRecharge"
-              label="是否开放充值"
+              label={intl.formatMessage({ id: 'currency.form.isDepositEnabled' })}
               required
             >
               <Select>
-                <Select.Option value={1}>是</Select.Option>
-                <Select.Option value={0}>否</Select.Option>
+                <Select.Option value={1}>{intl.formatMessage({ id: 'currency.form.yes' })}</Select.Option>
+                <Select.Option value={0}>{intl.formatMessage({ id: 'currency.form.no' })}</Select.Option>
               </Select>
             
             </Form.Item>
-            <span>状态将同时影响从币</span>
+            <span>{intl.formatMessage({ id: 'currency.form.statusAffectsSubCoins' })}</span>
           </Col>
           
           <Col span={12}>
             <Form.Item
               name="minTopUp"
-              label="最低充值金额"
+              label={intl.formatMessage({ id: 'currency.form.minDepositAmount' })}
               required
             >
               <InputNumber style={{ width: '100%' }} />
@@ -377,26 +379,26 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         </Row>
       </Card>
       
-      <Card title="提现信息" style={{ marginBottom: 16 }}>
+      <Card title={intl.formatMessage({ id: 'currency.form.withdrawalInfo' })} style={{ marginBottom: 16 }}>
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
               name="canWithdraw"
-              label="是否开放提现"
+              label={intl.formatMessage({ id: 'currency.form.isWithdrawalEnabled' })}
               required
             >
               <Select>
-                <Select.Option value={1}>是</Select.Option>
-                <Select.Option value={0}>否</Select.Option>
+                <Select.Option value={1}>{intl.formatMessage({ id: 'currency.form.yes' })}</Select.Option>
+                <Select.Option value={0}>{intl.formatMessage({ id: 'currency.form.no' })}</Select.Option>
               </Select>
              
             </Form.Item>
-            <span>状态将同时影响从币</span>
+            <span>{intl.formatMessage({ id: 'currency.form.statusAffectsSubCoins' })}</span>
           </Col>
           <Col span={12}>
             <Form.Item
               name="minWithdrawAmount"
-              label="单次提现最小值"
+              label={intl.formatMessage({ id: 'currency.form.minWithdrawalAmount' })}
               required
             >
               <InputNumber style={{ width: '100%' }} />
@@ -406,7 +408,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
           <Col span={12}>
             <Form.Item
               name="maxWithdrawAmount"
-              label="单次提现最大值"
+              label={intl.formatMessage({ id: 'currency.form.maxWithdrawalAmount' })}
               required
             >
               <InputNumber style={{ width: '100%' }} />
@@ -417,11 +419,11 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
       
       <div style={{ textAlign: 'center', marginTop: 24 }}>
         <Button type="primary" onClick={handleSubmit} style={{ marginRight: 16 }}>
-          保存
+          {intl.formatMessage({ id: 'currency.form.save' })}
         </Button>
         {onCancel && (
           <Button onClick={onCancel}>
-            取消
+            {intl.formatMessage({ id: 'currency.form.cancel' })}
           </Button>
         )}
       </div>

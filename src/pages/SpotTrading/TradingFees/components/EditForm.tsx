@@ -1,5 +1,6 @@
 import { Button, Form, Input, InputNumber, Modal } from 'antd';
 import React from 'react';
+import { useIntl } from 'umi';
 
 interface TradingFee {
   id: string;
@@ -18,6 +19,7 @@ interface EditFormProps {
 }
 
 const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
 
   React.useEffect(() => {
@@ -36,7 +38,7 @@ const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit
       onSubmit(values);
       form.resetFields();
     } catch (error) {
-      console.error('提交表单时出错:', error);
+      console.error(intl.formatMessage({ id: 'tradingFees.form.error' }), error);
     }
   };
 
@@ -47,41 +49,41 @@ const EditForm: React.FC<EditFormProps> = ({ visible, record, onCancel, onSubmit
 
   return (
     <Modal
-      title="编辑交易手续费"
+      title={intl.formatMessage({ id: 'tradingFees.form.title' })}
       visible={visible}
       onCancel={handleCancel}
       footer={null}
       destroyOnClose
     >
       <Form form={form} layout="vertical">
-        <Form.Item name="pairName" label="币对">
+        <Form.Item name="pairName" label={intl.formatMessage({ id: 'tradingFees.form.tradingPair' })}>
           <Input disabled />
         </Form.Item>
 
         <Form.Item
           name="buyFee"
-          label="Maker手续费"
-          rules={[{ required: true, message: '请输入Maker手续费' }]}
+          label={intl.formatMessage({ id: 'tradingFees.form.makerFee' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'tradingFees.form.makerFee.required' }) }]}
         >
           <InputNumber style={{ width: '100%' }} min={0} max={1} addonAfter="%" />
         </Form.Item>
 
         <Form.Item
           name="sellFee"
-          label="Maker手续费"
-          rules={[{ required: true, message: '请输入Maker手续费' }]}
+          label={intl.formatMessage({ id: 'tradingFees.form.takerFee' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'tradingFees.form.takerFee.required' }) }]}
         >
           <InputNumber style={{ width: '100%' }} min={0} max={1} addonAfter="%" />
         </Form.Item>
 
-        <div style={{ color: 'red', marginBottom: '16px' }}>Tip: 手续费范围0~25%</div>
+        <div style={{ color: 'red', marginBottom: '16px' }}>{intl.formatMessage({ id: 'tradingFees.form.tip' })}</div>
 
         <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleCancel} style={{ marginRight: '8px' }}>
-            取消
+            {intl.formatMessage({ id: 'tradingFees.form.cancel' })}
           </Button>
           <Button type="primary" onClick={handleSubmit}>
-            提交
+            {intl.formatMessage({ id: 'tradingFees.form.submit' })}
           </Button>
         </div>
       </Form>

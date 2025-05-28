@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clearAllCookies } from '@/utils';
+import { useIntl } from 'umi';
 import { sendGoogleKey, bindGoogleKey } from '@/services/ant-design-pro/authAdmin';
 type OrderItem = {
   id: string;
@@ -54,6 +55,7 @@ type TradeRecord = {
 };
 
 const OrderManagement: React.FC = () => {
+  const intl = useIntl();
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
   const [tradeRecords, setTradeRecords] = useState<TradeRecord[]>([]);
   const actionRef = useRef<any>();
@@ -82,15 +84,15 @@ const OrderManagement: React.FC = () => {
       // 这里添加取消订单的API调用
       const res = await revocationOrder({ orderId: orderId });
       if (res.code === '0' && res.data) {
-        message.success('撤销成功');
+        message.success(intl.formatMessage({ id: 'order.management.cancelSuccess' }));
         if (actionRef.current) {
           actionRef.current.reload();
         }
       } else {
-        message.error('撤销失败');
+        message.error(intl.formatMessage({ id: 'order.management.cancelFailed' }));
       }
     } catch (error) {
-      message.error('撤销失败');
+      message.error(intl.formatMessage({ id: 'order.management.cancelFailed' }));
     }
   };
 
@@ -99,7 +101,7 @@ const OrderManagement: React.FC = () => {
   const showTradeDetails = async (record: OrderItem) => {
     // 不再在这里处理收起逻辑，避免与表格的onExpand事件冲突
     if (!record.coinSymbol || !record.baseSymbol || !record.groupStatus) {
-      message.error('订单信息不完整');
+      message.error(intl.formatMessage({ id: 'order.management.incompleteOrderInfo' }));
       return;
     }
     const res = await tradesInfo({
@@ -122,13 +124,13 @@ const OrderManagement: React.FC = () => {
   }
 
   const statusMap = {
-    0: { text: '交易中', color: 'blue' },
-    1: { text: '完全成交', color: 'green' },
-    2: { text: '拒绝', color: 'orange' },
-    3: { text: '已经撤销', color: 'red' },
-    4: { text: '创建订单', color: 'blue' },
-    5: { text: '部分成交', color: 'blue' },
-    6: { text: '订单已经撤销-戳和未撤销', color: 'blue' },
+    0: { text: intl.formatMessage({ id: 'order.management.trading' }), color: 'blue' },
+    1: { text: intl.formatMessage({ id: 'order.management.fullyFilled' }), color: 'green' },
+    2: { text: intl.formatMessage({ id: 'order.management.rejected' }), color: 'orange' },
+    3: { text: intl.formatMessage({ id: 'order.management.cancelled' }), color: 'red' },
+    4: { text: intl.formatMessage({ id: 'order.management.creatingOrder' }), color: 'blue' },
+    5: { text: intl.formatMessage({ id: 'order.management.partiallyFilled' }), color: 'blue' },
+    6: { text: intl.formatMessage({ id: 'order.management.orderCancelled' }), color: 'blue' },
   };
 
   const columns = [
@@ -136,19 +138,19 @@ const OrderManagement: React.FC = () => {
       ? []
       : [
           {
-            title: '商户id',
+            title: intl.formatMessage({ id: 'order.management.merchantId' }),
             dataIndex: 'tenantId',
             key: 'tenantId',
             search: isAdmin,
           },
         ]),
     {
-      title: '委托单号',
+      title: intl.formatMessage({ id: 'order.management.orderId' }),
       dataIndex: 'orderId',
       copyable: true,
     },
     {
-      title: '币对',
+      title: intl.formatMessage({ id: 'order.management.tradingPair' }),
       dataIndex: 'symbol',
       search: !isAdmin,
       valueType: 'select',
@@ -171,71 +173,52 @@ const OrderManagement: React.FC = () => {
       ),
     },
     {
-      title: '类型',
+      title: intl.formatMessage({ id: 'order.management.orderType' }),
       dataIndex: 'type',
       valueType: 'select',
       valueEnum: {
-        0: '市价',
-        1: '限价',
+        0: intl.formatMessage({ id: 'order.management.marketPrice' }),
+        1: intl.formatMessage({ id: 'order.management.limitPrice' }),
       },
 
-      renderText: (val: number) => (val === 0 ? '市价' : '限价'),
+      renderText: (val: number) => (val === 0 ? intl.formatMessage({ id: 'order.management.marketPrice' }) : intl.formatMessage({ id: 'order.management.limitPrice' })),
     },
     {
-      title: '方向',
+      title: intl.formatMessage({ id: 'order.management.direction' }),
       dataIndex: 'direction',
       search: false,
 
       render: (val: number) => (
-        <Tag color={val === 0 ? 'green' : 'red'}>{val === 0 ? '买' : '卖'}</Tag>
+        <Tag color={val === 0 ? 'green' : 'red'}>{val === 0 ? intl.formatMessage({ id: 'order.management.buy' }) : intl.formatMessage({ id: 'order.management.sell' })}</Tag>
       ),
     },
     {
-      title: '订单状态',
+      title: intl.formatMessage({ id: 'order.management.orderStatus' }),
       dataIndex: 'status',
       key: 'status',
       valueType: 'select',
       valueEnum: statusMap,
       renderText: (val: number) => {
         const status = statusMap[val as keyof typeof statusMap] || {
-          text: '未知',
+          text: intl.formatMessage({ id: 'order.management.unknown' }),
           color: 'default',
         };
         return <Tag color={status.color}>{status.text}</Tag>;
       },
     },
     {
-      title: '委托时间',
+      title: intl.formatMessage({ id: 'order.management.orderTime' }),
       dataIndex: 'createTime',
       valueType: 'dateTime',
       search: false,
     },
     {
-      title: '委托时间',
+      title: intl.formatMessage({ id: 'order.management.orderTime' }),
       dataIndex: 'dateTimeRange',
       valueType: 'dateTimeRange',
       hideInTable: true,
     },
-    {
-      title: '委托数量',
-      dataIndex: 'amount',
-      search: false,
-    },
-    {
-      title: '委托价格',
-      dataIndex: 'price',
-      search: false,
-    },
-    {
-      title: '委托金额',
-      dataIndex: 'total',
-      search: false,
-      render: (_, record) => record.amount * record.price,
-    },
-    // {
-    //   title: '成交数量',
-    //   dataIndex: 'filledAmount',
-    //   search: false,
+    
 
     // },
     // {
@@ -250,14 +233,14 @@ const OrderManagement: React.FC = () => {
     //   search: false,
     // },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'order.management.operations' }),
       dataIndex: 'option',
       valueType: 'option',
-      render: (_, record) => {
+      render: (text: string, record: OrderItem) => {
         if (record.status === 0 && !isAdmin) {
           return (
             <Button type="link" onClick={() => handleCancel(record.orderId)}>
-              撤销订单
+              {intl.formatMessage({ id: 'order.management.cancelOrder' })}
             </Button>
           );
         }
@@ -266,15 +249,15 @@ const OrderManagement: React.FC = () => {
             type="link"
             onClick={() => {
               if (expandedOrderId === record.orderId) {
-                // 已展开，点击收起
+                // Already expanded, click to collapse
                 setExpandedOrderId(null);
               } else {
-                // 未展开，点击展开
+                // Not expanded, click to expand
                 showTradeDetails(record);
               }
             }}
           >
-            {expandedOrderId === record.orderId ? '收起' : '展开'}
+            {expandedOrderId === record.orderId ? intl.formatMessage({ id: 'order.management.collapse' }) : intl.formatMessage({ id: 'order.management.expand' })}
           </Button>
         );
       },
@@ -301,47 +284,47 @@ const OrderManagement: React.FC = () => {
 
   const tradeColumns = [
     {
-      title: '成交单号',
+      title: intl.formatMessage({ id: 'order.management.tradeId' }),
       dataIndex: 'idStr',
     },
     {
-      title: '买方UID/角色',
+      title: intl.formatMessage({ id: 'order.management.buyerUidRole' }),
       dataIndex: 'buyerUserId',
       render: (text: string, record: TradeRecord) =>
         `${text}/${record.takerSide === 0 ? 'taker' : 'maker'}`,
     },
     {
-      title: '卖方UID/角色',
+      title: intl.formatMessage({ id: 'order.management.sellerUidRole' }),
       dataIndex: 'sellerUserId',
       render: (text: string, record: TradeRecord) =>
         `${text}/${record.takerSide === 1 ? 'taker' : 'maker'}`,
     },
     {
-      title: '成交时间',
+      title: intl.formatMessage({ id: 'order.management.tradeTime' }),
       dataIndex: 'ctime',
       valueType: 'dateTime',
     },
     {
-      title: '成交价',
+      title: intl.formatMessage({ id: 'order.management.tradePrice' }),
       dataIndex: 'tradePrice',
     },
     {
-      title: '成交数量',
+      title: intl.formatMessage({ id: 'order.management.tradeAmount' }),
       dataIndex: 'quantity',
     },
     {
-      title: '成交金额',
+      title: intl.formatMessage({ id: 'order.management.tradeTotal' }),
       render: (text: string, record: TradeRecord) => record.tradePrice * record.quantity,
     },
     {
-      title: '手续费（买）',
+      title: intl.formatMessage({ id: 'order.management.buyFee' }),
       dataIndex: 'buyFee',
       renderText: (text: any, record: TradeRecord) => {
         return record.buyFee.toString() + record.buyFeeSymbol;
       },
     },
     {
-      title: '手续费（卖）',
+      title: intl.formatMessage({ id: 'order.management.sellFee' }),
       dataIndex: 'sellFee',
       renderText: (text: any, record: TradeRecord) => {
         return record.sellFee.toString() + record.sellFeeSymbol;
@@ -377,7 +360,7 @@ const OrderManagement: React.FC = () => {
     const handleGoogleCodeSuccess = async (code: string) => {
       const res = await bindGoogleKey({ googleCode: code });
       if (res.code === '0' && res.data) {
-        message.success('绑定成功');
+        message.success(intl.formatMessage({ id: 'order.management.bindSuccess' }));
         clearAllCookies();
         window.location.reload();
       } else {
@@ -419,7 +402,7 @@ const OrderManagement: React.FC = () => {
                     />
                   ) : (
                     <div style={{ padding: '16px', textAlign: 'center' }}>
-                      <Empty description="暂无成交记录" />
+                      <Empty description={intl.formatMessage({ id: 'order.management.noTradeRecords' })} />
                     </div>
                   )}
                 </>

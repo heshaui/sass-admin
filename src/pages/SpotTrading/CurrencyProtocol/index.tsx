@@ -3,10 +3,12 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Form, Modal, message, Space, Switch } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { protocolTypeList,deleteProtocolTypeById,saveProtocolType,updateProtocolTypeById } from '@/services/ant-design-pro/spot';
- import type { ProColumns, ActionType } from '@ant-design/pro-components';
+import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import ProtocolForm, { ProtocolItem } from './components/ProtocolForm';
+import { useIntl } from 'umi';
 
 const CurrencyProtocol: React.FC = () => {
+  const intl = useIntl();
   const [loading, setLoading] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [currentProtocol, setCurrentProtocol] = useState();
@@ -49,13 +51,13 @@ const CurrencyProtocol: React.FC = () => {
 
   const handleDelete = (id: string) => {
     Modal.confirm({
-      title: '确认删除',
-      content: '您确定要删除这个协议吗？',
+      title: intl.formatMessage({ id: 'protocol.confirm.delete' }),
+      content: intl.formatMessage({ id: 'protocol.confirm.deleteContent' }),
       onOk: async () => {
-        // 模拟删除操作
+        // Delete operation
         const res = await deleteProtocolTypeById({id:id});
         if (res.code === '0') {
-          message.success('删除成功');
+          message.success(intl.formatMessage({ id: 'protocol.message.deleteSuccess' }));
           actionRef.current?.reload();
         }
       },
@@ -70,16 +72,16 @@ const CurrencyProtocol: React.FC = () => {
         values.id = currentProtocol;
         const res = await updateProtocolTypeById(values);
         if (res.code === '0'&&res.data) {
-          message.success('协议更新成功');
+          message.success(intl.formatMessage({ id: 'protocol.message.updateSuccess' }));
           actionRef.current?.reload();
         }else{
           message.error(res.message);
         }
       } else {
-        // 新增
+        // Add new protocol
         const res = await saveProtocolType(values);
         if (res.code === '0') {
-          message.success('协议添加成功');
+          message.success(intl.formatMessage({ id: 'protocol.message.addSuccess' }));
           actionRef.current?.reload();
         }
       }
@@ -89,43 +91,43 @@ const CurrencyProtocol: React.FC = () => {
 
   const columns: ProColumns<ProtocolItem>[] = [
     {
-      title: '编号',
+      title: intl.formatMessage({ id: 'protocol.column.id' }),
       dataIndex: 'id',
       key: 'id',
       search: false,
     },
     {
-      title: '协议名称',
+      title: intl.formatMessage({ id: 'protocol.column.protocolName' }),
       dataIndex: 'protocolName',
       key: 'protocolName',
       search: true,
     },
     {
-      title: '代币协议',
+      title: intl.formatMessage({ id: 'protocol.column.protocol' }),
       dataIndex: 'protocol',
       key: 'protocol',
       search: true,
     },
     {
-      title: '区块浏览器',
+      title: intl.formatMessage({ id: 'protocol.column.browser' }),
       dataIndex: 'browser',
       key: 'browser',
       search: false,
     },
     {
-      title: '主币名称',
+      title: intl.formatMessage({ id: 'protocol.column.symbol' }),
       dataIndex: 'symbol',
       key: 'symbol',
       search: true,
     },
     {
-      title: '链ID',
+      title: intl.formatMessage({ id: 'protocol.column.chainId' }),
       dataIndex: 'chainId',
       key: 'chainId',
       search: true,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'protocol.column.action' }),
       key: 'action',
       search: false,
       render: (_, record: ProtocolItem) => (
@@ -136,7 +138,7 @@ const CurrencyProtocol: React.FC = () => {
             size="small"
             onClick={() => handleEdit(record.id)}
           >
-            编辑
+            {intl.formatMessage({ id: 'protocol.edit' })}
           </Button>
           <Button 
             danger 
@@ -144,7 +146,7 @@ const CurrencyProtocol: React.FC = () => {
             size="small"
             onClick={() => handleDelete(record.id)}
           >
-            删除
+            {intl.formatMessage({ id: 'protocol.delete' })}
           </Button>
         </Space>
       ),
@@ -157,7 +159,7 @@ const CurrencyProtocol: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<ProtocolItem>
-        headerTitle="协议管理"
+        headerTitle={intl.formatMessage({ id: 'protocol.title' })}
         actionRef={actionRef}
         rowKey="id"
         loading={loading}
@@ -168,7 +170,7 @@ const CurrencyProtocol: React.FC = () => {
             icon={<PlusOutlined />} 
             onClick={handleAdd}
           >
-            添加协议
+            {intl.formatMessage({ id: 'protocol.add' })}
           </Button>,
         ]}
         columns={columns}
@@ -177,17 +179,17 @@ const CurrencyProtocol: React.FC = () => {
       />
 
       <Modal
-        title={currentProtocol ? '编辑协议' : '添加协议'}
+        title={currentProtocol ? intl.formatMessage({ id: 'protocol.edit' }) : intl.formatMessage({ id: 'protocol.add' })}
         open={modalVisible}
         onOk={handleModalOk}
         onCancel={() => setModalVisible(false)}
         width={700}
         footer={[
           <Button key="cancel" onClick={() => setModalVisible(false)}>
-            取消
+            {intl.formatMessage({ id: 'protocol.button.cancel' })}
           </Button>,
           <Button key="submit" type="primary" onClick={handleModalOk}>
-            提交
+            {intl.formatMessage({ id: 'protocol.button.submit' })}
           </Button>,
         ]}
       >

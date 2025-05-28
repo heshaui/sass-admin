@@ -1,6 +1,7 @@
 import React, { useEffect,useState } from 'react';
 import { Button, Form, Input, InputNumber, Modal,Select,Switch } from 'antd';
 import { protocolTypeList } from '@/services/ant-design-pro/spot';
+import { useIntl } from 'umi';
 
 
 // 拓展信息数据类型定义
@@ -39,6 +40,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
   onCancel,
   mode
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [protocolList, setProtocolList] = useState([]);
 
@@ -88,7 +90,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
       onSubmit(submitValues);
       form.resetFields();
     } catch (error) {
-      console.error('表单验证失败:', error);
+      console.error(intl.formatMessage({ id: 'currency.extendInfo.formValidationFailed' }), error);
     }
   };
 
@@ -99,7 +101,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
 
   return (
     <Modal
-      title="添加同币异链"
+      title={intl.formatMessage({ id: 'currency.extendInfo.title' })}
       open={visible}
       onOk={handleSubmit}
       onCancel={handleCancel}
@@ -108,10 +110,10 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
       footer={
         <div style={{display:'flex',justifyContent:'center'}}>
         <Button key="cancel" onClick={handleCancel} style={{marginRight:'10px'}}>
-          取消
+          {intl.formatMessage({ id: 'currency.extendInfo.cancel' })}
         </Button>
         <Button key="submit" type="primary" onClick={handleSubmit}>
-          提交
+          {intl.formatMessage({ id: 'currency.extendInfo.submit' })}
         </Button>
         </div>
       }
@@ -129,23 +131,23 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
       >
         <Form.Item
           name="coinId"
-          label="币种ID"
-          rules={[{ required: true, message: '请输入币种ID' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.coinId' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterCoinId' }) }]}
         >
           <InputNumber style={{ width: '100%' }} disabled={true} />
         </Form.Item>
         <Form.Item
           name="coinName"
-          label="币种名称"
-          rules={[{ required: true, message: '请输入币种名称' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.coinName' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterCoinName' }) }]}
         >
           <Input disabled={true} />
         </Form.Item>
 
         <Form.Item
           name="protocolId"
-          label="网络类型"
-          rules={[{ required: true, message: '请选择网络类型' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.networkType' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseSelectNetworkType' }) }]}
         >
             <Select>
                 {
@@ -157,109 +159,109 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
         </Form.Item>
         <Form.Item
           name="status"
-          label="状态"
+          label={intl.formatMessage({ id: 'currency.extendInfo.status' })}
           required
           valuePropName="checked"
         >
           <Switch 
-            checkedChildren="启用" 
-            unCheckedChildren="禁用" 
+            checkedChildren={intl.formatMessage({ id: 'currency.extendInfo.enabled' })} 
+            unCheckedChildren={intl.formatMessage({ id: 'currency.extendInfo.disabled' })} 
           />
         </Form.Item>
                 
         <Form.Item
           name="mainAddress"
-          label="主链地址"
-          rules={[{ required: true, message: '请输入主链地址' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.mainChainAddress' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterMainChainAddress' }) }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item 
         name="token" 
-        label="合约地址"
-        rules={[{ required: true, message: '请输入合约地址' }]}
+        label={intl.formatMessage({ id: 'currency.extendInfo.contractAddress' })}
+        rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterContractAddress' }) }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="decimals"
-          label="合约精度"
-          rules={[{ required: true, message: '请输入小数位数' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.contractPrecision' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterDecimals' }) }]}
         >
           <Input style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="withdrawFee"
-          label="提现手续费"
-          rules={[{ required: true, message: '请输入提现手续费' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.withdrawalFee' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterWithdrawalFee' }) }]}
         >
           <Input style={{ width: '100%' }}  />
         </Form.Item>
 
         <Form.Item
           name="minWithdrawFee"
-          label="最小提现手续费"
-          rules={[{ required: true, message: '请输入最小提现手续费' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.minWithdrawalFee' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterMinWithdrawalFee' }) }]}
         >
           <Input style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="withdraw"
-          label="提现开关"
-          rules={[{ required: true, message: '请选择提现开关' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.withdrawalSwitch' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseSelectWithdrawalSwitch' }) }]}
         >
           <Switch 
-            checkedChildren="启用" 
-            unCheckedChildren="禁用" 
+            checkedChildren={intl.formatMessage({ id: 'currency.extendInfo.enabled' })} 
+            unCheckedChildren={intl.formatMessage({ id: 'currency.extendInfo.disabled' })} 
           />
         </Form.Item>
         <Form.Item
           name="recharge"
-          label="充值开关"
-          rules={[{ required: true, message: '请选择充值开关' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.depositSwitch' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseSelectDepositSwitch' }) }]}
         >
           <Switch 
-            checkedChildren="启用" 
-            unCheckedChildren="禁用" 
+            checkedChildren={intl.formatMessage({ id: 'currency.extendInfo.enabled' })} 
+            unCheckedChildren={intl.formatMessage({ id: 'currency.extendInfo.disabled' })} 
           />
         </Form.Item>
         <Form.Item
           name="autoWithdraw"
-          label="自动提现开关"
-          rules={[{ required: true, message: '请选择自动提现开关' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.autoWithdrawalSwitch' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseSelectAutoWithdrawalSwitch' }) }]}
         >
           <Switch 
-            checkedChildren="启用" 
-            unCheckedChildren="禁用" 
+            checkedChildren={intl.formatMessage({ id: 'currency.extendInfo.enabled' })} 
+            unCheckedChildren={intl.formatMessage({ id: 'currency.extendInfo.disabled' })} 
           />
         </Form.Item>
         <Form.Item
           name="minWithdraw"
-          label="最小提现量"
-          rules={[{ required: true, message: '请输入最小提现量' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.minWithdrawalAmount' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterMinWithdrawalAmount' }) }]}
         >
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="maxWithdraw"
-          label="最大提现量"
-          rules={[{ required: true, message: '请输入最大提现量' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.maxWithdrawalAmount' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterMaxWithdrawalAmount' }) }]}
         >
           <InputNumber style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="minRecharge"
-          label="最小充值量"
-          rules={[{ required: true, message: '请输入最小充值量' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.minDepositAmount' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterMinDepositAmount' }) }]}
         >
           <Input style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           name="confirms"
-          label="确认数"
-          rules={[{ required: true, message: '请输入确认数' }]}
+          label={intl.formatMessage({ id: 'currency.extendInfo.confirmations' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterConfirmations' }) }]}
         >
           <Input style={{ width: '100%' }} />
         </Form.Item>
