@@ -36,7 +36,7 @@ const UserAdmin: React.FC = () => {
          setRoleOptions(res.data.list || []);
        }
      } catch (error) {
-       console.error('获取角色列表失败:', error);
+       console.error(intl.formatMessage({ id: 'userAdmin.messages.getRoleListError' }), error);
      }
    };
 
@@ -143,20 +143,20 @@ const UserAdmin: React.FC = () => {
                 onClick={() => {
                   setEditingRecord(record);
                   Modal.confirm({
-                    title: '确认重置密码',
-                    content: '您确定要重置该用户的密码吗？',
+                    title: intl.formatMessage({ id: 'userAdmin.modal.resetPasswordTitle' }),
+                    content: intl.formatMessage({ id: 'userAdmin.table.actions.resetPassword.confirm' }),
                     onOk: async () => {
                       try {
                         await resetPassword({ id: record.id });
-                        message.success('密码重置成功');
+                        message.success(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordSuccess' }));
                       } catch (error) {
-                        message.error('密码重置失败');
+                        message.error(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordError' }));
                       }
                     },
                   });
                 }}
               >
-                重置密码
+                {intl.formatMessage({ id: 'userAdmin.table.actions.resetPassword' })}
               </Menu.Item>
               {(!record.googleCode || record.googleCode === '-') && (
                 <Menu.Item
@@ -166,7 +166,7 @@ const UserAdmin: React.FC = () => {
                     setBindGoogleVisible(true);
                   }}
                 >
-                  绑定谷歌
+                  {intl.formatMessage({ id: 'userAdmin.table.actions.bindGoogle' })}
                 </Menu.Item>
               )}
               {record.googleCode && record.googleCode !== '-' && (
@@ -177,18 +177,18 @@ const UserAdmin: React.FC = () => {
                     setResetGoogleVisible(true);
                   }}
                 >
-                  重置谷歌
+                  {intl.formatMessage({ id: 'userAdmin.table.actions.resetGoogle' })}
                 </Menu.Item>
               )}
               <Menu.Item key="delete" onClick={() => handleDelete(record.id)} danger>
-                删除
+                {intl.formatMessage({ id: 'userAdmin.table.actions.delete' })}
               </Menu.Item>
             </Menu>
           }
           trigger={['click']}
         >
           <Button>
-            操作 <DownOutlined />
+            {intl.formatMessage({ id: 'userAdmin.table.actions' })} <DownOutlined />
           </Button>
         </Dropdown>
       ),
@@ -215,7 +215,7 @@ const UserAdmin: React.FC = () => {
         success: false,
       };
     } catch (error) {
-      console.error('获取用户列表失败:', error);
+      console.error(intl.formatMessage({ id: 'userAdmin.messages.getUserListError' }), error);
       return {
         data: [],
         total: 0,
@@ -234,19 +234,19 @@ const UserAdmin: React.FC = () => {
           // 编辑用户
          const res= await updateEmployeeById({ ...editingRecord, ...values });
           if(res.code==='0'){
-            message.success('用户编辑成功');
+            message.success(intl.formatMessage({ id: 'userAdmin.messages.editSuccess' }));
           }else{
-            message.error('用户编辑失败');
+            message.error(intl.formatMessage({ id: 'userAdmin.messages.editError' }));
           }
         } else {
           // 新建用户
         const res=  await saveEmployee(values);
           if(res.code==='0'){
-            message.success('用户新建成功');
+            message.success(intl.formatMessage({ id: 'userAdmin.messages.createSuccess' }));
           }else if(res.code==='11111'){
             message.error(res.message);
           }else{
-            message.error('用户新建失败');
+            message.error(intl.formatMessage({ id: 'userAdmin.messages.createError' }));
           }
            
 
@@ -257,7 +257,7 @@ const UserAdmin: React.FC = () => {
         setEditingRecord(null);  // 清空编辑记录
         getUserList();  // 刷新用户列表
       } catch (error) {
-        message.error('操作失败');
+        message.error(intl.formatMessage({ id: 'userAdmin.messages.operationError' }));
       }
     };
   
@@ -272,10 +272,10 @@ const UserAdmin: React.FC = () => {
       try {
         // 调用API删除用户
         await deleteEmployeeById({ userId });
-        message.success('用户删除成功');
+        message.success(intl.formatMessage({ id: 'userAdmin.messages.deleteSuccess' }));
         getUserList();  // 刷新用户列表
       } catch (error) {
-        message.error('删除失败');
+        message.error(intl.formatMessage({ id: 'userAdmin.messages.deleteError' }));
       }
     };
 
@@ -284,13 +284,13 @@ const handleResetPassword = async (values) => {
   try {
    const res= await resetPassword({ id: editingRecord.id });
     if(res.code==='0'){
-      message.success('密码重置成功');
+      message.success(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordSuccess' }));
     }else{
-      message.error('密码重置失败');
+      message.error(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordError' }));
     }
     setResetPasswordVisible(false);
   } catch (error) {
-    message.error('密码重置失败');
+    message.error(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordError' }));
   }
 };
 
@@ -299,13 +299,13 @@ const handleResetGoogleAuth = async () => {
   try {
     const res=await relieveGoogleKey({ id: editingRecord.id});
     if(res.code==='0'){
-      message.success('谷歌身份验证重置成功');
+      message.success(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleSuccess' }));
     }else{
-      message.error('谷歌身份验证重置失败');
+      message.error(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleError' }));
     }
     setResetGoogleVisible(false);
   } catch (error) {
-    message.error('谷歌身份验证重置失败');
+    message.error(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleError' }));
   }
 };
   
@@ -324,15 +324,15 @@ const handleResetGoogleAuth = async () => {
       
       const res = await bindGoogleKey(params);
       if (res.code === '0') {
-        message.success('谷歌验证绑定成功');
+        message.success(intl.formatMessage({ id: 'userAdmin.messages.bindGoogleSuccess' }));
         setBindGoogleVisible(false);
         getUserList(); // 刷新列表
       } else {
-        message.error(res.msg || '谷歌验证绑定失败');
+        message.error(res.msg || intl.formatMessage({ id: 'userAdmin.messages.bindGoogleError' }));
       }
     } catch (error) {
-      console.error('绑定谷歌验证失败:', error);
-      message.error('谷歌验证绑定失败');
+      console.error(intl.formatMessage({ id: 'userAdmin.messages.bindGoogleError.detail' }), error);
+      message.error(intl.formatMessage({ id: 'userAdmin.messages.bindGoogleError' }));
     }
   };
 
@@ -373,7 +373,7 @@ const handleResetGoogleAuth = async () => {
         }}
         toolBarRender={() => [
           <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
-            新建
+            {intl.formatMessage({ id: 'userAdmin.actions.create' })}
           </Button>,
         ]}
       />

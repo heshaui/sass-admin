@@ -30,33 +30,19 @@ export default {
 
   // User Admin Translations
   'userAdmin.table.id': '管理员ID',
-
   'userAdmin.table.nickname': '昵称',
-
   'userAdmin.table.remark': '备注',
-
   'userAdmin.table.role': '角色',
-
   'userAdmin.table.phone': '手机号',
-
   'userAdmin.table.email': '邮箱',
-
   'userAdmin.table.googleCode': '2FA',
-
   'userAdmin.table.googleCode.enabled': '已开启',
-
   'userAdmin.table.googleCode.disabled': '未开启',
-
   'userAdmin.table.status': '状态',
-
   'userAdmin.table.status.disabled': '禁用',
-
   'userAdmin.table.status.enabled': '正常',
-
   'userAdmin.table.actions': '操作',
-
   'userAdmin.table.actions.delete': '删除',
-
   'userAdmin.table.actions.edit': '编辑',
   'userAdmin.table.actions.resetPassword': '重置密码',
   'userAdmin.table.actions.resetPassword.confirm': '您确定要重置该用户的密码吗？',
@@ -70,14 +56,132 @@ export default {
   'userAdmin.messages.createError': '用户新建失败',
   'userAdmin.messages.deleteSuccess': '用户删除成功',
   'userAdmin.messages.deleteError': '用户删除失败',
-  'userAdmin.messages.resetPasswordSuccess': '用户重置密码成功',
-  'userAdmin.messages.resetPasswordError': '用户重置密码失败',
+  'userAdmin.messages.resetPasswordSuccess': '密码重置成功',
+  'userAdmin.messages.resetPasswordError': '密码重置失败',
   'userAdmin.messages.resetGoogleSuccess': '谷歌身份验证重置成功',
   'userAdmin.messages.resetGoogleError': '谷歌身份验证重置失败',
   'userAdmin.messages.bindGoogleSuccess': '谷歌验证绑定成功',
   'userAdmin.messages.bindGoogleError': '谷歌验证绑定失败',
-  // 编辑用户
+  'userAdmin.messages.operationError': '操作失败',
+  'userAdmin.messages.getRoleListError': '获取角色列表失败:',
+  'userAdmin.messages.getUserListError': '获取用户列表失败:',
+  'userAdmin.messages.bindGoogleError.detail': '绑定谷歌验证失败:',
+  'userAdmin.actions.create': '新建',
+  'userAdmin.modal.resetPasswordTitle': '确认重置密码',
   
-
-
+  // UserModal Translations
+  'userModal.title.edit': '编辑用户',
+  'userModal.title.create': '新建用户',
+  'userModal.form.nickname': '昵称',
+  'userModal.form.nickname.required': '请输入昵称',
+  'userModal.form.nickname.maxLength': '昵称最多20个字符',
+  'userModal.form.phone': '手机号',
+  'userModal.form.phone.maxLength': '手机号最多15个字符',
+  'userModal.form.email': '邮箱',
+  'userModal.form.email.required': '请输入邮箱',
+  'userModal.form.email.format': '请输入有效的邮箱格式',
+  'userModal.form.role': '角色',
+  'userModal.form.role.required': '请选择角色',
+  'userModal.form.role.atLeastOne': '请至少选择一个角色',
+  'userModal.form.role.placeholder': '请选择角色',
+  'userModal.form.status': '状态',
+  'userModal.form.status.required': '请选择用户状态',
+  'userModal.form.status.normal': '正常',
+  'userModal.form.status.disabled': '禁用',
+  'userModal.messages.fillRequired': '请填写所有必填项',
+  'userModal.messages.getRoleListError': '获取角色列表失败',
+  
+  // UserActionDropdown Translations
+  'userActionDropdown.actions': '操作',
+  'userActionDropdown.actions.edit': '修改',
+  'userActionDropdown.actions.resetPassword': '重置密码',
+  'userActionDropdown.actions.resetGoogle': '重置谷歌',
+  'userActionDropdown.actions.disable': '禁用',
+  'userActionDropdown.actions.delete': '删除',
+  
+  // ResetPasswordModal Translations
+  'resetPasswordModal.title': '重置密码',
+  'resetPasswordModal.form.newPassword': '新密码',
+  'resetPasswordModal.form.newPassword.required': '请输入新密码',
+  'resetPasswordModal.validation.failed': '请填写新密码',
+  
+  // ResetGoogleModal Translations
+  'resetGoogleModal.title': '重置谷歌身份验证',
+  'resetGoogleModal.confirmation': '确定要重置此用户的谷歌身份验证吗？',
+  
+  // BindGoogleModal Translations
+  'bindGoogleModal.title': '绑定谷歌验证',
+  'bindGoogleModal.button.cancel': '取消',
+  'bindGoogleModal.button.confirm': '确认绑定',
+  'bindGoogleModal.text.enterKey': '请手动输入密钥',
+  'bindGoogleModal.text.key': '密钥: ',
+  'bindGoogleModal.text.fetchFailed': '获取谷歌验证信息失败，请重试',
+  'bindGoogleModal.form.googleCode': '谷歌验证码',
+  'bindGoogleModal.form.googleCode.required': '请输入谷歌验证码',
+  'bindGoogleModal.form.googleCode.placeholder': '请输入谷歌验证器中的6位验证码',
+  'bindGoogleModal.message.fetchFailed': '获取谷歌验证码失败',
+  'bindGoogleModal.message.fetchFailedDetail': '获取谷歌验证码失败:',
+  'bindGoogleModal.image.qrcode': '谷歌验证二维码',
+  
+  // Permission Admin Translations
+  'permissionAdmin.table.id': 'ID',
+  'permissionAdmin.table.description': '描述',
+  'permissionAdmin.table.type': '菜单权限',
+  'permissionAdmin.table.optionType': '操作权限',
+  'permissionAdmin.table.title': '中文标题',
+  'permissionAdmin.table.name': '名称',
+  'permissionAdmin.table.parentId': '父级ID',
+  'permissionAdmin.table.sort': '排序',
+  'permissionAdmin.table.path': '页面路径',
+  'permissionAdmin.table.component': '组件路径',
+  'permissionAdmin.table.icon': 'icon',
+  'permissionAdmin.table.systemType': '系统',
+  'permissionAdmin.table.systemType.admin': '总后台',
+  'permissionAdmin.table.systemType.merchant': '商户后台',
+  'permissionAdmin.table.systemType.common': '通用',
+  'permissionAdmin.table.actions': '选项',
+  'permissionAdmin.table.actions.edit': '编辑',
+  'permissionAdmin.table.actions.delete': '删除',
+  'permissionAdmin.actions.create': '新建',
+  'permissionAdmin.messages.editSuccess': '编辑成功',
+  'permissionAdmin.messages.createSuccess': '新建成功',
+  'permissionAdmin.messages.createError': '新建失败',
+  'permissionAdmin.messages.deleteSuccess': '删除成功',
+  'permissionAdmin.messages.deleteError': '删除失败',
+  'permissionAdmin.messages.operationError': '操作失败',
+  
+  // Permission Modal Translations
+  'permissionModal.title.edit': '编辑权限',
+  'permissionModal.title.create': '新建权限',
+  'permissionModal.form.systemType': '系统',
+  'permissionModal.form.systemType.admin': '总后台',
+  'permissionModal.form.systemType.merchant': '商户后台',
+  'permissionModal.form.systemType.common': '通用',
+  'permissionModal.form.title': '中文标题',
+  'permissionModal.form.titleKey': '多语言',
+  'permissionModal.form.name': '名称',
+  'permissionModal.form.type': '菜单权限',
+  'permissionModal.form.optionType': '操作权限',
+  'permissionModal.form.path': '页面路径',
+  'permissionModal.form.component': '前端路径',
+  'permissionModal.form.description': '描述',
+  'permissionModal.form.parentId': '父级ID',
+  'permissionModal.form.sort': '排序',
+  'permissionModal.form.icon': 'icon',
+  'permissionModal.form.validation.required': '请输入{field}',
+  'permissionModal.form.validation.select': '请选择{field}',
+  
+  // Role Modal Translations
+  'roleModal.title.edit': '编辑角色',
+  'roleModal.title.create': '新建角色',
+  'roleModal.form.roleName': '角色名称',
+  'roleModal.form.roleName.required': '请输入角色名称',
+  'roleModal.form.description': '描述',
+  'roleModal.form.description.required': '请输入角色描述',
+  'roleModal.form.status': '状态',
+  'roleModal.form.status.required': '请选择角色状态',
+  'roleModal.form.status.placeholder': '请选择状态',
+  'roleModal.form.status.enabled': '启用',
+  'roleModal.form.status.disabled': '禁用',
+  'roleModal.validation.fillRequired': '请填写所有必填项'
 };

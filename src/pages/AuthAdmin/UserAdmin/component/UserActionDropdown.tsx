@@ -1,24 +1,25 @@
 import React from 'react';
 import { Dropdown, Menu, Button, Space } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { useIntl } from 'umi';
 
-const actionsMenu = (record) => {
+const actionsMenu = (record, intl) => {
   return (
     <Menu>
       <Menu.Item key="edit" onClick={() => handleEdit(record)}>
-        修改
+        {intl.formatMessage({ id: 'userActionDropdown.actions.edit' })}
       </Menu.Item>
       <Menu.Item key="resetPassword" onClick={() => handleResetPassword(record.id)}>
-        重置密码
+        {intl.formatMessage({ id: 'userActionDropdown.actions.resetPassword' })}
       </Menu.Item>
       <Menu.Item key="resetGoogle" onClick={() => handleResetGoogleAuth(record.id)}>
-        重置谷歌
+        {intl.formatMessage({ id: 'userActionDropdown.actions.resetGoogle' })}
       </Menu.Item>
       <Menu.Item key="disable" onClick={() => handleDisable(record.id)}>
-        禁用
+        {intl.formatMessage({ id: 'userActionDropdown.actions.disable' })}
       </Menu.Item>
       <Menu.Item key="delete" onClick={() => handleDelete(record.id)}>
-        删除
+        {intl.formatMessage({ id: 'userActionDropdown.actions.delete' })}
       </Menu.Item>
     </Menu>
   );
@@ -45,10 +46,11 @@ const handleDelete = (userId) => {
 };
 
 const UserActionDropdown = ({ record }) => {
+  const intl = useIntl();
   return (
-    <Dropdown overlay={() => actionsMenu(record)} trigger={['click']}>
+    <Dropdown overlay={() => actionsMenu(record, intl)} trigger={['click']}>
       <Button>
-        操作 <DownOutlined />
+        {intl.formatMessage({ id: 'userActionDropdown.actions' })} <DownOutlined />
       </Button>
     </Dropdown>
   );

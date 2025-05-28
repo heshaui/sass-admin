@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, message } from 'antd';
+import { useIntl } from 'umi';
 
 interface ResetGoogleModalProps {
   visible: boolean;
@@ -12,18 +13,20 @@ const ResetGoogleModal: React.FC<ResetGoogleModalProps> = ({
   onClose,
   onSubmit,
 }) => {
+  const intl = useIntl();
+  
   const handleOk = () => {
     onSubmit();
   };
 
   return (
     <Modal
-      title="重置谷歌身份验证"
+      title={intl.formatMessage({ id: 'resetGoogleModal.title' })}
       visible={visible}
       onCancel={onClose}
       onOk={handleOk}
     >
-      <p>确定要重置此用户的谷歌身份验证吗？</p>
+      <p>{intl.formatMessage({ id: 'resetGoogleModal.confirmation' })}</p>
     </Modal>
   );
 };

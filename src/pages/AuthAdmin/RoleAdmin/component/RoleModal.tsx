@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, Input, message, Tree, Select } from 'antd';
+import { useIntl } from 'umi';
 
 interface RoleModalProps {
   visible: boolean;
@@ -16,6 +17,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
   initialValues,
 
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
 
 
@@ -39,7 +41,7 @@ const RoleModal: React.FC<RoleModalProps> = ({
       })
       .catch((info) => {
         console.log('Validate Failed:', info);
-        message.error('请填写所有必填项');
+        message.error(intl.formatMessage({ id: 'roleModal.validation.fillRequired' }));
       });
   };
 
@@ -48,7 +50,10 @@ const RoleModal: React.FC<RoleModalProps> = ({
   return (
     <Modal
       visible={visible}
-      title={initialValues ? '编辑角色' : '新建角色'}
+      title={initialValues ? 
+        intl.formatMessage({ id: 'roleModal.title.edit' }) : 
+        intl.formatMessage({ id: 'roleModal.title.create' })
+      }
       onCancel={onClose}
       onOk={handleSubmit}
     >
@@ -59,28 +64,28 @@ const RoleModal: React.FC<RoleModalProps> = ({
       >
         <Form.Item
           name="roleName"
-          label="角色名称"
-          rules={[{ required: true, message: '请输入角色名称' }]}
+          label={intl.formatMessage({ id: 'roleModal.form.roleName' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'roleModal.form.roleName.required' }) }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="describe"
-          label="描述"
-          rules={[{ required: true, message: '请输入角色描述' }]}
+          label={intl.formatMessage({ id: 'roleModal.form.description' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'roleModal.form.description.required' }) }]}
         >
           <Input />
         </Form.Item>
 
         <Form.Item
           name="status"
-          label="状态"
-          rules={[{ required: true, message: '请选择角色状态' }]}
+          label={intl.formatMessage({ id: 'roleModal.form.status' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'roleModal.form.status.required' }) }]}
         >
-          <Select placeholder="请选择状态">
-            <Select.Option value={1}>启用</Select.Option>
-            <Select.Option value={0}>禁用</Select.Option>
+          <Select placeholder={intl.formatMessage({ id: 'roleModal.form.status.placeholder' })}>
+            <Select.Option value={1}>{intl.formatMessage({ id: 'roleModal.form.status.enabled' })}</Select.Option>
+            <Select.Option value={0}>{intl.formatMessage({ id: 'roleModal.form.status.disabled' })}</Select.Option>
           </Select>
         </Form.Item>
 

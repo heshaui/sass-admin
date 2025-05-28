@@ -1,6 +1,7 @@
 // src/components/UserModal.tsx
 import { useEffect, useState } from 'react';
 import { Modal, Form, Input, Select, message } from 'antd';
+import { useIntl } from 'umi';
 import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
 
 interface UserModalProps {
@@ -16,6 +17,7 @@ const UserModal: React.FC<UserModalProps> = ({
   onSubmit,
   initialValues,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
 
 
@@ -34,7 +36,7 @@ const UserModal: React.FC<UserModalProps> = ({
           setRoleList(result.data.list|| []);
         }
       } catch (error) {
-        console.error('获取角色列表失败', error);
+        console.error(intl.formatMessage({ id: 'userModal.messages.getRoleListError' }), error);
       }
     };
     
@@ -65,24 +67,27 @@ const UserModal: React.FC<UserModalProps> = ({
       })
       .catch((info) => {
         console.log('Validate Failed:', info);
-        message.error('请填写所有必填项');
+        message.error(intl.formatMessage({ id: 'userModal.messages.fillRequired' }));
       });
   };
 
   return (
     <Modal
       visible={visible}
-      title={initialValues ? '编辑用户' : '新建用户'}
+      title={initialValues ? 
+        intl.formatMessage({ id: 'userModal.title.edit' }) : 
+        intl.formatMessage({ id: 'userModal.title.create' })
+      }
       onCancel={onClose}
       onOk={handleSubmit}
     >
       <Form form={form} layout="vertical">
         <Form.Item
           name="nickname"
-          label="昵称"
+          label={intl.formatMessage({ id: 'userModal.form.nickname' })}
           rules={[
-            { required: true, message: '请输入昵称' },
-            { max: 20, message: '昵称最多20个字符' }
+            { required: true, message: intl.formatMessage({ id: 'userModal.form.nickname.required' }) },
+            { max: 20, message: intl.formatMessage({ id: 'userModal.form.nickname.maxLength' }) }
           ]}
         >
           <Input maxLength={20} showCount />
@@ -90,9 +95,9 @@ const UserModal: React.FC<UserModalProps> = ({
 
         <Form.Item
           name="phone"
-          label="手机号"
+          label={intl.formatMessage({ id: 'userModal.form.phone' })}
           rules={[
-            { max: 15, message: '手机号最多15个字符' }
+            { max: 15, message: intl.formatMessage({ id: 'userModal.form.phone.maxLength' }) }
           ]}
         >
           <Input maxLength={15} />
@@ -100,10 +105,10 @@ const UserModal: React.FC<UserModalProps> = ({
 
         <Form.Item
           name="email"
-          label="邮箱"
+          label={intl.formatMessage({ id: 'userModal.form.email' })}
           rules={[
-            { required: true, message: '请输入邮箱' },
-            { type: 'email', message: '请输入有效的邮箱格式' }
+            { required: true, message: intl.formatMessage({ id: 'userModal.form.email.required' }) },
+            { type: 'email', message: intl.formatMessage({ id: 'userModal.form.email.format' }) }
           ]}
         >
           <Input />
@@ -117,20 +122,20 @@ const UserModal: React.FC<UserModalProps> = ({
         </Form.Item> */}
         <Form.Item
           name="role"
-          label="角色"
+          label={intl.formatMessage({ id: 'userModal.form.role' })}
           rules={[
-            { required: true, message: '请选择角色' },
+            { required: true, message: intl.formatMessage({ id: 'userModal.form.role.required' }) },
             {
               validator: (_, value) =>
                 !value || value.length === 0
-                  ? Promise.reject(new Error('请至少选择一个角色'))
+                  ? Promise.reject(new Error(intl.formatMessage({ id: 'userModal.form.role.atLeastOne' })))
                   : Promise.resolve(),
             },
           ]}
         >
            <Select 
              mode="multiple" 
-             placeholder="请选择角色"
+             placeholder={intl.formatMessage({ id: 'userModal.form.role.placeholder' })}
              optionLabelProp="label"
              style={{ width: '100%' }}
            >
@@ -148,12 +153,12 @@ const UserModal: React.FC<UserModalProps> = ({
 
         <Form.Item
           name="status"
-          label="状态"
-          rules={[{ required: true, message: '请选择用户状态' }]}
+          label={intl.formatMessage({ id: 'userModal.form.status' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'userModal.form.status.required' }) }]}
         >
           <Select>
-            <Select.Option value={1}>正常</Select.Option>
-            <Select.Option value={0}>禁用</Select.Option>
+            <Select.Option value={1}>{intl.formatMessage({ id: 'userModal.form.status.normal' })}</Select.Option>
+            <Select.Option value={0}>{intl.formatMessage({ id: 'userModal.form.status.disabled' })}</Select.Option>
           </Select>
         </Form.Item>
       </Form>

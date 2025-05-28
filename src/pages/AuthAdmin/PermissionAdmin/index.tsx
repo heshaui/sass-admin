@@ -2,10 +2,12 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space,message } from 'antd';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
+import { useIntl } from 'umi';
 import { AuthorityList,saveTenantAuthority,deleteTenantById,updateTenantById,permissionsParams,deleteTenantByIdList} from '@/services/ant-design-pro/authAdmin';
 import PermissionModal from './component/PermissionModal'; // 引入PermissionModal
 
 const PermissionAdmin: React.FC = () => {
+  const intl = useIntl();
   // 表格数据状态
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,94 +18,98 @@ const PermissionAdmin: React.FC = () => {
   // 表格列配置
   const columns = [
     {
-      title: 'ID',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.id' }),
       dataIndex: 'id',
       key: 'id',
       width: 100,
        search: false,
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.description' }),
       dataIndex: 'description',
       key: 'description',
       search: false,
     },
     {
-      title: '菜单权限',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.type' }),
       dataIndex: 'type',
       key: 'type',
       search: false,
     },
     {
-      title: '操作权限',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.optionType' }),
       dataIndex: 'optionType',
       key: 'optionType',
       search: false,
     },
     {
-      title: '中文标题',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.title' }),
       dataIndex: 'title',
       key: 'title',
     },
     {
-      title: '名称',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.name' }),
       dataIndex: 'name',
       key: 'name',
       search: false,
     },
     {
-      title: '父级ID',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.parentId' }),
       dataIndex: 'parentId',
       key: 'parentId',
       search: false,
     },
     {
-      title: '排序',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.sort' }),
       dataIndex: 'sort',
       key: 'sort',
       search: false,
     },
     {
-      title: '标题',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.title' }),
       dataIndex: 'title',
       key: 'title',
       search: false,
     },
     {
-      title: '页面路径',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.path' }),
       dataIndex: 'path',
       key: 'path',
       search: false,
     },
     {
-      title: '组件路径',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.component' }),
       dataIndex: 'component',
       key: 'component',
       search: false,
     },
     {
-      title: 'icon',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.icon' }),
       dataIndex: 'icon',
       key: 'icon',
       search: false,
     },
     {
-      title: '系统',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.systemType' }),
       dataIndex: 'systemType',
       key: 'systemType',
       search: false,
       render: (text) => {
-        return text === '1' ? '总后台' : text === '2' ? '商户后台' : '通用';
+        return text === '1' ? 
+          intl.formatMessage({ id: 'permissionAdmin.table.systemType.admin' }) : 
+          text === '2' ? 
+          intl.formatMessage({ id: 'permissionAdmin.table.systemType.merchant' }) : 
+          intl.formatMessage({ id: 'permissionAdmin.table.systemType.common' });
       },
     },
     {
-      title: '选项',
+      title: intl.formatMessage({ id: 'permissionAdmin.table.actions' }),
       key: 'action',
       search: false,
       render: (_, record) => (
         <Space>
-          <a onClick={() => handleEdit(record)}>编辑</a>
-          <a style={{ color: '#ff4d4f' }} onClick={() => handleDelete(record.id)}>删除</a>
+          <a onClick={() => handleEdit(record)}>{intl.formatMessage({ id: 'permissionAdmin.table.actions.edit' })}</a>
+          <a style={{ color: '#ff4d4f' }} onClick={() => handleDelete(record.id)}>{intl.formatMessage({ id: 'permissionAdmin.table.actions.delete' })}</a>
         </Space>
       ),
     },
@@ -135,14 +141,14 @@ const PermissionAdmin: React.FC = () => {
         if (editingRecord) {
           // 编辑
           await updateTenantById({ ...editingRecord, ...values });
-          message.success('编辑成功');
+          message.success(intl.formatMessage({ id: 'permissionAdmin.messages.editSuccess' }));
         } else {
           // 新建
        const res=  await saveTenantAuthority(values);
        if(res.code==='0'){
-        message.success('新建成功');
+        message.success(intl.formatMessage({ id: 'permissionAdmin.messages.createSuccess' }));
        }else{
-        message.error('新建失败');
+        message.error(intl.formatMessage({ id: 'permissionAdmin.messages.createError' }));
        }
          
         }
@@ -150,7 +156,7 @@ const PermissionAdmin: React.FC = () => {
         setEditingRecord(null);
         getAuthorityList();
       } catch (error) {
-        message.error('操作失败');
+        message.error(intl.formatMessage({ id: 'permissionAdmin.messages.operationError' }));
       }
     };
   
@@ -164,10 +170,10 @@ const PermissionAdmin: React.FC = () => {
     const handleDelete = async (id) => {
       try {
         await deleteTenantById(id);
-        message.success('删除成功');
+        message.success(intl.formatMessage({ id: 'permissionAdmin.messages.deleteSuccess' }));
         getAuthorityList();
       } catch (error) {
-        message.error('删除失败');
+        message.error(intl.formatMessage({ id: 'permissionAdmin.messages.deleteError' }));
       }
     };
 
@@ -213,7 +219,7 @@ const PermissionAdmin: React.FC = () => {
         }}
         toolBarRender={() => [
           <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
-            新建
+            {intl.formatMessage({ id: 'permissionAdmin.actions.create' })}
           </Button>,
         ]}
       />
