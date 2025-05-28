@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, message } from 'antd';
+import { useIntl } from 'umi';
 import AvatarUpload from '@/components/AvatarUpload';
 import { updateValue } from '@/services/ant-design-pro/kv';
 
@@ -24,6 +25,7 @@ const EditModal: React.FC<EditModalProps> = ({
   activeMode,
   activeStatus,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
@@ -38,16 +40,12 @@ const EditModal: React.FC<EditModalProps> = ({
       });
     }
   }, [visible, record, form]);
-
-  const changeImge = (url: string) => {
-    console.log(url);
-  }
   const handleSave = async () => {
     try {
       const values = await form.validateFields();
       const newData = { ...backgroundData };
       
-      // 根据当前选择的语言、模式和状态更新数据
+      // Update data based on current language, mode and status
       if (!newData[activeLanguage]) {
         newData[activeLanguage] = {};
       }
@@ -63,14 +61,14 @@ const EditModal: React.FC<EditModalProps> = ({
       });
 
       if (result.code === '0'&&result.data) {
-        message.success('保存成功');
+        message.success(intl.formatMessage({ id: 'webConfig.editModal.saveSuccess' }));
         onSuccess();
       } else {
-        message.error('保存失败');
+        message.error(intl.formatMessage({ id: 'webConfig.editModal.saveFailed' }));
       }
     } catch (error) {
-      console.error('保存数据失败:', error);
-      message.error('保存失败');
+      console.error(intl.formatMessage({ id: 'webConfig.editModal.saveError' }), error);
+      message.error(intl.formatMessage({ id: 'webConfig.editModal.saveFailed' }));
     } finally {
       setLoading(false);
     }
@@ -78,7 +76,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
   return (
     <Modal
-      title="编辑背景配置"
+      title={intl.formatMessage({ id: 'webConfig.editModal.title' })}
       open={visible}
       onOk={handleSave}
       onCancel={onCancel}
@@ -90,44 +88,44 @@ const EditModal: React.FC<EditModalProps> = ({
         layout="vertical"
       >
         <Form.Item
-          label="主标题"
+          label={intl.formatMessage({ id: 'webConfig.editModal.form.title' })}
           name="title"
-          rules={[{ required: true, message: '请输入主标题' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.editModal.form.title.required' }) }]}
         >
-          <Input placeholder="请输入主标题" />
+          <Input placeholder={intl.formatMessage({ id: 'webConfig.editModal.form.title.placeholder' })} />
         </Form.Item>
 
         <Form.Item
-          label="副标题"
+          label={intl.formatMessage({ id: 'webConfig.editModal.form.subtitle' })}
           name="subtitle"
-          rules={[{ required: true, message: '请输入副标题' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.editModal.form.subtitle.required' }) }]}
         >
-          <Input placeholder="请输入副标题" />
+          <Input placeholder={intl.formatMessage({ id: 'webConfig.editModal.form.subtitle.placeholder' })} />
         </Form.Item>
 
         <Form.Item
-          label="背景图"
+          label={intl.formatMessage({ id: 'webConfig.editModal.form.image' })}
           name="image"
-          rules={[{ required: true, message: '请上传背景图' }]}
-          extra="建议尺寸：2560*540"
+          rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.editModal.form.image.required' }) }]}
+          extra={intl.formatMessage({ id: 'webConfig.editModal.form.image.extra' })}
         >
           <AvatarUpload />
         </Form.Item>
 
         <Form.Item
-          label="按钮文案"
+          label={intl.formatMessage({ id: 'webConfig.editModal.form.buttonText' })}
           name="buttonText"
-          rules={[{ required: true, message: '请输入按钮文案' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.editModal.form.buttonText.required' }) }]}
         >
-          <Input placeholder="请输入按钮文案" />
+          <Input placeholder={intl.formatMessage({ id: 'webConfig.editModal.form.buttonText.placeholder' })} />
         </Form.Item>
 
         <Form.Item
-          label="跳转地址"
+          label={intl.formatMessage({ id: 'webConfig.editModal.form.url' })}
           name="url"
-          rules={[{ required: true, message: '请输入跳转地址' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.editModal.form.url.required' }) }]}
         >
-          <Input placeholder="请输入跳转地址" />
+          <Input placeholder={intl.formatMessage({ id: 'webConfig.editModal.form.url.placeholder' })} />
         </Form.Item>
       </Form>
     </Modal>

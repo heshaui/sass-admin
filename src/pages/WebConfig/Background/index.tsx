@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { useIntl } from 'umi';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Card, message, Tabs, Radio,Button,Image} from 'antd';
 import { getTenantKeyParams,updateValue } from '@/services/ant-design-pro/kv';
@@ -14,6 +15,7 @@ interface TableItem {
 }
 
 const Background: React.FC = () => {
+  const intl = useIntl();
   const [loading, setLoading] = useState(false);
   const [backgroundData, setBackgroundData] = useState<any>(null);
   const [activeLanguage, setActiveLanguage] = useState('en_US');
@@ -38,8 +40,8 @@ const Background: React.FC = () => {
         setBackgroundData(parsedData);
       }
     } catch (error) {
-      console.error('获取背景图数据失败:', error);
-      message.error('获取数据失败');
+      console.error(intl.formatMessage({ id: 'webConfig.background.fetchError' }), error);
+      message.error(intl.formatMessage({ id: 'webConfig.background.fetchFailed' }));
     } finally {
       setLoading(false);
     }
@@ -61,17 +63,17 @@ const Background: React.FC = () => {
 
   const columns: ProColumns<TableItem>[] = [
     {
-      title: '主标题',
+      title: intl.formatMessage({ id: 'webConfig.background.column.title' }),
       dataIndex: 'title',
       width: 200,
     },
     {
-      title: '副标题',
+      title: intl.formatMessage({ id: 'webConfig.background.column.subtitle' }),
       dataIndex: 'subtitle',
       width: 200,
     },
     {
-      title: '图片',
+      title: intl.formatMessage({ id: 'webConfig.background.column.image' }),
       dataIndex: 'image',
       render: (_, record) => (
         <img 
@@ -82,21 +84,21 @@ const Background: React.FC = () => {
       ),
     },
     {
-      title: '按钮文案',
+      title: intl.formatMessage({ id: 'webConfig.background.column.buttonText' }),
       dataIndex: 'buttonText',
       width: 150,
     },
     {
-      title: '跳转地址',
+      title: intl.formatMessage({ id: 'webConfig.background.column.url' }),
       dataIndex: 'url',
       width: 200,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'webConfig.background.column.action' }),
       valueType: 'option',
       width: 100,
       render: (_, record) => [
-        <a key="edit" onClick={() => handleEdit(record)}>编辑</a>,
+        <a key="edit" onClick={() => handleEdit(record)}>{intl.formatMessage({ id: 'webConfig.background.action.edit' })}</a>,
       ],
     },
   ];
@@ -139,14 +141,14 @@ const Background: React.FC = () => {
                 checked={selectedTemplate === '1'}
                 onChange={() => setSelectedTemplate('1')}
               >
-                模板1
+                {intl.formatMessage({ id: 'webConfig.background.template' })}1
               </Radio>
               <Button 
                 type="primary" 
                 style={{width:'100px',marginTop:'10px'}} 
                 onClick={handleViewWebsite}
               >
-                查看
+                {intl.formatMessage({ id: 'webConfig.background.view' })}
               </Button>
             </div>
     </Card>
@@ -158,8 +160,8 @@ const Background: React.FC = () => {
               onChange={(e) => setActiveLanguage(e.target.value)}
             >
               <Radio.Button value="en_US">English</Radio.Button>
-              <Radio.Button value="zh_CN">简体中文</Radio.Button>
-              <Radio.Button value="zh_TW">繁體中文</Radio.Button>
+              <Radio.Button value="zh_CN">{intl.formatMessage({ id: 'webConfig.background.language.zhCN' })}</Radio.Button>
+              <Radio.Button value="zh_TW">{intl.formatMessage({ id: 'webConfig.background.language.zhTW' })}</Radio.Button>
               <Radio.Button value="ja_JP">日本語</Radio.Button>
               <Radio.Button value="ko_KR">한국인</Radio.Button>
             </Radio.Group>
@@ -170,8 +172,8 @@ const Background: React.FC = () => {
               value={activeMode} 
               onChange={(e) => setActiveMode(e.target.value)}
             >
-              <Radio.Button value="dark">夜间版</Radio.Button>
-              <Radio.Button value="light">日间版</Radio.Button>
+              <Radio.Button value="dark">{intl.formatMessage({ id: 'webConfig.background.mode.dark' })}</Radio.Button>
+              <Radio.Button value="light">{intl.formatMessage({ id: 'webConfig.background.mode.light' })}</Radio.Button>
             </Radio.Group>
           </div>
 
@@ -180,14 +182,14 @@ const Background: React.FC = () => {
               value={activeStatus} 
               onChange={(e) => setActiveStatus(e.target.value)}
             >
-              <Radio.Button value="before_login">登录前</Radio.Button>
-              <Radio.Button value="after_login">登录后</Radio.Button>
+              <Radio.Button value="before_login">{intl.formatMessage({ id: 'webConfig.background.status.beforeLogin' })}</Radio.Button>
+              <Radio.Button value="after_login">{intl.formatMessage({ id: 'webConfig.background.status.afterLogin' })}</Radio.Button>
             </Radio.Group>
           </div>
         </div>
 
         <div style={{ color: '#ff4d4f', marginBottom: 16 }}>
-          Tips: 建议尺寸：2560*540, 若不配置则使用系统默认内容！
+          {intl.formatMessage({ id: 'webConfig.background.tips' })}
         </div>
 
         <ProTable<TableItem>

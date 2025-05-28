@@ -1,6 +1,7 @@
 import { PageContainer } from "@ant-design/pro-components";
 import { Button, message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
+import { useIntl } from "umi";
 import { HomeMenuTranslationList, saveHomeMenu, homeMenuParams,updateHomeMenuById,updateHomeMenuTranslationById,deleteHomeMenu } from "@/services/ant-design-pro/WebConfig";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import AddMenuModals from "./component/AddMenuModals";
@@ -8,6 +9,7 @@ import { languages } from '@/config/language';
 const languageOptions = languages
 
 const Header: React.FC = () => {
+  const intl = useIntl();
   const [currentLanguage, setCurrentLanguage] = useState("en_US");
   const [menuData, setMenuData] = useState<any[]>([]);
   const [modalType, setModalType] = useState<boolean>(false);
@@ -21,10 +23,10 @@ const Header: React.FC = () => {
       if(res.code === "0"){
         setMenuData(res?.data);
       }else{
-        message.error("获取菜单数据失败");
+        message.error(intl.formatMessage({ id: 'webConfig.header.fetchFailed' }));
       }
     } catch (error) {
-      message.error("获取菜单数据失败");
+      message.error(intl.formatMessage({ id: 'webConfig.header.fetchFailed' }));
     }
   };
 
@@ -61,10 +63,10 @@ const Header: React.FC = () => {
         setParentId(parentMenuInfo);
         setModalType(true);
       } else {
-        message.error("获取菜单详情失败");
+        message.error(intl.formatMessage({ id: 'webConfig.header.fetchMenuDetailFailed' }));
       }
     } catch (error) {
-      message.error("获取菜单详情失败");
+      message.error(intl.formatMessage({ id: 'webConfig.header.fetchMenuDetailFailed' }));
     }
   };
   
@@ -73,13 +75,13 @@ const Header: React.FC = () => {
     try {
       const res = await deleteHomeMenu({ id: itemId });
       if (res.code === "0") {
-        message.success("菜单删除成功");
+        message.success(intl.formatMessage({ id: 'webConfig.header.deleteSuccess' }));
         getMenu(); // 重新获取菜单数据
       } else {
-        message.error("删除失败: " + (res.message || "未知错误"));
+        message.error(intl.formatMessage({ id: 'webConfig.header.deleteFailed' }) + (res.message || intl.formatMessage({ id: 'webConfig.header.unknownError' })));
       }
     } catch (error) {
-      message.error("删除失败: " + (error || "网络错误"));
+      message.error(intl.formatMessage({ id: 'webConfig.header.deleteFailed' }) + (error || intl.formatMessage({ id: 'webConfig.header.networkError' })));
     }
   };
 
@@ -144,11 +146,11 @@ const Header: React.FC = () => {
        const response2 = await updateHomeMenuTranslationById(data2);
 
       if (response.code === "0"&&response2.code === "0"&&response2.data&&response.data) {
-        message.success( "菜单更新成功" );
+        message.success(intl.formatMessage({ id: 'webConfig.header.updateSuccess' }));
         handleCancel();
         getMenu(); // 重新获取菜单数据
       } else {
-        message.error( "菜单更新失败" );
+        message.error(intl.formatMessage({ id: 'webConfig.header.updateFailed' }));
       }
       } else {
           console.log('',values);
@@ -178,16 +180,16 @@ const Header: React.FC = () => {
   
         const res = await saveHomeMenu(data);
         if(res.code === "0"){
-          message.success( "菜单添加成功" );
+          message.success(intl.formatMessage({ id: 'webConfig.header.addSuccess' }));
           handleCancel();
           getMenu(); // 重新获取菜单数据
         }else{
-          message.error( "菜单添加失败" );
+          message.error(intl.formatMessage({ id: 'webConfig.header.addFailed' }));
         }
       }
 
     } catch (error) {
-      message.error("提交失败: " + (error || "网络错误"));
+      message.error(intl.formatMessage({ id: 'webConfig.header.submitFailed' }) + (error || intl.formatMessage({ id: 'webConfig.header.networkError' })));
     }
   };
 
@@ -213,10 +215,10 @@ const Header: React.FC = () => {
             >
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Popconfirm
-                  title={`确定要删除${item.menuName}菜单吗？`}
+                  title={intl.formatMessage({ id: 'webConfig.header.deleteConfirm' }, { name: item.menuName })}
                   onConfirm={(e) => { e?.stopPropagation(); handleDelete(item.id); }}
-                  okText="确定"
-                  cancelText="取消"
+                  okText={intl.formatMessage({ id: 'webConfig.header.confirmText' })}
+                  cancelText={intl.formatMessage({ id: 'webConfig.header.cancelText' })}
                 >
                   <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
                 </Popconfirm>
@@ -266,10 +268,10 @@ const Header: React.FC = () => {
                     >
                       <div style={{ display: "flex", alignItems: "center" }}>
                         <Popconfirm
-                          title={`确定要删除${child.menuName}菜单吗？`}
+                          title={intl.formatMessage({ id: 'webConfig.header.deleteConfirm' }, { name: child.menuName })}
                           onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.id); }}
-                          okText="确定"
-                          cancelText="取消"
+                          okText={intl.formatMessage({ id: 'webConfig.header.confirmText' })}
+                          cancelText={intl.formatMessage({ id: 'webConfig.header.cancelText' })}
                         >
                           <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
                         </Popconfirm>
@@ -353,7 +355,7 @@ const Header: React.FC = () => {
                   marginLeft: 20,
                 }}
                 onClick={() => handleModal()}
-              >添加一级菜单<PlusOutlined /></Button>
+              >{intl.formatMessage({ id: 'webConfig.header.addTopLevelMenu' })}<PlusOutlined /></Button>
             
           </div>
         </div>

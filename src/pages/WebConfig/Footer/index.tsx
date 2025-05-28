@@ -2,6 +2,7 @@ import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, message, Space, Switch, Input, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import { homeBottomList, saveHomeBottom, homeBottomTranslationList, updateHomeBottomTranslationById, updateHomeBottomById, saveHomeBottomFooter, homeBottomFooterList, updateHomeBottomFooterById, deleteHomeBottom, homeBottomParams } from '@/services/ant-design-pro/WebConfig';
 import { updateValue, getTenantKeyParams } from '@/services/ant-design-pro/kv';
 import AddMenuModal from './components/AddMenuModal';
@@ -11,6 +12,7 @@ const languageOptions = languages
 const { TextArea } = Input;
 
 const Footer: React.FC = () => {
+  const intl = useIntl();
   const [currentLanguage, setCurrentLanguage] = useState('en_US');
   const [menuData, setMenuData] = useState<any[]>([]);
   const [modalType, setModalType] = useState<boolean>(false);
@@ -20,7 +22,7 @@ const Footer: React.FC = () => {
   const [isCustomFooter, setIsCustomFooter] = useState(false);
   const [customCode, setCustomCode] = useState('');
   const [footerId, setFooterId] = useState<number | null>(null);
-    const [editingMenu, setEditingMenu] = useState<any>(null);
+  const [editingMenu, setEditingMenu] = useState<any>(null);
   
   // 获取菜单数据
   const getMenu = async () => {
@@ -36,10 +38,10 @@ const Footer: React.FC = () => {
         setMenuData(res?.data);
         setData(res?.data); // 同时更新data状态
       } else {
-        message.error('获取菜单数据失败');
+        message.error(intl.formatMessage({ id: 'webConfig.footer.fetchFailed' }));
       }
     } catch (error) {
-      message.error('获取菜单数据失败');
+      message.error(intl.formatMessage({ id: 'webConfig.footer.fetchFailed' }));
     } finally {
       setLoading(false);
     }
@@ -57,10 +59,10 @@ const Footer: React.FC = () => {
         if (response.code === '0') {
           setIsCustomFooter(response.data.keyValue === '1');
         } else {
-          message.error('获取自定义Footer状态失败');
+          message.error(intl.formatMessage({ id: 'webConfig.footer.fetchCustomStatusFailed' }));
         }
       } catch (error) {
-        message.error('获取自定义Footer状态失败');
+        message.error(intl.formatMessage({ id: 'webConfig.footer.fetchCustomStatusFailed' }));
       }
     };
 
@@ -76,10 +78,10 @@ const Footer: React.FC = () => {
           setCustomCode(response.data.list[0]?.codeContent || '');
           setFooterId(response.data.list[0]?.id);
         } else {
-          message.error('获取自定义Footer内容失败');
+          message.error(intl.formatMessage({ id: 'webConfig.footer.fetchCustomContentFailed' }));
         }
       } catch (error) {
-        message.error('获取自定义Footer内容失败');
+        message.error(intl.formatMessage({ id: 'webConfig.footer.fetchCustomContentFailed' }));
       }
     };
 
@@ -137,16 +139,16 @@ const Footer: React.FC = () => {
 
       const response = await saveHomeBottom(data);
       if (response.code === '0') {
-        message.success('菜单添加成功');
+        message.success(intl.formatMessage({ id: 'webConfig.footer.addSuccess' }));
         handleCancel();
         getMenu(); // 重新获取菜单数据
         setParentId(null);
       } else {
-        message.error('菜单添加失败: ' + (response.message || '未知错误'));
+        message.error(intl.formatMessage({ id: 'webConfig.footer.addFailed' }) + (response.message || intl.formatMessage({ id: 'webConfig.footer.unknownError' })));
       }
     } catch (error) {
       console.log(error);
-      message.error('提交失败: ' + (error || '网络错误'));
+      message.error(intl.formatMessage({ id: 'webConfig.footer.submitFailed' }) + (error || intl.formatMessage({ id: 'webConfig.footer.networkError' })));
     }
   };
 
@@ -201,11 +203,11 @@ const Footer: React.FC = () => {
       const response1 = await updateHomeBottomTranslationById(data1)
 
       if(response.code==='0' && response.data&&response1.code==='0'&&response1.data){
-        message.success('菜单编辑成功');
+        message.success(intl.formatMessage({ id: 'webConfig.footer.editSuccess' }));
         
 
       }else{
-        message.error('菜单编辑失败');
+        message.error(intl.formatMessage({ id: 'webConfig.footer.editFailed' }));
       }
       setModalType(false);
       setEditingMenu(null);
@@ -219,14 +221,14 @@ const Footer: React.FC = () => {
     try {
       const response = await deleteHomeBottom({ id });
       if (response.code === '0') {
-        message.success('删除成功');
+        message.success(intl.formatMessage({ id: 'webConfig.footer.deleteSuccess' }));
         getMenu(); // 重新获取菜单数据
       } else {
-        message.error('删除失败: ' + (response.message || '未知错误'));
+        message.error(intl.formatMessage({ id: 'webConfig.footer.deleteFailed' }) + (response.message || intl.formatMessage({ id: 'webConfig.footer.unknownError' })));
       }
     } catch (error) {
       console.log(error);
-      message.error('删除失败: ' + (error || '网络错误'));
+      message.error(intl.formatMessage({ id: 'webConfig.footer.deleteFailed' }) + (error || intl.formatMessage({ id: 'webConfig.footer.networkError' })));
     }
   };
 
@@ -259,10 +261,10 @@ const Footer: React.FC = () => {
         setParentId(parentMenuInfo);
         setModalType(true);
       } else {
-        message.error("获取菜单详情失败");
+        message.error(intl.formatMessage({ id: 'webConfig.footer.fetchMenuDetailFailed' }));
       }
     } catch (error) {
-      message.error("获取菜单详情失败");
+      message.error(intl.formatMessage({ id: 'webConfig.footer.fetchMenuDetailFailed' }));
     }
   };
 
@@ -293,10 +295,10 @@ const Footer: React.FC = () => {
               }}
             >
               <Popconfirm
-                title={`确定要删除${parentItem.bottomName}菜单吗？`}
+                title={intl.formatMessage({ id: 'webConfig.footer.deleteConfirm' }, { name: parentItem.bottomName })}
                 onConfirm={(e) => { e?.stopPropagation(); handleDelete(parentItem.bottomId); }}
-                okText="确定"
-                cancelText="取消"
+                okText={intl.formatMessage({ id: 'webConfig.footer.confirmText' })}
+                cancelText={intl.formatMessage({ id: 'webConfig.footer.cancelText' })}
               >
 
                 <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
@@ -346,10 +348,10 @@ const Footer: React.FC = () => {
                     }}
                   >
                     <Popconfirm
-                      title={`确定要删除${child.menuName}菜单吗？`}
+                      title={intl.formatMessage({ id: 'webConfig.footer.deleteConfirm' }, { name: child.menuName })}
                       onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.bottomId); }}
-                      okText="确定"
-                      cancelText="取消"
+                      okText={intl.formatMessage({ id: 'webConfig.footer.confirmText' })}
+                      cancelText={intl.formatMessage({ id: 'webConfig.footer.cancelText' })}
                     >
                       <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
                     </Popconfirm>
@@ -391,12 +393,12 @@ const Footer: React.FC = () => {
       });
       if (response.code === '0') {
         setIsCustomFooter(checked);
-        message.success('更新成功');
+        message.success(intl.formatMessage({ id: 'webConfig.footer.updateSuccess' }));
       } else {
-        message.error('更新失败');
+        message.error(intl.formatMessage({ id: 'webConfig.footer.updateFailed' }));
       }
     } catch (error) {
-      message.error('更新失败');
+      message.error(intl.formatMessage({ id: 'webConfig.footer.updateFailed' }));
     }
   };
 
@@ -416,9 +418,9 @@ const Footer: React.FC = () => {
         };
         const response = await updateHomeBottomFooterById(data);
         if (response.code === '0') {
-          message.success('更新成功');
+          message.success(intl.formatMessage({ id: 'webConfig.footer.updateSuccess' }));
         } else {
-          message.error(response.message || '更新失败');
+          message.error(response.message || intl.formatMessage({ id: 'webConfig.footer.updateFailed' }));
         }
       } else {
         const data = {
@@ -427,13 +429,13 @@ const Footer: React.FC = () => {
         };
         const response = await saveHomeBottomFooter(data);
         if (response.code === '0') {
-          message.success('保存成功');
+          message.success(intl.formatMessage({ id: 'webConfig.footer.saveSuccess' }));
         } else {
-          message.error(response.message || '保存失败');
+          message.error(response.message || intl.formatMessage({ id: 'webConfig.footer.saveFailed' }));
         }
       }
     } catch (error) {
-      message.error('保存失败');
+      message.error(intl.formatMessage({ id: 'webConfig.footer.saveFailed' }));
     }
   };
 
@@ -441,12 +443,12 @@ const Footer: React.FC = () => {
     <PageContainer>
       <div style={{ marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-          <div>Footer配置</div>|
+          <div>{intl.formatMessage({ id: 'webConfig.footer.title' })}</div>|
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>自定义Footer</span>
+            <span>{intl.formatMessage({ id: 'webConfig.footer.customFooter' })}</span>
           </div>
         </div>
-        <div style={{ marginBottom: 20 }}> 收否开启自定义Footer<Switch checked={isCustomFooter} onChange={handleCustomFooterChange} style={{ marginLeft: 10 }} /></div>
+        <div style={{ marginBottom: 20 }}> {intl.formatMessage({ id: 'webConfig.footer.enableCustomFooter' })}<Switch checked={isCustomFooter} onChange={handleCustomFooterChange} style={{ marginLeft: 10 }} /></div>
         <div style={{ marginBottom: 16 }}>
           {languageOptions.map((lang) => (
             <Button
@@ -463,9 +465,9 @@ const Footer: React.FC = () => {
           <>
             <div style={{ marginBottom: 16 }}>
               <div style={{ color: '#666', marginBottom: 8 }}>
-                Tips:
-                <div>开启自定义Footer,前台底部样式将基于此处代码显示;</div>
-                <div>英文为必填，其他语言不填，默认使用英文样式。</div>
+                {intl.formatMessage({ id: 'webConfig.footer.tips.title' })}
+                <div>{intl.formatMessage({ id: 'webConfig.footer.tips.line1' })}</div>
+                <div>{intl.formatMessage({ id: 'webConfig.footer.tips.line2' })}</div>
               </div>
             </div>
 
@@ -474,14 +476,14 @@ const Footer: React.FC = () => {
 
             {/* 代码编辑区域 */}
             <TextArea
-              placeholder="这是一段系统默认代码"
+              placeholder={intl.formatMessage({ id: 'webConfig.footer.codeTextareaPlaceholder' })}
               value={customCode}
               onChange={handleCodeChange}
               style={{ height: 400, marginBottom: 16 }}
             />
 
             <Button type="primary" onClick={handleSave}>
-              保存
+              {intl.formatMessage({ id: 'webConfig.footer.save' })}
             </Button>
           </>
         )}
@@ -516,7 +518,7 @@ const Footer: React.FC = () => {
                   }}
                   onClick={() => handleModal()}
                 >
-                  添加一级菜单
+                  {intl.formatMessage({ id: 'webConfig.footer.addTopLevelMenu' })}
                   <PlusOutlined />
                 </Button>
               </div>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from "@ant-design/pro-components";
 import { Tabs, Button, message } from "antd";
+import { useIntl } from 'umi';
 import AvatarUpload from '@/components/AvatarUpload';
 import { 
   getTenantKvParams,
@@ -12,6 +13,7 @@ import {
 const { TabPane } = Tabs;
 
 const Logo: React.FC = () => {
+  const intl = useIntl();
   const [loading, setLoading] = useState(false);
   const [darkLogo, setDarkLogo] = useState({ header: '', favicon: '' });
   const [lightLogo, setLightLogo] = useState({ header: '', favicon: '' });
@@ -40,7 +42,7 @@ const Logo: React.FC = () => {
         });
       }
     } catch (error) {
-      message.error('获取数据失败');
+      message.error(intl.formatMessage({ id: 'webConfig.logo.fetchFailed' }));
     } finally {
       setLoading(false);
     }
@@ -52,7 +54,7 @@ const Logo: React.FC = () => {
 
     // 检查夜间版本是否填写
     if (type === 'dark' && (!logoData.header || !logoData.favicon)) {
-      message.error('请填写夜间版本的 Logo');
+      message.error(intl.formatMessage({ id: 'webConfig.logo.darkLogoRequired' }));
       return;
     }
 
@@ -94,12 +96,12 @@ const Logo: React.FC = () => {
 
       const res = await updateValue(submitData);
       if (res.code === '0') {
-        message.success('更新成功');
+        message.success(intl.formatMessage({ id: 'webConfig.logo.updateSuccess' }));
       } else {
-        message.error('更新失败');
+        message.error(intl.formatMessage({ id: 'webConfig.logo.updateFailed' }));
       }
     } catch (error) {
-      message.error('更新失败');
+      message.error(intl.formatMessage({ id: 'webConfig.logo.updateFailed' }));
     } finally {
       setLoading(false);
     }
@@ -112,7 +114,7 @@ const Logo: React.FC = () => {
   return (
     <PageContainer>
       <Tabs defaultActiveKey="1">
-        <TabPane tab="夜间版" key="1">
+        <TabPane tab={intl.formatMessage({ id: 'webConfig.logo.darkMode' })} key="1">
           <div style={{ display: 'flex', marginBottom: 16 }}>
             <div style={{ marginRight: 16 }}>
               <AvatarUpload
@@ -121,7 +123,7 @@ const Logo: React.FC = () => {
                   setDarkLogo(prev => ({ ...prev, header: value }));
                 }}
               />
-              <p>(适用于顶部Header/底部Footer)</p>
+              <p>{intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}</p>
             </div>
             <div>
               <AvatarUpload
@@ -130,14 +132,14 @@ const Logo: React.FC = () => {
                   setDarkLogo(prev => ({ ...prev, favicon: value }));
                 }}
               />
-              <p>(适用于浏览器标签)</p>
+              <p>{intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}</p>
             </div>
           </div>
           <Button type="primary" loading={loading} onClick={() => handleSubmit('dark')}>
-            提交
+            {intl.formatMessage({ id: 'webConfig.logo.submit' })}
           </Button>
         </TabPane>
-        <TabPane tab="日间版" key="2">
+        <TabPane tab={intl.formatMessage({ id: 'webConfig.logo.lightMode' })} key="2">
           <div style={{ display: 'flex', marginBottom: 16 }}>
             <div style={{ marginRight: 16 }}>
               <AvatarUpload
@@ -146,7 +148,7 @@ const Logo: React.FC = () => {
                   setLightLogo(prev => ({ ...prev, header: value }));
                 }}
               />
-              <p>(适用于顶部Header/底部Footer)</p>
+              <p>{intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}</p>
             </div>
             <div>
               <AvatarUpload
@@ -155,11 +157,11 @@ const Logo: React.FC = () => {
                   setLightLogo(prev => ({ ...prev, favicon: value }));
                 }}
               />
-              <p>(适用于浏览器标签)</p>
+              <p>{intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}</p>
             </div>
           </div>
           <Button type="primary" loading={loading} onClick={() => handleSubmit('light')}>
-            提交
+            {intl.formatMessage({ id: 'webConfig.logo.submit' })}
           </Button>
         </TabPane>
       </Tabs>

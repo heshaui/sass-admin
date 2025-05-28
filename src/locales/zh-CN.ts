@@ -19,6 +19,7 @@ import IdentityVerification from './zh-CN/IdentityVerification';
 import InviteFriends from './zh-CN/InviteFriends';
 import depositWithdraw from './zh-CN/depositWithdraw';
 import fundsTools from './zh-CN/fundsTools';
+import webConfig from './zh-CN/webConfig';
 
 
 export default {
@@ -49,5 +50,6 @@ export default {
   ...IdentityVerification,
   ...InviteFriends,
   ...depositWithdraw,
+  ...webConfig,
   ...fundsTools
 };

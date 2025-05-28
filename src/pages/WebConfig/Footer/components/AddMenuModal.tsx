@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Switch, Button, Radio, Select } from 'antd';
+import { useIntl } from 'umi';
 import { saveHomeBottom, pcAccessPathAll,updateHomeBottomById,updateHomeBottomTranslationById} from '@/services/ant-design-pro/WebConfig';
 
 const { Option } = Select;
@@ -13,6 +14,7 @@ interface AddMenuModalProps {
 }
 
 const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, parentId, editingMenu }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [accessType, setAccessType] = useState("1");
   const [pcOptions, setPcOptions] = useState<any[]>([]);
@@ -26,7 +28,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
           setPcOptions(options);
         }
       } catch (error) {
-        console.error('获取PC功能列表失败:', error);
+        console.error(intl.formatMessage({ id: 'webConfig.footer.fetchPcOptionsFailed' }), error);
       }
     };
     
@@ -57,7 +59,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
 
   return (
     <Modal
-      title={editingMenu ? "编辑菜单" : "添加菜单"}
+      title={editingMenu ? intl.formatMessage({ id: 'webConfig.footer.modal.editTitle' }) : intl.formatMessage({ id: 'webConfig.footer.modal.addTitle' })}
       open={open}
       onCancel={handleCancel}
       footer={null}
@@ -74,29 +76,29 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
         }}
       >
         <Form.Item
-          label="标题"
+          label={intl.formatMessage({ id: 'webConfig.footer.modal.menuName' })}
           name={['values', 'menuName']}
-          rules={[{ required: true, message: '请输入菜单名称' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.footer.modal.menuNameRequired' }) }]}
         >
-          <Input placeholder="菜单名字" />
+          <Input placeholder={intl.formatMessage({ id: 'webConfig.footer.modal.menuNamePlaceholder' })} />
         </Form.Item>
         { parentId && (
         <Form.Item
-          label="父级菜单"
+          label={intl.formatMessage({ id: 'webConfig.footer.modal.parentMenu' })}
           name={['values', 'bottomName']}
         >
-          <Input placeholder="父级菜单" disabled={true}/>
+          <Input placeholder={intl.formatMessage({ id: 'webConfig.footer.modal.parentMenuPlaceholder' })} disabled={true}/>
         </Form.Item> 
        
         )}
-        <Form.Item label="跳转地址">
+        <Form.Item label={intl.formatMessage({ id: 'webConfig.footer.modal.redirectAddress' })}>
           <Form.Item
             name={['values', 'accessType']}
             noStyle
           >
             <Radio.Group onChange={(e) => setAccessType(e.target.value)}>
-              <Radio value="1">PC功能</Radio>
-              <Radio value="2">自定义URL</Radio>
+              <Radio value="1">{intl.formatMessage({ id: 'webConfig.footer.modal.pcFunction' })}</Radio>
+              <Radio value="2">{intl.formatMessage({ id: 'webConfig.footer.modal.customUrl' })}</Radio>
             </Radio.Group>
           </Form.Item>
           
@@ -105,7 +107,7 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
               name={['values', 'accessPath']} 
               style={{ marginTop: 10 }}
             >
-              <Select placeholder="请选择">
+              <Select placeholder={intl.formatMessage({ id: 'webConfig.footer.modal.selectPlaceholder' })}>
                 {Array.isArray(pcOptions) && pcOptions.map(option => (
                   <Option key={option.accessPath} value={option.accessPath}>
                     {option.functionName}
@@ -118,13 +120,13 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
               name={['values', 'accessPath']} 
               style={{ marginTop: 10 }}
             >
-              <Input placeholder="请输入URL" />
+              <Input placeholder={intl.formatMessage({ id: 'webConfig.footer.modal.urlPlaceholder' })} />
             </Form.Item>
           )}
         </Form.Item>
         
         <Form.Item
-          label="是否显示"
+          label={intl.formatMessage({ id: 'webConfig.footer.modal.display' })}
           name={['values', 'show']}
           valuePropName="checked"
           initialValue={true}
@@ -134,9 +136,9 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
         
         <Form.Item>
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8 }}>
-            <Button onClick={handleCancel}>取消</Button>
+            <Button onClick={handleCancel}>{intl.formatMessage({ id: 'webConfig.footer.modal.cancel' })}</Button>
             <Button type="primary" htmlType="submit">
-              提交
+              {intl.formatMessage({ id: 'webConfig.footer.modal.submit' })}
             </Button>
           </div>
         </Form.Item>

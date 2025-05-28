@@ -2,6 +2,7 @@ import AvatarUpload from '@/components/AvatarUpload/index';
 import { pcAccessPathAll } from '@/services/ant-design-pro/WebConfig';
 import { Button, Flex, Form, Image, Input, Modal, Radio, Select, Switch } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 const { Option } = Select;
 
 interface AddMenuModalsProps {
@@ -19,6 +20,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   parentId,
   editingMenu,
 }) => {
+  const intl = useIntl();
   const [accessType, setAccessType] = useState(1);
   const [formModal3] = Form.useForm();
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
@@ -62,7 +64,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
           setAccessPaths(JSON.parse(result.data));
         }
       } catch (error) {
-        console.error('获取访问路径失败:', error);
+        console.error(intl.formatMessage({ id: 'webConfig.header.fetchAccessPathsFailed' }), error);
       }
     };
 
@@ -163,25 +165,25 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
   };
 
   return (
-    <Modal title={editingMenu ? '编辑菜单' : '添加菜单'} visible={visible} onCancel={handleCancelAndReset} footer={null}>
+    <Modal title={editingMenu ? intl.formatMessage({ id: 'webConfig.header.modal.editTitle' }) : intl.formatMessage({ id: 'webConfig.header.modal.addTitle' })} visible={visible} onCancel={handleCancelAndReset} footer={null}>
       <Form form={formModal3} layout="vertical" onFinish={onFinish}>
         {/* 标签/菜单选择 */}
         {parentId && (
-          <Form.Item label="标签/菜单" rules={[{ required: true, message: '请选择类型' }]} name="typeId">
+          <Form.Item label={intl.formatMessage({ id: 'webConfig.header.modal.typeLabel' })} rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.header.modal.typeRequired' }) }]} name="typeId">
             <Radio.Group
               onChange={(e) => {
                 setTypeId(e.target.value);
               }}
               value={typeId}
             >
-              <Radio value={1}>标签</Radio>
-              <Radio value={2}>菜单</Radio>
+              <Radio value={1}>{intl.formatMessage({ id: 'webConfig.header.modal.typeTag' })}</Radio>
+              <Radio value={2}>{intl.formatMessage({ id: 'webConfig.header.modal.typeMenu' })}</Radio>
             </Radio.Group>
           </Form.Item>
         )}
 
         {typeId === 2 && parentId && (
-          <Form.Item label="父级菜单" name="parentId">
+          <Form.Item label={intl.formatMessage({ id: 'webConfig.header.modal.parentMenu' })} name="parentId">
             <Input disabled />
           </Form.Item>
         )}
@@ -205,37 +207,37 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
               </Radio.Group>
             </Form.Item> */}
             <Form.Item
-              label="标签名"
+              label={intl.formatMessage({ id: 'webConfig.header.modal.tagName' })}
               name="menuName"
-              rules={[{ required: true, message: '请输入标签名' }]}
+              rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.header.modal.tagNameRequired' }) }]}
             >
-              <Input placeholder="标签" />
+              <Input placeholder={intl.formatMessage({ id: 'webConfig.header.modal.tagNamePlaceholder' })} />
             </Form.Item>
           </>
         ) : (
           <>
             {/* 菜单模式：显示所有字段 */}
             <Form.Item
-              label="主标题"
+              label={intl.formatMessage({ id: 'webConfig.header.modal.mainTitle' })}
               name="menuName"
-              rules={[{ required: true, message: '请输入菜单名称' }]}
+              rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.header.modal.mainTitleRequired' }) }]}
             >
-              <Input placeholder="菜单名称" />
+              <Input placeholder={intl.formatMessage({ id: 'webConfig.header.modal.mainTitlePlaceholder' })} />
             </Form.Item>
             <Form.Item
-              label="副标题"
+              label={intl.formatMessage({ id: 'webConfig.header.modal.subtitle' })}
               name="menuViceName"
             >
-              <Input placeholder="副标题" />
+              <Input placeholder={intl.formatMessage({ id: 'webConfig.header.modal.subtitlePlaceholder' })} />
             </Form.Item>
-            <Form.Item label="访问路径">
+            <Form.Item label={intl.formatMessage({ id: 'webConfig.header.modal.accessPath' })}>
               <Radio.Group value={accessType} onChange={(e) => setAccessType(e.target.value)}>
-                <Radio value={1}>PC功能</Radio>
-                <Radio value={2}>自定义URL</Radio>
+                <Radio value={1}>{intl.formatMessage({ id: 'webConfig.header.modal.pcFunction' })}</Radio>
+                <Radio value={2}>{intl.formatMessage({ id: 'webConfig.header.modal.customUrl' })}</Radio>
               </Radio.Group>
               {accessType === 1 ? (
                 <Form.Item name="accessPath" style={{ marginTop: 10 }}>
-                  <Select placeholder="请选择">
+                  <Select placeholder={intl.formatMessage({ id: 'webConfig.header.modal.selectPlaceholder' })}>
                     {accessPaths.map((item) => (
                       <Option key={item.accessPath} value={item.accessPath}>
                         {item.functionName}
@@ -245,15 +247,15 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
                 </Form.Item>
               ) : (
                 <Form.Item name="accessPath" style={{ marginTop: 10 }}>
-                  <Input placeholder="请输入URL" />
+                  <Input placeholder={intl.formatMessage({ id: 'webConfig.header.modal.urlPlaceholder' })} />
                 </Form.Item>
               )}
             </Form.Item>
             {parentId && (
-              <Form.Item label="icon">
+              <Form.Item label={intl.formatMessage({ id: 'webConfig.header.modal.icon' })}>
                 <Flex gap="middle" wrap>
                   <div>
-                    <div style={{ textAlign: 'center' }}>日间</div>
+                    <div style={{ textAlign: 'center' }}>{intl.formatMessage({ id: 'webConfig.header.modal.dayMode' })}</div>
                     <AvatarUpload 
                       key="day-uploader"
                       onChange={handleDayChange} 
@@ -266,7 +268,7 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
                     </div>
                   </div>
                   <div>
-                    <div style={{ textAlign: 'center' }}>夜间</div>
+                    <div style={{ textAlign: 'center' }}>{intl.formatMessage({ id: 'webConfig.header.modal.nightMode' })}</div>
                     <AvatarUpload 
                       key="night-uploader"
                       onChange={handleNightChange} 
@@ -301,16 +303,16 @@ const AddMenuModals: React.FC<AddMenuModalsProps> = ({
                 </div>
               )}
             </Form.Item> */}
-            <Form.Item label="是否显示" name="displayStatus" style={{ marginTop: tops }}>
+            <Form.Item label={intl.formatMessage({ id: 'webConfig.header.modal.display' })} name="displayStatus" style={{ marginTop: tops }}>
               <Switch onChange={(checked) => setDisplayStatus(checked ? 1 : 0)} checked={displayStatus === 1} />
             </Form.Item>
           </>
         )}
 
         <Form.Item style={{ textAlign: 'center' }}>
-          <Button onClick={handleCancelAndReset}>取消</Button>
+          <Button onClick={handleCancelAndReset}>{intl.formatMessage({ id: 'webConfig.header.modal.cancel' })}</Button>
           <Button type="primary" htmlType="submit" style={{ marginLeft: 10 }}>
-            提交
+            {intl.formatMessage({ id: 'webConfig.header.modal.submit' })}
           </Button>
         </Form.Item>
       </Form>

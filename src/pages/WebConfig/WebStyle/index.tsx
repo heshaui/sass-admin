@@ -7,9 +7,10 @@ import {
     updateValue, 
   } from '@/services/ant-design-pro/kv';
 import { message } from 'antd';
-import { history } from 'umi';
+import { history, useIntl } from 'umi';
 
 const WebStyle: React.FC = () => {
+  const intl = useIntl();
   const [selectedTemplate, setSelectedTemplate] = useState('1');
   const [primaryColor, setPrimaryColor] = useState<string>('#FF5F1F');
 
@@ -30,7 +31,7 @@ const WebStyle: React.FC = () => {
         setSelectedTemplate(templateData.type);
       }
     } catch (error) {
-      console.error('获取配置失败:', error);
+      console.error(intl.formatMessage({ id: 'webConfig.webStyle.fetchFailed' }), error);
     }
   };
 
@@ -59,13 +60,13 @@ const WebStyle: React.FC = () => {
         keyValue: JSON.stringify({ type: selectedTemplate })
       });
       if(result.code === '0'&&templateResult.code === '0'&&result.data&&templateResult.data){
-        message.success('配置保存成功');
+        message.success(intl.formatMessage({ id: 'webConfig.webStyle.saveSuccess' }));
       }else{
-        message.error('配置保存失败');
+        message.error(intl.formatMessage({ id: 'webConfig.webStyle.saveFailed' }));
       }
     } catch (error) {
-      console.error('保存配置失败:', error);
-      message.error('保存配置失败');
+      console.error(intl.formatMessage({ id: 'webConfig.webStyle.saveError' }), error);
+      message.error(intl.formatMessage({ id: 'webConfig.webStyle.saveFailed' }));
     }
   };
 
@@ -79,12 +80,12 @@ const WebStyle: React.FC = () => {
        
         
         <div >
-          <h2>首页模板</h2>
+          <h2>{intl.formatMessage({ id: 'webConfig.webStyle.homeTemplate' })}</h2>
           <div >
             <div style={{display:'flex',flexDirection:'column'}}    >
               <Image 
                 src="/home.png" 
-                alt="模板1"
+                alt={`${intl.formatMessage({ id: 'webConfig.webStyle.template' })}1`}
                 width={100}
                 height={100}
               />
@@ -92,27 +93,27 @@ const WebStyle: React.FC = () => {
                 checked={selectedTemplate === '1'}
                 onChange={() => setSelectedTemplate('1')}
               >
-                模板1
+                {`${intl.formatMessage({ id: 'webConfig.webStyle.template' })}1`}
               </Radio>
               <Button type="primary" style={{width:'100px',marginTop:'10px'}} >
-                使用中
+                {intl.formatMessage({ id: 'webConfig.webStyle.inUse' })}
               </Button>
               <Button 
                 type="primary" 
                 style={{width:'100px',marginTop:'10px'}}
                 onClick={handleGoToBackground}
               >
-               背景图设置
+               {intl.formatMessage({ id: 'webConfig.webStyle.backgroundSetting' })}
               </Button>
             </div>
           </div>
         </div>
 
         <div style={{marginTop:'20px'}}>
-          <h2>主题色</h2>
+          <h2>{intl.formatMessage({ id: 'webConfig.webStyle.themeColor' })}</h2>
           <ul style={{listStyle:'none',margin:'0',padding:'0'}} >
-                <li>1、默认主题色:#FF5F1F</li>
-                <li>2、点击选择主题色</li>
+                <li>{intl.formatMessage({ id: 'webConfig.webStyle.defaultThemeColor' })}</li>
+                <li>{intl.formatMessage({ id: 'webConfig.webStyle.selectThemeColor' })}</li>
             </ul>
           <Space direction="vertical" size="large">
            
@@ -122,7 +123,7 @@ const WebStyle: React.FC = () => {
 
         <Space style={{ marginTop: 24 }}>
           <Button type="primary" onClick={handleSave}>
-            保存配置
+            {intl.formatMessage({ id: 'webConfig.webStyle.saveConfig' })}
           </Button>
         </Space>
       </Card>
