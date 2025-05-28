@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, Form, Button, Input, InputNumber, Radio, Select, Switch, message } from 'antd';
+import { useIntl } from 'umi';
 import LanguageSelector from '@/components/LanguageSelector';
 import AvatarUpload  from '@/components/AvatarUpload';
 import { pcAccessPathAll } from "@/services/ant-design-pro/WebConfig";
@@ -19,6 +20,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
   onCancel,
   onSubmit,
 }) => {
+  const intl = useIntl();
   console.log(initialValues);
   const [form] = Form.useForm();
   const [accessType, setAccessType] = useState<1 | 2>(1);
@@ -37,7 +39,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       setPcAccessPaths(JSON.parse(res.data));
     }
   } catch (error) {
-    console.error('获取PC功能失败:', error);
+    console.error(`${intl.formatMessage({ id: 'pcImages.message.getPcFunctionFailed' })}:`, error);
   }
 };
   // 使用ref来跟踪表单值的最新状态
@@ -134,7 +136,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       
       // 检查是否至少有一个语言有内容
       if (currentEntries.length === 0) {
-        message.error('请至少添加一种语言的内容');
+        message.error(intl.formatMessage({ id: 'pcImages.message.languageRequired' }));
         return;
       }
       
@@ -255,7 +257,9 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
 
  
 
-  const modalTitle = mode === 'create' ? '添加' : '编辑';
+  const modalTitle = mode === 'create' ? 
+    intl.formatMessage({ id: 'carousel.modal.add' }) : 
+    intl.formatMessage({ id: 'carousel.modal.edit' });
 
   return (
     <Modal
@@ -263,54 +267,63 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
       open={visible}
       onCancel={onCancel}
       footer={[
-        <Button key="cancel" onClick={onCancel}>取消</Button>,
-        <Button key="submit" type="primary" onClick={handleSubmit}>提交</Button>
+        <Button key="cancel" onClick={onCancel}>
+          {intl.formatMessage({ id: 'carousel.modal.button.cancel' })}
+        </Button>,
+        <Button key="submit" type="primary" onClick={handleSubmit}>
+          {intl.formatMessage({ id: 'carousel.modal.button.submit' })}
+        </Button>
       ]}
     >
       <Form
         form={form}
         layout="vertical"
       >
-        <Form.Item label="是否显示" name="isShow" valuePropName="checked" initialValue={true}>
+        <Form.Item 
+          label={intl.formatMessage({ id: 'carousel.modal.form.isShow' })} 
+          name="isShow" 
+          valuePropName="checked" 
+          initialValue={true}
+        >
           <Switch />
         </Form.Item>
 
         <Form.Item
-          label="排序"
+          label={intl.formatMessage({ id: 'carousel.modal.form.sort' })}
           name="sort"
-          rules={[{ required: true, message: '请输入排序' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'carousel.modal.form.sort.required' }) }]}
         >
           <InputNumber min={1} />
         </Form.Item>
 
-        <Form.Item label="语言设置">
+        <Form.Item label={intl.formatMessage({ id: 'carousel.modal.form.language' })}>
           <LanguageSelector value={language} onChange={handleLanguageChange} />
         </Form.Item>
         
         <Form.Item
-          label="标题"
+          label={intl.formatMessage({ id: 'carousel.modal.form.title' })}
           name="title"
-          rules={[{ required: true, message: '请输入标题' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'carousel.modal.form.title.required' }) }]}
         >
-          <Input placeholder="标题" />
+          <Input placeholder={intl.formatMessage({ id: 'carousel.modal.form.title.placeholder' })} />
         </Form.Item>
 
         <Form.Item
-          label="访问路径"
+          label={intl.formatMessage({ id: 'carousel.modal.form.accessPath' })}
           name="accessType"
-          rules={[{ required: true, message: '请选择访问路径类型' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'carousel.modal.form.accessPath.required' }) }]}
         >
           <Radio.Group onChange={(e) => setAccessType(e.target.value)}>
-            <Radio value={1}>PC功能</Radio>
-            <Radio value={2}>自定义URL</Radio>
+            <Radio value={1}>{intl.formatMessage({ id: 'carousel.modal.form.pcFunction' })}</Radio>
+            <Radio value={2}>{intl.formatMessage({ id: 'carousel.modal.form.customUrl' })}</Radio>
           </Radio.Group>
         </Form.Item>
         {
             accessType === 1 && (
                 <Form.Item
-                    label="PC功能"
+                    label={intl.formatMessage({ id: 'carousel.modal.form.pcFunction' })}
                     name="pcFunction"
-                    rules={[{ required: true, message: '请选择PC功能' }]}
+                    rules={[{ required: true, message: intl.formatMessage({ id: 'carousel.modal.form.pcFunction.required' }) }]}
                 >
                     <Select>
                         {pcAccessPaths.map((item) => (
@@ -324,16 +337,16 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
         {accessType === 2 && (
           <Form.Item
             name="linkUrl"
-            rules={[{ required: true, message: '请输入URL' }]}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'carousel.modal.form.url.required' }) }]}
           >
-            <Input placeholder="请输入URL" />
+            <Input placeholder={intl.formatMessage({ id: 'carousel.modal.form.url.placeholder' })} />
           </Form.Item>
         )}
 
         <Form.Item
-          label={`图片 (${language})`} 
+          label={intl.formatMessage({ id: 'carousel.modal.form.image' }, { language })} 
           name="image"
-          rules={[{ required: mode === 'create', message: '请上传图片' }]}
+          rules={[{ required: mode === 'create', message: intl.formatMessage({ id: 'carousel.modal.form.image.required' }) }]}
         >
           <AvatarUpload />
         </Form.Item>

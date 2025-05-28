@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Tag, Tabs, Table, Radio,Input,Button,message } from 'antd';
+import { Modal, Tag, Tabs, Radio, Input, Button, message } from 'antd';
 import { ProDescriptions } from '@ant-design/pro-components';
-import { fetchWithdrawDepositDetail,updateWithdrawDeposit,manualProcessing } from '@/services/ant-design-pro/depositWithdraw';
+import { fetchWithdrawDepositDetail, manualProcessing } from '@/services/ant-design-pro/depositWithdraw';
+import { useIntl } from 'umi';
 import OperaLog from './OperaLog';
 import RiskLog from './RiskLog';
+
 interface WithdrawRecord {
-  orderNo:string;
+  orderNo: string;
   key: string;
   withdrawalId: string;
   userId: string;
@@ -16,21 +18,14 @@ interface WithdrawRecord {
   actualAmount: number;
   minerFee: string;
   address: string;
+  toAddress: string; // Address field for receiving funds
   txId: string;
   riskLevel: number;
   riskDesc: string;
-  status: string;
+  status: string | number; // Handle both string and number types
   withdrawTime: string;
-  protocolName:string;
-  fromAddress:string;
-}
-
-interface RiskLogRecord {
-  triggerType: string;
-  triggerReason: string;
-  triggerRiskLevel: number;
-  suggestion: string;
-  triggerTime: string;
+  protocolName: string;
+  fromAddress: string;
 }
 
 interface DetailModalProps {
@@ -40,65 +35,61 @@ interface DetailModalProps {
 }
 
 const DetailModal: React.FC<DetailModalProps> = ({ visible, record, onClose }) => {
+  const intl = useIntl();
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailData, setDetailData] = useState<WithdrawRecord | null>(null);
-  const [riskLogs, setRiskLogs] = useState<RiskLogRecord[]>([]);
-  const [processingMethod, setProcessingMethod] = useState<string>('wallet');
   const [checkStatus, setCheckStatus] = useState<string>('2');
   const [txId, setTxId] = useState<string>('');
   const [remark, setRemark] = useState<string>('');
   const [realityFee, setRealityFee] = useState<string>('');
-  const [formAddress, setFormAddress] = useState<string>('');
-  // 获取详情数据
+  
+  // Fetch detail data
   const fetchDetailData = async (orderId: string) => {
     setDetailLoading(true);
     try {
-      const res = await fetchWithdrawDepositDetail({ withdrawalId:orderId });
+      const res = await fetchWithdrawDepositDetail({ withdrawalId: orderId });
       if (res.code === '0') {
         setDetailData(res.data.detail || record);
-        setRiskLogs(res.data.riskLogs || []);
       }
     } finally {
       setDetailLoading(false);
     }
   };
 
-  // 风控日志表格列
-  const riskLogColumns = [
-    { title: '触发类型', dataIndex: 'triggerType', key: 'triggerType' },
-    { title: '触发原因', dataIndex: 'triggerReason', key: 'triggerReason' },
-    { title: '触发后风控等级', dataIndex: 'triggerRiskLevel', key: 'triggerRiskLevel' },
-    { title: '处理建议', dataIndex: 'suggestion', key: 'suggestion' },
-    { title: '触发时间', dataIndex: 'triggerTime', key: 'triggerTime' },
-  ];
-
   const currentRecord = detailData || record;
 
-const handleUpdate = async () => {
-    // 添加必填字段验证
-    // if (!formAddress) {
-    //   message.error('转账地址为必填项');
-    //   return;
-    // }
-    
+  const handleUpdate = async () => {
+    // Validate required fields
     if (!txId) {
-      message.error('TXID为必填项');
+      message.error(intl.formatMessage({ id: 'withdraw.message.txIdRequired' }));
       return;
     }
     
     if (!realityFee) {
-      message.error('实际矿工费为必填项');
+      message.error(intl.formatMessage({ id: 'withdraw.message.minerFeeRequired' }));
       return;
     }
 
-    const res = await manualProcessing({ withdrawalId: currentRecord.withdrawalId, txHash: txId, status: checkStatus, remark: remark,realityFee:realityFee});
-    if (res.code === '0') {
-      message.success('人工处理成功');
-      onClose();
-    }else{
-      message.error('人工处理失败');
+    if (!currentRecord) {
+      message.error(intl.formatMessage({ id: 'withdraw.message.noRecordSelected' }));
+      return;
     }
-}
+
+    const res = await manualProcessing({ 
+      withdrawalId: currentRecord?.withdrawalId || '', 
+      txHash: txId, 
+      status: checkStatus, 
+      remark: remark,
+      realityFee: realityFee
+    });
+    
+    if (res.code === '0') {
+      message.success(intl.formatMessage({ id: 'withdraw.message.processSuccess' }));
+      onClose();
+    } else {
+      message.error(intl.formatMessage({ id: 'withdraw.message.processFailed' }));
+    }
+  };
 
 
   useEffect(() => {
@@ -118,97 +109,104 @@ const handleUpdate = async () => {
       {currentRecord && (
         <>
           <ProDescriptions
-            title={ currentRecord.status !== 1 ? '提现详情' : '提现审核' }
+            title={currentRecord.status !== 1 ?
+              intl.formatMessage({ id: 'withdraw.modal.title.details' }) :
+              intl.formatMessage({ id: 'withdraw.modal.title.review' })
+            }
             loading={detailLoading}
             column={2}
             dataSource={currentRecord}
           >
-            <ProDescriptions.Item label="提现单号" span={1}>{currentRecord.orderNo}</ProDescriptions.Item>
-            <ProDescriptions.Item label="UID" span={1}>{currentRecord.userId}</ProDescriptions.Item>
-            <ProDescriptions.Item label="风控等级" span={1}>{currentRecord.riskLevel}</ProDescriptions.Item>
-            <ProDescriptions.Item label="提现金额" span={1}>{currentRecord.amount} {currentRecord.coinName}</ProDescriptions.Item>
-            <ProDescriptions.Item label="手续费" span={1}>{currentRecord.fee} {currentRecord.coinName}</ProDescriptions.Item>
-            <ProDescriptions.Item label="应到金额" span={1}>{currentRecord.actualAmount} {currentRecord.actualAmount?currentRecord.coinName:''}</ProDescriptions.Item>
-            <ProDescriptions.Item label="提币协议" span={1}>{currentRecord.protocolName}</ProDescriptions.Item>
-            <ProDescriptions.Item label="收款地址" span={1}>{currentRecord.toAddress}</ProDescriptions.Item>
-            <ProDescriptions.Item label="审核状态" span={1}>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.withdrawId' })} span={1}>{currentRecord.orderNo}</ProDescriptions.Item>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.userId' })} span={1}>{currentRecord.userId}</ProDescriptions.Item>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.riskLevel' })} span={1}>{currentRecord.riskLevel}</ProDescriptions.Item>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.amount' })} span={1}>{currentRecord.amount} {currentRecord.coinName}</ProDescriptions.Item>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.fee' })} span={1}>{currentRecord.fee} {currentRecord.coinName}</ProDescriptions.Item>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.actualAmount' })} span={1}>{currentRecord.actualAmount} {currentRecord.actualAmount ? currentRecord.coinName : ''}</ProDescriptions.Item>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.protocol' })} span={1}>{currentRecord.protocolName}</ProDescriptions.Item>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.receivingAddress' })} span={1}>{currentRecord.toAddress || currentRecord.address}</ProDescriptions.Item>
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.reviewStatus' })} span={1}>
               <Tag color={
-                currentRecord.status === 3 || currentRecord.status === '3' ? 'red' : 
-                currentRecord.status === 2 || currentRecord.status === '2' ? 'green' : 
+                currentRecord.status === 3 || currentRecord.status === '3' ? 'red' :
+                currentRecord.status === 2 || currentRecord.status === '2' ? 'green' :
                 currentRecord.status === 4 || currentRecord.status === '4' ? 'gray' : 'blue'
               }>
                 {
-                  currentRecord.status === 0 || currentRecord.status === '0' ? '创建' :
-                  currentRecord.status === 1 || currentRecord.status === '1' ? '待审核' :
-                  currentRecord.status === 2 || currentRecord.status === '2' ? '完成' :
-                  currentRecord.status === 3 || currentRecord.status === '3' ? '拒绝' :
-                  currentRecord.status === 4 || currentRecord.status === '4' ? '用户撤销' : '未知状态'
+                  currentRecord.status === 0 || currentRecord.status === '0' ? intl.formatMessage({ id: 'withdraw.status.created' }) :
+                  currentRecord.status === 1 || currentRecord.status === '1' ? intl.formatMessage({ id: 'withdraw.status.pending' }) :
+                  currentRecord.status === 2 || currentRecord.status === '2' ? intl.formatMessage({ id: 'withdraw.status.completed' }) :
+                  currentRecord.status === 3 || currentRecord.status === '3' ? intl.formatMessage({ id: 'withdraw.status.rejected' }) :
+                  currentRecord.status === 4 || currentRecord.status === '4' ? intl.formatMessage({ id: 'withdraw.status.userCancelled' }) :
+                  intl.formatMessage({ id: 'withdraw.status.unknown' })
                 }
               </Tag>
             </ProDescriptions.Item>
-            {
-              currentRecord.status === 1 && (
-                <ProDescriptions.Item label="审核结果" span={1}>
-                  <Radio.Group 
-                value={checkStatus} 
-                onChange={(e) => setCheckStatus(e.target.value)}
-              >
-                <Radio value="2">通过</Radio>
-                <Radio value="3">拒绝</Radio>
-              </Radio.Group>
-            </ProDescriptions.Item>
-            )
-            }
-              
-            <ProDescriptions.Item label="处理方式" span={1}>
-              {/* <Radio.Group 
-                value={processingMethod} 
-                onChange={(e) => setProcessingMethod(e.target.value)}
-              >
-                <Radio value="wallet">钱包处理</Radio>
-                <Radio value="manual">人工处理</Radio>
-              </Radio.Group> */}
-              <div>
-              人工处理
-              </div>
-            </ProDescriptions.Item>
-            {
-              currentRecord.status === 1 && (
-                <>
-                {/* <ProDescriptions.Item label="转账地址" span={1}><Input value={formAddress} onChange={(e) => setFormAddress(e.target.value)} placeholder="请输入转账地址（必填）"/></ProDescriptions.Item> */}
-                <ProDescriptions.Item label="TXID" span={1}><Input value={txId} onChange={(e) => setTxId(e.target.value)} placeholder="请输入TXID（必填）"/></ProDescriptions.Item>
-                <ProDescriptions.Item label="实际矿工费" span={1}><Input value={realityFee} onChange={(e) => setRealityFee(e.target.value)} placeholder="请输入实际矿工费（必填）"/></ProDescriptions.Item>
-                <ProDescriptions.Item label="审核备注" span={1}><Input value={remark} onChange={(e) => setRemark(e.target.value)}/></ProDescriptions.Item>
-                </>
-              )
-            }
-          </ProDescriptions>
-          {
-            currentRecord.status === 1 && (
-              <>
-              <div style={{display: 'flex', justifyContent: 'center', gap: 10,marginTop: 20}}>
-                <Button type="primary" onClick={handleUpdate}>提交</Button>
-                <Button  onClick={onClose}>取消</Button>
-              </div>
-              </>
-            )
-          }
 
-          <Tabs
-            defaultActiveKey="riskLogs"
-            items={[
-              {
-                key: 'riskLogs',
-                label: '风控日志',
-                children: <RiskLog userId={currentRecord.userId} />,
-              },
-              {
-                key: 'operationLogs',
-                label: '操作日志',
-                children: <OperaLog userId={currentRecord.userId} />,
-              },
-            ]}
-          />
+            {(currentRecord.status === 1 || currentRecord.status === '1') && (
+              <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.reviewResult' })} span={1}>
+                <Radio.Group
+                  value={checkStatus}
+                  onChange={(e) => setCheckStatus(e.target.value)}
+                >
+                  <Radio value="2">{intl.formatMessage({ id: 'withdraw.modal.option.approve' })}</Radio>
+                  <Radio value="3">{intl.formatMessage({ id: 'withdraw.modal.option.reject' })}</Radio>
+                </Radio.Group>
+              </ProDescriptions.Item>
+            )}
+
+            <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.processingMethod' })} span={1}>
+              <div>
+                {intl.formatMessage({ id: 'withdraw.modal.option.manualProcessing' })}
+              </div>
+            </ProDescriptions.Item>
+
+            {(currentRecord.status === 1 || currentRecord.status === '1') && (
+              <>
+                {checkStatus === '2' && (
+                  <>
+                    <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.txId' })} span={1}>
+                      <Input
+                        value={txId}
+                        onChange={(e) => setTxId(e.target.value)}
+                        placeholder={intl.formatMessage({ id: 'withdraw.modal.placeholder.txId' })}
+                      />
+                    </ProDescriptions.Item>
+                    <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.actualMinerFee' })} span={1}>
+                      <Input
+                        value={realityFee}
+                        onChange={(e) => setRealityFee(e.target.value)}
+                        placeholder={intl.formatMessage({ id: 'withdraw.modal.placeholder.actualMinerFee' })}
+                      />
+                    </ProDescriptions.Item>
+                  </>
+                )}
+                <ProDescriptions.Item label={intl.formatMessage({ id: 'withdraw.modal.label.remark' })} span={1}>
+                  <Input
+                    value={remark}
+                    onChange={(e) => setRemark(e.target.value)}
+                    placeholder={intl.formatMessage({ id: 'withdraw.modal.placeholder.remark' })}
+                  />
+                </ProDescriptions.Item>
+              </>
+            )}
+          </ProDescriptions>
+
+          {(currentRecord.status === 1 || currentRecord.status === '1') && (
+            <div style={{ textAlign: 'center', marginTop: 16 }}>
+              <Button type="primary" onClick={handleUpdate}>
+                {intl.formatMessage({ id: 'withdraw.button.confirm' })}
+              </Button>
+            </div>
+          )}
+
+          <Tabs defaultActiveKey="1">
+            <Tabs.TabPane tab={intl.formatMessage({ id: 'withdraw.tabs.operationLog' })} key="1">
+              <OperaLog userId={currentRecord.userId} />
+            </Tabs.TabPane>
+            <Tabs.TabPane tab={intl.formatMessage({ id: 'withdraw.tabs.riskLog' })} key="2">
+              <RiskLog userId={currentRecord.userId} />
+            </Tabs.TabPane>
+          </Tabs>
         </>
       )}
     </Modal>

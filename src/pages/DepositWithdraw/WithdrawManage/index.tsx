@@ -5,6 +5,7 @@ import type { ProColumns } from '@ant-design/pro-components';
 import { fetchWithdrawDepositList,manualProcessing } from '@/services/ant-design-pro/depositWithdraw';
 import DetailModal from './components/DetailModal';
 import { useNavigate } from 'react-router-dom';
+import { useIntl } from 'umi';
 
 interface WithdrawRecord {
   key: string;
@@ -25,6 +26,7 @@ interface WithdrawRecord {
 }
 
 const WithdrawManage: React.FC = () => {
+  const intl = useIntl();
   const [detailVisible, setDetailVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<WithdrawRecord | null>(null);
   const actionRef = useRef<ActionType>();
@@ -52,153 +54,157 @@ const WithdrawManage: React.FC = () => {
 
   const columns: ProColumns<WithdrawRecord>[] = [
     { 
-      title: '提现单号', 
+      title: intl.formatMessage({ id: 'withdraw.column.id' }), 
       dataIndex: 'withdrawalId',
       hideInSearch: true
     },
     { 
-      title: '用户ID', 
+      title: intl.formatMessage({ id: 'withdraw.column.userId' }), 
       dataIndex: 'userId', 
       render: (userId) => (
         <a onClick={() => navigate(`/user-management/user-list?userId=${userId}`)}>{userId}</a>
       ),
     },
     { 
-      title: '币种', 
+      title: intl.formatMessage({ id: 'withdraw.column.coin' }), 
       dataIndex: 'coinName', 
       key: 'coinName',
     },
     { 
-      title: '网络名称', 
+      title: intl.formatMessage({ id: 'withdraw.column.network' }), 
       dataIndex: 'protocolId', 
       key: 'protocolId',
     },
     { 
-      title: '提现数量', 
+      title: intl.formatMessage({ id: 'withdraw.column.amount' }), 
       dataIndex: 'amount', 
       key: 'amount',
       hideInSearch: true
     },
     { 
-      title: '手续费', 
+      title: intl.formatMessage({ id: 'withdraw.column.fee' }), 
       dataIndex: 'fee', 
       key: 'fee',
       hideInSearch: true
     },
     { 
-      title: '实际到账', 
+      title: intl.formatMessage({ id: 'withdraw.column.actualAmount' }), 
       dataIndex: 'actualAmount',
       key: 'actualAmount',
       hideInSearch: true,
       render: (_, record) => (Number(record.amount) - Number(record.fee))
     },
     { 
-      title: '实际矿工费', 
+      title: intl.formatMessage({ id: 'withdraw.column.minerFee' }), 
       dataIndex: 'minerFee', 
       key: 'minerFee',
       hideInSearch: true
     },
     { 
-      title: '地址/TxId', 
+      title: intl.formatMessage({ id: 'withdraw.column.addressTxId' }), 
       dataIndex: 'addressTxId', 
       key: 'addressTxId',
       render: (text) => <a>{text}</a>,
       fieldProps: {
-        placeholder: '到账地址、TxID'
+        placeholder: intl.formatMessage({ id: 'withdraw.form.addressOrTxId.placeholder' })
       },
       hideInTable: true
     },
     { 
-      title: '发送地址', 
+      title: intl.formatMessage({ id: 'withdraw.column.fromAddress' }), 
       dataIndex: 'fromAddress', 
       key: 'fromAddress',
       search:false
     },
     { 
-      title: '接收地址', 
+      title: intl.formatMessage({ id: 'withdraw.column.toAddress' }), 
       dataIndex: 'toAddress', 
       key: 'toAddress',
       search:false
     },
     { 
-      title: 'TxID', 
+      title: intl.formatMessage({ id: 'withdraw.column.txId' }), 
       dataIndex: 'txId', 
       key: 'txId', 
       render: (text) => text !== '-' ? <a>{text}</a> : text,
       hideInSearch: true
     },
     { 
-      title: '风控等级', 
+      title: intl.formatMessage({ id: 'withdraw.column.riskLevel' }), 
       dataIndex: 'riskLevel', 
       key: 'riskLevel',
       hideInSearch: true
     },
     { 
-      title: '风控说明', 
+      title: intl.formatMessage({ id: 'withdraw.column.riskDesc' }), 
       dataIndex: 'riskDesc', 
       key: 'riskDesc',
       hideInSearch: true
     },
     { 
-      title: '状态', 
+      title: intl.formatMessage({ id: 'withdraw.column.status' }), 
       dataIndex: 'status', 
       renderText: (record:number) => {
         console.log(record);
         let color = 'blue';
-        let statusText = '创建';
+        let statusText = intl.formatMessage({ id: 'withdraw.status.created' });
         
         switch(Number(record)) {
           case 0:
-            statusText = '待审核';
+            statusText = intl.formatMessage({ id: 'withdraw.status.pending' });
             color = 'blue';
             break;
           case 1:
-            statusText = '待审核';
+            statusText = intl.formatMessage({ id: 'withdraw.status.pending' });
             color = 'blue';
             break;
           case 2:
-            statusText = '完成';
+            statusText = intl.formatMessage({ id: 'withdraw.status.completed' });
             color = 'green';
             break;
           case 3:
-            statusText = '拒绝';
+            statusText = intl.formatMessage({ id: 'withdraw.status.rejected' });
             color = 'red';
             break;
           case 4:
-            statusText = '已撤销';
+            statusText = intl.formatMessage({ id: 'withdraw.status.cancelled' });
             color = 'gray';
             break;
           default:
-            statusText = '未知状态';
+            statusText = intl.formatMessage({ id: 'withdraw.status.unknown' });
             color = 'default';
         }
         
         return <Tag color={color}>{statusText}</Tag>;
       },
       valueEnum: {
-        '': { text: '全部' },
-        '0': { text: '创建', status: 'Processing' },
-        '1': { text: '待审核', status: 'Processing' },
-        '2': { text: '完成', status: 'Success' },
-        '3': { text: '拒绝', status: 'Error' },
-        '4': { text: '用户撤销', status: 'Default' }
+        '': { text: intl.formatMessage({ id: 'withdraw.status.all' }) },
+        '0': { text: intl.formatMessage({ id: 'withdraw.status.created' }), status: 'Processing' },
+        '1': { text: intl.formatMessage({ id: 'withdraw.status.pending' }), status: 'Processing' },
+        '2': { text: intl.formatMessage({ id: 'withdraw.status.completed' }), status: 'Success' },
+        '3': { text: intl.formatMessage({ id: 'withdraw.status.rejected' }), status: 'Error' },
+        '4': { text: intl.formatMessage({ id: 'withdraw.status.userCancelled' }), status: 'Default' }
       }
     },
     { 
-      title: '提现时间', 
+      title: intl.formatMessage({ id: 'withdraw.column.withdrawTime' }), 
       dataIndex: 'dateTimeRange',
       valueType: 'dateTimeRange',
       hideInTable: true
     },
     { 
-      title: '操作', 
+      title: intl.formatMessage({ id: 'withdraw.column.action' }), 
       key: 'action',
       hideInSearch: true,
       render: (_, record) => (
         <Space size="middle">
           {record.status === 1 ? 
-            <Button type="primary" size="small" onClick={() => showDetailModal(record)}>审核</Button> : 
-            <Button type="link" onClick={() => showDetailModal(record)}>详情</Button>}
+            <Button type="primary" size="small" onClick={() => showDetailModal(record)}>
+              {intl.formatMessage({ id: 'withdraw.action.review' })}
+            </Button> : 
+            <Button type="link" onClick={() => showDetailModal(record)}>
+              {intl.formatMessage({ id: 'withdraw.action.details' })}
+            </Button>}
         </Space>
       ),
     },

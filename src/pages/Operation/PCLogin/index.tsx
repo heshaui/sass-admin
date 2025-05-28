@@ -3,6 +3,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Card, Tabs, Tag, Typography, Image, Space } from 'antd';
 import type { TabsProps } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
+import { useIntl } from 'umi';
 import { 
   getTenantKeyParams,
   updateTenantKv, 
@@ -21,6 +22,7 @@ interface TableItem {
 
 
 const PCLogin: React.FC = () => {
+  const intl = useIntl();
   const [activeTab, setActiveTab] = useState('login');
   const [activeLanguage, setActiveLanguage] = useState('en_US');
   const [pcLoginData, setPcLoginData] = useState<any>(null);
@@ -37,7 +39,7 @@ const PCLogin: React.FC = () => {
         setPcLoginData(JSON.parse(result.data.keyValue));
       }
     } catch (error) {
-      console.error('获取pcLogin数据失败:', error);
+      console.error(intl.formatMessage({ id: 'pcLogin.message.getPcLoginFailed' }), error);
     } finally {
       setLoading(false);
     }
@@ -49,9 +51,9 @@ const PCLogin: React.FC = () => {
 
   // 提示信息
   const tips = [
-    '若配置，则使用您的配置；若不配置，则使用系统默认；',
-    '英文语言&登录为必填项，其他语言若不配置则默认与英文下场景一致；',
-    '图片建议尺寸：126*869',
+    intl.formatMessage({ id: 'pcLogin.tips.1' }),
+    intl.formatMessage({ id: 'pcLogin.tips.2' }),
+    intl.formatMessage({ id: 'pcLogin.tips.3' }),
   ];
 
   // 语言选项
@@ -87,19 +89,19 @@ const PCLogin: React.FC = () => {
   // 表格列定义
   const columns: ProColumns<TableItem>[] = [
     {
-      title: '标题',
+      title: intl.formatMessage({ id: 'pcLogin.column.title' }),
       dataIndex: 'title',
       key: 'title',
     },
     {
-      title: '图片',
+      title: intl.formatMessage({ id: 'pcLogin.column.image' }),
       dataIndex: 'image',
       key: 'image',
       search: false,
       render: (_, record) => (
         <Image
           src={record.image}
-          alt="登录图片"
+          alt={intl.formatMessage({ id: 'pcLogin.column.image.alt' })}
           width={80}
           height={80}
           style={{ objectFit: 'cover' }}
@@ -107,16 +109,16 @@ const PCLogin: React.FC = () => {
       ),
     },
     {
-      title: '跳转地址',
+      title: intl.formatMessage({ id: 'pcLogin.column.url' }),
       dataIndex: 'url',
       key: 'url',
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'pcLogin.column.action' }),
       valueType: 'option',
       key: 'option',
       render: (_, record) => [
-        <a key="edit" onClick={() => handleEdit(record)}>编辑</a>,
+        <a key="edit" onClick={() => handleEdit(record)}>{intl.formatMessage({ id: 'pcLogin.action.edit' })}</a>,
       ],
     },
   ];
@@ -140,7 +142,7 @@ const PCLogin: React.FC = () => {
   const tabItems: TabsProps['items'] = [
     {
       key: 'login',
-      label: '登录',
+      label: intl.formatMessage({ id: 'pcLogin.tab.login' }),
       children: (
         <ProTable<TableItem>
           columns={columns}
@@ -156,7 +158,7 @@ const PCLogin: React.FC = () => {
     },
     {
       key: 'register',
-      label: '注册',
+      label: intl.formatMessage({ id: 'pcLogin.tab.register' }),
       children: (
         <ProTable<TableItem>
           columns={columns}

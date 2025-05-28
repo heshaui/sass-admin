@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'umi';
 import { Modal, Form, Input, InputNumber, Radio, message, Select } from 'antd';
 import { HelpCenterClassItem, getHelpCenterClassList } from '@/services/ant-design-pro/operation';
 import AvatarUpload from '@/components/AvatarUpload';
@@ -11,12 +12,8 @@ interface CategoryFormModalProps {
   onCancel: () => void;
 }
 
-const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
-  visible,
-  currentCategory,
-  onSubmit,
-  onCancel,
-}) => {
+const CategoryFormModal: React.FC<CategoryFormModalProps> = ({ visible, onCancel, onSubmit, currentCategory }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [language, setLanguage] = useState('en_US');
   const [titleMap, setTitleMap] = useState<Record<string, string>>({});
@@ -24,17 +21,32 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   const [helpCenterClassList, setHelpCenterClassList] = useState<HelpCenterClassItem[]>([]);
   const [formType, setFormType] = useState<number>(1);
 
-
-  const getClassList = async () => {
-    const response = await getHelpCenterClassList({});
-    if (response.code === '0') {
-      if (Array.isArray(response.data.list)) {
-        setHelpCenterClassList(response.data.list);
-      } else {
-        console.error('API返回的数据结构不是预期的数组格式:', response.data);
-      }
-    }
+  // 定义API响应类型
+  interface ApiResponse {
+    code: string;
+    message?: string;
+    success: boolean;
+    data: HelpCenterClassItem[] | HelpCenterClassItem;
   }
+
+  useEffect(() => {
+    // 获取分类列表
+    const fetchCategoryList = async () => {
+      try {
+        const res = await getHelpCenterClassList({}) as ApiResponse;
+        if (res.code === '0' && res.success) {
+          const data = Array.isArray(res.data) ? res.data : [];
+          setHelpCenterClassList(data.filter((item: any) => item.type === 1));
+        }
+      } catch (error) {
+        console.error('获取分类列表失败:', error);
+      }
+    };
+
+    if (visible) {
+      fetchCategoryList();
+    }
+  }, [visible]);
 
   const handleLanguageChange = (value: string) => {
     // 保存当前语言的标题
@@ -69,7 +81,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
 
       // 检查是否至少有一种语言有标题
       if (Object.keys(titleMap).length === 0) {
-        message.error('请至少添加一种语言的标题');
+        message.error(intl.formatMessage({ id: 'helpCenter.category.message.getCategoryListError' }));
         return;
       }
 
@@ -98,8 +110,8 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
     }
   };
 
+  // 初始化表单数据
   useEffect(() => {
-    getClassList();
     if (visible) {
       // 重置状态
       let initialTitleMap: Record<string, string> = {};
@@ -117,7 +129,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         // 处理多语言标题
         if (currentCategory.languages && Array.isArray(currentCategory.languages)) {
           // 如果有多语言数据
-          currentCategory.languages.forEach(item => {
+          currentCategory.languages.forEach((item: any) => {
             initialTitleMap[item.languageCode] = item.articleTitle;
           });
 
@@ -150,7 +162,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
 
   return (
     <Modal
-      title={currentCategory ? '编辑分类' : '添加分类'}
+      title={currentCategory ? intl.formatMessage({ id: 'helpCenter.category.modal.editTitle' }) : intl.formatMessage({ id: 'helpCenter.category.modal.addTitle' })}
       open={visible}
       onOk={handleSubmit}
       onCancel={onCancel}
@@ -161,21 +173,21 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         form={form}
         layout="vertical"
       >
-        <Form.Item name='type' label="类型">
+        <Form.Item name='type' label={intl.formatMessage({ id: 'helpCenter.category.form.type' })}>
           <Radio.Group value={form.getFieldValue('type')} defaultValue={1} onChange={(e) => setFormType(e.target.value)}>
-            <Radio value={1}>菜单</Radio>
-            <Radio value={2}>分类</Radio>
+            <Radio value={1}>{intl.formatMessage({ id: 'helpCenter.category.type.menu' })}</Radio>
+            <Radio value={2}>{intl.formatMessage({ id: 'helpCenter.category.type.category' })}</Radio>
           </Radio.Group>
         </Form.Item>
         {formType === 1 &&(
           <Form.Item
-            label="图标"
-            extra="夜间版Logo为必传，若未上传日间版则默认使用夜间版"
+            label={intl.formatMessage({ id: 'helpCenter.category.form.icon' })}
+            extra={intl.formatMessage({ id: 'helpCenter.category.form.iconNote' })}
           >
             <div style={{ display: 'flex', gap: '20px' }}>
             <div>
               <div style={{ marginBottom: '8px' }}>
-                夜间
+                {intl.formatMessage({ id: 'helpCenter.category.form.nightMode' })}
               </div>
               <Form.Item name="blackIcon" noStyle>
                 <AvatarUpload/>
@@ -183,7 +195,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
               <div>142*72 png图片</div>
             </div>
             <div>
-              <div style={{ marginBottom: '8px' }}>日间</div>
+              <div style={{ marginBottom: '8px' }}>{intl.formatMessage({ id: 'helpCenter.category.form.dayMode' })}</div>
               <Form.Item name="whiteIcon" noStyle>
                 <AvatarUpload/>
               </Form.Item>
@@ -195,31 +207,31 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           )}
 
         <Form.Item
-          label="描述"
+          label={intl.formatMessage({ id: 'helpCenter.category.form.description' })}
           name="helpDescription"
-          rules={[{ required: true, message: '请输入描述' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'helpCenter.category.form.validation.descriptionRequired' }) }]}
         >
-          <Input placeholder="描述" />
+          <Input placeholder={intl.formatMessage({ id: 'helpCenter.category.form.descriptionPlaceholder' })} />
         </Form.Item>
 
       {formType === 1 &&(
         <Form.Item
-          label="排序"
+          label={intl.formatMessage({ id: 'helpCenter.category.form.sort' })}
           name="helpSort"
-          rules={[{ required: true, message: '请输入排序' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'helpCenter.category.form.validation.sortRequired' }) }]}
         >
-          <InputNumber min={1} placeholder="排序" style={{ width: '100%' }} />
+          <InputNumber min={1} placeholder={intl.formatMessage({ id: 'helpCenter.category.form.sortPlaceholder' })} style={{ width: '100%' }} />
         </Form.Item>
 
   )}
 
         <Form.Item
-          label="上级分类"
+          label={intl.formatMessage({ id: 'helpCenter.category.form.parentCategory' })}
           name="parentId"
-          rules={[{ required: true, message: '请选择上级分类' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'helpCenter.category.form.validation.parentCategoryRequired' }) }]}
         >
           <Select
-            placeholder="请选择分类"
+            placeholder={intl.formatMessage({ id: 'helpCenter.category.form.selectCategory' })}
             options={Array.isArray(helpCenterClassList) ? helpCenterClassList.map((item) => ({
               value: item.id,
               label: item.helpDescription,
@@ -228,20 +240,20 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
         </Form.Item>
 
         <Form.Item
-          label="语言"
+          label={intl.formatMessage({ id: 'helpCenter.category.form.language' })}
           name="languageCode"
-          rules={[{ required: true, message: '请选择语言' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'helpCenter.category.form.validation.languageRequired' }) }]}
         >
           <LanguageSelector value={language} onChange={handleLanguageChange} />
         </Form.Item>
 
         <Form.Item
-          label="标题"
+          label={intl.formatMessage({ id: 'helpCenter.category.form.title' })}
           name="articleTitle"
-          rules={[{ required: true, message: '请输入标题' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'helpCenter.category.form.validation.titleRequired' }) }]}
         >
           <Input
-            placeholder="输入当前语言的标题"
+            placeholder={intl.formatMessage({ id: 'helpCenter.category.form.titlePlaceholder' })}
             maxLength={30}
             value={currentTitle}
             onChange={handleTitleChange}

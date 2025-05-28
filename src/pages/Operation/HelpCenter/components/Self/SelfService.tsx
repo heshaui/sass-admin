@@ -1,10 +1,12 @@
-import React, { useState, useRef,useEffect } from 'react';
-import {  Space, message,Button,Image} from 'antd';
+import React, { useState, useRef, useEffect } from 'react';
+import { Space, message, Button, Image } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
+import { useIntl } from 'umi';
 import ServiceModal from './ServiceModal';
 import LanguageSelector from '@/components/LanguageSelector';
 import { addHelpCenterCustomization,getHelpCenterCustomizationList,getHelpCenterCustomizationContentList } from '@/services/ant-design-pro/operation';
 const SelfService: React.FC = () => {
+  const intl = useIntl();
   const [activeLanguage, setActiveLanguage] = useState('en_US');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dataSource, setDataSource] = useState([]);
@@ -23,12 +25,11 @@ const SelfService: React.FC = () => {
     setIsModalVisible(false);
     const res = await addHelpCenterCustomization(data);
     if (res.code==='0'&&res.data) {
-      message.success('添加成功');
+      message.success(intl.formatMessage({ id: 'helpCenter.selfService.message.addSuccess' }));
       actionRef.current?.reload();
     }else{
-      message.error('添加失败');
+      message.error(intl.formatMessage({ id: 'helpCenter.selfService.message.addError' }));
     }
-
   };
 
   // 新的合并请求函数
@@ -74,17 +75,17 @@ const SelfService: React.FC = () => {
         setDataSource(mergedData);
         console.log('合并数据:', mergedData);
       } else {
-        message.error('获取数据失败');
+        message.error(intl.formatMessage({ id: 'helpCenter.common.getDataFailed' }));
       }
     } catch (error) {
-      console.error('请求出错:', error);
-      message.error('获取数据失败');
+      console.error(`${intl.formatMessage({ id: 'helpCenter.common.requestError' })}:`, error);
+      message.error(intl.formatMessage({ id: 'helpCenter.common.getDataFailed' }));
     }
   };
 
   const columns = [
     {
-      title: '标题',
+      title: intl.formatMessage({ id: 'helpCenter.selfService.column.title' }),
       dataIndex: ['contents', 0, 'articleTitle'],
       render: (text: string, record: any) => {
         const content = record.contents && record.contents[0];
@@ -92,7 +93,7 @@ const SelfService: React.FC = () => {
       }
     },
     {
-      title: '路径',
+      title: intl.formatMessage({ id: 'helpCenter.selfService.column.path' }),
       dataIndex: ['contents', 0, 'languagePath'],
       render: (text: string, record: any) => {
         const content = record.contents && record.contents[0];
@@ -100,7 +101,7 @@ const SelfService: React.FC = () => {
       }
     },
     {
-      title: '夜间图标',
+      title: intl.formatMessage({ id: 'helpCenter.selfService.column.nightIcon' }),
       dataIndex: 'blackIcon',
       render: (text: string, record: any) => {
         if(text!=='-'){
@@ -109,11 +110,9 @@ const SelfService: React.FC = () => {
           return ''
         }
       }
-       
-      
     },
     {
-      title: '日间图标',
+      title: intl.formatMessage({ id: 'helpCenter.selfService.column.dayIcon' }),
       dataIndex: 'whiteIcon',
       render: (text: string, record: any) => {
         if(text!=='-'){
@@ -124,7 +123,6 @@ const SelfService: React.FC = () => {
         }
       }
     },
-    
   ];
 
 
@@ -149,7 +147,9 @@ const SelfService: React.FC = () => {
           dataSource={dataSource}
           toolBarRender={() => 
             dataSource.length < 10 ? [
-              <Button type="primary" onClick={handleAddService}>添加</Button>
+              <Button type="primary" onClick={handleAddService}>
+                {intl.formatMessage({ id: 'helpCenter.selfService.button.add' })}
+              </Button>
             ] : []
           }
         />

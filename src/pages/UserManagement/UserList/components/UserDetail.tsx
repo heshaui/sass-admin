@@ -2,7 +2,7 @@ import React, { useState ,useEffect} from 'react';
 import { Card, Descriptions, Badge, Space, Button, Modal, message, Input, Form, Select, Tabs } from 'antd';
 import type { UserItem } from '@/services/ant-design-pro/UserManagement';
 import {  ProTable } from '@ant-design/pro-components';
-import { useModel } from 'umi';
+import { useModel, useIntl } from 'umi';
 import { 
   freezeLogin, freezeTransaction, freezeWithdrawal,
   unfreezeLogin, unfreezeTransaction, unfreezeWithdrawal,
@@ -33,6 +33,7 @@ interface UserDetailProps {
 
 
 const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => {
+  const intl = useIntl();
   if (!visible || !userId) return null;
   const { initialState,refresh } = useModel('@@initialState');
   const { currentUser } = initialState || {};
@@ -161,7 +162,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   
   const handleUnbindGoogleCode = async () => {
     if (!unbindGoogleReason.trim()) {
-      message.error('请输入解绑原因');
+      message.error(intl.formatMessage({ id: 'userDetail.message.unbindGoogleAuthReason' }));
       return;
     }
     
@@ -171,7 +172,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
     });
     
     if(res.code === '0'&&res.data) {
-      message.success('解绑成功');
+      message.success(intl.formatMessage({ id: 'userDetail.message.unbindGoogleAuthSuccess' }));
       await userDetailInfo();
       setUnbindGoogleModalVisible(false);
       refresh();
@@ -291,7 +292,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       if (withdrawalActionType === 'freeze') {
        const res= await freezeWithdrawal({ userId: user.userId, remark: withdrawalReason });
        if(res.code==='0'&&res.data){
-        message.success('冻结提现操作成功');
+        message.success(intl.formatMessage({ id: 'userDetail.message.freezeWithdrawalSuccess' }));
         await getLog({current:1,pageSize:10})
 
        }else{
@@ -300,7 +301,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       } else {
         const res= await unfreezeWithdrawal({ userId: user.userId, remark: withdrawalReason });
         if(res.code==='0'&&res.data){
-          message.success('解冻提现操作成功');
+          message.success(intl.formatMessage({ id: 'userDetail.message.unfreezeWithdrawalSuccess' }));
           await getLog({current:1,pageSize:10})
 
         }else{
@@ -309,8 +310,12 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       }
       setWithdrawalModalVisible(false);
     } catch (error) {
-      console.error(`${withdrawalActionType === 'freeze' ? '冻结' : '解冻'}提现失败`, error);
-      message.error(`${withdrawalActionType === 'freeze' ? '冻结' : '解冻'}提现操作失败`);
+      console.error(withdrawalActionType === 'freeze' ? 
+        intl.formatMessage({ id: 'userDetail.message.freezeWithdrawalError' }) : 
+        intl.formatMessage({ id: 'userDetail.message.unfreezeWithdrawalError' }), error);
+      message.error(withdrawalActionType === 'freeze' ? 
+        intl.formatMessage({ id: 'userDetail.message.freezeWithdrawalError' }) : 
+        intl.formatMessage({ id: 'userDetail.message.unfreezeWithdrawalError' }));
     }
     await userDetailInfo();
   };
@@ -319,17 +324,17 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const handleUpdatePhone = async () => {
     try {
       if (!newPhone.trim()) {
-        message.error('请输入新手机号');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterNewPhone' }));
         return;
       }
       
       if (!googleCode.trim()) {
-        message.error('请输入谷歌验证码');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterGoogleAuthCode' }));
         return;
       }
 
       if(!phoneRemark.trim()){
-        message.error('请输入备注');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterRemark' }));
         return;
       }
       
@@ -341,7 +346,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         remark: phoneRemark 
       });
       if(res.code==='0'&&res.data){
-        message.success('手机号更新成功');
+        message.success(intl.formatMessage({ id: 'userDetail.message.updatePhoneSuccess' }));
         await getLog({current:1,pageSize:10})
 
       }else{
@@ -349,7 +354,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       }
       setPhoneModalVisible(false);
     } catch (error) {
-      message.error('手机号更新失败');
+      message.error(intl.formatMessage({ id: 'userDetail.message.updatePhoneError' }));
     }
     await userDetailInfo();
   };
@@ -358,17 +363,17 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const handleUpdateEmail = async () => {
     try {
       if (!newEmail.trim()) {
-        message.error('请输入新邮箱');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterNewEmail' }));
         return;
       }
       
       if (!googleCode.trim()) {
-        message.error('请输入谷歌验证码');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterGoogleAuthCode' }));
         return;
       }
       
       if(!emailRemark.trim()){
-        message.error('请输入备注');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterRemark' }));
         return;
       }
      const res= await updateEmail({ 
@@ -379,7 +384,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
         remark: emailRemark 
       });
       if(res.code==='0'){
-        message.success('邮箱更新成功');
+        message.success(intl.formatMessage({ id: 'userDetail.message.updateEmailSuccess' }));
         await getLog({current:1,pageSize:10})
 
       }else{
@@ -387,8 +392,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       }
       setEmailModalVisible(false);
     } catch (error) {
-      console.error('更新邮箱失败', error);
-      message.error('邮箱更新失败');
+      console.error(intl.formatMessage({ id: 'userDetail.message.updateEmailError' }), error);
+      message.error(intl.formatMessage({ id: 'userDetail.message.updateEmailError' }));
     }
     await userDetailInfo();
   };
@@ -439,29 +444,29 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   return (
     <>
       <Card 
-        title="用户详情" 
-        extra={<a onClick={onClose}>返回</a>} 
+        title={intl.formatMessage({ id: 'userDetail.title' })} 
+        extra={<a onClick={onClose}>{intl.formatMessage({ id: 'userDetail.return' })}</a>} 
         className="user-detail-card"
       >
         <Descriptions bordered column={2}>
-          <Descriptions.Item label="用户ID">{user?.userId}</Descriptions.Item>
-          <Descriptions.Item label="昵称">{user?.account}</Descriptions.Item>
-          <Descriptions.Item label="用户状态">
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.userId' })}>{user?.userId}</Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.nickname' })}>{user?.account}</Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.userStatus' })}>
             <Space>
-            {user.status===1 ? '正常' : '冻结'}
+            {user.status===1 ? intl.formatMessage({ id: 'userDetail.status.normal' }) : intl.formatMessage({ id: 'userDetail.status.frozen' })}
             </Space>
           </Descriptions.Item>
-          <Descriptions.Item label="提现状态">
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.withdrawalStatus' })}>
             <Space>
-            {user.withdrawalStatus===1 ? '正常' : '冻结'}
+            {user.withdrawalStatus===1 ? intl.formatMessage({ id: 'userDetail.status.normal' }) : intl.formatMessage({ id: 'userDetail.status.frozen' })}
             </Space>
           </Descriptions.Item>
-          <Descriptions.Item label="交易状态">
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.transactionStatus' })}>
             <Space>
-            {user.transactionStatus===1 ? '正常' : '冻结'}
+            {user.transactionStatus===1 ? intl.formatMessage({ id: 'userDetail.status.normal' }) : intl.formatMessage({ id: 'userDetail.status.frozen' })}
             </Space>
           </Descriptions.Item>
-          <Descriptions.Item label="手机号码">
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.phoneNumber' })}>
             {user.phone}
             {user.phone ? (
               <Button 
@@ -474,11 +479,11 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
               修改
             </Button>) : ''}
           </Descriptions.Item>
-          <Descriptions.Item label="姓名">
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.name' })}>
             {user.surname} {user.firstName}
           </Descriptions.Item>
-          <Descriptions.Item label="注册时间">{dayjs(user.createTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
-          <Descriptions.Item label="邮箱">
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.registrationTime' })}>{dayjs(user.createTime).format('YYYY-MM-DD HH:mm:ss')}</Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.email' })}>
             {user.email}
             {
               user.email ? (
@@ -488,15 +493,15 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                   style={{ marginLeft: '8px' }}
                 >
                   
-                  修改
+                  {intl.formatMessage({ id: 'userDetail.action.edit' })}
                 </Button>
               ) : ''
             }
      
           </Descriptions.Item>
-          <Descriptions.Item label="实名认证">{user.realnessStatus===1 ? '已认证' : '未认证'}</Descriptions.Item>
-          <Descriptions.Item label="证件编号">{user.cardCode || '暂无'}</Descriptions.Item>
-          <Descriptions.Item label="操作">
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.realNameVerification' })}>{user.realnessStatus===1 ? intl.formatMessage({ id: 'userDetail.verification.verified' }) : intl.formatMessage({ id: 'userDetail.verification.unverified' })}</Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.idNumber' })}>{user.cardCode || intl.formatMessage({ id: 'userDetail.idNumber.none' })}</Descriptions.Item>
+          <Descriptions.Item label={intl.formatMessage({ id: 'userDetail.actions' })}>
             {/* 登录状态操作按钮 */}
             {user.status === 1 ? (
               <Button 
@@ -505,7 +510,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 style={{marginRight: '10px'}} 
                 onClick={() => showLoginModal('freeze')}
               >
-                冻结登录
+                {intl.formatMessage({ id: 'userDetail.action.freezeLogin' })}
               </Button>
             ) : (
               <Button 
@@ -513,7 +518,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 style={{marginRight: '10px'}} 
                 onClick={() => showLoginModal('unfreeze')}
               >
-                解冻登录
+                {intl.formatMessage({ id: 'userDetail.action.unfreezeLogin' })}
               </Button>
             )}
             
@@ -525,7 +530,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 style={{marginRight: '10px'}} 
                 onClick={() => showTransactionModal('freeze')}
               >
-                冻结交易
+                {intl.formatMessage({ id: 'userDetail.action.freezeTransaction' })}
               </Button>
             ) : (
               <Button 
@@ -533,7 +538,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 style={{marginRight: '10px'}} 
                 onClick={() => showTransactionModal('unfreeze')}
               >
-                解冻交易
+                {intl.formatMessage({ id: 'userDetail.action.unfreezeTransaction' })}
               </Button>
             )}
             
@@ -544,14 +549,14 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 danger 
                 onClick={() => showWithdrawalModal('freeze')}
               >
-                冻结提现
+                {intl.formatMessage({ id: 'userDetail.action.freezeWithdrawal' })}
               </Button>
             ) : (
               <Button 
                 type="primary"
                 onClick={() => showWithdrawalModal('unfreeze')}
               >
-                解冻提现
+                {intl.formatMessage({ id: 'userDetail.action.unfreezeWithdrawal' })}
               </Button>
             )}
             {user.googleKey && (
@@ -560,25 +565,25 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 style={{marginLeft: '10px'}} 
                 onClick={showUnbindGoogleModal}
               >
-                解绑谷歌验证
+                {intl.formatMessage({ id: 'userDetail.action.unbindGoogleAuth' })}
               </Button>
             )}
           </Descriptions.Item>
         </Descriptions>
         <Tabs>
-        <Tabs.TabPane tab="资产" key="1">
+        <Tabs.TabPane tab={intl.formatMessage({ id: 'userDetail.tab.assets' })} key="1">
           <Asset userId={userId} />
         </Tabs.TabPane>
-          <Tabs.TabPane tab="流水" key="2">
+          <Tabs.TabPane tab={intl.formatMessage({ id: 'userDetail.tab.transactions' })} key="2">
             <UserTransaction userId={userId} />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="对账" key="3">
+          <Tabs.TabPane tab={intl.formatMessage({ id: 'userDetail.tab.reconciliation' })} key="3">
             <Reconciliation userId={userId} />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="日志" key="4">
+          <Tabs.TabPane tab={intl.formatMessage({ id: 'userDetail.tab.logs' })} key="4">
             <Log userId={userId} />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="操作日志" key="5">
+          <Tabs.TabPane tab={intl.formatMessage({ id: 'userDetail.tab.operationLogs' })} key="5">
             <ProTable
               columns={columns}
               rowKey="id"
@@ -599,20 +604,30 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
 
       {/* 登录权限操作对话框 */}
       <Modal
-        title={`确认${loginActionType === 'freeze' ? '冻结' : '解冻'}登录`}
+        title={loginActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.confirmFreezeLogin' }) : 
+          intl.formatMessage({ id: 'userDetail.modal.confirmUnfreezeLogin' })}
         open={loginModalVisible}
         onOk={handleLoginAction}
         onCancel={() => setLoginModalVisible(false)}
-        okText="确认"
-        cancelText="取消"
+        okText={intl.formatMessage({ id: 'userDetail.button.confirm' })}
+        cancelText={intl.formatMessage({ id: 'userDetail.button.cancel' })}
         okButtonProps={{ disabled: !loginReason.trim() }}
       >
-        <p>您确定要{loginActionType === 'freeze' ? '冻结' : '解冻'}用户 <strong>{user.account}</strong> (ID: {user.userId}) 的登录权限吗？</p>
-        <p>{loginActionType === 'freeze' ? '冻结后，该用户将无法登录系统。' : '解冻后，该用户将恢复登录系统的权限。'}</p>
+        <p>{loginActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.confirmFreezeLoginText' }, { account: user.account, userId: user.userId }) : 
+          intl.formatMessage({ id: 'userDetail.modal.confirmUnfreezeLoginText' }, { account: user.account, userId: user.userId })}</p>
+        <p>{loginActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.freezeLoginDescription' }) : 
+          intl.formatMessage({ id: 'userDetail.modal.unfreezeLoginDescription' })}</p>
         <Form layout="vertical">
-          <Form.Item label={`${loginActionType === 'freeze' ? '冻结' : '解冻'}原因：`} required>
+          <Form.Item label={loginActionType === 'freeze' ? 
+            intl.formatMessage({ id: 'userDetail.form.freezeReason' }) : 
+            intl.formatMessage({ id: 'userDetail.form.unfreezeReason' })} required>
             <TextArea
-              placeholder={`请输入${loginActionType === 'freeze' ? '冻结' : '解冻'}原因`}
+              placeholder={loginActionType === 'freeze' ? 
+                intl.formatMessage({ id: 'userDetail.placeholder.enterFreezeReason' }) : 
+                intl.formatMessage({ id: 'userDetail.placeholder.enterUnfreezeReason' })}
               value={loginReason}
               onChange={(e) => {
                 if (e.target.value.length <= 50) {
@@ -631,20 +646,30 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
 
       {/* 交易权限操作对话框 */}
       <Modal
-        title={`确认${transactionActionType === 'freeze' ? '冻结' : '解冻'}交易`}
+        title={transactionActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.confirmFreezeTransaction' }) : 
+          intl.formatMessage({ id: 'userDetail.modal.confirmUnfreezeTransaction' })}
         open={transactionModalVisible}
         onOk={handleTransactionAction}
         onCancel={() => setTransactionModalVisible(false)}
-        okText="确认"
-        cancelText="取消"
+        okText={intl.formatMessage({ id: 'userDetail.button.confirm' })}
+        cancelText={intl.formatMessage({ id: 'userDetail.button.cancel' })}
         okButtonProps={{ disabled: !transactionReason.trim() }}
       >
-        <p>您确定要{transactionActionType === 'freeze' ? '冻结' : '解冻'}用户 <strong>{user.account}</strong> (ID: {user.userId}) 的交易权限吗？</p>
-        <p>{transactionActionType === 'freeze' ? '冻结后，该用户将无法进行任何交易操作。' : '解冻后，该用户将恢复交易功能。'}</p>
+        <p>{transactionActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.confirmFreezeTransactionText' }, { account: user.account, userId: user.userId }) : 
+          intl.formatMessage({ id: 'userDetail.modal.confirmUnfreezeTransactionText' }, { account: user.account, userId: user.userId })}</p>
+        <p>{transactionActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.freezeTransactionDescription' }) : 
+          intl.formatMessage({ id: 'userDetail.modal.unfreezeTransactionDescription' })}</p>
         <Form layout="vertical">
-          <Form.Item label={`${transactionActionType === 'freeze' ? '冻结' : '解冻'}原因：`} required>
+          <Form.Item label={transactionActionType === 'freeze' ? 
+            intl.formatMessage({ id: 'userDetail.form.freezeReason' }) : 
+            intl.formatMessage({ id: 'userDetail.form.unfreezeReason' })} required>
             <TextArea
-              placeholder={`请输入${transactionActionType === 'freeze' ? '冻结' : '解冻'}原因`}
+              placeholder={transactionActionType === 'freeze' ? 
+                intl.formatMessage({ id: 'userDetail.placeholder.enterFreezeReason' }) : 
+                intl.formatMessage({ id: 'userDetail.placeholder.enterUnfreezeReason' })}
               value={transactionReason}
               onChange={(e) => {
                 if (e.target.value.length <= 50) {
@@ -663,20 +688,30 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
 
       {/* 提现权限操作对话框 */}
       <Modal
-        title={`确认${withdrawalActionType === 'freeze' ? '冻结' : '解冻'}提现`}
+        title={withdrawalActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.confirmFreezeWithdrawal' }) : 
+          intl.formatMessage({ id: 'userDetail.modal.confirmUnfreezeWithdrawal' })}
         open={withdrawalModalVisible}
         onOk={handleWithdrawalAction}
         onCancel={() => setWithdrawalModalVisible(false)}
-        okText="确认"
-        cancelText="取消"
+        okText={intl.formatMessage({ id: 'userDetail.button.confirm' })}
+        cancelText={intl.formatMessage({ id: 'userDetail.button.cancel' })}
         okButtonProps={{ disabled: !withdrawalReason.trim() }}
       >
-        <p>您确定要{withdrawalActionType === 'freeze' ? '冻结' : '解冻'}用户 <strong>{user.account}</strong> (ID: {user.userId}) 的提现权限吗？</p>
-        <p>{withdrawalActionType === 'freeze' ? '冻结后，该用户将无法进行提现操作。' : '解冻后，该用户将恢复提现功能。'}</p>
+        <p>{withdrawalActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.confirmFreezeWithdrawalText' }, { account: user.account, userId: user.userId }) : 
+          intl.formatMessage({ id: 'userDetail.modal.confirmUnfreezeWithdrawalText' }, { account: user.account, userId: user.userId })}</p>
+        <p>{withdrawalActionType === 'freeze' ? 
+          intl.formatMessage({ id: 'userDetail.modal.freezeWithdrawalDescription' }) : 
+          intl.formatMessage({ id: 'userDetail.modal.unfreezeWithdrawalDescription' })}</p>
         <Form layout="vertical">
-          <Form.Item label={`${withdrawalActionType === 'freeze' ? '冻结' : '解冻'}原因：`} required>
+          <Form.Item label={withdrawalActionType === 'freeze' ? 
+            intl.formatMessage({ id: 'userDetail.form.freezeReason' }) : 
+            intl.formatMessage({ id: 'userDetail.form.unfreezeReason' })} required>
             <TextArea
-              placeholder={`请输入${withdrawalActionType === 'freeze' ? '冻结' : '解冻'}原因`}
+              placeholder={withdrawalActionType === 'freeze' ? 
+                intl.formatMessage({ id: 'userDetail.placeholder.enterFreezeReason' }) : 
+                intl.formatMessage({ id: 'userDetail.placeholder.enterUnfreezeReason' })}
               value={withdrawalReason}
               onChange={(e) => {
                 if (e.target.value.length <= 50) {
@@ -695,19 +730,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
 
       {/* 修改手机号模态框 */}
       <Modal
-        title="更改手机号"
+        title={intl.formatMessage({ id: 'userDetail.modal.updatePhone' })}
         open={phoneModalVisible}
         onOk={handleUpdatePhone}
         onCancel={() => setPhoneModalVisible(false)}
-        okText="提交"
-        cancelText="取消"
+        okText={intl.formatMessage({ id: 'userDetail.button.submit' })}
+        cancelText={intl.formatMessage({ id: 'userDetail.button.cancel' })}
       >
         <p style={{ color: '#ff4d4f', marginBottom: '24px' }}>
-          更改手机号后，{time}小时内无法出金，请确保已告知终端用户！
+          {intl.formatMessage({ id: 'userDetail.modal.updatePhoneWarning' }, { time })}
         </p>
         <Form layout="vertical">
           <Form.Item 
-            label="旧手机号："
+            label={intl.formatMessage({ id: 'userDetail.form.oldPhone' })}
             required
             style={{ marginBottom: '16px' }}
           >
@@ -715,7 +750,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           </Form.Item>
           
           <Form.Item 
-            label="新手机号："
+            label={intl.formatMessage({ id: 'userDetail.form.newPhone' })}
             required
             style={{ marginBottom: '16px' }}
           >
@@ -738,19 +773,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 style={{ width: '70%' }} 
                 value={newPhone}
                 onChange={(e) => setNewPhone(e.target.value)}
-                placeholder="请输入手机号"
+                placeholder={intl.formatMessage({ id: 'userDetail.placeholder.enterNewPhone' })}
               />
             </Input.Group>
           </Form.Item>
           
           <Form.Item 
-            label="谷歌验证码："
+            label={intl.formatMessage({ id: 'userDetail.form.googleAuthCode' })}
             required
             style={{ marginBottom: '16px' }}
           >
             {
               currentUser?.employeeResp?.googleCode===false && (
-                <Button type="link"  onClick={getGoogleCode}>未绑定，点击前往绑定</Button>
+                <Button type="link" onClick={getGoogleCode}>{intl.formatMessage({ id: 'userDetail.button.bindGoogleAuth' })}</Button>
               )
             }
             {
@@ -758,19 +793,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 <Input 
                   value={googleCode}
                   onChange={(e) => setGoogleCode(e.target.value)}
-                  placeholder="请输入验证码"
+                  placeholder={intl.formatMessage({ id: 'userDetail.placeholder.enterGoogleAuthCode' })}
                 />
               )
             }
           </Form.Item>
           
           <Form.Item 
-            label="备注："
+            label={intl.formatMessage({ id: 'userDetail.form.remark' })}
             style={{ marginBottom: '8px' }}
             required
           >
             <TextArea
-              placeholder="请输入原因，50字符以内"
+              placeholder={intl.formatMessage({ id: 'userDetail.placeholder.enterRemark' })}
               value={phoneRemark}
               onChange={(e) => {
                 if (e.target.value.length <= 50) {
@@ -789,19 +824,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       
       {/* 修改邮箱模态框 */}
       <Modal
-        title="更改邮箱"
+        title={intl.formatMessage({ id: 'userDetail.modal.updateEmail' })}
         open={emailModalVisible}
         onOk={handleUpdateEmail}
         onCancel={() => setEmailModalVisible(false)}
-        okText="提交"
-        cancelText="取消"
+        okText={intl.formatMessage({ id: 'userDetail.button.submit' })}
+        cancelText={intl.formatMessage({ id: 'userDetail.button.cancel' })}
       >
         <p style={{ color: '#ff4d4f', marginBottom: '24px' }}>
-          更改邮箱后，{time}小时内无法出金，请确保已告知终端用户！
+          {intl.formatMessage({ id: 'userDetail.modal.updateEmailWarning' }, { time })}
         </p>
         <Form layout="vertical">
           <Form.Item 
-            label="旧邮箱："
+            label={intl.formatMessage({ id: 'userDetail.form.oldEmail' })}
             required
             style={{ marginBottom: '16px' }}
           >
@@ -809,26 +844,26 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
           </Form.Item>
           
           <Form.Item 
-            label="新邮箱："
+            label={intl.formatMessage({ id: 'userDetail.form.newEmail' })}
             required
             style={{ marginBottom: '16px' }}
           >
             <Input 
               value={newEmail}
               onChange={(e) => setNewEmail(e.target.value)}
-              placeholder="请输入新邮箱"
+              placeholder={intl.formatMessage({ id: 'userDetail.placeholder.enterNewEmail' })}
             />
           </Form.Item>
           
           <Form.Item 
-            label="谷歌验证码："
+            label={intl.formatMessage({ id: 'userDetail.form.googleAuthCode' })}
             required
             style={{ marginBottom: '16px' }}
             
           >
             {
               currentUser?.employeeResp?.googleCode===false && (
-                <Button type="link" onClick={getGoogleCode}>未绑定，点击前往绑定</Button>
+                <Button type="link" onClick={getGoogleCode}>{intl.formatMessage({ id: 'userDetail.button.bindGoogleAuth' })}</Button>
               )
             }
             {
@@ -836,19 +871,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
                 <Input 
                   value={googleCode}
                   onChange={(e) => setGoogleCode(e.target.value)}
-                  placeholder="请输入验证码"
+                  placeholder={intl.formatMessage({ id: 'userDetail.placeholder.enterGoogleAuthCode' })}
                 />
               )
             }
           </Form.Item>
           
           <Form.Item 
-            label="备注："
+            label={intl.formatMessage({ id: 'userDetail.form.remark' })}
             style={{ marginBottom: '8px' }}
             required
           >
             <TextArea
-              placeholder="请输入原因，50字符以内"
+              placeholder={intl.formatMessage({ id: 'userDetail.placeholder.enterRemark' })}
               value={emailRemark}
               onChange={(e) => {
                 if (e.target.value.length <= 50) {
@@ -867,19 +902,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       
       {/* 添加解绑谷歌验证弹框 */}
       <Modal
-        title="解绑谷歌验证"
+        title={intl.formatMessage({ id: 'userDetail.modal.unbindGoogleAuth' })}
         open={unbindGoogleModalVisible}
         onOk={handleUnbindGoogleCode}
         onCancel={() => setUnbindGoogleModalVisible(false)}
-        okText="确认"
-        cancelText="取消"
+        okText={intl.formatMessage({ id: 'userDetail.button.confirm' })}
+        cancelText={intl.formatMessage({ id: 'userDetail.button.cancel' })}
         okButtonProps={{ disabled: !unbindGoogleReason.trim() }}
       >
-        <p style={{ marginBottom: '20px' }}>解绑谷歌后，该用户可登录账号重新绑定！</p>
+        <p style={{ marginBottom: '20px' }}>{intl.formatMessage({ id: 'userDetail.modal.unbindGoogleAuthDescription' })}</p>
         <Form layout="vertical">
           <Form.Item>
             <TextArea
-              placeholder="请输入原因，50字符以内"
+              placeholder={intl.formatMessage({ id: 'userDetail.placeholder.enterRemark' })}
               value={unbindGoogleReason}
               onChange={(e) => {
                 if (e.target.value.length <= 50) {

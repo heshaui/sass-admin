@@ -5,7 +5,7 @@ import { walletTypeList,tenantWallet,tenantSubWallet} from '@/services/ant-desig
 import {getCurrencyCoinList} from '@/services/ant-design-pro/inviteFriends';
 import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
-import { useModel } from 'umi';
+import { useModel, useIntl } from 'umi';
 import GoogleCode from '@/components/GoogleCode';
 import { clearAllCookies } from '@/utils';
 const { Option } = Select;
@@ -21,6 +21,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
   onCancel, 
   onSubmit 
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [walletList, setWalletList] = useState<any[]>([]);
   const [coinList, setCoinList] = useState<any[]>([]);
@@ -75,7 +76,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
   const handleGoogleCodeSuccess = async (code: string) => {
     const res = await bindGoogleKey({ googleCode: code });
     if (res.code === '0' && res.data) {
-      message.success('绑定成功');
+      message.success(intl.formatMessage({ id: 'assetAdjustment.googleCode.bindSuccess' }));
       clearAllCookies();
       window.location.reload();
     } else {
@@ -90,12 +91,12 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
   }, []);
   return (
     <Modal
-      title="增减代币"
+      title={intl.formatMessage({ id: 'assetAdjustment.form.title' })}
       open={visible}
       onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onCancel}>
-          取消
+          {intl.formatMessage({ id: 'assetAdjustment.form.button.cancel' })}
         </Button>,
         <Button
           key="submit"
@@ -107,7 +108,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
             });
           }}
         >
-          提交
+          {intl.formatMessage({ id: 'assetAdjustment.form.button.submit' })}
         </Button>,
       ]}
       width={800}
@@ -115,7 +116,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
       <div style={{ display: 'flex' }}>
         <div style={{ flex: 1, paddingRight: 40 }}>
           <Form form={form} layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
-            <Form.Item label="账户" name="account" initialValue="company_general_account">
+            <Form.Item label={intl.formatMessage({ id: 'assetAdjustment.form.label.account' })} name="account" initialValue="company_general_account">
               <Select disabled>
                 {walletList.map((item: any) => (
                   <Option key={item.walletType} value={item.walletType}>{item.walletTypeDefeat}</Option>
@@ -123,7 +124,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
               </Select>
             </Form.Item>
             
-            <Form.Item label="方向" name="direction" initialValue="increase">
+            <Form.Item label={intl.formatMessage({ id: 'assetAdjustment.form.label.direction' })} name="direction" initialValue="increase">
               <Radio.Group buttonStyle="solid" style={{ width: '100%' }}>
                 <Radio.Button 
                   value="increase" 
@@ -134,7 +135,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
                     borderBottomLeftRadius: 4
                   }}
                 >
-                  增币
+                  {intl.formatMessage({ id: 'assetAdjustment.form.direction.increase' })}
                 </Radio.Button>
                 <Radio.Button 
                   value="decrease" 
@@ -145,12 +146,12 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
                     borderBottomRightRadius: 4
                   }}
                 >
-                  减币
+                  {intl.formatMessage({ id: 'assetAdjustment.form.direction.decrease' })}
                 </Radio.Button>
               </Radio.Group>
             </Form.Item>
             
-            <Form.Item label="币种" name="currency" initialValue="">
+            <Form.Item label={intl.formatMessage({ id: 'assetAdjustment.form.label.currency' })} name="currency" initialValue="">
               <Select style={{ width: '100%' }} onChange={(value,option)=>{
                 getWalletBalance(value);
                 setCoinName(option.children);
@@ -161,19 +162,19 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
               </Select>
             </Form.Item>
             
-            <Form.Item label="金额" name="amount" rules={[{ required: true, message: '请输入金额' }]}>
-              <Input placeholder="金额"  />
+            <Form.Item label={intl.formatMessage({ id: 'assetAdjustment.form.label.amount' })} name="amount" rules={[{ required: true, message: intl.formatMessage({ id: 'assetAdjustment.form.validation.amount' }) }]}>
+              <Input placeholder={intl.formatMessage({ id: 'assetAdjustment.form.placeholder.amount' })}  />
             </Form.Item>
             
-            <Form.Item label="备注" name="description">
-              <Input placeholder="原因"  />
+            <Form.Item label={intl.formatMessage({ id: 'assetAdjustment.form.label.description' })} name="description">
+              <Input placeholder={intl.formatMessage({ id: 'assetAdjustment.form.placeholder.description' })}  />
             </Form.Item>
             
-            <Form.Item label="谷歌验证码" name="googleCode" rules={[{ required: true, message: '请输入谷歌验证码' }]}>
+            <Form.Item label={intl.formatMessage({ id: 'assetAdjustment.form.label.googleCode' })} name="googleCode" rules={[{ required: true, message: intl.formatMessage({ id: 'assetAdjustment.form.validation.googleCode' }) }]}>
                 
                {
                 currentUser?.employeeResp?.googleCode===false && (
-                  <Button type="link"  onClick={getGoogleCode}>未绑定，点击前往绑定</Button>
+                  <Button type="link" onClick={getGoogleCode}>{intl.formatMessage({ id: 'assetAdjustment.googleCode.notBound' })}</Button>
                 )
               }
               {
@@ -181,7 +182,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
                   <Input 
                     value={googleCode}
                     onChange={(e) => setGoogleCode(e.target.value)}
-                    placeholder="请输入验证码"
+                    placeholder={intl.formatMessage({ id: 'assetAdjustment.form.placeholder.googleCode' })}
                   />
                 )
               }
@@ -192,7 +193,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
         <div style={{ width: 300, paddingTop: 10 }}>
           <div style={{ background: '#f5f5f5', padding: '20px', borderRadius: 4 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15 }}>
-              <span>账户余额</span>
+              <span>{intl.formatMessage({ id: 'assetAdjustment.account.balance' })}</span>
               <Space>
                 <span>{walletBalance?.balance}</span>
                 <span>{coinName}</span>
@@ -200,7 +201,7 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
             </div>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 15 }}>
-              <span>累计增发金额</span>
+              <span>{intl.formatMessage({ id: 'assetAdjustment.account.totalIncrease' })}</span>
               <Space>
                 <span>12.620</span>
                 <span>USDT</span>
@@ -209,12 +210,12 @@ const AssetAdjustmentForm: React.FC<AssetAdjustmentFormProps> = ({
           </div>
           
           <div style={{ marginTop: '20px', color: 'red' }}>
-            <div>注意事项:</div>
+            <div>{intl.formatMessage({ id: 'assetAdjustment.notes.title' })}</div>
             <div style={{ marginTop: 8 }}>
-              1. <span style={{ color: '#ff4d4f' }}>增发资产建议谨慎操作，若资金流向用户，您需要承担对应损失；</span>
+              1. <span style={{ color: '#ff4d4f' }}>{intl.formatMessage({ id: 'assetAdjustment.notes.item1' })}</span>
             </div>
             <div style={{ marginTop: 4 }}>
-              2. <span style={{ color: '#ff4d4f' }}>建议用于做市服务。</span>
+              2. <span style={{ color: '#ff4d4f' }}>{intl.formatMessage({ id: 'assetAdjustment.notes.item2' })}</span>
             </div>
           </div>
         </div>

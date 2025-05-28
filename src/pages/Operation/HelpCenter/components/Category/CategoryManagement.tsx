@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useIntl } from 'umi';
 import { Button, message, Popconfirm, Card } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { ProTable } from '@ant-design/pro-components';
@@ -10,13 +11,30 @@ import CategoryFormModal from './CategoryFormModal';
 // 定义API响应类型
 interface ApiResponse {
   code: string;
-  data: {
-    list: HelpCenterClassItem[];
-    count: number;
+  message?: string;
+  success: boolean;
+  data: HelpCenterClassItem[] | HelpCenterClassItem;
+}
+
+// 定义分类提交数据类型
+interface CategorySubmitData {
+  homeHelpCenterClass: {
+    type: any;
+    helpDescription: any;
+    helpSort: any;
+    blackIcon: any;
+    whiteIcon: any;
+    parentId: any;
+    showType: any;
+    id?: number;
+    name?: string;
+    status?: number;
   };
+  homeHelpCenterClassContents: any;
 }
 
 const CategoryManagement: React.FC = () => {
+  const intl = useIntl();
   const [visible, setVisible] = useState<boolean>(false);
   const [currentCategory, setCurrentCategory] = useState<HelpCenterClassItem | undefined>(undefined);
   const actionRef = useRef<ActionType>();
@@ -38,14 +56,14 @@ const CategoryManagement: React.FC = () => {
     try {
       // 实现删除逻辑
       // await deleteHelpCenterClass(id);
-      // message.success('删除成功');
+      // message.success(intl.formatMessage({ id: 'helpCenter.category.message.deleteSuccess' }));
       
       // // 删除成功后刷新表格
       // if (actionRef.current) {
       //   actionRef.current.reload();
       // }
     } catch (error) {
-      message.error('删除失败');
+      message.error(intl.formatMessage({ id: 'helpCenter.category.message.deleteError' }));
       console.error('删除失败:', error);
     }
   };
@@ -53,72 +71,84 @@ const CategoryManagement: React.FC = () => {
   // 处理表单提交
   const handleSubmit = async (values: any) => {
     try {  
-      // 判断是新增还是编辑
-      if (!currentCategory) {
-        // 确保languages存在且是数组
-        const languageContents = Array.isArray(values.languages) ? values.languages : [];
-        console.log('父组件接收到的多语言数据:', languageContents); // 调试用
-        
-        if (languageContents.length === 0) {
-          message.error('请至少添加一种语言');
-          return;
-        }
-        
+      const { languages, ...restValues } = values;
+      console.log('父组件接收到的多语言数据:', languages); // 调试用
+      
+      if (languages.length === 0) {
+        message.error(intl.formatMessage({ id: 'helpCenter.category.message.languageRequired' }));
+        return;
+      }
+      
+      // 构建提交数据
+      const languageContents = languages.map((item: any) => ({
+        languageCode: item.languageCode,
+        articleTitle: item.articleTitle
+      }));
+      
+      if (!values.id) {
         // 新增分类
-        const submitData = {
-          homeHelpCenterClass: {
-            type: values.type,
-            helpDescription: values.helpDescription || "",
-            helpSort: values.helpSort || 1,
-            blackIcon: values.blackIcon || "",
-            whiteIcon: values.whiteIcon || "",
-            parentId: values.parentId || "0",
-            showType: values.showType || 1,
+        const submitData: CategorySubmitData = {
+          "homeHelpCenterClass": {
+            "type": restValues.type,
+            "helpDescription": restValues.helpDescription,
+            "helpSort": restValues.helpSort,
+            "blackIcon": restValues.blackIcon,
+            "whiteIcon": restValues.whiteIcon,
+            "parentId": restValues.parentId,
+            "showType": 1,
+            "name": languageContents[0]?.articleTitle || '',
+            "status": 1
           },
-          homeHelpCenterClassContents: languageContents.map((item: any) => ({
-            languageCode: item.languageCode,
-            articleTitle: item.articleTitle,
-          }))
+          "homeHelpCenterClassContents": languageContents
         };
-
-        console.log('提交到接口的数据:', submitData); // 调试用
         
-        const res = await addHelpCenterClass(submitData);
+        const res = await addHelpCenterClass(submitData) as ApiResponse;
         if (res.code === '0') {
-          message.success('添加成功');
+          message.success(intl.formatMessage({ id: 'helpCenter.category.message.addSuccess' }));
           setVisible(false);
           if (actionRef.current) {
             actionRef.current.reload();
           }
         } else {
-          message.error(`添加失败: ${res.message || '未知错误'}`);
+          message.error(intl.formatMessage({ id: 'helpCenter.category.message.addError' }, { message: res.message || '' }));
         }
       } else {
+        // 编辑分类
+        const updateData = {
+          id: values.id,
+          type: restValues.type,
+          helpDescription: restValues.helpDescription,
+          helpSort: restValues.helpSort,
+          blackIcon: restValues.blackIcon,
+          whiteIcon: restValues.whiteIcon,
+          parentId: restValues.parentId,
+          showType: 1,
+          name: languageContents[0]?.articleTitle || '',
+          status: 1
+        };
+
+        const res = await updateHelpCenterClass(updateData) as ApiResponse;
         
-        const res = await updateHelpCenterClass(values);
-        const languageContents = Array.isArray(values.languages) ? values.languages : [];
-
-        let data={
-          homeHelpCenterClassContent:languageContents.map((item: any) => ({
-            languageCode: item.languageCode,
-            articleTitle: item.articleTitle,
-          }))
-        }
-
-        const resContent = await updateHelpCenterClassContent(data);
+        // 更新多语言内容
+        const contentData = {
+          classId: values.id,
+          contents: languageContents
+        };
+        
+        const resContent = await updateHelpCenterClassContent(contentData) as ApiResponse;
+        
         if (res.code === '0' && resContent.code === '0') {
-          message.success('编辑成功');
+          message.success(intl.formatMessage({ id: 'helpCenter.category.message.editSuccess' }));
           setVisible(false);
           if (actionRef.current) {
             actionRef.current.reload();
           }
         } else {
-          message.error(`编辑失败: ${res.message || '未知错误'}`);
+          message.error(intl.formatMessage({ id: 'helpCenter.category.message.editError' }, { message: res.message || '' }));
         }
-        
       }
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'helpCenter.category.message.operationError' }));
       console.error('提交表单失败:', error);
     }
   };
@@ -131,50 +161,50 @@ const CategoryManagement: React.FC = () => {
       key: 'id',
     },
     {
-      title: '类型',
+      title: intl.formatMessage({ id: 'helpCenter.category.column.type' }),
       dataIndex: 'type',
       key: 'type',
       valueType: 'select',
       fieldProps: {
         options: [
-          { value: 1, label: '菜单' },
-          { value: 2, label: '分类' },
+          { value: 1, label: intl.formatMessage({ id: 'helpCenter.category.type.menu' }) },
+          { value: 2, label: intl.formatMessage({ id: 'helpCenter.category.type.category' }) },
         ],
       },
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'helpCenter.category.column.description' }),
       dataIndex: 'helpDescription',
       key: 'helpDescription',
     },
     {
-      title: '上级分类',
+      title: intl.formatMessage({ id: 'helpCenter.category.column.parentCategory' }),
       dataIndex: 'parentId',
       key: 'parentId',
     },
     {
-      title: '路径',
+      title: intl.formatMessage({ id: 'helpCenter.category.column.path' }),
       dataIndex: 'sort',
       key: 'sort',
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'helpCenter.category.column.createTime' }),
       dataIndex: 'createTime',
       key: 'createTime',
       valueType:'dateTime'
     },
     {
-      title: '排序',
+      title: intl.formatMessage({ id: 'helpCenter.category.column.sort' }),
       dataIndex: 'helpSort',
       key: 'helpSort',
     },
     
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'helpCenter.category.column.action' }),
       key: 'action',
       valueType: 'option',
       render: (_, record) => [
-        <a key="edit" onClick={() => handleEdit(record)}>编辑</a>,
+        <a key="edit" onClick={() => handleEdit(record)}>{intl.formatMessage({ id: 'helpCenter.category.action.edit' })}</a>,
         // <Popconfirm
         //   key="delete"
         //   title="确定要删除此分类吗？"
@@ -191,7 +221,7 @@ const CategoryManagement: React.FC = () => {
   return (
     <Card>
       <ProTable<HelpCenterClassItem>
-        headerTitle="帮助中心分类管理"
+        headerTitle={intl.formatMessage({ id: 'helpCenter.category.title' })}
         actionRef={actionRef}
         rowKey="id"
         search={false}
@@ -202,31 +232,35 @@ const CategoryManagement: React.FC = () => {
         }}
         toolBarRender={() => [
           <Button type="primary" key="add" onClick={handleAdd} icon={<PlusOutlined />}>
-            添加分类
+            {intl.formatMessage({ id: 'helpCenter.category.button.add' })}
           </Button>,
         ]}
         request={async (params) => {
-          const { current, pageSize } = params;
           try {
+            // 调用获取分类列表的API
             const response = await getHelpCenterClassList({
-              pageNo: current,
-              pageSize: pageSize,
-            }) as unknown as ApiResponse;
+              pageNo: params.current,
+              pageSize: params.pageSize,
+              helpDescription: params.helpDescription,
+            }) as ApiResponse;
             
-            if (response.code === '0') {
+            // 处理响应数据
+            if (response.code === '0' && response.success) {
+              const data = Array.isArray(response.data) ? response.data : [];
               return {
-                data: response.data.list,
+                data,
                 success: true,
-                total: response.data.count,
+                total: data.length,
+              };
+            } else {
+              return {
+                data: [],
+                success: false,
+                total: 0,
               };
             }
-            return {
-              data: [],
-              success: false,
-              total: 0,
-            };
           } catch (error) {
-            message.error('获取分类列表失败');
+            message.error(intl.formatMessage({ id: 'helpCenter.category.message.getCategoryListError' }));
             console.error('获取分类列表失败:', error);
             return {
               data: [],
@@ -239,7 +273,7 @@ const CategoryManagement: React.FC = () => {
         pagination={{
           showQuickJumper: true,
           showSizeChanger: true,
-          showTotal: (total) => `共 ${total} 条记录`,
+          showTotal: (total) => intl.formatMessage({ id: 'helpCenter.category.pagination.total' }, { total }),
         }}
       />
 

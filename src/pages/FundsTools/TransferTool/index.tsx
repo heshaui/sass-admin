@@ -5,13 +5,14 @@ import { SwapOutlined } from '@ant-design/icons';
 import { walletTypeList,tenantToWallet } from '@/services/ant-design-pro/fundsTools';
 import {getCurrencyCoinList} from '@/services/ant-design-pro/inviteFriends';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
-import { useModel } from 'umi';
+import { useModel, useIntl } from 'umi';
 import GoogleCode from '@/components/GoogleCode';
 import { tenantCurrencyCoinList} from '@/services/ant-design-pro/spot';
 import { clearAllCookies } from '@/utils';
 const { Option } = Select;
 
 const TransferTool: React.FC = () => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   
   const [loading, setLoading] = useState<boolean>(false);
@@ -77,7 +78,7 @@ if(fromAccount==='user'&&toAccount==='user'){
     }
    const res= await tenantToWallet(data);
    if(res.code==='0'&&res.data){
-    message.success('转账成功');
+    message.success(intl.formatMessage({ id: 'transferTool.message.success' }));
     form.resetFields();
    }else{
     message.error(res.message);
@@ -108,7 +109,7 @@ if(fromAccount==='user'&&toAccount==='user'){
     
     const res=await bindGoogleKey({ googleCode: code });
     if(res.code==='0'&&res.data){
-      message.success('绑定成功');
+      message.success(intl.formatMessage({ id: 'assetAdjustment.googleCode.bindSuccess' }));
       clearAllCookies();
       window.location.reload();
 
@@ -127,17 +128,17 @@ if(fromAccount==='user'&&toAccount==='user'){
 
   return (
     <PageContainer>
-      <Card title="用户间转账">
+      <Card title={intl.formatMessage({ id: 'transferTool.title' })}>
         <Form form={form} layout="vertical" onFinish={onFinish} style={{width:'50%',margin:'0 auto'}}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Form.Item
               name="form"
-              label="转出账户"
-              rules={[{ required: true, message: '请选择转出账户' }]}
+              label={intl.formatMessage({ id: 'transferTool.form.label.fromAccount' })}
+              rules={[{ required: true, message: intl.formatMessage({ id: 'transferTool.form.validation.fromAccount' }) }]}
               style={{ flex: 1 }}
             >
-              <Select placeholder="请选择转出账户" onChange={handleFromAccountChange}>
-                <Option key='user' value='user'>用户账户</Option>
+              <Select placeholder={intl.formatMessage({ id: 'transferTool.form.placeholder.fromAccount' })} onChange={handleFromAccountChange}>
+                <Option key='user' value='user'>{intl.formatMessage({ id: 'transferTool.account.user' })}</Option>
                 {walletList.map((item: any) => (
                   <Option key={item.walletType} value={item.walletType}>{item.walletTypeDefeat}</Option>
                 ))}
@@ -150,12 +151,12 @@ if(fromAccount==='user'&&toAccount==='user'){
             
             <Form.Item
               name="to"
-              label="转入账户"
-              rules={[{ required: true, message: '请选择转入账户' }]}
+              label={intl.formatMessage({ id: 'transferTool.form.label.toAccount' })}
+              rules={[{ required: true, message: intl.formatMessage({ id: 'transferTool.form.validation.toAccount' }) }]}
               style={{ flex: 1 }}
             >
-              <Select placeholder="请选择转入账户" onChange={handleToAccountChange}>
-                <Option key='user' value='user'>用户账户</Option>
+              <Select placeholder={intl.formatMessage({ id: 'transferTool.form.placeholder.toAccount' })} onChange={handleToAccountChange}>
+                <Option key='user' value='user'>{intl.formatMessage({ id: 'transferTool.account.user' })}</Option>
                 {walletList.map((item: any) => (
                   <Option key={item.walletType} value={item.walletType}>{item.walletTypeDefeat}</Option>
                 ))}
@@ -167,21 +168,21 @@ if(fromAccount==='user'&&toAccount==='user'){
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               {fromAccount === 'user' && (
                 <Form.Item
-                  label="uid"
+                  label={intl.formatMessage({ id: 'transferTool.form.label.uid' })}
                   name="formUid"
-                  rules={[{ required: true, message: '请输入转出账户uid' }]}
+                  rules={[{ required: true, message: intl.formatMessage({ id: 'transferTool.form.validation.fromUid' }) }]}
                 >
-                  <Input placeholder="请输入uid" />
+                  <Input placeholder={intl.formatMessage({ id: 'transferTool.form.placeholder.uid' })} />
                 </Form.Item>
               )}
 
               {toAccount === 'user' && (
                 <Form.Item
-                  label="uid"
+                  label={intl.formatMessage({ id: 'transferTool.form.label.uid' })}
                   name="toUid"
-                  rules={[{ required: true, message: '请输入转入账户uid' }]}
+                  rules={[{ required: true, message: intl.formatMessage({ id: 'transferTool.form.validation.toUid' }) }]}
                 >
-                  <Input placeholder="请输入uid" />  
+                  <Input placeholder={intl.formatMessage({ id: 'transferTool.form.placeholder.uid' })} />  
                 </Form.Item>
               )}
             </div>
@@ -189,10 +190,10 @@ if(fromAccount==='user'&&toAccount==='user'){
           
           <Form.Item
             name="coinId"
-            label="币种"
-            rules={[{ required: true, message: '请选择币种' }]}
+            label={intl.formatMessage({ id: 'transferTool.form.label.currency' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'transferTool.form.validation.currency' }) }]}
           >
-            <Select placeholder="请选择转账币种">
+            <Select placeholder={intl.formatMessage({ id: 'transferTool.form.placeholder.currency' })}>
                 {coinList.map((item: any) => (
                   <Option key={item.coinId} value={item.coinId}>{item.coinName}</Option>
                 ))}
@@ -201,21 +202,21 @@ if(fromAccount==='user'&&toAccount==='user'){
           
           <Form.Item
             name="count"
-            label="转账金额"
-            rules={[{ required: true, message: '请输入转账金额' }]}
+            label={intl.formatMessage({ id: 'transferTool.form.label.amount' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'transferTool.form.validation.amount' }) }]}
           >
-            <InputNumber style={{ width: '100%' }} min={0} placeholder="请输入" />
+            <InputNumber style={{ width: '100%' }} min={0} placeholder={intl.formatMessage({ id: 'transferTool.form.placeholder.amount' })} />
           </Form.Item>
           
           <div style={{ marginTop: '-15px', marginBottom: '15px' }}>
-            <span>可用: {availableBalance} USDT</span>
+            <span>{intl.formatMessage({ id: 'transferTool.form.label.available' })}: {availableBalance} USDT</span>
           </div>
 
-          <Form.Item label="谷歌验证码" name="googleCode" rules={[{ required: true, message: '请输入谷歌验证码' }]}>
+          <Form.Item label={intl.formatMessage({ id: 'transferTool.form.label.googleCode' })} name="googleCode" rules={[{ required: true, message: intl.formatMessage({ id: 'transferTool.form.validation.googleCode' }) }]}>
                 
                 {
                  currentUser?.employeeResp?.googleCode===false && (
-                   <Button type="link"  onClick={getGoogleCode}>未绑定，点击前往绑定</Button>
+                   <Button type="link" onClick={getGoogleCode}>{intl.formatMessage({ id: 'assetAdjustment.googleCode.notBound' })}</Button>
                  )
                }
                {
@@ -223,7 +224,7 @@ if(fromAccount==='user'&&toAccount==='user'){
                    <Input 
                      value={googleCode}
                      onChange={(e) => setGoogleCode(e.target.value)}
-                     placeholder="请输入验证码"
+                     placeholder={intl.formatMessage({ id: 'transferTool.form.placeholder.googleCode' })}
                    />
                  )
                }
@@ -231,19 +232,19 @@ if(fromAccount==='user'&&toAccount==='user'){
                        
           <Form.Item
             name="description"
-            label="备注"
-            rules={[{ required: true, message: '请输入备注' }]}
+            label={intl.formatMessage({ id: 'transferTool.form.label.description' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'transferTool.form.validation.description' }) }]}
           >
-            <Input.TextArea rows={4} placeholder="请输入" />
+            <Input.TextArea rows={4} placeholder={intl.formatMessage({ id: 'transferTool.form.placeholder.description' })} />
           </Form.Item>
           
           <Form.Item>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
               <Button htmlType="button" onClick={() => form.resetFields()}>
-                取消
+                {intl.formatMessage({ id: 'transferTool.form.button.cancel' })}
               </Button>
               <Button type="primary" htmlType="submit" loading={loading}>
-                确认
+                {intl.formatMessage({ id: 'transferTool.form.button.confirm' })}
               </Button>
             </div>
           </Form.Item>

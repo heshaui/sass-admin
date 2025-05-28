@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Input, Image, message } from 'antd';
 import type { TableItem } from '../index';
+import { useIntl } from 'umi';
 import { updateValue } from '@/services/ant-design-pro/kv';
 import AvatarUpload from '@/components/AvatarUpload'
 interface EditModalProps {
@@ -22,6 +23,7 @@ const EditModal: React.FC<EditModalProps> = ({
   activeTab,
   pcLoginData,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -57,14 +59,14 @@ const EditModal: React.FC<EditModalProps> = ({
       });
       
       if (result.code === '0') {
-        message.success('保存成功');
+        message.success(intl.formatMessage({ id: 'pcLogin.modal.message.saveSuccess' }));
         onSuccess();
       } else {
-        message.error('保存失败');
+        message.error(intl.formatMessage({ id: 'pcLogin.modal.message.saveFailed' }));
       }
     } catch (error) {
-      console.error('保存数据失败:', error);
-      message.error('保存失败');
+      console.error(intl.formatMessage({ id: 'pcLogin.modal.message.saveFailed' }), error);
+      message.error(intl.formatMessage({ id: 'pcLogin.modal.message.saveFailed' }));
     } finally {
       setSubmitting(false);
     }
@@ -72,7 +74,9 @@ const EditModal: React.FC<EditModalProps> = ({
 
   return (
     <Modal
-      title={`编辑${activeTab === 'login' ? '登录' : '注册'}配置`}
+      title={intl.formatMessage(
+        { id: activeTab === 'login' ? 'pcLogin.modal.title.login' : 'pcLogin.modal.title.register' }
+      )}
       open={visible}
       onOk={handleSave}
       onCancel={onCancel}
@@ -84,28 +88,28 @@ const EditModal: React.FC<EditModalProps> = ({
         initialValues={record || {}}
       >
         <Form.Item
-          label="标题"
+          label={intl.formatMessage({ id: 'pcLogin.modal.form.title' })}
           name="title"
-          rules={[{ required: true, message: '请输入标题' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'pcLogin.modal.form.title.required' }) }]}
         >
-          <Input placeholder="请输入标题" />
+          <Input placeholder={intl.formatMessage({ id: 'pcLogin.modal.form.title.placeholder' })} />
         </Form.Item>
         
         <Form.Item
-          label="图片"
+          label={intl.formatMessage({ id: 'pcLogin.modal.form.image' })}
           name="image"
-          rules={[{ required: true, message: '请上传图片' }]}
-          extra="建议尺寸：126*869"
+          rules={[{ required: true, message: intl.formatMessage({ id: 'pcLogin.modal.form.image.required' }) }]}
+          extra={intl.formatMessage({ id: 'pcLogin.modal.form.image.extra' })}
         >
           <AvatarUpload/>
         </Form.Item>
         
         <Form.Item
-          label="跳转地址"
+          label={intl.formatMessage({ id: 'pcLogin.modal.form.url' })}
           name="url"
-          rules={[{ required: true, message: '请输入跳转地址' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'pcLogin.modal.form.url.required' }) }]}
         >
-          <Input placeholder="请输入跳转地址" />
+          <Input placeholder={intl.formatMessage({ id: 'pcLogin.modal.form.url.placeholder' })} />
         </Form.Item>
 
       

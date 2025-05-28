@@ -1,7 +1,8 @@
-import React, {  useState } from 'react';
+import React, { useState } from 'react';
 import { Card } from 'antd';
-import { PageContainer,ProTable } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { fundFlowDirectionOperationList } from '@/services/ant-design-pro/fundsTools';
+import { useIntl } from 'umi';
 
 interface TransferRecord {
   key: string;
@@ -16,6 +17,7 @@ interface TransferRecord {
 }
 
 const TransferRecords: React.FC = () => {
+  const intl = useIntl();
   const [loading, setLoading] = useState<boolean>(false);
 
 const getTransferRecords=async(params:any)=>{
@@ -34,47 +36,47 @@ const getTransferRecords=async(params:any)=>{
 
   const columns: ColumnsType<TransferRecord> = [
     {
-      title: '时间',
+      title: intl.formatMessage({ id: 'transferRecords.column.createTime' }),
       dataIndex: 'createTime', 
       key: 'createTime',
       valueType: 'dateTime',
 
     },
     {
-      title: '转出账户',
+      title: intl.formatMessage({ id: 'transferRecords.column.fromAccount' }),
       dataIndex: 'fromAccountId',
       key: 'fromAccountId',
     },
     {
-      title: '转出账户类型',
+      title: intl.formatMessage({ id: 'transferRecords.column.fromAccountType' }),
       dataIndex: 'fromAccountType',
       key: 'fromAccountType',
 
     },
     {
-      title: '转入账户',
+      title: intl.formatMessage({ id: 'transferRecords.column.toAccount' }),
       dataIndex: 'toAccountType',
       key: 'toAccountType',
     },
     {
-      title: '转入账户类型',
+      title: intl.formatMessage({ id: 'transferRecords.column.toAccountType' }),
       dataIndex: 'sceneType',
       key: 'sceneType',
 
     },
     {
-      title: '转账金额',
+      title: intl.formatMessage({ id: 'transferRecords.column.amount' }),
       dataIndex: 'amount',
       key: 'amount',
     },
     {
-      title: '备注',
+      title: intl.formatMessage({ id: 'transferRecords.column.description' }),
       dataIndex: 'description',
       key: 'description',
 
     },
     {
-      title: '操作人',
+      title: intl.formatMessage({ id: 'transferRecords.column.operator' }),
       dataIndex: 'operateId',
       key: 'operateId',
 
@@ -84,7 +86,7 @@ const getTransferRecords=async(params:any)=>{
   return (
     <PageContainer>
       <Card>
-        <h2>转账记录</h2>
+        <h2>{intl.formatMessage({ id: 'transferRecords.title' })}</h2>
         <ProTable
           columns={columns}
           request={getTransferRecords}

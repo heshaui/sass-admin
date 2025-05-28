@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { useIntl } from 'umi';
 import { Button, message, Space, Modal, Image } from 'antd';
 import { getCarouselImageList, deleteCarouselImage, addCarouselImage, updateCarouselImage } from '@/services/ant-design-pro/operation';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -8,6 +9,7 @@ import CarouselModal from './components/CarouselModal';
 import LanguageSelector from '@/components/LanguageSelector';
 
 const PCImages: React.FC = () => {
+  const intl = useIntl();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [modalMode, setModalMode] = useState<'create' | 'edit'>('create');
   const [currentRecord, setCurrentRecord] = useState<any>(null);
@@ -51,7 +53,7 @@ const PCImages: React.FC = () => {
         }
         const res = await addCarouselImage(data);
         if(res.code === '0'){
-          message.success('添加成功');
+          message.success(intl.formatMessage({ id: 'pcImages.message.addSuccess' }));
         }else{
           message.error(res.message);
         }
@@ -66,7 +68,7 @@ const PCImages: React.FC = () => {
         
         const res = await updateCarouselImage(updateData);
         if(res.code === '0'){
-          message.success('更新成功');
+          message.success(intl.formatMessage({ id: 'pcImages.message.updateSuccess' }));
         }else{
           message.error(res.message);
         }
@@ -74,7 +76,10 @@ const PCImages: React.FC = () => {
       setModalVisible(false);
       actionRef.current?.reload();
     } catch (error) {
-      message.error(modalMode === 'create' ? '添加失败' : '更新失败');
+      message.error(modalMode === 'create' ? 
+        intl.formatMessage({ id: 'pcImages.message.addFailed' }) : 
+        intl.formatMessage({ id: 'pcImages.message.updateFailed' })
+      );
     } finally {
       setLoading(false);
     }
@@ -83,19 +88,19 @@ const PCImages: React.FC = () => {
   // 处理删除
   const handleDelete = async (record: any) => {
     Modal.confirm({
-      title: '确认删除',
-      content: '确定要删除这张图片吗？',
+      title: intl.formatMessage({ id: 'pcImages.message.deleteConfirm' }),
+      content: intl.formatMessage({ id: 'pcImages.message.deleteConfirmContent' }),
       onOk: async () => {
         try {
           const res = await deleteCarouselImage(record.id);
           if(res.code === '0'){
-            message.success('删除成功');
+            message.success(intl.formatMessage({ id: 'pcImages.message.deleteSuccess' }));
             actionRef.current?.reload();
           }else{
             message.error(res.message);
           }
         } catch (error) {
-          message.error('删除失败');
+          message.error(intl.formatMessage({ id: 'pcImages.message.deleteFailed' }));
         }
       },
     });
@@ -103,7 +108,7 @@ const PCImages: React.FC = () => {
 
   const columns: ProColumns<any>[] = [
     {
-      title: '图片',
+      title: intl.formatMessage({ id: 'pcImages.column.image' }),
       dataIndex: ['carouselImageContents', 0, 'imageUrl'],
       key: 'imageUrl',
       search: false,
@@ -116,28 +121,28 @@ const PCImages: React.FC = () => {
       ),
     },
     {
-      title: '标题',
+      title: intl.formatMessage({ id: 'pcImages.column.title' }),
       dataIndex: ['carouselImageContents', 0, 'title'],
       key: 'title',
       search: false,
       render: (_, record) => record.carouselImageContents?.[0]?.title || '',
     },
     {
-      title: '链接',
+      title: intl.formatMessage({ id: 'pcImages.column.link' }),
       dataIndex: ['carouselImageContents', 0, 'accessUrl'],
       key: 'accessUrl',
       search: false,
       render: (_, record) => record.carouselImageContents?.[0]?.accessUrl || '',
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'pcImages.column.action' }),
       valueType: 'option',
       render: (_, record) => [
         <a key="edit" onClick={() => showEditModal(record)}>
-          <EditOutlined /> 编辑
+          <EditOutlined /> {intl.formatMessage({ id: 'pcImages.action.edit' })}
         </a>,
         <a key="delete" onClick={() => handleDelete(record)}>
-          <DeleteOutlined /> 删除
+          <DeleteOutlined /> {intl.formatMessage({ id: 'pcImages.action.delete' })}
         </a>,
       ],
     },
@@ -150,12 +155,12 @@ const PCImages: React.FC = () => {
       <ProTable
         rowKey="id"
         actionRef={actionRef}
-        headerTitle="个人中心广告图"
+        headerTitle={intl.formatMessage({ id: 'pcImages.title' })}
         search={false}
         columns={columns}
         toolBarRender={() => [
           <Button type="primary" key="add" onClick={showCreateModal}>
-            <PlusOutlined /> 新建
+            <PlusOutlined /> {intl.formatMessage({ id: 'pcImages.button.add' })}
           </Button>,
         ]}
         request={async (params, sort, filter) => {
@@ -171,7 +176,7 @@ const PCImages: React.FC = () => {
               total: response.total || response.data?.length || 0,
             };
           } catch (error) {
-            message.error('获取图片列表失败');
+            message.error(intl.formatMessage({ id: 'pcImages.message.getListFailed' }));
             return {
               data: [],   
               success: false,

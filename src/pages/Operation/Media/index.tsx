@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { useIntl } from 'umi';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { Button, Space, message, Modal, Form, Input, Image, Switch } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
@@ -14,6 +15,7 @@ import AvatarUpload from '@/components/AvatarUpload';
 
 
 const MediaPage: React.FC = () => {
+  const intl = useIntl();
   const [visible, setVisible] = useState<boolean>(false);
   const [currentItem, setCurrentItem] = useState<MediaItem | null>(null);
   const [form] = Form.useForm();
@@ -66,22 +68,22 @@ const MediaPage: React.FC = () => {
         });
         
         if (res.code==='0') {
-          message.success('更新成功');
+          message.success(intl.formatMessage({ id: 'media.message.updateSuccess' }));
           setVisible(false);
           actionRef.current?.reload();
         } else {
-          message.error('更新失败');
+          message.error(intl.formatMessage({ id: 'media.message.updateFailed' }));
         }
       } else {
         // 添加媒体
         const res = await addMedia(values);
         
         if (res.code==='0') {
-          message.success('添加成功');
+          message.success(intl.formatMessage({ id: 'media.message.addSuccess' }));
           setVisible(false);
           actionRef.current?.reload();
         } else {
-          message.error('添加失败');
+          message.error(intl.formatMessage({ id: 'media.message.addFailed' }));
         }
       }
     } catch (error) {
@@ -92,21 +94,29 @@ const MediaPage: React.FC = () => {
   // 删除媒体
   const handleDelete = (record: MediaItem) => {
     Modal.confirm({
-      title: '确认删除',
-      content: `确定要删除 ${record.name} 吗？`,
+      title: intl.formatMessage({ id: 'media.message.deleteConfirm' }),
+      content: intl.formatMessage(
+        { id: 'media.message.deleteConfirmContent' },
+        { name: record.name }
+      ),
       onOk: async () => {
         try {
           const res = await deleteMedia(record.id);
           
           if (res.success) {
-            message.success(`已删除: ${record.name}`);
+            message.success(
+              intl.formatMessage(
+                { id: 'media.message.deleteSuccess' },
+                { name: record.name }
+              )
+            );
             actionRef.current?.reload();
           } else {
-            message.error('删除失败');
+            message.error(intl.formatMessage({ id: 'media.message.deleteFailed' }));
           }
         } catch (error) {
-          console.error('删除出错:', error);
-          message.error('删除出错');
+          console.error(intl.formatMessage({ id: 'media.message.deleteError' }), error);
+          message.error(intl.formatMessage({ id: 'media.message.deleteError' }));
         }
       }
     });
@@ -114,42 +124,42 @@ const MediaPage: React.FC = () => {
 
   const columns: ProColumns<MediaItem>[] = [
     {
-      title: 'id',
+      title: intl.formatMessage({ id: 'media.column.id' }),
       dataIndex: 'id',
       key: 'id',
     },
     {
-      title: '名称',
+      title: intl.formatMessage({ id: 'media.column.name' }),
       dataIndex: 'nameText',
       key: 'nameText',
     },
     {
-      title: '图标',
+      title: intl.formatMessage({ id: 'media.column.icon' }),
       dataIndex: 'imgUrl',
       key: 'imgUrl',
-      render: (text: string) => <Image src={text} alt="图标" width={32} height={32} />
+      render: (text: string) => <Image src={text} alt={intl.formatMessage({ id: 'media.column.icon' })} width={32} height={32} />
     },
     {
-      title: '跳转链接',
+      title: intl.formatMessage({ id: 'media.column.link' }),
       dataIndex: 'linkUrl',
       key: 'linkUrl',
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: 'media.column.status' }),
       dataIndex: 'status',
       key: 'status',
       render: (text: number) => (
-        text === 1 ? '显示' : '隐藏'
+        text === 1 ? intl.formatMessage({ id: 'media.form.status.show' }) : intl.formatMessage({ id: 'media.form.status.hide' })
       )
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'media.column.action' }),
       key: 'action',
       valueType: 'option',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => handleEdit(record)}>编辑</a>
-          <a onClick={() => handleDelete(record)}>删除</a>
+          <a onClick={() => handleEdit(record)}>{intl.formatMessage({ id: 'media.action.edit' })}</a>
+          <a onClick={() => handleDelete(record)}>{intl.formatMessage({ id: 'media.action.delete' })}</a>
         </Space>
       ),
     },
@@ -168,7 +178,7 @@ const MediaPage: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<MediaItem>
-        headerTitle="媒体列表"
+        headerTitle={intl.formatMessage({ id: 'media.title' })}
         actionRef={actionRef}
         rowKey="id"
         search={false}
@@ -179,7 +189,7 @@ const MediaPage: React.FC = () => {
             onClick={handleAdd}
             icon={<PlusOutlined />}
           >
-            添加
+            {intl.formatMessage({ id: 'media.button.add' })}
           </Button>,
         ]}
         request={async (params) => {
@@ -198,7 +208,7 @@ const MediaPage: React.FC = () => {
       
       {/* 添加/编辑表单模态框 */}
       <Modal
-        title={currentItem ? '编辑社交媒体' : '新增社交媒体'}
+        title={currentItem ? intl.formatMessage({ id: 'media.modal.edit' }) : intl.formatMessage({ id: 'media.modal.add' })}
         visible={visible}
         onOk={handleSubmit}
         onCancel={() => {
@@ -215,34 +225,37 @@ const MediaPage: React.FC = () => {
         >
           <Form.Item
             name="nameText"
-            label="名称"
-            rules={[{ required: true, message: '请输入媒体名称' }]}
+            label={intl.formatMessage({ id: 'media.form.name' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'media.form.name.required' }) }]}
           >
-            <Input placeholder="请输入媒体名称" />
+            <Input placeholder={intl.formatMessage({ id: 'media.form.name.placeholder' })} />
           </Form.Item>
           <Form.Item
             name="imgUrl"
-            label="图标"
-            rules={[{ required: true, message: '请上传图标' }]}
+            label={intl.formatMessage({ id: 'media.form.icon' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'media.form.icon.required' }) }]}
           >
             <AvatarUpload onChange={(url) => form.setFieldsValue({ imgUrl: url })} />
           </Form.Item>
           <Form.Item
             name="linkUrl"
-            label="跳转链接"
-            rules={[{ required: true, message: '请输入跳转链接' }]}
+            label={intl.formatMessage({ id: 'media.form.link' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'media.form.link.required' }) }]}
           >
-            <Input placeholder="请输入跳转链接" />
+            <Input placeholder={intl.formatMessage({ id: 'media.form.link.placeholder' })} />
           </Form.Item>
           <Form.Item
             name="status"
-            label="是否显示"
+            label={intl.formatMessage({ id: 'media.form.status' })}
             valuePropName="checked"
             getValueFromEvent={(checked) => checked ? 1 : 0}
             getValueProps={(value) => ({ checked: value === 1 })}
             initialValue={1}
           >
-            <Switch checkedChildren="显示" unCheckedChildren="隐藏" />
+            <Switch 
+              checkedChildren={intl.formatMessage({ id: 'media.form.status.show' })} 
+              unCheckedChildren={intl.formatMessage({ id: 'media.form.status.hide' })} 
+            />
           </Form.Item>
         </Form>
       </Modal>

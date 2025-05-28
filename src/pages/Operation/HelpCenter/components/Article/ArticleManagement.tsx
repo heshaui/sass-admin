@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useIntl } from 'umi';
 import { Button, message } from 'antd';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
@@ -17,6 +18,7 @@ interface ArticleItem {
 }
 
 const ArticleManagement: React.FC = () => {
+  const intl = useIntl();
   const articleActionRef = useRef<ActionType>();
   const [publishModalVisible, setPublishModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -50,7 +52,7 @@ const ArticleManagement: React.FC = () => {
       setCurrentArticle(articleDetail);
       setPublishModalVisible(true);
     } catch (error) {
-      message.error('获取文章详情失败');
+      message.error(intl.formatMessage({ id: 'helpCenter.article.message.getDetailError' }));
     }
   };
 
@@ -78,24 +80,24 @@ const ArticleManagement: React.FC = () => {
         data.homeHelpCenterArticle.id = currentArticle?.id;
         const res = await updateHelpCenterArticleContent(data);
         if (res.code === '0' && res.data) {
-          message.success('文章更新成功');
+          message.success(intl.formatMessage({ id: 'helpCenter.article.message.updateSuccess' }));
         } else {
-          message.error('文章更新失败');
+          message.error(intl.formatMessage({ id: 'helpCenter.article.message.updateError' }));
         }
       } else {
         // 新增文章
         res = await addHelpCenterArticle(data);
         if (res.code === '0' && res.data) {
-          message.success('文章发布成功');
+          message.success(intl.formatMessage({ id: 'helpCenter.article.message.publishSuccess' }));
         } else {
-          message.error('文章发布失败');
+          message.error(intl.formatMessage({ id: 'helpCenter.article.message.publishError' }));
         }
       }
       
       closePublishModal();
       articleActionRef.current?.reload();
     } catch (error) {
-      message.error(isEditing ? '文章更新失败' : '文章发布失败');
+      message.error(isEditing ? intl.formatMessage({ id: 'helpCenter.article.message.updateError' }) : intl.formatMessage({ id: 'helpCenter.article.message.publishError' }));
     }
   };
 
@@ -106,10 +108,10 @@ const ArticleManagement: React.FC = () => {
       // 这里应该调用切换状态的接口，暂时用message演示
       const res = await updateHelpCenterArticle({id,showType:newStatus});
       if(res.code==='0'){
-        message.success(`文章ID: ${id} 状态已更新为 ${newStatus ? '启用' : '禁用'}`);
+        message.success(intl.formatMessage({ id: 'helpCenter.article.message.statusUpdateSuccess' }, { id, status: newStatus ? intl.formatMessage({ id: 'helpCenter.article.status.enabled' }) : intl.formatMessage({ id: 'helpCenter.article.status.disabled' }) }));
         articleActionRef.current?.reload();
       }else{
-        message.error('操作失败');
+        message.error(intl.formatMessage({ id: 'helpCenter.article.message.operationError' }));
       }
       articleActionRef.current?.reload();
     } catch (error) {
@@ -151,7 +153,7 @@ const ArticleManagement: React.FC = () => {
       };
     } catch (error) {
       console.log(error);
-      message.error('获取文章列表失败');
+      message.error(intl.formatMessage({ id: 'helpCenter.article.message.getListError' }));
       return {
         data: [],
         success: false,
@@ -162,19 +164,19 @@ const ArticleManagement: React.FC = () => {
 
   // 文章管理表格列定义
   const articleColumns: ProColumns<ArticleItem>[] = [
-    { title: 'ID', dataIndex: 'id', key: 'id', search: false },
+    { title: intl.formatMessage({ id: 'helpCenter.article.column.id' }), dataIndex: 'id', key: 'id', search: false },
     { 
-      title: '描述', 
+      title: intl.formatMessage({ id: 'helpCenter.article.column.description' }), 
       dataIndex: 'articleDescription', 
       key: 'articleDescription',
       formItemProps: {
-        label: '描述',
+        label: intl.formatMessage({ id: 'helpCenter.article.column.description' }),
       },
     },
-    { title: '标题', dataIndex: 'articleTitle', key: 'articleTitle', search: false },
-    { title: '分类', dataIndex: 'classId', key: 'classId', search: false },
+    { title: intl.formatMessage({ id: 'helpCenter.article.column.title' }), dataIndex: 'articleTitle', key: 'articleTitle', search: false },
+    { title: intl.formatMessage({ id: 'helpCenter.article.column.category' }), dataIndex: 'classId', key: 'classId', search: false },
     { 
-      title: '发布时间', 
+      title: intl.formatMessage({ id: 'helpCenter.article.column.publishTime' }), 
       dataIndex: 'createTime', 
       key: 'createTime',
       valueType: 'dateTimeRange',
@@ -191,16 +193,16 @@ const ArticleManagement: React.FC = () => {
       },
     },
     { 
-      title: '状态', 
+      title: intl.formatMessage({ id: 'helpCenter.article.column.status' }), 
       dataIndex: 'showType', 
       key: 'showType',
       search: false,
       render: (_, record) => (
-        <span>{record.showType === 1 ? '启用' : '禁用'}</span>
+        <span>{record.showType === 1 ? intl.formatMessage({ id: 'helpCenter.article.status.enabled' }) : intl.formatMessage({ id: 'helpCenter.article.status.disabled' })}</span>
       ),
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'helpCenter.article.column.action' }),
       key: 'action',
       valueType: 'option',
       render: (_, record) => [
@@ -209,7 +211,7 @@ const ArticleManagement: React.FC = () => {
           key="edit" 
           onClick={() => showEditModal(record)}
         >
-          编辑
+          {intl.formatMessage({ id: 'helpCenter.article.action.edit' })}
         </Button>,            
         <Button 
           type="link" 
@@ -217,7 +219,7 @@ const ArticleManagement: React.FC = () => {
           danger={record.showType === 1}
           onClick={() => handleToggleStatus(record.id, record.showType)}
         >
-          {record.showType === 1 ? '禁用' : '启用'}
+          {record.showType === 1 ? intl.formatMessage({ id: 'helpCenter.article.action.disable' }) : intl.formatMessage({ id: 'helpCenter.article.action.enable' })}
         </Button>,
       ],
     },
@@ -226,7 +228,7 @@ const ArticleManagement: React.FC = () => {
   return (
     <>
       <ProTable<ArticleItem>
-        headerTitle="文章列表"
+        headerTitle={intl.formatMessage({ id: 'helpCenter.article.title' })}
         actionRef={articleActionRef}
         rowKey="id"
         search={{
@@ -234,7 +236,7 @@ const ArticleManagement: React.FC = () => {
         }}
         toolBarRender={() => [
           <Button key="publish" type="primary" onClick={showPublishModal}>
-            发布文章
+            {intl.formatMessage({ id: 'helpCenter.article.button.publish' })}
           </Button>,
         ]}
         request={fetchArticleData}

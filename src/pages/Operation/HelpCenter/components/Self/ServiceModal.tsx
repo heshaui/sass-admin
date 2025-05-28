@@ -1,5 +1,6 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Upload, Radio, Input, Form, Button, Space, message, Select } from 'antd';
+import { useIntl } from 'umi';
 import type { UploadFile } from 'antd/es/upload/interface';
 import LanguageSelector from '@/components/LanguageSelector';
 import AvatarUpload  from '@/components/AvatarUpload';
@@ -18,6 +19,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
   onSubmit,
   defaultLanguage,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [nightIcon, setNightIcon] = useState<UploadFile[]>([]);
   const [dayIcon, setDayIcon] = useState<UploadFile[]>([]);
@@ -128,7 +130,7 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
   }, []);
   return (
     <Modal
-      title="添加服务"
+      title={intl.formatMessage({ id: 'helpCenter.serviceModal.title' })}
       open={visible}
       onCancel={handleCancel}
       footer={null}
@@ -138,70 +140,72 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
         layout="vertical"
         initialValues={{ language: defaultLanguage }}
       >
-        <Form.Item label="图标" name="icon">
+        <Form.Item label={intl.formatMessage({ id: 'helpCenter.serviceModal.form.icon' })} name="icon">
           <Space size={64}>
             <Form.Item
               name="nightIcon"
             >
-                <div style={{marginBottom: 8,textAlign: 'center'}}>夜间</div>
+                <div style={{marginBottom: 8,textAlign: 'center'}}>
+                  {intl.formatMessage({ id: 'helpCenter.serviceModal.form.nightMode' })}
+                </div>
                 <AvatarUpload onChange={(url) => form.setFieldsValue({ nightIcon: url })} />
             </Form.Item>
             <Form.Item
               name="dayIcon"
             >
-                   <div style={{marginBottom: 8,textAlign: 'center'}}>日间</div>
-             
-                   <AvatarUpload onChange={(url) => form.setFieldsValue({ dayIcon: url })} />
+                <div style={{marginBottom: 8,textAlign: 'center'}}>
+                  {intl.formatMessage({ id: 'helpCenter.serviceModal.form.dayMode' })}
+                </div>
+                <AvatarUpload onChange={(url) => form.setFieldsValue({ dayIcon: url })} />
             </Form.Item>
-         
           </Space>
           <div style={{ marginTop: 8 }}>
-            <p>夜间版Logo为必传，若未上传日间版则默认使用夜间版</p>
+            <p>{intl.formatMessage({ id: 'helpCenter.serviceModal.form.iconNote' })}</p>
           </div>
         </Form.Item>
 
         <Form.Item
-          label='语言'
+          label={intl.formatMessage({ id: 'helpCenter.serviceModal.form.language' })}
           name="language"
-          rules={[{ required: true, message: '请选择语言' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'helpCenter.serviceModal.form.languageRequired' }) }]}
         >
              <LanguageSelector value={language} onChange={handleLanguageChange} />
         </Form.Item>
         <div style={{ marginTop: -16, marginBottom: 16 }}>
-          <p>*支持多个语言编辑，英文为必填，其他语言配置则显示，不配置不显示</p>
+          <p>{intl.formatMessage({ id: 'helpCenter.serviceModal.form.languageNote' })}</p>
         </div>
 
         <Form.Item
-          label='标题'
+          label={intl.formatMessage({ id: 'helpCenter.serviceModal.form.title' })}
           name="title"
-          rules={[{ required: true, message: '请输入标题' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'helpCenter.serviceModal.form.titleRequired' }) }]}
         >
-          <Input placeholder="菜单名字" />
+          <Input placeholder={intl.formatMessage({ id: 'helpCenter.serviceModal.form.titlePlaceholder' })} />
         </Form.Item>
 
         <Form.Item
-          label='访问路径'
+          label={intl.formatMessage({ id: 'helpCenter.serviceModal.form.accessPath' })}
           name="accessType"
           initialValue="1"
         >
           <Radio.Group onChange={(e) => setAccessType(e.target.value)}>
-            <Radio value="1">PC功能</Radio>
-            <Radio value="2">自定义URL</Radio>
+            <Radio value="1">{intl.formatMessage({ id: 'helpCenter.serviceModal.form.pcFunction' })}</Radio>
+            <Radio value="2">{intl.formatMessage({ id: 'helpCenter.serviceModal.form.customUrl' })}</Radio>
           </Radio.Group>
         </Form.Item>
 
         {accessType === '2' && (
           <Form.Item
             name="customUrl"
-            rules={[{ required: accessType === '2', message: '请输入URL' }]}
+            rules={[{ required: accessType === '2', message: intl.formatMessage({ id: 'helpCenter.serviceModal.form.urlRequired' }) }]}
           >
-            <Input placeholder="请输入URL" />
+            <Input placeholder={intl.formatMessage({ id: 'helpCenter.serviceModal.form.urlPlaceholder' })} />
           </Form.Item>
         )}
         {
             accessType === '1' && (
                 <Form.Item
-                    label='PC功能'
+                    label={intl.formatMessage({ id: 'helpCenter.serviceModal.form.pcFunction' })}
                     name='pcFunction'
                 >
                     <Select>
@@ -217,10 +221,10 @@ const ServiceModal: React.FC<ServiceModalProps> = ({
           <div style={{ textAlign: 'center' }}>
             <Space>
               <Button type="primary" onClick={handleSubmit}>
-                提交
+                {intl.formatMessage({ id: 'helpCenter.serviceModal.button.submit' })}
               </Button>
               <Button onClick={handleCancel}>
-                取消
+                {intl.formatMessage({ id: 'helpCenter.serviceModal.button.cancel' })}
               </Button>
             </Space>
           </div>

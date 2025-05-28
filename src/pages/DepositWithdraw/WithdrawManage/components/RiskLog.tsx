@@ -1,8 +1,9 @@
-import React, { useRef,useEffect } from 'react';
-import {ProTable} from '@ant-design/pro-components';
+import React, { useRef, useEffect } from 'react';
+import { ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { assetAccountReviewList } from '@/services/ant-design-pro/risk';
+import { useIntl } from 'umi';
 
 interface LogRecord {
   id: string;
@@ -19,6 +20,7 @@ interface LogProps {
   
 
 const Log: React.FC<LogProps> = ({ userId }) => {
+  const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
   const userIdRef = useRef(userId);
@@ -53,33 +55,33 @@ const Log: React.FC<LogProps> = ({ userId }) => {
 
   const columns: ProColumns<LogRecord>[] = [
     {
-      title: '触发类型',
+      title: intl.formatMessage({ id: 'riskLog.column.sceneCode' }),
       dataIndex: 'sceneCode',
       search: false,
     },
     {
-      title: '触发原因',
+      title: intl.formatMessage({ id: 'riskLog.column.resultContent' }),
       dataIndex: 'resultContent',
       search: false,
     },
     {
-      title: '触发后风控等级',
+      title: intl.formatMessage({ id: 'riskLog.column.riskLevel' }),
       dataIndex: 'riskLevel',
       search: false,
     },
     {
-        title: '风控周期',
-        dataIndex: 'riskRule',
-        search: false,
-      },
+      title: intl.formatMessage({ id: 'riskLog.column.riskRule' }),
+      dataIndex: 'riskRule',
+      search: false,
+    },
     {
-      title: '处理建议',
+      title: intl.formatMessage({ id: 'riskLog.column.suggestion' }),
       dataIndex: 'resultContent',
       ellipsis: true,
       search: false,
     },
     {
-      title: '触发时间',
+      title: intl.formatMessage({ id: 'riskLog.column.createTime' }),
       dataIndex: 'createTime',
       search: false,
     },
@@ -100,7 +102,7 @@ const Log: React.FC<LogProps> = ({ userId }) => {
       pagination={{
         showSizeChanger: true,
         showQuickJumper: true,
-        showTotal: (total) => `共 ${total} 条记录`,
+        showTotal: (total) => intl.formatMessage({ id: 'riskLog.pagination.total' }, { total }),
       }}
       dateFormatter="string"
       bordered

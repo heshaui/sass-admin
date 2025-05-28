@@ -6,8 +6,10 @@ import type { ProColumns,ActionType } from '@ant-design/pro-components';
 import AssetAdjustmentForm from './components/AssetAdjustmentForm';
 import {tenantSubWallet,tenantSubWalletList} from '@/services/ant-design-pro/fundsTools';
 import { getCurrencyCoinList } from '@/services/ant-design-pro/inviteFriends';
+import { useIntl } from 'umi';
 
 const AssetAdjustment: React.FC = () => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const actionRef = useRef<ActionType>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -57,7 +59,7 @@ const AssetAdjustment: React.FC = () => {
    }
     const res=await tenantSubWallet(data);
     if(res.code==='0'){
-      message.success('资产调整操作已提交');
+      message.success(intl.formatMessage({ id: 'assetAdjustment.message.success' }));
       actionRef.current?.reload();
     }else{
       message.error(res.message);
@@ -67,15 +69,15 @@ const AssetAdjustment: React.FC = () => {
 
   // 定义ProTable的列
   const columns: ProColumns[] = [
-    { title: '编号', dataIndex: 'id', key: 'id', search: false },
+    { title: intl.formatMessage({ id: 'assetAdjustment.column.id' }), dataIndex: 'id', key: 'id', search: false },
     { 
-      title: '币种', 
+      title: intl.formatMessage({ id: 'assetAdjustment.column.coinName' }), 
       dataIndex: 'coinName', 
       key: 'coinName',
       search: false,
     },
     {
-      title: '币种', 
+      title: intl.formatMessage({ id: 'assetAdjustment.column.coinName' }), 
       dataIndex: 'coinId', 
       key: 'coinId',
       valueType:'select',
@@ -87,11 +89,11 @@ const AssetAdjustment: React.FC = () => {
       }
     },
 
-    { title: '金额', dataIndex: 'count', key: 'count', search: false },
-    { title: '备注', dataIndex: 'description', key: 'description', search: false },
-    { title: '操作人', dataIndex: 'operateId', key: 'operateId' , search: false},
+    { title: intl.formatMessage({ id: 'assetAdjustment.column.amount' }), dataIndex: 'count', key: 'count', search: false },
+    { title: intl.formatMessage({ id: 'assetAdjustment.column.description' }), dataIndex: 'description', key: 'description', search: false },
+    { title: intl.formatMessage({ id: 'assetAdjustment.column.operator' }), dataIndex: 'operateId', key: 'operateId' , search: false},
     { 
-      title: '时间', 
+      title: intl.formatMessage({ id: 'assetAdjustment.column.createTime' }), 
       dataIndex: 'createTime', 
       key: 'createTime',
       valueType: 'dateTime',
@@ -119,7 +121,7 @@ useEffect(()=>{
             type="primary" 
             onClick={() => setFormVisible(true)}
           >
-            增减操作
+            {intl.formatMessage({ id: 'assetAdjustment.button.operation' })}
           </Button>,
         ]}
         search={{
