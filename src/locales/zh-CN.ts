@@ -14,6 +14,12 @@ import user from './zh-CN/user';
 import kv from './zh-CN/kv';
 import spot from './zh-CN/spot';
 import auth from './zh-CN/auth';
+import login from './zh-CN/login';
+import IdentityVerification from './zh-CN/IdentityVerification';
+import InviteFriends from './zh-CN/InviteFriends';
+import depositWithdraw from './zh-CN/depositWithdraw';
+import fundsTools from './zh-CN/fundsTools';
+
 
 export default {
   'navBar.lang': '语言',
@@ -38,5 +44,10 @@ export default {
   ...user,
   ...kv,
   ...spot,
-  ...auth
+  ...auth,
+  ...login,
+  ...IdentityVerification,
+  ...InviteFriends,
+  ...depositWithdraw,
+  ...fundsTools
 };

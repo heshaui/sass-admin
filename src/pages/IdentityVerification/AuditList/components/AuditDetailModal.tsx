@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import styles from './AuditDetailModal.module.less';
 interface AuditDetailModalProps {
   visible: boolean;
@@ -24,20 +25,20 @@ interface AuditDetailModalProps {
   title?: React.ReactNode;
 }
 // 1居民身份证  2普通护照  3港澳通行证  4台湾通行证  5台湾身份证  6外国人永久居住身份证
-const cardType=(cardType:number)=>{
+const cardType=(cardType:number, intl: any)=>{
   switch(cardType){
     case 1:
-      return '居民身份证';
+      return intl.formatMessage({ id: 'auditDetail.cardType.idCard' });
     case 2:
-      return '普通护照';
+      return intl.formatMessage({ id: 'auditDetail.cardType.passport' });
     case 3:
-      return '港澳通行证';
+      return intl.formatMessage({ id: 'auditDetail.cardType.hkMacauPass' });
     case 4:
-      return '台湾通行证';
+      return intl.formatMessage({ id: 'auditDetail.cardType.taiwanPass' });
     case 5:
-      return '台湾身份证';
+      return intl.formatMessage({ id: 'auditDetail.cardType.taiwanIdCard' });
     case 6:
-      return '外国人永久居住身份证';
+      return intl.formatMessage({ id: 'auditDetail.cardType.foreignerCard' });
     default:
       return '-';
   }
@@ -48,6 +49,7 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
   onSuccess,
   record,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [rejectModalVisible, setRejectModalVisible] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
@@ -72,13 +74,13 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
         authStatus: '1',
       });
       if (res.code === '0') {
-        message.success('已通过审核');
+        message.success(intl.formatMessage({ id: 'auditDetail.message.approveSuccess' }));
         onSuccess();
       } else {
-        message.error('操作失败');
+        message.error(intl.formatMessage({ id: 'auditDetail.message.operationFailed' }));
       }
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'auditDetail.message.operationFailed' }));
       console.error(error);
     }
   };
@@ -98,7 +100,7 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
   // 处理确认驳回
   const handleRejectConfirm = async () => {
     if (!rejectReason.trim()) {
-      message.error('请填写拒绝原因');
+      message.error(intl.formatMessage({ id: 'auditDetail.modal.emptyRejectReason' }));
       return;
     }
 
@@ -110,10 +112,10 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
       });
 
       setRejectModalVisible(false);
-      message.success('驳回成功');
+      message.success(intl.formatMessage({ id: 'auditDetail.message.rejectSuccess' }));
       onSuccess();
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'auditDetail.message.operationFailed' }));
       console.error(error);
     }
   };
@@ -130,18 +132,18 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
   const handleRevoke = async () => {
     // 
     Modal.confirm({
-      title: '确认撤销',
-      content: '确认撤销后，该用户将需要重新审核身份信息',
+      title: intl.formatMessage({ id: 'auditDetail.confirm.revokeTitle' }),
+      content: intl.formatMessage({ id: 'auditDetail.confirm.revokeContent' }),
       onOk: async () => {
         const res = await updateUserIdentityVerificationById({
           id: record.id,
           authStatus: '2',
         });
         if (res.code === '0') {
-          message.success('撤销成功');
+          message.success(intl.formatMessage({ id: 'auditDetail.message.revokeSuccess' }));
           onSuccess();
         } else {
-          message.error('操作失败');
+          message.error(intl.formatMessage({ id: 'auditDetail.message.operationFailed' }));
         }
       },
     });
@@ -153,42 +155,46 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
 
   return (
     <>
-      <Card title="审核详情" extra={<Button onClick={onClose}>关闭</Button>}>
+      <Card title={intl.formatMessage({ id: 'auditDetail.title' })} extra={<Button onClick={onClose}>{intl.formatMessage({ id: 'auditList.button.close' })}</Button>}>
         <div className={styles.statusBar}>
-          <div className={styles.statusLabel}>审核状态</div>
+          <div className={styles.statusLabel}>{intl.formatMessage({ id: 'auditDetail.statusLabel' })}</div>
           <div
             className={styles.statusValue}
             style={{
               color: record?.authStatus === 0 ? 'red' : record?.authStatus === 1 ? 'green' : 'gray',
             }}
           >
-            {record?.authStatus === 0 ? '驳回' : record?.authStatus === 1 ? '通过' : '未审核'}
+            {record?.authStatus === 0 ? 
+              intl.formatMessage({ id: 'auditList.status.rejected' }) : 
+              record?.authStatus === 1 ? 
+                intl.formatMessage({ id: 'auditList.status.approved' }) : 
+                intl.formatMessage({ id: 'auditList.status.pending' })}
           </div>
         </div>
 
         <Descriptions bordered column={2}>
-          <Descriptions.Item label="用户ID" span={1}>
+          <Descriptions.Item label={intl.formatMessage({ id: 'auditDetail.description.userId' })} span={1}>
             {record?.userId}
           </Descriptions.Item>
-          <Descriptions.Item label="名" span={1}>
+          <Descriptions.Item label={intl.formatMessage({ id: 'auditDetail.description.firstName' })} span={1}>
             {record?.firstName}
           </Descriptions.Item>
-          <Descriptions.Item label="国家或地区" span={1}>
+          <Descriptions.Item label={intl.formatMessage({ id: 'auditDetail.description.country' })} span={1}>
             {record?.country}
           </Descriptions.Item>
-          <Descriptions.Item label="姓" span={1}>
+          <Descriptions.Item label={intl.formatMessage({ id: 'auditDetail.description.surname' })} span={1}>
             {record?.surname}
           </Descriptions.Item>
-          <Descriptions.Item label="出生日期" span={1}>
+          <Descriptions.Item label={intl.formatMessage({ id: 'auditDetail.description.birthday' })} span={1}>
             {dayjs(record?.birthday).format('YYYY-MM-DD')}
           </Descriptions.Item>
-          <Descriptions.Item label="证件类型" span={1}>
-            {cardType(record?.cardType)}
+          <Descriptions.Item label={intl.formatMessage({ id: 'auditDetail.description.cardType' })} span={1}>
+            {cardType(record?.cardType, intl)}
           </Descriptions.Item>
-          <Descriptions.Item label="当前语言" span={1}>
+          <Descriptions.Item label={intl.formatMessage({ id: 'auditDetail.description.currentLanguage' })} span={1}>
             {record?.currentLanguage}
           </Descriptions.Item>
-          <Descriptions.Item label="证件号" span={2}>
+          <Descriptions.Item label={intl.formatMessage({ id: 'auditDetail.description.cardCode' })} span={2}>
             {record?.cardCode}
           </Descriptions.Item>
         </Descriptions>
@@ -197,17 +203,17 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
           {(record?.authStatus === 3 || record?.authStatus === 2 || record?.authStatus === 0) && (
             <Space size="middle">
               <Button type="primary" onClick={handleApprove}>
-                通过
+                {intl.formatMessage({ id: 'auditList.button.approve' })}
               </Button>
               <Button danger onClick={showRejectModal}>
-                驳回
+                {intl.formatMessage({ id: 'auditList.button.reject' })}
               </Button>
             </Space>
           )}
           {record?.authStatus === 1 && (
             <Space size="middle">
               <Button type="primary" danger onClick={handleRevoke}>
-                撤销
+                {intl.formatMessage({ id: 'auditList.button.revoke' })}
               </Button>
             </Space>
           )}
@@ -216,7 +222,7 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
         {/* 显示驳回原因 */}
         {record?.authStatus === 0 && record?.remark && (
           <div className={styles.rejectReasonSection}>
-            <h3>拒绝原因：</h3>
+            <h3>{intl.formatMessage({ id: 'auditDetail.rejectReasonTitle' })}：</h3>
             <div className={styles.rejectReasonContent}>
               {record?.remark?.split('&&').map((reason:string, index:number) => (
                 <div key={index} className={styles.rejectReasonItem}>
@@ -228,14 +234,14 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
         )}
 
         <div className={styles.documentSection}>
-          <h3>证件照</h3>
+          <h3>{intl.formatMessage({ id: 'auditDetail.documentSection' })}</h3>
           <Row gutter={16}>
             <Col span={8}>
               <div className={styles.imageBox}>
-                <div className={styles.imageLabel}>正面</div>
+                <div className={styles.imageLabel}>{intl.formatMessage({ id: 'auditDetail.frontSide' })}</div>
                 <div className={styles.imageContainer}>
                   {record?.frontUrl ? (
-                    <Image src={record.frontUrl} alt="证件正面" className={styles.documentImage} width={200} height={200} />
+                    <Image src={record.frontUrl} alt={intl.formatMessage({ id: 'auditDetail.frontSide' })} className={styles.documentImage} width={200} height={200} />
                   ) : (
                     <ImagePlaceholder />
                   )}
@@ -244,10 +250,10 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
             </Col>
             <Col span={8}>
               <div className={styles.imageBox}>
-                <div className={styles.imageLabel}>背面</div>
+                <div className={styles.imageLabel}>{intl.formatMessage({ id: 'auditDetail.backSide' })}</div>
                 <div className={styles.imageContainer}>
                   {record?.backUrl ? (
-                    <Image src={record.backUrl} alt="证件背面" className={styles.documentImage} width={200} height={200} />
+                    <Image src={record.backUrl} alt={intl.formatMessage({ id: 'auditDetail.backSide' })} className={styles.documentImage} width={200} height={200} />
                   ) : (
                     <ImagePlaceholder />
                   )}
@@ -256,10 +262,10 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
             </Col>
             <Col span={8}>
               <div className={styles.imageBox}>
-                <div className={styles.imageLabel}>自拍照</div>
+                <div className={styles.imageLabel}>{intl.formatMessage({ id: 'auditDetail.selfie' })}</div>
                 <div className={styles.imageContainer}>
                   {record?.selfieUrl ? (
-                    <Image src={record.selfieUrl} alt="自拍照" className={styles.documentImage} width={200} height={200} />
+                    <Image src={record.selfieUrl} alt={intl.formatMessage({ id: 'auditDetail.selfie' })} className={styles.documentImage} width={200} height={200} />
                   ) : (
                     <ImagePlaceholder />
                   )}
@@ -272,20 +278,20 @@ const AuditDetailModal: React.FC<AuditDetailModalProps> = ({
 
       {/* 驳回原因模态框 */}
       <Modal
-        title="驳回原因"
+        title={intl.formatMessage({ id: 'auditDetail.modal.rejectTitle' })}
         open={rejectModalVisible}
         onCancel={handleRejectCancel}
         footer={[
           <Button key="cancel" onClick={handleRejectCancel}>
-            取消
+            {intl.formatMessage({ id: 'auditList.button.cancel' })}
           </Button>,
           <Button key="submit" type="primary" onClick={handleRejectConfirm}>
-            确认
+            {intl.formatMessage({ id: 'auditList.button.confirm' })}
           </Button>,
         ]}
       >
         <Input.TextArea
-          placeholder="请输入"
+          placeholder={intl.formatMessage({ id: 'auditDetail.modal.placeholder' })}
           value={rejectReason}
           onChange={handleRejectReasonChange}
           rows={4}

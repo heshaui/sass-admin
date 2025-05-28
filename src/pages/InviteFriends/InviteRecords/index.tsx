@@ -1,5 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
+import { useIntl } from 'umi';
 import { Tag, Button, Space } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { getUserInviteDetailList, } from '@/services/ant-design-pro/inviteFriends';
@@ -19,6 +20,7 @@ interface InviteRecord {
 
 
 const InviteRecords: React.FC = () => {
+  const intl = useIntl();
   const [userList, setUserList] = useState<InviteRecord[]>([]);
 
   //获取用户邀请详情列表
@@ -38,68 +40,72 @@ const InviteRecords: React.FC = () => {
 
   const columns: ProColumns<InviteRecord>[] = [
     {
-      title: '编号',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.id' }),
       dataIndex: 'id',
       key: 'id',
       search: false,
     },
     {
-      title: 'UID',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.userId' }),
       dataIndex: 'userId',
       key: 'userId',
     },
     {
-      title: '注册账号',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.account' }),
       dataIndex: 'account',
       key: 'account',
       search: false,
     },
     {
-      title: '邀请AID',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.parentUserId' }),
       dataIndex: 'parentUserId',
       key: 'parentUserId',
     },
     {
-      title: '注册时间',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.createTime' }),
       dataIndex: 'createTime',
       key: 'createTime',
       valueType: 'dateTime',
     },
     {
-      title: '14D累计充值USDT',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.accumulate' }),
       dataIndex: 'accumulate',
       key: 'accumulate',
       search: false,
     },
     {
-      title: '邀请状态',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.inviteStatus' }),
       dataIndex: 'inviteStatus',
       key: 'inviteStatus',
       // 邀请状态:1成功，0失败
       valueEnum: {
-        1: { text: '成功' },
-        0: { text: '失败' },
+        1: { text: intl.formatMessage({ id: 'inviteFriends.inviteRecords.status.success' }) },
+        0: { text: intl.formatMessage({ id: 'inviteFriends.inviteRecords.status.failed' }) },
       },
     },
     {
-      title: '发放状态',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.distributeStatus' }),
       dataIndex: 'distributeStatus',
       key: 'distributeStatus',
       valueEnum: {
-        1: { text: '已发放' },
-        0: { text: '未发放' },
+        1: { text: intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.distributed' }) },
+        0: { text: intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.undistributed' }) },
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.action' }),
       key: 'action',
       search: false,
       render: (_, record) => (
         <Space>
-          {record.distributionStatus === '未发放' && record.invitationStatus === '成功' && (
-            <Button type="link" style={{ color: '#1677ff' }}>手动发放</Button>
+          {record.distributionStatus === intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.undistributed' }) && 
+           record.invitationStatus === intl.formatMessage({ id: 'inviteFriends.inviteRecords.status.success' }) && (
+            <Button type="link" style={{ color: '#1677ff' }}>
+              {intl.formatMessage({ id: 'inviteFriends.inviteRecords.action.manualDistribute' })}
+            </Button>
           )}
-          {(record.distributionStatus === '已发放' || record.invitationStatus === '未成功') && (
+          {(record.distributionStatus === intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.distributed' }) || 
+            record.invitationStatus === intl.formatMessage({ id: 'inviteFriends.inviteRecords.status.failed' })) && (
             <span>-</span>
           )}
         </Space>

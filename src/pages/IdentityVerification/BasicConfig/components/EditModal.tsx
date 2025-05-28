@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Radio, Input, Slider, Space } from 'antd';
+import { useIntl } from 'umi';
 
 interface EditModalProps {
   visible: boolean;
@@ -9,6 +10,7 @@ interface EditModalProps {
 }
 
 const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave }) => {
+  const intl = useIntl();
   const [cryptoWithdrawal, setCryptoWithdrawal] = useState<number>(1);
   const [withdrawalLimit, setWithdrawalLimit] = useState<number>(0);
   const [sliderValue, setSliderValue] = useState<number>(5);
@@ -93,27 +95,27 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
 
   return (
     <Modal
-      title="编辑"
+      title={intl.formatMessage({ id: 'editModal.title' })}
       open={visible}
       onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onCancel}>
-          取消
+          {intl.formatMessage({ id: 'editModal.button.cancel' })}
         </Button>,
         <Button key="submit" type="primary" onClick={handleSubmit}>
-          确认
+          {intl.formatMessage({ id: 'editModal.button.confirm' })}
         </Button>,
       ]}
       closeIcon={<span style={{ fontSize: '18px' }}>X</span>}
     >
       <div style={{ marginBottom: 20 }}>
-        <div style={{ marginBottom: 10 }}>加密货币提现</div>
+        <div style={{ marginBottom: 10 }}>{intl.formatMessage({ id: 'editModal.cryptoWithdrawal' })}</div>
         <Radio.Group 
           value={cryptoWithdrawal} 
           onChange={(e) => setCryptoWithdrawal(e.target.value)}
         >
-          <Radio value={1}>允许</Radio>
-          <Radio value={0}>禁止</Radio>
+          <Radio value={1}>{intl.formatMessage({ id: 'editModal.allow' })}</Radio>
+          <Radio value={0}>{intl.formatMessage({ id: 'editModal.deny' })}</Radio>
         </Radio.Group>
       </div>
 
@@ -124,18 +126,18 @@ const EditModal: React.FC<EditModalProps> = ({ visible, record, onCancel, onSave
             onChange={(e) => setWithdrawalLimit(Number(e.target.value))}
             style={{ width: 200 }}
           />
-          <span>USDT/24小时</span>
+          <span>{intl.formatMessage({ id: 'editModal.limitPerDay' })}</span>
         </Space>
       </div>
 
       <div style={{ marginBottom: 20 }}>
-        <div style={{ marginBottom: 10 }}>加密货币充值</div>
+        <div style={{ marginBottom: 10 }}>{intl.formatMessage({ id: 'editModal.cryptoDeposit' })}</div>
         <Radio.Group 
           value={cryptoDeposit} 
           onChange={(e) => setCryptoDeposit(e.target.value)}
         >
-          <Radio value={1}>允许</Radio>
-          <Radio value={0}>禁止</Radio>
+          <Radio value={1}>{intl.formatMessage({ id: 'editModal.allow' })}</Radio>
+          <Radio value={0}>{intl.formatMessage({ id: 'editModal.deny' })}</Radio>
         </Radio.Group>
       </div>
     </Modal>

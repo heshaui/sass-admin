@@ -2,6 +2,7 @@ import React,{useEffect}from 'react';
 import { Button,message } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { useIntl } from 'umi';
 import { 
   getUserLevelBenefitList,updateLevelBenefitById
 } from '@/services/ant-design-pro/IdentityVerification';
@@ -26,6 +27,7 @@ interface UserLevelItem {
 }
 
 const UserLevel: React.FC = () => {
+  const intl = useIntl();
   const [loading, setLoading] = React.useState<boolean>(false);
   const [dataSource, setDataSource] = React.useState<UserLevelItem[]>([]);
   const [pagination, setPagination] = React.useState({
@@ -58,7 +60,7 @@ const UserLevel: React.FC = () => {
         });
       }
     } catch (error) {
-      console.error('获取用户等级列表失败:', error);
+      console.error(intl.formatMessage({ id: 'basicConfig.message.fetchFailed' }), error);
     } finally {
       setLoading(false);
     }
@@ -95,9 +97,9 @@ const UserLevel: React.FC = () => {
 
      const res = await updateLevelBenefitById(params);
       if(res.code === '0'&&res.data){
-        message.success('更新成功');
+        message.success(intl.formatMessage({ id: 'basicConfig.message.updateSuccess' }));
       }else{
-        message.error('更新失败');
+        message.error(intl.formatMessage({ id: 'basicConfig.message.updateFailed' }));
       }
       fetchUserLevelList({
         current: pagination.current,
@@ -108,26 +110,26 @@ const UserLevel: React.FC = () => {
       
     
     } catch (error) {
-      console.error('更新失败:', error);
+      console.error(intl.formatMessage({ id: 'basicConfig.message.updateFailed' }), error);
     }
   };
 
   const columns = [
     {
-      title: '等级',
+      title: intl.formatMessage({ id: 'basicConfig.column.level' }),
       dataIndex: 'levelValue',
       key: 'levelValue',
       render: (text: string | null) => 
-        text === 'L0' ? '未认证' : '标准身份认证'
+        text === 'L0' ? intl.formatMessage({ id: 'basicConfig.level.unverified' }) : intl.formatMessage({ id: 'basicConfig.level.standard' })
     },
     {
-      title: '要求',
+      title: intl.formatMessage({ id: 'basicConfig.column.requirement' }),
       dataIndex: 'demand',
       key: 'demand',
       render: (text: string | null) => text || '-',
     },
     {
-      title: '权益',
+      title: intl.formatMessage({ id: 'basicConfig.column.benefits' }),
       dataIndex: 'benefitResps',
       key: 'benefitResps',
       render: (benefitResps: UserLevelItem['benefitResps']) => {
@@ -139,12 +141,14 @@ const UserLevel: React.FC = () => {
             {benefitResps.map((item) => (
               <li key={item.levelBenefitId}>
                 {item.benefitName}
-                {` 状态: ${item.status===1 ? '允许' : '不允许'}`}
+                {` ${intl.formatMessage({ id: 'basicConfig.benefit.status' })}: ${item.status===1 ? 
+                    intl.formatMessage({ id: 'basicConfig.benefit.allow' }) : 
+                    intl.formatMessage({ id: 'basicConfig.benefit.deny' })}`}
                 {item.params && (
                   <span style={{ color: '#999', marginLeft: 8 }}>
-                    {item.params.amountLimit ? `限额: ${item.params.amountLimit}` : ''}
-                    {item.params.coin ? ` 币种: ${item.params.coin}` : ''}
-                    {item.params.time ? ` 周期: ${item.params.time}小时` : ''}
+                    {item.params.amountLimit ? `${intl.formatMessage({ id: 'basicConfig.benefit.limit' })}: ${item.params.amountLimit}` : ''}
+                    {item.params.coin ? ` ${intl.formatMessage({ id: 'basicConfig.benefit.coin' })}: ${item.params.coin}` : ''}
+                    {item.params.time ? ` ${intl.formatMessage({ id: 'basicConfig.benefit.period' })}: ${item.params.time}${intl.formatMessage({ id: 'basicConfig.benefit.hour' })}` : ''}
                   
                   </span>
                 )}
@@ -155,20 +159,20 @@ const UserLevel: React.FC = () => {
       },
     },
     {
-      title: '修改时间',
+      title: intl.formatMessage({ id: 'basicConfig.column.updateTime' }),
       dataIndex: 'updateTime',
       key: 'updateTime',
       valueType: 'dateTime',
      
     },
     {
-      title: '操作管理员',
+      title: intl.formatMessage({ id: 'basicConfig.column.operator' }),
       dataIndex: 'operatorName',
       key: 'tenantId',
       render: (text: string | null) => text || '-',
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'basicConfig.column.action' }),
       dataIndex: 'action',
       key: 'action',
       render: (_, record) => (
@@ -177,7 +181,7 @@ const UserLevel: React.FC = () => {
           icon={<EditOutlined />} 
           onClick={() => showEditModal(record)}
         >
-          编辑
+          {intl.formatMessage({ id: 'basicConfig.action.edit' })}
         </Button>
       ),
     },
@@ -193,7 +197,7 @@ const UserLevel: React.FC = () => {
           ...pagination,
           showSizeChanger: true,
           showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条记录`,
+          showTotal: (total) => intl.formatMessage({ id: 'basicConfig.pagination.total' }, { total }),
         }}
         loading={loading}
         onChange={handleTableChange}

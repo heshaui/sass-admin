@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, Select } from 'antd';
+import { useIntl } from 'umi';
 import AvatarUpload from "@/components/AvatarUpload/index";
 
 
@@ -20,6 +21,7 @@ const ImageConfigModal: React.FC<ImageConfigModalProps> = ({
     language,
     imagesConfig
 }) => {
+    const intl = useIntl();
 
 const [backgroundImage,setBackgroundImage]=useState('');
 const [posterImage,setPosterImage]=useState('');
@@ -43,16 +45,16 @@ const getPosterImageValue = () => {
 
     return (
         <Modal
-            title="邀请页面图片配置"
+            title={intl.formatMessage({ id: 'inviteFriends.imageConfigModal.title' })}
             open={visible}
             onCancel={onCancel}
             footer={[
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button key="cancel" onClick={onCancel} style={{ marginRight: '20px' }}>
-                        取消
+                        {intl.formatMessage({ id: 'inviteFriends.imageConfigModal.cancel' })}
                     </Button>
                     <Button key="save" type="primary" onClick={()=>{onSave(backgroundImage,posterImage)}}>
-                        保存
+                        {intl.formatMessage({ id: 'inviteFriends.imageConfigModal.save' })}
                     </Button>
                 </div>
 
@@ -61,12 +63,12 @@ const getPosterImageValue = () => {
         >
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-                    语言： <Select value={language} disabled={true} >
-                         <Select.Option value="zh_CN">简体中文</Select.Option>
-                        <Select.Option value="zh_TW">繁体中文</Select.Option>
-                        <Select.Option value="en_US">英文</Select.Option>
-                        <Select.Option value="ja_JP">日语</Select.Option>
-                        <Select.Option value="ko_KR">韩语</Select.Option>
+                    {intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language' })} <Select value={language} disabled={true} >
+                         <Select.Option value="zh_CN">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.zhCN' })}</Select.Option>
+                        <Select.Option value="zh_TW">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.zhTW' })}</Select.Option>
+                        <Select.Option value="en_US">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.enUS' })}</Select.Option>
+                        <Select.Option value="ja_JP">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.jaJP' })}</Select.Option>
+                        <Select.Option value="ko_KR">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.koKR' })}</Select.Option>
                     </Select>
                 </div>
 
@@ -76,7 +78,7 @@ const getPosterImageValue = () => {
 
                         <div style={{ marginTop: 10 }}>
                             <AvatarUpload onChange={(url)=>{setBackgroundImage(url)}} value={getBackgroundImageValue()}/>
-                            <p>建议尺寸1236*452</p>
+                            <p>{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.backgroundSize' })}</p>
                         </div>
                     </div>
 
@@ -84,7 +86,7 @@ const getPosterImageValue = () => {
 
                         <div style={{ marginTop: 10 }}>
                             <AvatarUpload onChange={(url)=>{setPosterImage(url)}} value={getPosterImageValue()}/>
-                            <p>建议尺寸856*452</p>
+                            <p>{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.posterSize' })}</p>
                         </div>
                     </div>
                 </div>

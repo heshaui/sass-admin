@@ -13,6 +13,10 @@ import rate from './en-US/rate';
 import langPackage from './en-US/langPackage';
 import auth from './en-US/auth';
 import spot from './en-US/spot';
+import depositWithdraw from './en-US/depositWithdraw';
+import fundsTools from './en-US/fundsTools';
+
+
 
 export default {
   'navBar.lang': 'Languages',
@@ -36,5 +40,7 @@ export default {
   ...rate,
   ...langPackage,
   ...auth,
-  ...spot
+  ...spot,
+  ...depositWithdraw,
+  ...fundsTools
 };

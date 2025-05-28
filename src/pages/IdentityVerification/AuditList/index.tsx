@@ -10,8 +10,10 @@ import {
 } from '@/services/ant-design-pro/IdentityVerification';
 import AuditDetailCard from './components/AuditDetailModal';
 import dayjs from 'dayjs';
+import { useIntl } from 'umi';
 
 const AuditList: React.FC = () => {
+  const intl = useIntl();
   const [visible, setVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<any>(null);
   const [showList, setShowList] = useState(true);
@@ -26,7 +28,7 @@ const AuditList: React.FC = () => {
       setShowList(false);
     } catch (error) {
       console.error(error);
-      message.error('获取详情失败');
+      message.error(intl.formatMessage({ id: 'auditList.message.getDetailFailed' }));
     }
   };
 
@@ -36,12 +38,12 @@ const AuditList: React.FC = () => {
         id,
         status: 'approved',
       });
-      message.success('已通过审核');
+      message.success(intl.formatMessage({ id: 'auditList.message.approveSuccess' }));
       actionRef.current?.reload();
       setVisible(false);
       setShowList(true);
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'auditList.message.operationFailed' }));
       console.error(error);
     }
   };
@@ -52,12 +54,12 @@ const AuditList: React.FC = () => {
         id,
         status: 'rejected',
       });
-      message.success('已拒绝审核');
+      message.success(intl.formatMessage({ id: 'auditList.message.rejectSuccess' }));
       actionRef.current?.reload();
       setVisible(false);
       setShowList(true);
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'auditList.message.operationFailed' }));
       console.error(error);
     }
   };
@@ -82,52 +84,52 @@ const AuditList: React.FC = () => {
           onClick={handleBackToList}
           style={{ marginRight: '12px', padding: 0 }}
         >
-          返回列表
+          {intl.formatMessage({ id: 'auditList.backToList' })}
         </Button>
       )}
-      <span>审核详情</span>
+      <span>{intl.formatMessage({ id: 'auditList.cardTitle' })}</span>
     </div>
   );
 
   const columns: ProColumns<any>[] = [
     {
-      title: '编号',
+      title: intl.formatMessage({ id: 'auditList.column.id' }),
       dataIndex: 'id',
       key: 'id',
       search: false,
     },
     {
-      title: '账号',
+      title: intl.formatMessage({ id: 'auditList.column.account' }),
       dataIndex: 'account',
       key: 'account',
       hideInTable: true,
     },
     {
-      title: '用户ID',
+      title: intl.formatMessage({ id: 'auditList.column.userId' }),
       dataIndex: 'userId',
       key: 'userId',
       search: false,
     },
     {
-      title: '真实姓名',
+      title: intl.formatMessage({ id: 'auditList.column.realName' }),
       search: false,
       renderText: (record: any) => {
         return record?.firstName + ' ' + record?.surname;
       },
     },
     {
-      title: '国家/地区',
+      title: intl.formatMessage({ id: 'auditList.column.country' }),
       dataIndex: 'country',
       key: 'country',
       search: false,
     },
     // {
-    //   title: '证件类型',
+    //   title: intl.formatMessage({ id: 'auditList.column.cardType' }),
     //   dataIndex: 'cardType',
     //   key: 'cardType',
     // },
     {
-      title: '提交时间',
+      title: intl.formatMessage({ id: 'auditList.column.createTime' }),
       dataIndex: 'createTime',
       key: 'createTime',
       valueType: 'dateTime',
@@ -135,35 +137,37 @@ const AuditList: React.FC = () => {
       
     },
     {
-      title: '首次审核时间',
+      title: intl.formatMessage({ id: 'auditList.column.firstCheckTime' }),
       dataIndex: 'firstCheckTime',
       key: 'firstCheckTime',
       valueType: 'dateTime',
       search: false,
     },
     {
-      title: '最近审核时间',
+      title: intl.formatMessage({ id: 'auditList.column.currentCheckTime' }),
       dataIndex: 'currentCheckTime',
       key: 'currentCheckTime',
       valueType: 'dateTime',
       search: false,
     },
     {
-      title: '认证状态',
+      title: intl.formatMessage({ id: 'auditList.column.authStatus' }),
       dataIndex: 'authStatus',
       key: 'authStatus',
       valueEnum:{
-        0:'驳回',
-        1:'通过',
-        2:'未审核',
-        3:'未审核'
+        0: intl.formatMessage({ id: 'auditList.status.rejected' }),
+        1: intl.formatMessage({ id: 'auditList.status.approved' }),
+        2: intl.formatMessage({ id: 'auditList.status.pending' }),
+        3: intl.formatMessage({ id: 'auditList.status.pending' })
       },
       renderText: (text: number) => {
-        return text === 0 ? '驳回' : text === 1 ? '通过' : text === 2 ? '未审核':text === 3 ? '未审核':'';
+        return text === 0 ? intl.formatMessage({ id: 'auditList.status.rejected' }) : 
+               text === 1 ? intl.formatMessage({ id: 'auditList.status.approved' }) : 
+               text === 2 || text === 3 ? intl.formatMessage({ id: 'auditList.status.pending' }) : '';
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'auditList.column.action' }),
       key: 'action',
       valueType: 'option',
       render: (_, record) => (
@@ -174,7 +178,7 @@ const AuditList: React.FC = () => {
             icon={<EyeOutlined />} 
             onClick={() => handleView(record)}
           >
-            查看
+            {intl.formatMessage({ id: 'auditList.button.view' })}
           </Button>
           {record.status === 'pending' && (
             <>
@@ -184,7 +188,7 @@ const AuditList: React.FC = () => {
                 icon={<CheckOutlined />} 
                 onClick={() => handleApprove(record.id)}
               >
-                通过
+                {intl.formatMessage({ id: 'auditList.button.approve' })}
               </Button>
               <Button 
                 danger 
@@ -192,7 +196,7 @@ const AuditList: React.FC = () => {
                 icon={<CloseOutlined />} 
                 onClick={() => handleReject(record.id)}
               >
-                拒绝
+                {intl.formatMessage({ id: 'auditList.button.reject' })}
               </Button>
             </>
           )}
@@ -205,7 +209,7 @@ const AuditList: React.FC = () => {
     <PageContainer>
       {showList && (
         <ProTable<any>
-          headerTitle="审核列表"
+          headerTitle={intl.formatMessage({ id: 'auditList.title' })}
           actionRef={actionRef}
           rowKey="id"
           search={{
@@ -234,8 +238,8 @@ const AuditList: React.FC = () => {
           columns={columns}
           tableAlertRender={({ selectedRowKeys, onCleanSelected }) => (
             <Space>
-              <span>已选择 {selectedRowKeys.length} 项</span>
-              <Button type="link" onClick={onCleanSelected}>取消选择</Button>
+              <span>{intl.formatMessage({ id: 'auditList.tableAlert.selected' }, { count: selectedRowKeys.length })}</span>
+              <Button type="link" onClick={onCleanSelected}>{intl.formatMessage({ id: 'auditList.button.cancelSelection' })}</Button>
             </Space>
           )}
         />

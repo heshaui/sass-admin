@@ -1,5 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { useIntl } from 'umi';
 import { 
   Card, 
   Form, 
@@ -23,6 +24,7 @@ const { Option } = Select;
 
 
 const BasicConfig: React.FC = () => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [language, setLanguage] = useState('en_US');
   const [isEditing, setIsEditing] = useState(false);
@@ -90,7 +92,7 @@ const BasicConfig: React.FC = () => {
   }
   const res=await saveOrUpdateImageConfiguration(data);
   if(res.code==='0'){
-    message.success('图片配置保存成功');
+    message.success(intl.formatMessage({ id: 'inviteFriends.message.imageConfigSaveSuccess' }));
   }else{
     message.error(res.message);
   }
@@ -105,7 +107,7 @@ const BasicConfig: React.FC = () => {
     }
     const res = await saveOrUpdateRewardConfiguration(data);
     if (res.code === '0') {
-      message.success('配置保存成功');
+      message.success(intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }));
       setIsEditing(false); // 保存成功后关闭编辑状态
     } else {
       message.error(res.message);
@@ -148,8 +150,8 @@ const BasicConfig: React.FC = () => {
   }
 
   const onFinish = (values: any) => {
-    console.log('表单提交的值：', values);
-    message.success('配置保存成功');
+    console.log(intl.formatMessage({ id: 'inviteFriends.message.formSubmitValues' }), values);
+    message.success(intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }));
   };
 
   useEffect(() => {
@@ -163,30 +165,32 @@ const BasicConfig: React.FC = () => {
   // 定义资金账户列表的列配置
   const columns: ProColumns[] = [
     {
-      title: '币种',
+      title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.coin' }),
       dataIndex: 'coinName',
     },
     {
-      title: '账户可用',
+      title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.balance' }),
       dataIndex: 'balance',
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.status' }),
       dataIndex: 'isLock',
       render: (text:number) => {
-        return text===0?'未锁定':'锁定'
+        return text===0 ? 
+          intl.formatMessage({ id: 'inviteFriends.fundAccount.status.unlocked' }) : 
+          intl.formatMessage({ id: 'inviteFriends.fundAccount.status.locked' })
       }
     },
     {
-      title: '添加时间',
+      title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.createTime' }),
       dataIndex: 'createTime',
       valueType: 'dateTime',
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.action' }),
       valueType: 'option',
       render: (_, record) => [
-        <a key="records" href="/invite-friends/reward-records">发放记录</a>,
+        <a key="records" href="/invite-friends/reward-records">{intl.formatMessage({ id: 'inviteFriends.fundAccount.action.records' })}</a>,
       ],
     },
   ];
@@ -201,33 +205,33 @@ const BasicConfig: React.FC = () => {
     saveImage(backgroundImage,posterImage);
   };
   return (
-    <PageContainer title="邀请好友基础配置">
+    <PageContainer title={intl.formatMessage({ id: 'inviteFriends.basicConfig.title' })}>
       {/* 账户余额警告 */}
       {/* <Alert
-        message="账户余额不足提醒！"
-        description="尊敬的客户！检测到您邀请返佣账户余额不足！请及时补充余额！若余额不足，自动停止发放奖励，资金充足后自动补发。"
+        message={intl.formatMessage({ id: 'inviteFriends.alert.lowBalance.title' })}
+        description={intl.formatMessage({ id: 'inviteFriends.alert.lowBalance.description' })}
         type="warning"
         showIcon
         style={{ marginBottom: 24 }}
         action={
           <Button size="small" type="primary">
-            前往
+            {intl.formatMessage({ id: 'inviteFriends.alert.lowBalance.action' })}
           </Button>
         }
       /> */}
 
       {/* 账户配置 */}
-      <Card title="账户配置" style={{ marginBottom: 24 }}>
+      <Card title={intl.formatMessage({ id: 'inviteFriends.accountConfig.title' })} style={{ marginBottom: 24 }}>
         {config}
         <Form.Item
           name="enabled"
-          label="是否开启"
+          label={intl.formatMessage({ id: 'inviteFriends.accountConfig.enabled' })}
           valuePropName="checked"
         >
           <Switch value={config==='1'} onChange={ async (checked)=>{
            const res= await updateAccountConfiguration({keyProperty:'account_configuration',keyValue:checked?'1':'0'});
            if(res.code==='0'){
-            message.success('配置保存成功');
+            message.success(intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }));
            }else{
             message.error(res.message);
            }
@@ -235,16 +239,16 @@ const BasicConfig: React.FC = () => {
           }} />
         </Form.Item>
         <div className="tips">
-          <p>Tips:</p>
-          <p>1. 开启后，个人中心将显示入口，及之不显示，查通过URL配置，也需要开启;</p>
+          <p>{intl.formatMessage({ id: 'inviteFriends.accountConfig.tips' })}</p>
+          <p>{intl.formatMessage({ id: 'inviteFriends.accountConfig.tips.content' })}</p>
         </div>
       </Card>
 
       {/* 奖励配置 */}
       <Card 
-        title="奖励配置" 
+        title={intl.formatMessage({ id: 'inviteFriends.rewardConfig.title' })} 
         style={{ marginBottom: 24 }}
-        extra={<Button type="primary" onClick={toggleEdit}>{isEditing ? '取消' : '编辑'}</Button>}
+        extra={<Button type="primary" onClick={toggleEdit}>{isEditing ? intl.formatMessage({ id: 'inviteFriends.rewardConfig.cancel' }) : intl.formatMessage({ id: 'inviteFriends.rewardConfig.edit' })}</Button>}
       >
         <Form
           form={form}
@@ -254,8 +258,8 @@ const BasicConfig: React.FC = () => {
         >
           <Form.Item
             name="coinId"
-            label="返佣返币币种"
-            rules={[{ required: true, message: '请选择返佣币种' }]}
+            label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.coinType' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'inviteFriends.rewardConfig.coinType.placeholder' }) }]}
           >
             <Select style={{ width: 200 }}>
               {coinList.map((item:any)=>(
@@ -266,42 +270,42 @@ const BasicConfig: React.FC = () => {
           
           <Form.Item
             name="rebateRatio"
-            label="返佣比例"
-            rules={[{ required: true, message: '请输入返佣比例' }]}
+            label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.rebateRatio' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'inviteFriends.rewardConfig.rebateRatio.placeholder' }) }]}
           >
             <InputNumber min={0} max={100} addonAfter="%" style={{ width: 200 }} />
           </Form.Item>
           
           <Form.Item
             name="validTime"
-            label="任务有效期限:被邀请用户注册"
-            rules={[{ required: true, message: '请输入有效期限' }]}
+            label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.validTime' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'inviteFriends.rewardConfig.validTime.placeholder' }) }]}
           >
-            <InputNumber min={1} addonAfter="天" style={{ width: 200 }} />
+            <InputNumber min={1} addonAfter={intl.formatMessage({ id: 'inviteFriends.rewardConfig.validTime.unit' })} style={{ width: 200 }} />
           </Form.Item>
           
           <Form.Item
             name="rechargeLimit"
-            label="充值：最小充值不低于"
-            rules={[{ required: true, message: '请输入最小充值金额' }]}
+            label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.rechargeLimit' })}
+            rules={[{ required: true, message: intl.formatMessage({ id: 'inviteFriends.rewardConfig.rechargeLimit.placeholder' }) }]}
           >
-            <InputNumber min={0} addonAfter="USDT" style={{ width: 200 }} />
+            <InputNumber min={0} addonAfter={intl.formatMessage({ id: 'inviteFriends.rewardConfig.rechargeLimit.unit' })} style={{ width: 200 }} />
           </Form.Item>
           
           <Form.Item
             name="isRealname"
-            label="是否要求实名"
+            label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.isRealname' })}
           >
             <Radio.Group>
-              <Radio value="1">需要实名</Radio>
-              <Radio value="0">无需实名</Radio>
+              <Radio value="1">{intl.formatMessage({ id: 'inviteFriends.rewardConfig.isRealname.required' })}</Radio>
+              <Radio value="0">{intl.formatMessage({ id: 'inviteFriends.rewardConfig.isRealname.notRequired' })}</Radio>
             </Radio.Group>
           </Form.Item>
 
           {isEditing && (
             <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                保存
+                {intl.formatMessage({ id: 'inviteFriends.rewardConfig.save' })}
               </Button>
             </Form.Item>
           )}
@@ -309,15 +313,15 @@ const BasicConfig: React.FC = () => {
       </Card>
 
       {/* 邀请页面配置 */}
-      <Card title="邀请页面配置" style={{ marginBottom: 24 }}>
+      <Card title={intl.formatMessage({ id: 'inviteFriends.pageConfig.title' })} style={{ marginBottom: 24 }}>
        
-      <LanguageSelector value={language} text="配置英文样式，则默认同步至其他语言。若不配置将使用系统默认。" onChange={handleLanguageChange} />
+      <LanguageSelector value={language} text={intl.formatMessage({ id: 'inviteFriends.pageConfig.languageInfo' })} onChange={handleLanguageChange} />
       <Button type="primary" onClick={()=>{
         setImageModalVisible(true);
-      }}>配置图片</Button>
+      }}>{intl.formatMessage({ id: 'inviteFriends.pageConfig.configImage' })}</Button>
       <div style={{display:'flex',flexDirection:'row'}}>
         <div style={{ marginTop: 20, marginRight: 20 }}>
-          <h4>邀请页背景配置（PC）</h4>
+          <h4>{intl.formatMessage({ id: 'inviteFriends.pageConfig.backgroundTitle' })}</h4>
           {imagesConfig && imagesConfig[language] ? (
             <Image 
               src={imagesConfig[language].backgroundImage} 
@@ -331,7 +335,7 @@ const BasicConfig: React.FC = () => {
         </div>
         
         <div style={{ marginTop: 20 }}>
-          <h4>邀请海报底图（PC）</h4>
+          <h4>{intl.formatMessage({ id: 'inviteFriends.pageConfig.posterTitle' })}</h4>
           {imagesConfig && imagesConfig[language] ? (
             <Image 
               src={imagesConfig[language].posterImage} 
@@ -354,7 +358,7 @@ const BasicConfig: React.FC = () => {
       </Card>
 
       {/* 资金账户列表 */}
-      <Card title="资金账户列表">
+      <Card title={intl.formatMessage({ id: 'inviteFriends.fundAccount.title' })}>
         <ProTable
           columns={columns}
           rowKey="id"
@@ -366,7 +370,7 @@ const BasicConfig: React.FC = () => {
           }}
           dateFormatter="string"
           toolbar={{
-            title: '资金账户列表',
+            title: intl.formatMessage({ id: 'inviteFriends.fundAccount.title' }),
           }}
         />
       </Card>

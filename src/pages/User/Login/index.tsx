@@ -207,7 +207,7 @@ const Login: React.FC = () => {
       setLoginValues(values);
 
       if (!checkResult || checkResult.code !== '0') {
-        message.error(checkResult?.message || '登录前检查失败');
+        message.error(checkResult?.message || intl.formatMessage({ id: 'pages.login.check.failure' }));
         return;
       }
 
@@ -233,7 +233,7 @@ const Login: React.FC = () => {
   const sendPhoneCode = async () => {
     try {
       if (!phoneNumber) {
-        message.error('邮箱不能为空');
+        message.error(intl.formatMessage({ id: 'pages.login.email.empty' }));
         return;
       }
 
@@ -245,17 +245,17 @@ const Login: React.FC = () => {
       }
 
       if (!result) {
-        message.error(`验证码获取失败`);
+        message.error(intl.formatMessage({ id: 'pages.login.email.code.failure' }));
       }
 
       if (result.code === '0') {
-        message.success('获取验证码成功！');
+        message.success(intl.formatMessage({ id: 'pages.login.email.code.success' }));
       } else {
-        message.error(`验证码获取失败: ${result.message || '未知错误'}`);
+        message.error(`${intl.formatMessage({ id: 'pages.login.email.code.failure' })}: ${result.message || intl.formatMessage({ id: 'pages.login.email.code.failure.unknown' })}`);
       }
     } catch (error) {
-      console.error('获取验证码失败:', error);
-      message.error('验证码请求失败，请稍后再试');
+      console.error(intl.formatMessage({ id: 'pages.login.email.code.failure' }), error);
+      message.error(intl.formatMessage({ id: 'pages.login.email.code.failure.request' }));
     }
   };
 
@@ -315,7 +315,7 @@ const Login: React.FC = () => {
   // 验证码弹框确认
   const handleSmsModalOk = async () => {
     if (!verificationCode) {
-      message.error('请输入验证码');
+      message.error(intl.formatMessage({ id: 'pages.login.email.code.required' }));
       return;
     }
 
@@ -329,7 +329,7 @@ const Login: React.FC = () => {
   // 谷歌验证码弹框确认
   const handleGoogleModalOk = async () => {
     if (!googleCode) {
-      message.error('请输入谷歌验证码');
+      message.error(intl.formatMessage({ id: 'pages.login.google.code.required' }));
       return;
     }
 
@@ -368,7 +368,7 @@ const Login: React.FC = () => {
             formRef={formRef}
             logo={null}
             title='IMBIT'
-            subTitle={isAdmin ? '总后台' : '商户后台'}
+            subTitle={isAdmin ? intl.formatMessage({ id: 'pages.login.admin' }) : intl.formatMessage({ id: 'pages.login.merchant' })}
             initialValues={{
               autoLogin: true,
             }}
@@ -377,7 +377,7 @@ const Login: React.FC = () => {
             }}
             submitter={{
               searchConfig: {
-                submitText: '登录',
+                submitText: intl.formatMessage({ id: 'pages.login.submit' }),
               },
               submitButtonProps: {
                 className: styles.loginBtn,
@@ -389,13 +389,13 @@ const Login: React.FC = () => {
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined style={{ color: '#bfbfbf' }} />,
-                  placeholder: '请输入用户名',
+                  placeholder: intl.formatMessage({ id: 'pages.login.username.placeholder' }),
                 }}
                 name="account"
                 rules={[
                   {
                     required: true,
-                    message: '请输入用户名',
+                    message: intl.formatMessage({ id: 'pages.login.username.required' }),
                   },
                 ]}
               />
@@ -407,12 +407,12 @@ const Login: React.FC = () => {
                 fieldProps={{
                   size: 'large',
                   prefix: <LockOutlined style={{ color: '#bfbfbf' }} />,
-                  placeholder: '请输入密码',
+                  placeholder: intl.formatMessage({ id: 'pages.login.password.placeholder' }),
                 }}
                 rules={[
                   {
                     required: true,
-                    message: '请输入密码',
+                    message: intl.formatMessage({ id: 'pages.login.password.required' }),
                   },
                 ]}
               />
@@ -424,36 +424,36 @@ const Login: React.FC = () => {
 
       {/* 短信验证码弹框 */}
       <Modal
-        title="邮箱验证"
+        title={intl.formatMessage({ id: 'pages.login.email.modal.title' })}
         open={smsModalVisible}
         onOk={handleSmsModalOk}
         onCancel={() => setSmsModalVisible(false)}
       >
         <div style={{ marginBottom: 16 }}>
-          <p>请输入邮箱验证码</p>
+          <p>{intl.formatMessage({ id: 'pages.login.email.modal.prompt' })}</p>
           <div style={{ display: 'flex' }}>
             <Input
-              placeholder="验证码"
+              placeholder={intl.formatMessage({ id: 'pages.login.email.code.placeholder' })}
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value)}
               style={{ marginRight: 8 }}
             />
-            <Button onClick={sendPhoneCode}>获取验证码</Button>
+            <Button onClick={sendPhoneCode}>{intl.formatMessage({ id: 'pages.login.email.code.get' })}</Button>
           </div>
         </div>
       </Modal>
 
       {/* 谷歌验证码弹框 */}
       <Modal
-        title="谷歌验证"
+        title={intl.formatMessage({ id: 'pages.login.google.modal.title' })}
         open={googleModalVisible}
         onOk={handleGoogleModalOk}
         onCancel={() => setGoogleModalVisible(false)}
       >
         <div style={{ marginBottom: 16 }}>
-          <p>请输入谷歌验证码</p>
+          <p>{intl.formatMessage({ id: 'pages.login.google.modal.prompt' })}</p>
           <Input
-            placeholder="谷歌验证码"
+            placeholder={intl.formatMessage({ id: 'pages.login.google.code.placeholder' })}
             value={googleCode}
             onChange={(e) => setGoogleCode(e.target.value)}
           />
