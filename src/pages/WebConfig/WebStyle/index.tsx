@@ -11,7 +11,7 @@ import { history } from 'umi';
 
 const WebStyle: React.FC = () => {
   const [selectedTemplate, setSelectedTemplate] = useState('1');
-  const [primaryColor, setPrimaryColor] = useState<Color>('#FF5F1F');
+  const [primaryColor, setPrimaryColor] = useState<string>('#FF5F1F');
 
   const fetchConfig = async () => {
     try {
@@ -39,7 +39,10 @@ const WebStyle: React.FC = () => {
   }, []);
 
   const handleColorChange = (color: Color) => {
-    setPrimaryColor(color);
+    console.log(color);
+    // Convert the color to a hex string
+    const hexValue = typeof color === 'string' ? color : color.toHexString();
+    setPrimaryColor(hexValue);
   };
 
   const handleSave = async () => {
@@ -113,7 +116,7 @@ const WebStyle: React.FC = () => {
             </ul>
           <Space direction="vertical" size="large">
            
-            <ColorPicker value={primaryColor} onChange={handleColorChange} />
+            <ColorPicker format="hex" defaultValue={primaryColor} onChangeComplete={handleColorChange} />
           </Space>
         </div>
 
