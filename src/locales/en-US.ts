@@ -1,22 +1,23 @@
-import component from './en-US/component';
-import globalHeader from './en-US/globalHeader';
-import menu from './en-US/menu';
-import pages from './en-US/pages';
-import pwa from './en-US/pwa';
-import settingDrawer from './en-US/settingDrawer';
-import settings from './en-US/settings';
-import merchant from './en-US/merchant';
-import pc from './en-US/pc';
-import user from './en-US/user';
-import kv from './en-US/kv';
-import rate from './en-US/rate';
-import langPackage from './en-US/langPackage';
 import auth from './en-US/auth';
-import spot from './en-US/spot';
+import commonConfig from './en-US/commonConfig';
+import component from './en-US/component';
 import depositWithdraw from './en-US/depositWithdraw';
 import fundsTools from './en-US/fundsTools';
-
-
+import globalHeader from './en-US/globalHeader';
+import kv from './en-US/kv';
+import langPackage from './en-US/langPackage';
+import login from './en-US/login';
+import menu from './en-US/menu';
+import merchant from './en-US/merchant';
+import pages from './en-US/pages';
+import pc from './en-US/pc';
+import pwa from './en-US/pwa';
+import rate from './en-US/rate';
+import settingDrawer from './en-US/settingDrawer';
+import settings from './en-US/settings';
+import spot from './en-US/spot';
+import user from './en-US/user';
+import webConfig from './en-US/webConfig';
 
 export default {
   'navBar.lang': 'Languages',
@@ -42,5 +43,8 @@ export default {
   ...auth,
   ...spot,
   ...depositWithdraw,
-  ...fundsTools
+  ...fundsTools,
+  ...webConfig,
+  ...commonConfig,
+  ...login,
 };

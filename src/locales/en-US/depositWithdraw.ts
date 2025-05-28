@@ -1,151 +1,151 @@
 export default {
   // Deposit Management
-  'deposit.title': '充币管理',
-  'deposit.column.id': '充值单号',
-  'deposit.column.userId': '用户ID',
-  'deposit.column.coin': '币种',
-  'deposit.column.network': '网络名称',
-  'deposit.column.amount': '数量',
-  'deposit.column.address': '地址',
+  'deposit.title': 'Deposit Management',
+  'deposit.column.id': 'Deposit Order Number',
+  'deposit.column.userId': 'User ID',
+  'deposit.column.coin': 'Currency',
+  'deposit.column.network': 'Network Name',
+  'deposit.column.amount': 'Amount',
+  'deposit.column.address': 'Address',
   'deposit.column.txId': 'TxID',
-  'deposit.column.confirmations': '确认数',
-  'deposit.column.status': '状态',
-  'deposit.column.completedTime': '到账时间',
-  'deposit.address.internal': '内',
-  'deposit.address.external': '外',
-  
+  'deposit.column.confirmations': 'Confirmations',
+  'deposit.column.status': 'Status',
+  'deposit.column.completedTime': 'Completion Time',
+  'deposit.address.internal': 'Internal',
+  'deposit.address.external': 'External',
+
   // Form Fields
-  'deposit.form.coin.placeholder': '币种',
-  'deposit.form.userId.placeholder': '用户ID',
-  'deposit.form.network.placeholder': '网络名称',
-  'deposit.form.status.placeholder': '充值状态',
-  'deposit.form.addressOrTxId.placeholder': '到账地址、TxID',
-  'deposit.form.dateRange.placeholder.start': '年/月/日',
-  'deposit.form.dateRange.placeholder.end': '年/月/日',
-  'deposit.form.button.search': '搜索',
-  
+  'deposit.form.coin.placeholder': 'Currency',
+  'deposit.form.userId.placeholder': 'User ID',
+  'deposit.form.network.placeholder': 'Network Name',
+  'deposit.form.status.placeholder': 'Deposit Status',
+  'deposit.form.addressOrTxId.placeholder': 'Receiving Address, TxID',
+  'deposit.form.dateRange.placeholder.start': 'Year/Month/Day',
+  'deposit.form.dateRange.placeholder.end': 'Year/Month/Day',
+  'deposit.form.button.search': 'Search',
+
   // Status
-  'deposit.status.confirming': '确认中',
-  'deposit.status.completed': '已到账',
-  'deposit.status.failed': '失败',
-  
+  'deposit.status.confirming': 'Confirming',
+  'deposit.status.completed': 'Completed',
+  'deposit.status.failed': 'Failed',
+
   // Mock Data
-  'deposit.mock.address': '这是一个地址',
-  'deposit.mock.txId': '这是一个TxID',
+  'deposit.mock.address': 'This is an address',
+  'deposit.mock.txId': 'This is a TxID',
 
   // Withdraw Management
-  'withdraw.column.id': '提现单号',
-  'withdraw.column.userId': '用户ID',
-  'withdraw.column.coin': '币种',
-  'withdraw.column.network': '网络名称',
-  'withdraw.column.amount': '提现数量',
-  'withdraw.column.fee': '手续费',
-  'withdraw.column.actualAmount': '实际到账',
-  'withdraw.column.minerFee': '实际矿工费',
-  'withdraw.column.addressTxId': '地址/TxId',
-  'withdraw.column.fromAddress': '发送地址',
-  'withdraw.column.toAddress': '接收地址',
+  'withdraw.column.id': 'Withdrawal Order Number',
+  'withdraw.column.userId': 'User ID',
+  'withdraw.column.coin': 'Currency',
+  'withdraw.column.network': 'Network Name',
+  'withdraw.column.amount': 'Withdrawal Amount',
+  'withdraw.column.fee': 'Fee',
+  'withdraw.column.actualAmount': 'Actual Amount',
+  'withdraw.column.minerFee': 'Actual Miner Fee',
+  'withdraw.column.addressTxId': 'Address/TxId',
+  'withdraw.column.fromAddress': 'From Address',
+  'withdraw.column.toAddress': 'To Address',
   'withdraw.column.txId': 'TxID',
-  'withdraw.column.riskLevel': '风控等级',
-  'withdraw.column.riskDesc': '风控说明',
-  'withdraw.column.status': '状态',
-  
+  'withdraw.column.riskLevel': 'Risk Level',
+  'withdraw.column.riskDesc': 'Risk Description',
+  'withdraw.column.status': 'Status',
+
   // Additional keys for WithdrawManage DetailModal
-  'withdraw.modal.label.actualMinerFee': '实际矿工费',
-  'withdraw.modal.label.remark': '审核备注',
-  'withdraw.modal.placeholder.actualMinerFee': '请输入实际矿工费',
-  'withdraw.modal.placeholder.remark': '请输入备注',
-  'withdraw.message.transferAddressRequired': '转账地址为必填项',
-  'withdraw.message.noRecordSelected': '未选择记录',
-  'withdraw.button.confirm': '确认',
-  'withdraw.tabs.operationLog': '操作日志',
-  'withdraw.tabs.riskLog': '风控日志',
-  'withdraw.riskLog.column.triggerType': '触发类型',
-  'withdraw.riskLog.column.triggerReason': '触发原因',
-  'withdraw.riskLog.column.triggerRiskLevel': '触发后风控等级',
-  'withdraw.riskLog.column.suggestion': '处理建议',
-  'withdraw.riskLog.column.triggerTime': '触发时间',
-  
+  'withdraw.modal.label.actualMinerFee': 'Actual Miner Fee',
+  'withdraw.modal.label.remark': 'Review Notes',
+  'withdraw.modal.placeholder.actualMinerFee': 'Please enter actual miner fee',
+  'withdraw.modal.placeholder.remark': 'Please enter notes',
+  'withdraw.message.transferAddressRequired': 'Transfer address is required',
+  'withdraw.message.noRecordSelected': 'No record selected',
+  'withdraw.button.confirm': 'Confirm',
+  'withdraw.tabs.operationLog': 'Operation Log',
+  'withdraw.tabs.riskLog': 'Risk Control Log',
+  'withdraw.riskLog.column.triggerType': 'Trigger Type',
+  'withdraw.riskLog.column.triggerReason': 'Trigger Reason',
+  'withdraw.riskLog.column.triggerRiskLevel': 'Risk Level After Trigger',
+  'withdraw.riskLog.column.suggestion': 'Processing Suggestion',
+  'withdraw.riskLog.column.triggerTime': 'Trigger Time',
+
   // OperaLog Component
-  'operaLog.column.requestPath': '接口路径',
-  'operaLog.column.clientIp': 'ip地址',
-  'operaLog.column.reqSource': '请求来源',
-  'operaLog.column.networkType': '网络类型',
-  'operaLog.column.beforeValue': '名称',
-  'operaLog.column.timestamp': '请求时间',
-  'operaLog.pagination.total': '共 {total} 条记录',
-  
+  'operaLog.column.requestPath': 'API Path',
+  'operaLog.column.clientIp': 'IP Address',
+  'operaLog.column.reqSource': 'Request Source',
+  'operaLog.column.networkType': 'Network Type',
+  'operaLog.column.beforeValue': 'Name',
+  'operaLog.column.timestamp': 'Request Time',
+  'operaLog.pagination.total': 'Total {total} records',
+
   // RiskLog Component
-  'riskLog.column.sceneCode': '触发类型',
-  'riskLog.column.resultContent': '触发原因',
-  'riskLog.column.riskLevel': '触发后风控等级',
-  'riskLog.column.riskRule': '风控周期',
-  'riskLog.column.suggestion': '处理建议',
-  'riskLog.column.createTime': '触发时间',
-  'riskLog.pagination.total': '共 {total} 条记录',
-  'withdraw.column.withdrawTime': '提现时间',
-  'withdraw.column.action': '操作',
-  
+  'riskLog.column.sceneCode': 'Trigger Type',
+  'riskLog.column.resultContent': 'Trigger Reason',
+  'riskLog.column.riskLevel': 'Risk Level After Trigger',
+  'riskLog.column.riskRule': 'Risk Control Period',
+  'riskLog.column.suggestion': 'Processing Suggestion',
+  'riskLog.column.createTime': 'Trigger Time',
+  'riskLog.pagination.total': 'Total {total} records',
+  'withdraw.column.withdrawTime': 'Withdrawal Time',
+  'withdraw.column.action': 'Action',
+
   // Form Fields
-  'withdraw.form.addressOrTxId.placeholder': '到账地址、TxID',
-  
+  'withdraw.form.addressOrTxId.placeholder': 'Receiving Address, TxID',
+
   // Status
-  'withdraw.status.all': '全部',
-  'withdraw.status.created': '创建',
-  'withdraw.status.pending': '待审核',
-  'withdraw.status.completed': '完成',
-  'withdraw.status.rejected': '拒绝',
-  'withdraw.status.cancelled': '已撤销',
-  'withdraw.status.userCancelled': '用户撤销',
-  'withdraw.status.unknown': '未知状态',
-  
+  'withdraw.status.all': 'All',
+  'withdraw.status.created': 'Created',
+  'withdraw.status.pending': 'Pending Review',
+  'withdraw.status.completed': 'Completed',
+  'withdraw.status.rejected': 'Rejected',
+  'withdraw.status.cancelled': 'Cancelled',
+  'withdraw.status.userCancelled': 'User Cancelled',
+  'withdraw.status.unknown': 'Unknown Status',
+
   // Action Buttons
-  'withdraw.action.review': '审核',
-  'withdraw.action.details': '详情',
-  
+  'withdraw.action.review': 'Review',
+  'withdraw.action.details': 'Details',
+
   // Detail Modal
-  'withdraw.modal.title.details': '提现详情',
-  'withdraw.modal.title.review': '提现审核',
-  'withdraw.modal.label.withdrawId': '提现单号',
+  'withdraw.modal.title.details': 'Withdrawal Details',
+  'withdraw.modal.title.review': 'Withdrawal Review',
+  'withdraw.modal.label.withdrawId': 'Withdrawal Order Number',
   'withdraw.modal.label.userId': 'UID',
-  'withdraw.modal.label.riskLevel': '风控等级',
-  'withdraw.modal.label.amount': '提现金额',
-  'withdraw.modal.label.fee': '手续费',
-  'withdraw.modal.label.actualAmount': '应到金额',
-  'withdraw.modal.label.protocol': '提币协议',
-  'withdraw.modal.label.receivingAddress': '收款地址',
-  'withdraw.modal.label.reviewStatus': '审核状态',
-  'withdraw.modal.label.reviewResult': '审核结果',
-  'withdraw.modal.label.processingMethod': '处理方式',
-  'withdraw.modal.label.transferAddress': '转账地址',
+  'withdraw.modal.label.riskLevel': 'Risk Level',
+  'withdraw.modal.label.amount': 'Withdrawal Amount',
+  'withdraw.modal.label.fee': 'Fee',
+  'withdraw.modal.label.actualAmount': 'Expected Amount',
+  'withdraw.modal.label.protocol': 'Withdrawal Protocol',
+  'withdraw.modal.label.receivingAddress': 'Receiving Address',
+  'withdraw.modal.label.reviewStatus': 'Review Status',
+  'withdraw.modal.label.reviewResult': 'Review Result',
+  'withdraw.modal.label.processingMethod': 'Processing Method',
+  'withdraw.modal.label.transferAddress': 'Transfer Address',
   'withdraw.modal.label.txId': 'TXID',
-  'withdraw.modal.label.realMinerFee': '实际矿工费',
-  'withdraw.modal.label.reviewRemark': '审核备注',
-  
+  'withdraw.modal.label.realMinerFee': 'Actual Miner Fee',
+  'withdraw.modal.label.reviewRemark': 'Review Notes',
+
   // Radio Options
-  'withdraw.modal.option.approve': '通过',
-  'withdraw.modal.option.reject': '拒绝',
-  'withdraw.modal.option.walletProcessing': '钱包处理',
-  'withdraw.modal.option.manualProcessing': '人工处理',
-  
+  'withdraw.modal.option.approve': 'Approve',
+  'withdraw.modal.option.reject': 'Reject',
+  'withdraw.modal.option.walletProcessing': 'Wallet Processing',
+  'withdraw.modal.option.manualProcessing': 'Manual Processing',
+
   // Placeholders
-  'withdraw.modal.placeholder.transferAddress': '请输入转账地址（必填）',
-  'withdraw.modal.placeholder.txId': '请输入TXID（必填）',
-  'withdraw.modal.placeholder.minerFee': '请输入实际矿工费（必填）',
-  
+  'withdraw.modal.placeholder.transferAddress': 'Please enter transfer address (required)',
+  'withdraw.modal.placeholder.txId': 'Please enter TXID (required)',
+  'withdraw.modal.placeholder.minerFee': 'Please enter actual miner fee (required)',
+
   // Buttons
-  'withdraw.modal.button.submit': '提交',
-  'withdraw.modal.button.cancel': '取消',
-  
+  'withdraw.modal.button.submit': 'Submit',
+  'withdraw.modal.button.cancel': 'Cancel',
+
   // Tabs
-  'withdraw.modal.tab.riskLog': '风控日志',
-  'withdraw.modal.tab.operationLog': '操作日志',
-  
+  'withdraw.modal.tab.riskLog': 'Risk Control Log',
+  'withdraw.modal.tab.operationLog': 'Operation Log',
+
   // Risk Log Table
-  
+
   // Messages
-  'withdraw.message.txIdRequired': 'TXID为必填项',
-  'withdraw.message.minerFeeRequired': '实际矿工费为必填项',
-  'withdraw.message.processSuccess': '人工处理成功',
-  'withdraw.message.processFailed': '人工处理失败'
-}
+  'withdraw.message.txIdRequired': 'TXID is required',
+  'withdraw.message.minerFeeRequired': 'Actual miner fee is required',
+  'withdraw.message.processSuccess': 'Manual processing successful',
+  'withdraw.message.processFailed': 'Manual processing failed',
+};

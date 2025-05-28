@@ -1,26 +1,26 @@
-import component from './zh-CN/component';
-import globalHeader from './zh-CN/globalHeader';
-import menu from './zh-CN/menu';
-import pages from './zh-CN/pages';
-import pwa from './zh-CN/pwa';
-import settingDrawer from './zh-CN/settingDrawer';
-import settings from './zh-CN/settings';
-import common from './zh-CN/common';
-import langPackage from './zh-CN/langPackage';
-import merchant from './zh-CN/merchant';
-import rate from './zh-CN/rate';
-import pc from './zh-CN/pc';
-import user from './zh-CN/user';
-import kv from './zh-CN/kv';
-import spot from './zh-CN/spot';
-import auth from './zh-CN/auth';
-import login from './zh-CN/login';
 import IdentityVerification from './zh-CN/IdentityVerification';
 import InviteFriends from './zh-CN/InviteFriends';
+import auth from './zh-CN/auth';
+import common from './zh-CN/common';
+import commonConfig from './zh-CN/commonConfig';
+import component from './zh-CN/component';
 import depositWithdraw from './zh-CN/depositWithdraw';
 import fundsTools from './zh-CN/fundsTools';
+import globalHeader from './zh-CN/globalHeader';
+import kv from './zh-CN/kv';
+import langPackage from './zh-CN/langPackage';
+import login from './zh-CN/login';
+import menu from './zh-CN/menu';
+import merchant from './zh-CN/merchant';
+import pages from './zh-CN/pages';
+import pc from './zh-CN/pc';
+import pwa from './zh-CN/pwa';
+import rate from './zh-CN/rate';
+import settingDrawer from './zh-CN/settingDrawer';
+import settings from './zh-CN/settings';
+import spot from './zh-CN/spot';
+import user from './zh-CN/user';
 import webConfig from './zh-CN/webConfig';
-
 
 export default {
   'navBar.lang': '语言',
@@ -51,5 +51,6 @@ export default {
   ...InviteFriends,
   ...depositWithdraw,
   ...webConfig,
-  ...fundsTools
+  ...fundsTools,
+  ...commonConfig,
 };

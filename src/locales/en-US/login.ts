@@ -1,42 +1,43 @@
 export default {
   // Page Title
-  'menu.login': '登录',
-  
+  'menu.login': 'Login',
+
   // Login Form
-  'pages.login.accountLogin.tab': '账户密码登录',
-  'pages.login.accountLogin.errorMessage': '错误的用户名和密码',
-  'pages.login.failure': '登录失败，请重试！',
-  'pages.login.success': '登录成功！',
-  'pages.login.username.placeholder': '请输入用户名',
-  'pages.login.username.required': '请输入用户名',
-  'pages.login.password.placeholder': '请输入密码',
-  'pages.login.password.required': '请输入密码',
-  'pages.login.rememberMe': '自动登录',
-  'pages.login.forgotPassword': '忘记密码',
-  'pages.login.submit': '登录',
-  
+  'pages.login.accountLogin.tab': 'Account Password Login',
+  'pages.login.accountLogin.errorMessage': 'Incorrect username and password',
+  'pages.login.failure': 'Login failed, please try again!',
+  'pages.login.success': 'Login successful!',
+  'pages.login.username.placeholder': 'Please enter username',
+  'pages.login.username.required': 'Please enter username',
+  'pages.login.password.placeholder': 'Please enter password',
+  'pages.login.password.required': 'Please enter password',
+  'pages.login.rememberMe': 'Remember me',
+  'pages.login.forgotPassword': 'Forgot password',
+  'pages.login.submit': 'Login',
+
   // Login Check
-  'pages.login.check.failure': '登录前检查失败',
-  
+  'pages.login.check.failure': 'Pre-login check failed',
+
   // Email Verification
-  'pages.login.email.modal.title': '邮箱验证',
-  'pages.login.email.modal.prompt': '请输入邮箱验证码',
-  'pages.login.email.empty': '邮箱不能为空',
-  'pages.login.email.code.placeholder': '验证码',
-  'pages.login.email.code.get': '获取验证码',
-  'pages.login.email.code.required': '请输入验证码',
-  'pages.login.email.code.failure': '验证码获取失败',
-  'pages.login.email.code.success': '获取验证码成功！',
-  'pages.login.email.code.failure.unknown': '验证码获取失败: 未知错误',
-  'pages.login.email.code.failure.request': '验证码请求失败，请稍后再试',
-  
+  'pages.login.email.modal.title': 'Email Verification',
+  'pages.login.email.modal.prompt': 'Please enter email verification code',
+  'pages.login.email.empty': 'Email cannot be empty',
+  'pages.login.email.code.placeholder': 'Verification code',
+  'pages.login.email.code.get': 'Get verification code',
+  'pages.login.email.code.required': 'Please enter verification code',
+  'pages.login.email.code.failure': 'Failed to get verification code',
+  'pages.login.email.code.success': 'Verification code obtained successfully!',
+  'pages.login.email.code.failure.unknown': 'Failed to get verification code: Unknown error',
+  'pages.login.email.code.failure.request':
+    'Verification code request failed, please try again later',
+
   // Google Verification
-  'pages.login.google.modal.title': '谷歌验证',
-  'pages.login.google.modal.prompt': '请输入谷歌验证码',
-  'pages.login.google.code.placeholder': '谷歌验证码',
-  'pages.login.google.code.required': '请输入谷歌验证码',
-  
+  'pages.login.google.modal.title': 'Google Verification',
+  'pages.login.google.modal.prompt': 'Please enter Google verification code',
+  'pages.login.google.code.placeholder': 'Google verification code',
+  'pages.login.google.code.required': 'Please enter Google verification code',
+
   // Admin/Merchant
-  'pages.login.admin': '总后台',
-  'pages.login.merchant': '商户后台'
-}
+  'pages.login.admin': 'Admin Dashboard',
+  'pages.login.merchant': 'Merchant Dashboard',
+};
