@@ -53,7 +53,7 @@ const BindGoogleModal: React.FC<BindGoogleModalProps> = ({ visible, onClose, onS
         });
       }
     } catch (error) {
-      console.error('表单验证失败:', error);
+
     }
   };
 

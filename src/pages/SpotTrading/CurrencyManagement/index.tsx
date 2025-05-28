@@ -10,11 +10,11 @@ import {
   saveTenantCurrencyCoinExt,
   updateTenantCurrencyCoinExtById
 } from '@/services/ant-design-pro/spot';
-import { EditOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Descriptions, message, Modal, Space, Spin, Switch, Typography } from 'antd';
+import { Button, message, Modal, Space, Spin, Switch, Typography } from 'antd';
 import React, { useRef, useState } from 'react';
+import { useIntl } from 'umi';
 import CurrencyForm from './components/CurrencyForm';
 import ExtendInfoForm, { ExtendInfoFormData } from './components/ExtendInfoForm';
 import CurrencyIntroForm, { CurrencyIntroFormData } from './components/CurrencyIntroForm';
@@ -37,6 +37,7 @@ type CurrencyItem = {
 };
 
 const CurrencyManagement: React.FC = () => {
+  const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const [selectedRows, setSelectedRows] = useState<CurrencyItem[]>([]);
   const [extInfo, setExtInfo] = useState<any>(null);
@@ -179,10 +180,16 @@ const CurrencyManagement: React.FC = () => {
       data['autoWithdraw'] = record.autoWithdraw === 1 ? 0 : 1;
     }
 
-    const tip = {
-      status: '状态' + (record.status === 1 ? '禁用' : '启用'),
-      recharge: '充值开关' + (record.recharge === 1 ? '关闭' : '开启'),
-      autoWithdraw: '自动提现开关' + (record.autoWithdraw === 1 ? '关闭' : '开启'),
+    const tip: Record<string, string> = {
+      status: intl.formatMessage({ 
+        id: record.status === 1 ? 'currency.tip.status.disable' : 'currency.tip.status.enable' 
+      }),
+      recharge: intl.formatMessage({ 
+        id: record.recharge === 1 ? 'currency.tip.recharge.off' : 'currency.tip.recharge.on' 
+      }),
+      autoWithdraw: intl.formatMessage({ 
+        id: record.autoWithdraw === 1 ? 'currency.tip.autoWithdraw.off' : 'currency.tip.autoWithdraw.on' 
+      }),
     };
 
     let res;
@@ -193,11 +200,11 @@ const CurrencyManagement: React.FC = () => {
     }
 
     if (res.code === '0' && res.data) {
-      message.success(`${tip[type]}成功`);
+      message.success(intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }));
       // 更新扩展数据
       fetchExtendInfo(record.coinId);
     } else {
-      message.error(`${tip[type]}失败`);
+      message.error(intl.formatMessage({ id: 'currency.message.error' }, { action: tip[type] }));
     }
   };
 
@@ -207,7 +214,7 @@ const CurrencyManagement: React.FC = () => {
     const { Text } = Typography;
 
     if (expandLoading[record.coinId]) {
-      return <Spin tip="加载中..." />;
+      return <Spin tip={intl.formatMessage({ id: 'currency.loading' })} />;
     }
 
     if (!extInfo) {
@@ -221,52 +228,57 @@ const CurrencyManagement: React.FC = () => {
     }
 
     const columns = [
-      { title: '协议ID', dataIndex: 'protocolId', key: 'protocolId' },
+      { title: intl.formatMessage({ id: 'currency.column.protocolId' }), dataIndex: 'protocolId', key: 'protocolId' },
       { 
-        title: '主地址', 
+        title: intl.formatMessage({ id: 'currency.column.mainAddress' }), 
         dataIndex: 'mainAddress', 
         key: 'mainAddress',
         width: 120,
         ellipsis: true,
-        render: (text: string) => (
-          text ? (
+        render: (dom: any, entity: any) => {
+          const text = entity.mainAddress;
+          return text ? (
             <Typography.Text 
               style={{ width: 120 }} 
               ellipsis={{ tooltip: text }}
             >
               {text}
             </Typography.Text>
-          ) : '-'
-        )
+          ) : '-';
+        }
       },
       { 
-        title: '合约地址', 
+        title: intl.formatMessage({ id: 'currency.column.contractAddress' }), 
         dataIndex: 'token', 
         key: 'token',
         width: 120,
         ellipsis: true,
-        render: (text: string) => (
-          text ? (
+        render: (dom: any, entity: any) => {
+          const text = entity.token;
+          return text ? (
             <Typography.Text 
               style={{ width: 120 }} 
               ellipsis={{ tooltip: text }}
             >
               {text}
             </Typography.Text>
-          ) : '-'
-        )
+          ) : '-';
+        }
       },
-      { title: '小数位数', dataIndex: 'decimals', key: 'decimals' },
+      { title: intl.formatMessage({ id: 'currency.column.decimals' }), dataIndex: 'decimals', key: 'decimals' },
       { 
-        title: '状态', 
+        title: intl.formatMessage({ id: 'currency.column.status' }), 
         dataIndex: 'status', 
         key: 'status',
-        render: (text: number, extRecord: any) => (
+        render: (dom: any, extRecord: any) => (
           <Switch
             checked={extRecord.status === 1}
             onChange={(checked) => {
               Modal.confirm({
-                title: `确定要${checked ? '启用' : '禁用'}该币种吗？`,
+                title: intl.formatMessage(
+                  { id: 'currency.modal.confirm.status' },
+                  { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                ),
                 onOk: () => {
                   handleExtSwtich(extRecord, 'status');
                 },
@@ -275,18 +287,21 @@ const CurrencyManagement: React.FC = () => {
           />
         )
       },
-      { title: '提现手续费', dataIndex: 'withdrawFee', key: 'withdrawFee' },
-      { title: '最小提现手续费', dataIndex: 'minWithdrawFee', key: 'minWithdrawFee' },
+      { title: intl.formatMessage({ id: 'currency.column.withdrawFee' }), dataIndex: 'withdrawFee', key: 'withdrawFee' },
+      { title: intl.formatMessage({ id: 'currency.column.minWithdrawFee' }), dataIndex: 'minWithdrawFee', key: 'minWithdrawFee' },
       { 
-        title: '充值开关', 
+        title: intl.formatMessage({ id: 'currency.column.recharge' }), 
         dataIndex: 'recharge', 
         key: 'recharge',
-        render: (text: number, extRecord: any) => (
+        render: (dom: any, extRecord: any) => (
           <Switch
             checked={extRecord.recharge === 1}
             onChange={(checked) => {
               Modal.confirm({
-                title: `确定要${checked ? '开启' : '关闭'}充值开关吗？`,
+                title: intl.formatMessage(
+                  { id: 'currency.modal.confirm.recharge' },
+                  { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                ),
                 onOk: () => {
                   handleExtSwtich(extRecord, 'recharge');
                 },
@@ -296,15 +311,18 @@ const CurrencyManagement: React.FC = () => {
         )
       },
       { 
-        title: '自动提现开关', 
+        title: intl.formatMessage({ id: 'currency.column.autoWithdraw' }), 
         dataIndex: 'autoWithdraw', 
         key: 'autoWithdraw',
-        render: (text: number, extRecord: any) => (
+        render: (dom: any, extRecord: any) => (
           <Switch
             checked={extRecord.autoWithdraw === 1}
             onChange={(checked) => {
               Modal.confirm({
-                title: `确定要${checked ? '开启' : '关闭'}自动提现开关吗？`,
+                title: intl.formatMessage(
+                  { id: 'currency.modal.confirm.autoWithdraw' },
+                  { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                ),
                 onOk: () => {
                   handleExtSwtich(extRecord, 'autoWithdraw');
                 },
@@ -313,16 +331,18 @@ const CurrencyManagement: React.FC = () => {
           />
         )
       },
-      { title: '最小提现量', dataIndex: 'minWithdraw', key: 'minWithdraw' },
-      { title: '最大提现量', dataIndex: 'maxWithdraw', key: 'maxWithdraw' },
-      { title: '最小充值量', dataIndex: 'minRecharge', key: 'minRecharge' },
-      { title: '确认数', dataIndex: 'confirms', key: 'confirms' },
+      { title: intl.formatMessage({ id: 'currency.column.minWithdraw' }), dataIndex: 'minWithdraw', key: 'minWithdraw' },
+      { title: intl.formatMessage({ id: 'currency.column.maxWithdraw' }), dataIndex: 'maxWithdraw', key: 'maxWithdraw' },
+      { title: intl.formatMessage({ id: 'currency.column.minRecharge' }), dataIndex: 'minRecharge', key: 'minRecharge' },
+      { title: intl.formatMessage({ id: 'currency.column.confirms' }), dataIndex: 'confirms', key: 'confirms' },
       {
-        title:'操作',
+        title: intl.formatMessage({ id: 'currency.column.action' }),
         dataIndex:'action',
         key:'action',
-        render:(text:string,record:any)=>(
-          <Button type='link' onClick={()=>handleEditExtendInfo(record,extInfo)}>编辑</Button>
+        render:(dom: any, record: any)=>(
+          <Button type='link' onClick={()=>handleEditExtendInfo(record,extInfo)}>
+            {intl.formatMessage({ id: 'currency.action.edit' })}
+          </Button>
         )
       }
     ];
@@ -330,7 +350,7 @@ const CurrencyManagement: React.FC = () => {
     return (
       <div style={{ position: 'relative', padding: '0 16px' }}>
         <ProTable
-          headerTitle="币种拓展信息"
+          headerTitle={intl.formatMessage({ id: 'currency.table.extendInfo' })}
           columns={columns}
           dataSource={extInfo}
           search={false}
@@ -390,66 +410,77 @@ const CurrencyManagement: React.FC = () => {
           canAutoWithdraw:record.canAutoWithdraw===1?0:1
         }
       }
-      const tip={
-        canRecharge:'充值'+(record.canRecharge===1?'关闭':'开启'),
-        canWithdraw:'提现'+(record.canWithdraw===1?'关闭':'开启'),
-        canTransfer:'转账'+(record.canTransfer===1?'关闭':'开启'),
-        canAutoWithdraw:'自动提币'+(record.canAutoWithdraw===1?'关闭':'开启'),
+      const tip: Record<string, string> = {
+        canRecharge: intl.formatMessage({ 
+          id: record.canRecharge === 1 ? 'currency.tip.canRecharge.off' : 'currency.tip.canRecharge.on' 
+        }),
+        canWithdraw: intl.formatMessage({ 
+          id: record.canWithdraw === 1 ? 'currency.tip.canWithdraw.off' : 'currency.tip.canWithdraw.on' 
+        }),
+        canTransfer: intl.formatMessage({ 
+          id: record.canTransfer === 1 ? 'currency.tip.canTransfer.off' : 'currency.tip.canTransfer.on' 
+        }),
+        canAutoWithdraw: intl.formatMessage({ 
+          id: record.canAutoWithdraw === 1 ? 'currency.tip.canAutoWithdraw.off' : 'currency.tip.canAutoWithdraw.on' 
+        }),
       }
     let res=await adminUpdateCurrencyCoinById(data);
     if(res.code==='0'&&res.data){
-      message.success(`${tip[type]}成功`);
+      message.success(intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }));
       actionRef.current?.reload();
     }else{
-      message.error(`${tip[type]}失败`);
+      message.error(intl.formatMessage({ id: 'currency.message.error' }, { action: tip[type] }));
     }
   }
 
   // 表格列定义
   const columns: ProColumns<CurrencyItem>[] = [
     {
-      title: '排序',
+      title: intl.formatMessage({ id: 'currency.column.sort' }),
       dataIndex: 'sort',
       search: false,
     },
     {
-      title: '币种简称',
+      title: intl.formatMessage({ id: 'currency.column.coinName' }),
       dataIndex: 'coinName',
       valueType: 'text',
       search: false,
     },
     {
-      title: '网络类型',
+      title: intl.formatMessage({ id: 'currency.column.networkType' }),
       dataIndex: 'mianChain',
       search: false,
       renderText: (text: string) => {
-        return text === '1' ? '主链' : 'token';
+        return text === '1' ? intl.formatMessage({ id: 'currency.mainChain' }) : intl.formatMessage({ id: 'currency.token' });
       },
     },
     {
-      title: '币种状态',
+      title: intl.formatMessage({ id: 'currency.column.status' }),
       dataIndex: 'status',
       valueEnum:{
-        1:'正常',
-        0:'禁用'
+        1: intl.formatMessage({ id: 'currency.status.normal' }),
+        0: intl.formatMessage({ id: 'currency.status.disabled' })
       },
       renderText: (text: number) => {
-        return text === 1 ? '正常' : '禁用';
+        return text === 1 ? intl.formatMessage({ id: 'currency.status.normal' }) : intl.formatMessage({ id: 'currency.status.disabled' });
       },
     },
     {
-      title: '充值',
+      title: intl.formatMessage({ id: 'currency.column.recharge' }),
       dataIndex: 'canRecharge',
       valueEnum:{
-        0:'关闭',
-        1:'开启'
+        0: intl.formatMessage({ id: 'currency.switch.off' }),
+        1: intl.formatMessage({ id: 'currency.switch.on' })
       },
       render: (_, record) => (
         <Switch
           checked={record.canRecharge === 1}
           onChange={(checked) => {
             Modal.confirm({
-              title: `确定要${checked ? '开启' : '关闭'}充值吗？`,
+              title: intl.formatMessage(
+                { id: 'currency.modal.confirm.canRecharge' },
+                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+              ),
               onOk: () => {
                 handleSwtich(record,'canRecharge');
               },
@@ -459,18 +490,21 @@ const CurrencyManagement: React.FC = () => {
       ),
     },
     {
-      title: '提现',
+      title: intl.formatMessage({ id: 'currency.column.withdraw' }),
       dataIndex: 'canWithdraw',
       valueEnum:{
-        0:'关闭',
-        1:'开启'
+        0: intl.formatMessage({ id: 'currency.switch.off' }),
+        1: intl.formatMessage({ id: 'currency.switch.on' })
       },
       render: (_, record) => (
         <Switch
           checked={record.canWithdraw === 1}
           onChange={(checked) => {
             Modal.confirm({
-              title: `确定要${checked ? '开启' : '关闭'}提现吗？`,
+              title: intl.formatMessage(
+                { id: 'currency.modal.confirm.canWithdraw' },
+                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+              ),
               onOk: () => {
                 handleSwtich(record,'canWithdraw');
               },
@@ -480,18 +514,21 @@ const CurrencyManagement: React.FC = () => {
       ),
     },
     {
-      title: '转账',
+      title: intl.formatMessage({ id: 'currency.column.transfer' }),
       dataIndex: 'canTransfer',
       valueEnum:{
-        0:'关闭',
-        1:'开启'
+        0: intl.formatMessage({ id: 'currency.switch.off' }),
+        1: intl.formatMessage({ id: 'currency.switch.on' })
       },
       render: (_, record) => (
         <Switch
           checked={record.canTransfer === 1}
           onChange={(checked) => {
             Modal.confirm({
-              title: `确定要${checked ? '开启' : '关闭'}转账吗？`,
+              title: intl.formatMessage(
+                { id: 'currency.modal.confirm.canTransfer' },
+                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+              ),
               onOk: () => {
                 handleSwtich(record,'canTransfer');
               },
@@ -501,18 +538,21 @@ const CurrencyManagement: React.FC = () => {
       ),
     },
     {
-      title: '自动提币',
+      title: intl.formatMessage({ id: 'currency.column.autoWithdraw' }),
       dataIndex: 'canAutoWithdraw',
       valueEnum:{
-        0:'关闭',
-        1:'开启'
+        0: intl.formatMessage({ id: 'currency.switch.off' }),
+        1: intl.formatMessage({ id: 'currency.switch.on' })
       },
       render: (_, record) => (
         <Switch
           checked={record.canAutoWithdraw === 1}
           onChange={(checked) => {
             Modal.confirm({
-              title: `确定要${checked ? '开启' : '关闭'}自动提币吗？`,
+              title: intl.formatMessage(
+                { id: 'currency.modal.confirm.canAutoWithdraw' },
+                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+              ),
               onOk: () => {
                 handleSwtich(record,'canAutoWithdraw');
               },
@@ -522,34 +562,34 @@ const CurrencyManagement: React.FC = () => {
       ),
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'currency.column.createTime' }),
       dataIndex: 'createTime',
       valueType: 'dateTime',
       search: false,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'currency.column.action' }),
       valueType: 'option',
       search: false,
       render: (_, record) =>
         isAdmin
           ? [
             <Button key="edit" onClick={() => handleEdit(record)}>
-              编辑
+              {intl.formatMessage({ id: 'currency.action.edit' })}
             </Button>,
             <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
-              拓展信息增加
+              {intl.formatMessage({ id: 'currency.action.addExtendInfo' })}
             </Button>,
           ]
           : [
             <Button key="edit" onClick={() => handleEdit(record)}>
-              编辑
+              {intl.formatMessage({ id: 'currency.action.edit' })}
             </Button>,
             <Button key="detail" onClick={() => handleDetail(record)}>
-              币种简介
+              {intl.formatMessage({ id: 'currency.action.currencyIntro' })}
             </Button>,
             <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
-              添加同币异链
+              {intl.formatMessage({ id: 'currency.action.addSameChain' })}
             </Button>,
           ],
     },
@@ -569,12 +609,12 @@ const CurrencyManagement: React.FC = () => {
   };
 
   const handlePublish = (record: CurrencyItem) => {
-    message.success(`发布上线币种: ${record.name}`);
+    message.success(intl.formatMessage({ id: 'currency.message.publishOnline' }, { name: record.name }));
     // 实现发布上线逻辑
   };
 
   const handleAddSameChain = (record: CurrencyItem) => {
-    message.success(`添加同币异链: ${record.name}`);
+    message.success(intl.formatMessage({ id: 'currency.message.addSameChain' }, { name: record.name }));
     // 实现添加同币异链逻辑
   };
 
@@ -596,7 +636,12 @@ const CurrencyManagement: React.FC = () => {
   };
 
   const handleExtendInfoSubmit = async (values: ExtendInfoFormData) => {
-    console.log('拓展信息表单提交数据:', values, '模式:', extendInfoMode);
+    console.log(
+      intl.formatMessage({ id: 'currency.log.extendInfoFormSubmit' }), 
+      values, 
+      intl.formatMessage({ id: 'currency.log.extendInfoMode' }), 
+      extendInfoMode
+    );
 
     let res;
     if (extendInfoMode === 'add') {
@@ -607,7 +652,9 @@ const CurrencyManagement: React.FC = () => {
       }
 
       if (res && res.code === '0') {
-        message.success(extendInfoMode === 'add' ? '拓展信息添加成功' : '拓展信息更新成功');
+        message.success(intl.formatMessage({ 
+          id: extendInfoMode === 'add' ? 'currency.message.addExtendInfoSuccess' : 'currency.message.updateExtendInfoSuccess' 
+        }));
 
         // 更新已展开行的数据
         if (expandedRowKeys.length > 0) {
@@ -629,7 +676,9 @@ const CurrencyManagement: React.FC = () => {
       }
       
       if (res && res.code === '0') {
-        message.success(extendInfoMode === 'add' ? '拓展信息添加成功' : '拓展信息更新成功');
+        message.success(intl.formatMessage({ 
+          id: extendInfoMode === 'add' ? 'currency.message.addExtendInfoSuccess' : 'currency.message.updateExtendInfoSuccess' 
+        }));
 
         // 更新已展开行的数据
         if (expandedRowKeys.length > 0) {
@@ -647,15 +696,15 @@ const CurrencyManagement: React.FC = () => {
 
   const handleBatchDelete = () => {
     if (selectedRows.length === 0) {
-      message.warning('请选择要删除的币种');
+      message.warning(intl.formatMessage({ id: 'currency.message.warning.selectDelete' }));
       return;
     }
-    message.success(`批量删除${selectedRows.length}个币种`);
+    message.success(intl.formatMessage({ id: 'currency.message.batchDelete' }, { count: selectedRows.length }));
     // 这里实现批量删除逻辑
   };
 
   const handleFormSubmit = async (values: CurrencyFormData) => {
-    console.log('表单提交数据:', values);
+    console.log(intl.formatMessage({ id: 'currency.log.formSubmit' }), values);
     if (formMode === 'add') {
       let res;
       if (isAdmin) {
@@ -664,7 +713,7 @@ const CurrencyManagement: React.FC = () => {
         res = await saveTenantCurrencyCoin(values);
       }
       if (res.code === '0'&&res.data) {
-        message.success('添加币种成功');
+        message.success(intl.formatMessage({ id: 'currency.message.addSuccess' }));
         setFormVisible(false);
         actionRef.current?.reload();
       } else {
@@ -682,9 +731,9 @@ const CurrencyManagement: React.FC = () => {
         res = await adminUpdateCurrencyCoinById(data);
 
       if (res.code === '0'&&res.data) {
-        message.success(`编辑币种成功: ${values.coinName}`);
+        message.success(intl.formatMessage({ id: 'currency.message.editSuccess' }, { name: values.coinName }));
       } else {
-        message.error('编辑币种失败');
+        message.error(intl.formatMessage({ id: 'currency.message.editError' }));
       
       }
       setFormVisible(false);
@@ -707,14 +756,14 @@ const CurrencyManagement: React.FC = () => {
       const res = await saveCurrencyIntro(values);
       
       if (res.code === '0') {
-        message.success('币种简介保存成功');
+        message.success(intl.formatMessage({ id: 'currency.message.introSaveSuccess' }));
         setIntroFormVisible(false);
       } else {
-        message.error(res.message || '币种简介保存失败');
+        message.error(res.message || intl.formatMessage({ id: 'currency.message.introSaveError' }));
       }
     } catch (error) {
-      console.error('保存币种简介失败:', error);
-      message.error('保存币种简介失败');
+      console.error(intl.formatMessage({ id: 'currency.message.introSaveError' }), error);
+      message.error(intl.formatMessage({ id: 'currency.message.introSaveError' }));
     }
   };
 
@@ -727,14 +776,14 @@ const CurrencyManagement: React.FC = () => {
     <PageContainer>
       {!formVisible ? (
         <ProTable
-          headerTitle="币种管理"
+          headerTitle={intl.formatMessage({ id: 'currency.table.title' })}
           actionRef={actionRef}
           rowKey="coinId"
           request={fetchData}
           columns={columns}
           toolBarRender={() => [
             <Button type="primary" onClick={handleAdd}>
-              添加币种
+              {intl.formatMessage({ id: 'currency.action.add' })}
             </Button>,
           ]}
           rowSelection={{

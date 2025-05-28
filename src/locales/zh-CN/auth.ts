@@ -76,5 +76,8 @@ export default {
   'userAdmin.messages.resetGoogleError': '谷歌身份验证重置失败',
   'userAdmin.messages.bindGoogleSuccess': '谷歌验证绑定成功',
   'userAdmin.messages.bindGoogleError': '谷歌验证绑定失败',
+  // 编辑用户
+  
+
 
 };
