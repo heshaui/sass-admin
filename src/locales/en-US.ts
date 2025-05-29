@@ -19,6 +19,7 @@ import spot from './en-US/spot';
 import user from './en-US/user';
 import webConfig from './en-US/webConfig';
 import common from './en-US/common';
+import merchantSystem from './zh-CN/merchantSystem';
 
 export default {
   'navBar.lang': 'Languages',
@@ -49,4 +50,5 @@ export default {
   ...commonConfig,
   ...login,
   ...common,
+  ...merchantSystem,
 };
