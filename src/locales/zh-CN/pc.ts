@@ -25,4 +25,5 @@ export default {
   'pc.message.update.error': '更新失败',
   'pc.message.create.success': '添加成功',
   'pc.message.create.error': '添加失败',
+  'pc.form.languageKey.required': '请输入多语言翻译Key',
 };

@@ -93,7 +93,7 @@ const PC: React.FC = () => {
     setEditingRecord(record);
     form.setFieldsValue({
       ...record,
-      status: record.status === 1,
+      status: record.status,
     });
     setVisible(true);
   };
@@ -122,11 +122,17 @@ const PC: React.FC = () => {
     try {
       const values = await form.validateFields();
       setLoading(true);
+      
+      // Ensure status is a number
+      const formData = {
+        ...values,
+        status: Number(values.status)
+      };
 
       if (editingRecord) {
         // 更新
         const response = await updatePcAccessPathById({
-          ...values,
+          ...formData,
           id: editingRecord.id,
         });
         if (response.code === '0') {
@@ -139,7 +145,7 @@ const PC: React.FC = () => {
       } else {
         // 新增
         let data = {
-          ...values,
+          ...formData,
           parentId: 0,
         };
         const response = await savePcAccessPath(data);
@@ -277,15 +283,18 @@ const PC: React.FC = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item name="languageKey" label={intl.formatMessage({ id: 'pc.languageKey' })}>
+          <Form.Item name="languageKey" label={intl.formatMessage({ id: 'pc.languageKey' })} rules={[
+            { required: true, message: intl.formatMessage({ id: 'pc.form.languageKey.required' }) },
+          ]}>
             <Input />
           </Form.Item>
           <Form.Item
             name="status"
             label={intl.formatMessage({ id: 'pc.status' })}
             valuePropName="checked"
-            getValueProps={(value) => ({ checked: value === 1 })}
+            getValueProps={(value) => ({ checked: Number(value) === 1 })}
             getValueFromEvent={(checked) => (checked ? 1 : 0)}
+            normalize={(value) => Number(value)}
           >
             <Switch
               checkedChildren={intl.formatMessage({ id: 'pc.status.enable' })}

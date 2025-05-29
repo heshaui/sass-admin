@@ -25,4 +25,5 @@ export default {
   'pc.message.update.error': 'Update failed',
   'pc.message.create.success': 'Creation successful',
   'pc.message.create.error': 'Creation failed',
+  'pc.form.languageKey.required': 'Please enter the language translation key',
 };
