@@ -23,7 +23,7 @@ const Rate: React.FC = () => {
       status,
     });
     if(res.code === '0'){
-      message.success('更新成功');
+      message.success(intl.formatMessage({ id: 'rate.message.operation.success' }));
       actionRef.current?.reload();
     }else{
       message.error(res.message);
@@ -39,7 +39,7 @@ const Rate: React.FC = () => {
           id: currentRow.id,
         });
         if(res.code === '0'){
-        message.success('更新成功');
+        message.success(intl.formatMessage({ id: 'rate.message.operation.success' }));
         }else{
           message.error(res.message);
         }
