@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { PageContainer, ProTable } from "@ant-design/pro-components";
+import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
+import type { ReactNode } from 'react';
 import { Button, Space, Tag, message, Modal } from "antd";
 import { PlusOutlined, DownOutlined, UpOutlined } from "@ant-design/icons";
 import AddModal from "./component/AddModal";
 import { tenantLangList, updateEndpointInfo, deleteTenantLangPackage, checkUpdate, enablePackage, disablePackage, readJsonFromAliyun,deleteTenantLangEndpoint } from "@/services/ant-design-pro/WebConfig";
 import UploadModal from './component/UploadModal';
-import { useModel } from 'umi';
+import { useModel, useIntl } from 'umi';
 // **主组件**
 const Language: React.FC = () => {
+  const intl = useIntl();
   const [dataSource, setDataSource] = useState([]);
   const [expandedRowKeys, setExpandedRowKeys] = useState<number[]>([]);
   const [isUploadModalVisible, setIsUploadModalVisible] = useState(false);
@@ -27,10 +29,10 @@ const Language: React.FC = () => {
         setDataSource(response.data.list);
         setPagination({ current: pageNo, pageSize, total: response.data.count });
       } else {
-        message.error(`获取语言列表失败`);
+        message.error(intl.formatMessage({ id: 'language.message.fetch.failed' }));
       }
     } catch (error) {
-      message.error("请求失败，请检查网络连接");
+      message.error(intl.formatMessage({ id: 'language.message.request.failed' }));
     }
   };
 
@@ -47,12 +49,12 @@ const Language: React.FC = () => {
       }
       const response = await updateEndpointInfo(data);
       if (response.code === "0") {
-        message.success(`更新成功`);
+        message.success(intl.formatMessage({ id: 'language.message.update.success' }));
       } else {
-        message.error(`更新失败`);
+        message.error(intl.formatMessage({ id: 'language.message.update.failed' }));
       }
     } catch (error) {
-      message.error("请求失败，请检查网络连接");
+      message.error(intl.formatMessage({ id: 'language.message.request.failed' }));
     }
   }
 
@@ -69,13 +71,13 @@ const Language: React.FC = () => {
       }
 
       if (response.code === '0') {
-        message.success(`已${record.status === 1 ? '禁用' : '启用'} ${record.lang}`);
+        message.success(`${record.status === 1 ? intl.formatMessage({ id: 'language.status.disabled' }) : intl.formatMessage({ id: 'language.status.enabled' })} ${record.lang}`);
         fetchLanguages(); // 刷新列表
       } else {
-        message.error(`操作失败: ${response.message}`);
+        message.error(`${intl.formatMessage({ id: 'language.message.operation.failed' })}: ${response.message}`);
       }
     } catch (error) {
-      message.error('操作失败，请重试');
+      message.error(intl.formatMessage({ id: 'language.message.operation.failed' }));
     }
   };
 
@@ -83,7 +85,7 @@ const Language: React.FC = () => {
   const toggleExpand = (id: number, status: number) => {
     // 只有启用状态(status === 1)才允许展开
     if (status !== 1) {
-      message.info('禁用状态的语言无法查看详情');
+      message.info(intl.formatMessage({ id: 'language.message.disabled.info' }));
       return;
     }
     
@@ -100,7 +102,7 @@ const Language: React.FC = () => {
 
   const handleDownload = (fileUrl: string | null, endpointName: string) => {
     if (!fileUrl) {
-      message.warning('暂无可下载的文件');
+      message.warning(intl.formatMessage({ id: 'language.message.no.download' }));
       return;
     }
 
@@ -115,21 +117,21 @@ const Language: React.FC = () => {
 
   const handleDelete = async (id: number, fileName: string) => {
     Modal.confirm({
-      title: '移除语言包',
-      content: `移除后，列表将不显示该语言，如有需要可以重新添加至列表！`,
-      okText: '确认',
-      cancelText: '取消',
+      title: intl.formatMessage({ id: 'language.modal.remove.title' }),
+      content: intl.formatMessage({ id: 'language.modal.remove.content' }),
+      okText: intl.formatMessage({ id: 'language.button.confirm' }),
+      cancelText: intl.formatMessage({ id: 'language.button.cancel' }),
       onOk: async () => {
         try {
           const response = await deleteTenantLangPackage({ tenantLangId: id });
           if (response.code === '0') {
-            message.success('移除成功');
+            message.success(intl.formatMessage({ id: 'language.message.remove.success' }));
             fetchLanguages(); // 刷新列表
           } else {
-            message.error(`移除失败: ${response.message}`);
+            message.error(`${intl.formatMessage({ id: 'language.message.remove.failed' })}: ${response.message}`);
           }
         } catch (error) {
-          message.error('操作失败，请重试');
+          message.error(intl.formatMessage({ id: 'language.message.operation.failed' }));
         }
       }
     });
@@ -138,21 +140,21 @@ const Language: React.FC = () => {
 
   const handleTenantDelete = async (id: number, fileName: string) => {
     Modal.confirm({
-      title: '确认删除',
-      content: `确定要删除"${fileName}"的语言端吗？`,
-      okText: '确认',
-      cancelText: '取消',
+      title: intl.formatMessage({ id: 'language.modal.confirm.delete.title' }),
+      content: intl.formatMessage({ id: 'language.modal.confirm.delete.content' }, { fileName }),
+      okText: intl.formatMessage({ id: 'language.button.confirm' }),
+      cancelText: intl.formatMessage({ id: 'language.button.cancel' }),
       onOk: async () => {
         try {
           const response = await deleteTenantLangEndpoint({ tenantLangEndPointId: id });
           if (response.code === '0') {
-            message.success('删除成功');
+            message.success(intl.formatMessage({ id: 'language.message.delete.success' }));
             fetchLanguages(); // 刷新列表
           } else {
-            message.error(`删除失败: ${response.message}`);
+            message.error(`${intl.formatMessage({ id: 'language.message.delete.failed' })}: ${response.message}`);
           }
         } catch (error) {
-          message.error('操作失败，请重试');
+          message.error(intl.formatMessage({ id: 'language.message.operation.failed' }));
         }
       }
     })
@@ -162,13 +164,13 @@ const Language: React.FC = () => {
     try {
       const response = await checkUpdate({ tenantLangId: record.id });
       if (response.code === '0') {
-        message.success('更新成功');
+        message.success(intl.formatMessage({ id: 'language.message.update.success' }));
         fetchLanguages(); // 刷新列表
       } else {
-        message.error(`更新失败: ${response.message}`);
+        message.error(`${intl.formatMessage({ id: 'language.message.update.failed' })}: ${response.message}`);
       }
     } catch (error) {
-      message.error('操作失败，请重试');
+      message.error(intl.formatMessage({ id: 'language.message.operation.failed' }));
     }
   };
 
@@ -179,50 +181,51 @@ const Language: React.FC = () => {
           : `https://${currentUser.host}`;
       window.open(url, '_blank');
   }else{
-      message.error('请先配置host');
+      message.error(intl.formatMessage({ id: 'language.message.configure.host' }));
     }
   };
 
 
   // **修改主表格列定义**
-  const columns = [
+  const columns: ProColumns<any>[] = [
     {
-      title: "语言",
+      title: intl.formatMessage({ id: 'language.column.language' }),
       dataIndex: "lang",
-      render: (text: string, record: any) => (
+      render: (dom: ReactNode, entity: any) => (
         <span>
+          {entity.lang}
           <Button
             type="link"
-            icon={expandedRowKeys.includes(record.id) ? <UpOutlined /> : <DownOutlined />}
-            onClick={() => toggleExpand(record.id, record.status)}
-            disabled={record.status !== 1} // 禁用状态下按钮不可点击
-          />
-          {text}
+            size="small"
+            onClick={() => toggleExpand(entity.id, entity.status)}
+          >
+            {expandedRowKeys.includes(entity.id) ? <UpOutlined /> : <DownOutlined />}
+          </Button>
         </span>
       ),
     },
-    { title: "语言代码", dataIndex: "langEncode" },
+    { title: intl.formatMessage({ id: 'language.column.language.code' }), dataIndex: "langEncode" },
     {
-      title: "状态",
+      title: intl.formatMessage({ id: 'language.column.status' }),
       dataIndex: "status",
-      render: (text: number) =>
-        text === 1 ? <Tag color="green">启用</Tag> : <Tag color="red">禁用</Tag>,
+      render: (dom: ReactNode, entity: any) =>
+        entity.status === 1 ? <Tag color="green">{intl.formatMessage({ id: 'language.status.enabled' })}</Tag> : <Tag color="red">{intl.formatMessage({ id: 'language.status.disabled' })}</Tag>,
     },
     {
-      title: "操作",
-      render: (_, record: any) => (
+      title: intl.formatMessage({ id: 'language.column.operations' }),
+      render: (dom: ReactNode, entity: any) => (
         <Space>
-          <Button type="link" onClick={() => handleUpdate(record)}>
-            更新
+          <Button type="link" onClick={() => handleUpdate(entity)}>
+            {intl.formatMessage({ id: 'language.button.update' })}
           </Button>
-          <Button type="link" onClick={() => toggleStatus(record)}>
-            {record.status === 1 ? "禁用" : "启用"}
+          <Button type="link" onClick={() => toggleStatus(entity)}>
+            {entity.status === 1 ? intl.formatMessage({ id: 'language.button.disable' }) : intl.formatMessage({ id: 'language.button.enable' })}
           </Button>
-          {record.status===1 ? (<Button type="link" onClick={() => handleView(record.fileUrl)}>
-            查看
+          {entity.status===1 ? (<Button type="link" onClick={() => handleView(entity.fileUrl)}>
+            {intl.formatMessage({ id: 'language.button.view' })}
           </Button>) : ''}
-          <Button type="link" danger onClick={() => handleDelete(record.id, record.lang)}>
-            移除
+          <Button type="link" danger onClick={() => handleDelete(entity.id, entity.lang)}>
+            {intl.formatMessage({ id: 'language.button.remove' })}
           </Button>
         </Space>
       ),
@@ -231,24 +234,24 @@ const Language: React.FC = () => {
 
   // **子表格（翻译文件）**
   const expandedRowRender = (record: any) => {
-    const endpointColumns = [
-      { title: "端", dataIndex: "endpointName" },
-      { title: "文件名称", dataIndex: "fileName" },
+    const endpointColumns: ProColumns<any>[] = [
+      { title: intl.formatMessage({ id: 'language.column.endpoint' }), dataIndex: "endpointName" },
+      { title: intl.formatMessage({ id: 'language.column.filename' }), dataIndex: "fileName" },
       {
-        title: "完整度",
+        title: intl.formatMessage({ id: 'language.column.completeness' }),
         dataIndex: "cmpPercentage",
-        render: (text: string) => `${text}%`
+        render: (dom: ReactNode, entity: any) => `${entity.cmpPercentage}%`
       },
       {
-        title: "操作",
-        render: (_, endpoint) => (
+        title: intl.formatMessage({ id: 'language.column.operations' }),
+        render: (dom: ReactNode, endpoint: any) => (
           // 检查文件名称是否为空
           <Space>
             {endpoint.fileName ? (<Button
               type="link"
               onClick={() => handleDownload(endpoint.fileUrl, endpoint.endpointName)}
             >
-              下载
+              {intl.formatMessage({ id: 'language.button.download' })}
             </Button>
             ) : ''}
             <Button
@@ -258,14 +261,14 @@ const Language: React.FC = () => {
                 langEncode: record.langEncode
               })}
             >
-              上传
+              {intl.formatMessage({ id: 'language.button.upload' })}
             </Button>
             {endpoint.fileName ? (<Button
               type="link"
               danger
               onClick={() => handleTenantDelete(endpoint.id, endpoint.fileName)}
             >
-              删除
+              {intl.formatMessage({ id: 'language.button.delete' })}
             </Button>
             ) : ''}
 
@@ -291,10 +294,10 @@ const Language: React.FC = () => {
   return (
     <PageContainer>
         <div style={{marginBottom: 10}}>
-          <div style={{fontSize: 16, fontWeight: 'bold',marginBottom: 10}}>TIPS</div>
-       <div style={{marginBottom: 10}}>1.如需添加未存在语言，请联系客服！<br/></div>
-       <div style={{marginBottom: 10}}> 2.已开启语言，新增语言包未翻译，前台将默认使用英文！</div>
-       <div style={{marginBottom: 10}}>3.新添加语言，默认状态=禁用，需要管理员手动启用。</div> 
+          <div style={{fontSize: 16, fontWeight: 'bold',marginBottom: 10}}>{intl.formatMessage({ id: 'language.tips.title' })}</div>
+       <div style={{marginBottom: 10}}>{intl.formatMessage({ id: 'language.tips.contact.service' })}<br/></div>
+       <div style={{marginBottom: 10}}>{intl.formatMessage({ id: 'language.tips.default.english' })}</div>
+       <div style={{marginBottom: 10}}>{intl.formatMessage({ id: 'language.tips.default.disabled' })}</div> 
         </div>
       <ProTable
         rowKey="id"
@@ -337,7 +340,7 @@ const Language: React.FC = () => {
         visible={isViewModalVisible}
         onCancel={() => setIsViewModalVisible(false)}
         footer={null}
-        title="查看数据"
+        title={intl.formatMessage({ id: 'language.modal.view.data.title' })}
       >
         <pre>{JSON.stringify(viewData, null, 2)}</pre>
       </Modal>

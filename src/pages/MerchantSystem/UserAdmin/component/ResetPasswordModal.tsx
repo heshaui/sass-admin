@@ -1,4 +1,5 @@
 import React from 'react';
+import { useIntl } from 'umi';
 import { Modal, Form, Input, message } from 'antd';
 
 interface ResetPasswordModalProps {
@@ -13,6 +14,7 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
   onSubmit,
 }) => {
   const [form] = Form.useForm();
+  const intl = useIntl();
 
   const handleOk = () => {
     form
@@ -23,13 +25,13 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
       })
       .catch((info) => {
         console.log('Validation Failed:', info);
-        message.error('请填写新密码');
+        message.error(intl.formatMessage({ id: 'merchantSystem.resetPasswordModal.message.fillRequired' }));
       });
   };
 
   return (
     <Modal
-      title="重置密码"
+      title={intl.formatMessage({ id: 'merchantSystem.resetPasswordModal.title' })}
       visible={visible}
       onCancel={onClose}
       onOk={handleOk}
@@ -37,8 +39,8 @@ const ResetPasswordModal: React.FC<ResetPasswordModalProps> = ({
       <Form form={form} layout="vertical">
         <Form.Item
           name="newPassword"
-          label="新密码"
-          rules={[{ required: true, message: '请输入新密码' }]}
+          label={intl.formatMessage({ id: 'merchantSystem.resetPasswordModal.form.newPassword' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'merchantSystem.resetPasswordModal.form.newPassword.required' }) }]}
         >
           <Input.Password />
         </Form.Item>

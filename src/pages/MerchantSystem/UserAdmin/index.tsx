@@ -2,6 +2,7 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Dropdown, Menu, Button, Tag, message, Modal } from 'antd';
 import { PlusOutlined,DownOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
+import { useIntl } from 'umi';
 import { bindGoogleKey,relieveGoogleKey} from '@/services/ant-design-pro/authAdmin';
 import { getTenantEmployeeList,saveTenantEmployee,restPasswordTenantEmployee,deleteTenantEmployeeById,updateTenantEmployeeById,getTomeMenuParams} from '@/services/ant-design-pro/merchantSystem';
 
@@ -13,6 +14,7 @@ import { getTenantRoleList } from '@/services/ant-design-pro/merchantSystem';
 import { clearAllCookies } from '@/utils';
 import { sendGoogleKey } from '@/services/ant-design-pro/authAdmin';
 const UserAdmin: React.FC = () => {
+   const intl = useIntl();
    const [data, setData] = useState([]);
    const [loading, setLoading] = useState(false);
    const [modalVisible, setModalVisible] = useState(false); // 控制用户弹框
@@ -33,7 +35,7 @@ const UserAdmin: React.FC = () => {
          setRoleOptions(res.data.list || []);
        }
      } catch (error) {
-       console.error('获取角色列表失败:', error);
+       console.error(`${intl.formatMessage({ id: 'merchantSystem.userAdmin.message.fetchRoles.failed' })}`, error);
      }
    };
 
@@ -44,24 +46,24 @@ const UserAdmin: React.FC = () => {
   // 表格的列配置
   const columns = [
     {
-      title: '管理员ID',
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.id' }),
       dataIndex: 'id',
       key: 'id',
       search:false
     },
     {
-      title: '昵称',
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.nickname' }),
       dataIndex: 'nickname',
       key: 'nickname',
     },
     // {
-    //   title: '备注',
+    //   title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.remark' }),
     //   dataIndex: 'remark',
     //   key: 'remark',
     //   search:false
     // },
     {
-      title: '角色',
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.role' }),
       dataIndex: 'role',
       key: 'role',
       search:false,
@@ -73,31 +75,31 @@ const UserAdmin: React.FC = () => {
       },
     },
     {
-      title: '手机号',
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.phone' }),
       dataIndex: 'phone',
       key: 'phone',
     },
     {
-      title: '邮箱',
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.email' }),
       dataIndex: 'email',
       key: 'email',
       render: (text) => (text ? text : '--'),
     },
     {
-      title: '2FA',
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.2fa' }),
       dataIndex: 'googleCode',
       key: 'googleCode',
       search:false,
       render: (text) => {
         return text && text !== '-' ? (
-          <Tag color="green">已开启</Tag>
+          <Tag color="green">{intl.formatMessage({ id: 'merchantSystem.userAdmin.status.enabled' })}</Tag>
         ) : (
-          <Tag color="red">未开启</Tag>
+          <Tag color="red">{intl.formatMessage({ id: 'merchantSystem.userAdmin.status.disabled' })}</Tag>
         );
       },
       filters: [
-        { text: '已开启', value: 'enabled' },
-        { text: '未开启', value: 'disabled' },
+        { text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.enabled' }), value: 'enabled' },
+        { text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.disabled' }), value: 'disabled' },
       ],
       onFilter: (value, record) => {
         if (value === 'enabled') {
@@ -107,19 +109,19 @@ const UserAdmin: React.FC = () => {
       },
     },
     {
-      title: '状态',
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.status' }),
       dataIndex: 'status',
       valueType: 'select',
       valueEnum: {
-        0: { text: '禁用', status: 'Error' },
-        1: { text: '正常', status: 'Success' }
+        0: { text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.disabled.label' }), status: 'Error' },
+        1: { text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.normal' }), status: 'Success' }
       },
       filters: true,
       onFilter: true,
       width: 100,
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.operations' }),
       key: 'action',
       search:false,
       render: (_, record) => (
@@ -127,27 +129,27 @@ const UserAdmin: React.FC = () => {
           overlay={
             <Menu>
               <Menu.Item key="edit" onClick={() => handleEdit(record)}>
-                修改
+                {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.edit' })}
               </Menu.Item>
               <Menu.Item
                 key="resetPassword"
                 onClick={() => {
                   setEditingRecord(record);
                   Modal.confirm({
-                    title: '确认重置密码',
-                    content: '您确定要重置该用户的密码吗？',
+                    title: intl.formatMessage({ id: 'merchantSystem.userAdmin.modal.resetPassword.title' }),
+                    content: intl.formatMessage({ id: 'merchantSystem.userAdmin.modal.resetPassword.content' }),
                     onOk: async () => {
                       try {
                         await restPasswordTenantEmployee({ id: record.id });
-                        message.success('密码重置成功');
+                        message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.success' }));
                       } catch (error) {
-                        message.error('密码重置失败');
+                        message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.failed' }));
                       }
                     },
                   });
                 }}
               >
-                重置密码
+                {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.resetPassword' })}
               </Menu.Item>
               {record.googleCode && record.googleCode !== '-' && (
                 <Menu.Item
@@ -157,18 +159,18 @@ const UserAdmin: React.FC = () => {
                     setResetGoogleVisible(true);
                   }}
                 >
-                  重置谷歌
+                  {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.resetGoogle' })}
                 </Menu.Item>
               )}
               <Menu.Item key="delete" onClick={() => handleDelete(record.id)} danger>
-                删除
+                {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.delete' })}
               </Menu.Item>
             </Menu>
           }
           trigger={['click']}
         >
           <Button>
-            操作 <DownOutlined />
+            {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.operations' })} <DownOutlined />
           </Button>
         </Dropdown>
       ),
@@ -195,7 +197,7 @@ const UserAdmin: React.FC = () => {
         success: false,
       };
     } catch (error) {
-      console.error('获取用户列表失败:', error);
+      console.error(`${intl.formatMessage({ id: 'merchantSystem.userAdmin.message.fetchUsers.failed' })}`, error);
       return {
         data: [],
         total: 0,
@@ -207,24 +209,24 @@ const UserAdmin: React.FC = () => {
   }
 
     // 新建/编辑用户提交
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values: any) => {
       console.log('values',values);
       try {
         if (editingRecord) {
           // 编辑用户
          const res= await updateTenantEmployeeById({ ...editingRecord, ...values });
           if(res.code==='0'){
-            message.success('用户编辑成功');
+            message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.editUser.success' }));
           }else{
-            message.error(res.message||'用户编辑失败');
+            message.error(res.message || intl.formatMessage({ id: 'merchantSystem.userAdmin.message.editUser.failed' }));
           }
         } else {
           // 新建用户
         const res=  await saveTenantEmployee(values);
           if(res.code==='0'){
-            message.success('用户新建成功');
+            message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.createUser.success' }));
           }else{
-            message.error(res.message||'用户新建失败');
+            message.error(res.message || intl.formatMessage({ id: 'merchantSystem.userAdmin.message.createUser.failed' }));
           }
 
           
@@ -233,7 +235,7 @@ const UserAdmin: React.FC = () => {
         setEditingRecord(null);  // 清空编辑记录
         getUserList();  // 刷新用户列表
       } catch (error) {
-        message.error('操作失败');
+        message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.operation.failed' }));
       }
     };
   
@@ -249,13 +251,13 @@ const UserAdmin: React.FC = () => {
         // 调用API删除用户
        const res= await deleteTenantEmployeeById({ userId });
         if(res.code==='0'){
-          message.success('用户删除成功');
+          message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.deleteUser.success' }));
           getUserList();  // 刷新用户列表
         }else{
-          message.error('用户删除失败');
+          message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.deleteUser.failed' }));
         }
       } catch (error) {
-        message.error('删除失败');
+        message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.delete.failed' }));
       }
     };
 
@@ -264,9 +266,9 @@ const handleResetPassword = async (values) => {
   try {
    const res= await restPasswordTenantEmployee({ id: editingRecord.id });
     if(res.code==='0'){
-      message.success('密码重置成功');
+      message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.success' }));
     }else{
-      message.error('密码重置失败');
+      message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.failed' }));
     }
     setResetPasswordVisible(false);
   } catch (error) {
@@ -279,10 +281,10 @@ const handleResetGoogleAuth = async () => {
   try {
     const res=await relieveGoogleKey({ id: editingRecord.id});
     if(res.code==='0'){
-      message.success('谷歌身份验证重置成功');
+      message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetGoogle.success' }));
       getUserList();  // 刷新用户列表
     }else{
-      message.error('谷歌身份验证重置失败');
+      message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetGoogle.failed' }));
     }
     setResetGoogleVisible(false);
   } catch (error) {
@@ -295,7 +297,7 @@ const handleResetGoogleAuth = async () => {
     }, []);
 
   // 处理绑定谷歌验证
-  const handleBindGoogleAuth = async (values) => {
+  const handleBindGoogleAuth = async (values: any) => {
     try {
       if (!editingRecord) return;
       
@@ -305,15 +307,15 @@ const handleResetGoogleAuth = async () => {
       
       const res = await bindGoogleKey(params);
       if (res.code === '0') {
-        message.success('谷歌验证绑定成功');
+        message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bindGoogle.success' }));
         setBindGoogleVisible(false);
         getUserList(); // 刷新列表
       } else {
-        message.error(res.msg || '谷歌验证绑定失败');
+        message.error(res.msg || intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bindGoogle.failed' }));
       }
     } catch (error) {
-      console.error('绑定谷歌验证失败:', error);
-      message.error('谷歌验证绑定失败');
+      console.error(`${intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bindGoogle.error' })}`, error);
+      message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bindGoogle.failed' }));
     }
   };
 
@@ -333,7 +335,7 @@ const handleResetGoogleAuth = async () => {
     
     const res=await bindGoogleKey({ googleCode: code });
     if(res.code==='0'&&res.data){
-      message.success('绑定成功');
+      message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bind.success' }));
       clearAllCookies();
       window.location.reload();
 
@@ -388,7 +390,7 @@ const handleResetGoogleAuth = async () => {
               setModalVisible(true);
             }}
           >
-            新建
+            {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.create' })}
           </Button>,
         ]}
       />
