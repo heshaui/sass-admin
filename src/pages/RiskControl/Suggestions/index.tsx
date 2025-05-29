@@ -13,10 +13,8 @@ const { Title } = Typography;
 
 const RiskControlSuggestions: React.FC = () => {
   const intl = useIntl();
-  // 风控建议数据
   const [suggestionsForm] = Form.useForm();
   const [sensitiveForm] = Form.useForm();
-  // 添加编辑状态
   const [editingSuggestions, setEditingSuggestions] = useState(false);
   const [editingSensitive, setEditingSensitive] = useState(false);
   const { initialState, refresh } = useModel('@@initialState');
@@ -25,20 +23,13 @@ const RiskControlSuggestions: React.FC = () => {
   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
   const [sugEdit, setSugEdit] = useState<any>();
-  // 处理建议选项
-  // We're keeping the suggestionOptions variable but not using it directly in the UI
-  const suggestionOptions = [
-    intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAndCallback' }),
-    intl.formatMessage({ id: 'riskControl.suggestions.freezeUserWithdrawal' }),
-    intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAndCallbackAgain' }),
-    intl.formatMessage({ id: 'riskControl.suggestions.manualReview' })
-  ];
+  
+  // Define suggestion options for dropdown selections
   const suggestion = [
     {
       label: intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAndCallback' }),
       code: 'prohibit_withdrawa'
     },
-
     {
       label: intl.formatMessage({ id: 'riskControl.suggestions.freezeUserWithdrawal' }),
       code: 'freezing_withdrawal'
@@ -64,16 +55,12 @@ const RiskControlSuggestions: React.FC = () => {
         suggestion2: res.data[1]?.actionTipsCode,
         riskLevel3: res.data[2]?.riskLevel,
         suggestion3: res.data[2]?.actionTipsCode,
-      })
-      setSugEdit(res.data)
+      });
+      setSugEdit(res.data);
     }
-
-
-  }
+  };
 
   const getTemplate = async () => {
-
-
     let res = await riskConditionTemplateList({});
     if (res.code === '0' && res.data) {
       res.data.forEach((item: any) => {
@@ -90,13 +77,14 @@ const RiskControlSuggestions: React.FC = () => {
             emailSuggestion: item.riskConditions[3].thresholdMap.unit,
             fiveTime: item.riskConditions[4].thresholdMap.time,
             fundPasswordSuggestion: item.riskConditions[4].thresholdMap.unit,
-          })
+          });
         }
-      })
+      });
     }
-  }
+  };
+
   const handleSave = async (values: any) => {
-    let data
+    let data;
     if (sugEdit) {
       data = {
         riskLevels: [
@@ -116,9 +104,7 @@ const RiskControlSuggestions: React.FC = () => {
             actionTipsCode: values.suggestion3
           }
         ]
-      }
-
-
+      };
     } else {
       data = {
         riskLevels: [
@@ -135,9 +121,8 @@ const RiskControlSuggestions: React.FC = () => {
             actionTipsCode: values.suggestion3
           }
         ]
-      }
+      };
     }
-
 
     const res = await saveActionRiskLevel(data);
     if (res.code === '0' && res.data) {
@@ -148,16 +133,9 @@ const RiskControlSuggestions: React.FC = () => {
     // 保存后关闭编辑状态
     setEditingSuggestions(false);
     setEditingSensitive(false);
-    // 这里添加保存逻辑
   };
 
-
-
-
-
-
   const handleSensitiveSave = async (values: any) => {
-
     let riskConditions = [
       {
         ...(template?.riskConditions[0].conditionId !== 14 ? { conditionId: template?.riskConditions[0].conditionId } : {}),
@@ -185,7 +163,6 @@ const RiskControlSuggestions: React.FC = () => {
           "unit": values.phoneSuggestion,
           "time": values.threeTime
         },
-
       },
       {
         ...(template?.riskConditions[3].conditionId !== 21 ? { conditionId: template?.riskConditions[3].conditionId } : {}),
@@ -195,7 +172,6 @@ const RiskControlSuggestions: React.FC = () => {
           "unit": values.emailSuggestion,
           "time": values.fourTime
         },
-
       },
       {
         ...(template?.riskConditions[4].conditionId !== 22 ? { conditionId: template?.riskConditions[4].conditionId } : {}),
@@ -206,12 +182,12 @@ const RiskControlSuggestions: React.FC = () => {
           "time": values.fiveTime
         },
       }
-    ]
+    ];
 
     let data = {
       riskConditionVos: riskConditions,
       googleCode: values.googleCode,
-    }
+    };
     let res = await saveRiskConditions(data);
     console.log(res);
     if (res.code === '0') {
@@ -225,9 +201,7 @@ const RiskControlSuggestions: React.FC = () => {
     } else {
       message.error(res.message);
     }
-    // 保存后关闭编辑状态
     setEditingSensitive(false);
-    // 这里添加保存逻辑
   };
 
   const getGoogleCode = async () => {
@@ -238,9 +212,7 @@ const RiskControlSuggestions: React.FC = () => {
     } else {
       message.error(res.message);
     }
-
-  }
-
+  };
 
   const handleGoogleCodeSuccess = async (code: string) => {
     const res = await bindGoogleKey({ googleCode: code });
@@ -252,28 +224,31 @@ const RiskControlSuggestions: React.FC = () => {
       message.error(res.message);
     }
     setGoogleCodeVisible(false);
-  }
+  };
 
   useEffect(() => {
-    getSugges()
+    getSugges();
     getTemplate();
   }, []);
 
   return (
     <PageContainer>
-
-
-
       <Card style={{ marginBottom: 30 }}>
         <Form form={suggestionsForm} layout="vertical" onFinish={handleSave}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
             <Title level={4}>{intl.formatMessage({ id: 'riskControl.suggestions.withdrawalProcessingSuggestions' })}</Title>
             {!editingSuggestions ? (
-              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode === true ? setEditingSuggestions(true) : getGoogleCode()}>{intl.formatMessage({ id: 'riskControl.config.edit' })}</Button>
+              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode === true ? setEditingSuggestions(true) : getGoogleCode()}>
+                {intl.formatMessage({ id: 'riskControl.config.edit' })}
+              </Button>
             ) : (
               <Space>
-                <Button onClick={() => setEditingSuggestions(false)}>{intl.formatMessage({ id: 'riskControl.config.cancel' })}</Button>
-                <Button type="primary" htmlType="submit">{intl.formatMessage({ id: 'riskControl.config.save' })}</Button>
+                <Button onClick={() => setEditingSuggestions(false)}>
+                  {intl.formatMessage({ id: 'riskControl.config.cancel' })}
+                </Button>
+                <Button type="primary" htmlType="submit">
+                  {intl.formatMessage({ id: 'riskControl.config.save' })}
+                </Button>
               </Space>
             )}
           </div>
@@ -369,11 +344,17 @@ const RiskControlSuggestions: React.FC = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
               <Title level={4}>{intl.formatMessage({ id: 'riskControl.suggestions.sensitiveInfoModification' })}</Title>
               {!editingSensitive ? (
-                <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode === true ? setEditingSensitive(true) : getGoogleCode()}>{intl.formatMessage({ id: 'riskControl.config.edit' })}</Button>
+                <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode === true ? setEditingSensitive(true) : getGoogleCode()}>
+                  {intl.formatMessage({ id: 'riskControl.config.edit' })}
+                </Button>
               ) : (
                 <Space>
-                  <Button onClick={() => setEditingSensitive(false)}>{intl.formatMessage({ id: 'riskControl.config.cancel' })}</Button>
-                  <Button type="primary" htmlType="submit">{intl.formatMessage({ id: 'riskControl.config.save' })}</Button>
+                  <Button onClick={() => setEditingSensitive(false)}>
+                    {intl.formatMessage({ id: 'riskControl.config.cancel' })}
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    {intl.formatMessage({ id: 'riskControl.config.save' })}
+                  </Button>
                 </Space>
               )}
             </div>
@@ -492,9 +473,8 @@ const RiskControlSuggestions: React.FC = () => {
         onSubmit={handleGoogleCodeSuccess}
         onCancel={() => setGoogleCodeVisible(false)}
       />
-
     </PageContainer>
   );
 };
 
-export default RiskControlSuggestions; 
+export default RiskControlSuggestions;
