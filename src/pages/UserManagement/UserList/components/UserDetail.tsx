@@ -84,38 +84,38 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
 
   const columns: ProColumns<any>[] = [
     {
-      title: '操作时间',
+      title: intl.formatMessage({ id: 'userDetail.operationLog.operationTime' }),
       dataIndex: 'createTime',
       key: 'createTime',
       valueType: 'dateTime',
     },
     {
-      title: '管理员Id',
+      title: intl.formatMessage({ id: 'userDetail.operationLog.adminId' }),
       dataIndex: 'tenantId',
       key: 'tenantId',
     },
     {
-      title: '操作管理员',
+      title: intl.formatMessage({ id: 'userDetail.operationLog.adminName' }),
       dataIndex: 'tenantName',
       key: 'tenantName',
     },
     {
-      title: '操作行为',
+      title: intl.formatMessage({ id: 'userDetail.operationLog.operationType' }),
       dataIndex: 'operationType',
       key: 'operationType',
     },
     {
-      title: '修改前',
+      title: intl.formatMessage({ id: 'userDetail.operationLog.beforeValue' }),
       dataIndex: 'beforeValue',
       key: 'beforeValue',
     },
     {
-      title: '修改后',
+      title: intl.formatMessage({ id: 'userDetail.operationLog.afterValue' }),
       dataIndex: 'afterValue',
       key: 'afterValue',
     },
     {
-      title: '备注',
+      title: intl.formatMessage({ id: 'userDetail.operationLog.remark' }),
       dataIndex: 'operationRemark',
       key: 'operationRemark',
     },

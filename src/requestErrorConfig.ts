@@ -1,6 +1,7 @@
-﻿import type { RequestOptions } from '@@/plugin-request/request';
+import type { RequestOptions } from '@@/plugin-request/request';
 import type { RequestConfig } from '@umijs/max';
 import { message, notification } from 'antd';
+import { getLocale } from '@umijs/max';
 const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
 const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
 
@@ -91,24 +92,45 @@ export const errorConfig: RequestConfig = {
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-
-     
+      
+      // 获取当前语言
+      const currentLang = getLocale();
+      
       let newHeaders = {};
 
       if (isAdmin) {
+        if(currentLang==='zh-CN'){
+          newHeaders = {
+            'accept-language': 'zh_CN',
+          };
+        } else if(currentLang==='en-US'){
+          newHeaders = {
+            'accept-language': 'en_US',
+          };
+        } else if(currentLang==='ja-JP'){
+          newHeaders = {
+            'accept-language': 'ja_JP',
+          };
+        } else if(currentLang==='ko-KR'){
+          newHeaders = {
+            'accept-language': 'ko_KR',
+          };
+        }
         const token = localStorage.getItem('sa-token-admin');
         config.headers = {
           ...config.headers,
+          ...newHeaders,
           'sa-token-admin': token?`${token}`:'',
         };
       } else if (isMerchant) {
         const token = localStorage.getItem('sa-token-tenant');
         config.headers = {
           ...config.headers,
+          ...newHeaders,
           'sa-token-tenant':token?`${token}`:'',
         };
       }
-      console.log('newHeaders',newHeaders)
+      console.log('Headers with language:', config.headers)
    
       return config
     },
