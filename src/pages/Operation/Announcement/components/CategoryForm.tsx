@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, Modal, message, Radio } from 'antd';
+import { useIntl } from 'umi';
 import { languages } from '@/config/language';
 
 const { TextArea } = Input;
@@ -27,6 +28,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
   type,
   confirmLoading,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [activeLanguage, setActiveLanguage] = useState('en_US');
   
@@ -160,7 +162,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       // 检查英文内容必填
       const enContent = contentList.find(item => item.languageCode === 'en_US');
       if (!enContent || !enContent.languageContent) {
-        message.error('英文内容为必填项');
+        message.error(intl.formatMessage({ id: 'announcement.category.form.validation.english.required', defaultMessage: '英文内容为必填项' }));
         return;
       }
       
@@ -184,14 +186,17 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       onSuccess(submitData);
     } catch (error) {
       console.error('表单验证失败:', error);
-      message.error('表单校验失败，请检查必填项');
+      message.error(intl.formatMessage({ id: 'announcement.category.form.validation.form.failed', defaultMessage: '表单校验失败，请检查必填项' }));
     }
   };
 
   return (
     <Modal
       width={600}
-      title={type === 'create' ? '新建分类' : '编辑分类'}
+      title={type === 'create' 
+        ? intl.formatMessage({ id: 'announcement.category.form.title.create', defaultMessage: '新建分类' })
+        : intl.formatMessage({ id: 'announcement.category.form.title.update', defaultMessage: '编辑分类' })
+      }
       visible={visible}
       onOk={handleSubmit}
       confirmLoading={confirmLoading}
@@ -207,22 +212,22 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
       >
         <Form.Item
           name="serialNum"
-          label="排序"
-          rules={[{ required: true, message: '请输入排序' }]}
+          label={intl.formatMessage({ id: 'announcement.category.form.sort', defaultMessage: '排序' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'announcement.category.form.sort.required', defaultMessage: '请输入排序' }) }]}
         >
-          <InputNumber min={0} style={{ width: '100%' }} placeholder="数字越小越靠前" />
+          <InputNumber min={0} style={{ width: '100%' }} placeholder={intl.formatMessage({ id: 'announcement.category.form.sort.placeholder', defaultMessage: '数字越小越靠前' })} />
         </Form.Item>
         
         <Form.Item
           name="describe"
-          label="描述"
-          rules={[{ required: true, message: '请输入描述' }]}
+          label={intl.formatMessage({ id: 'announcement.category.form.description', defaultMessage: '描述' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'announcement.category.form.description.required', defaultMessage: '请输入描述' }) }]}
         >
-          <Input placeholder="请输入描述" />
+          <Input placeholder={intl.formatMessage({ id: 'announcement.category.form.description.placeholder', defaultMessage: '请输入描述' })} />
         </Form.Item>
         
         <Form.Item
-          label="内容语言"
+          label={intl.formatMessage({ id: 'announcement.category.form.language', defaultMessage: '内容语言' })}
           required
           name="languageCode"
         >
@@ -235,24 +240,24 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
             ))}
           </Radio.Group>
           <div style={{ color: '#999', marginBottom: '15px' }}>
-            *内容支持多语言编辑，英文内容为必填，其他语言可选
+            {intl.formatMessage({ id: 'announcement.category.form.language.note', defaultMessage: '*内容支持多语言编辑，英文内容为必填，其他语言可选' })}
           </div>
         </Form.Item>
         
         {/* 多语言内容编辑区域 */}
         <Form.Item
           name="languageContent"
-          label="内容"
+          label={intl.formatMessage({ id: 'announcement.category.form.content', defaultMessage: '内容' })}
           required={activeLanguage === 'en_US'}
         >
           <TextArea 
             rows={4}
-            placeholder="请输入内容" 
+            placeholder={intl.formatMessage({ id: 'announcement.category.form.content.placeholder', defaultMessage: '请输入内容' })} 
             value={getCurrentContent(activeLanguage)}
             onChange={(e) => handleContentChange(activeLanguage, e.target.value)}
           />
           {activeLanguage === 'en_US' && !getCurrentContent('en_US') && (
-            <div style={{ color: 'red' }}>英文内容为必填项</div>
+            <div style={{ color: 'red' }}>{intl.formatMessage({ id: 'announcement.category.form.content.required', defaultMessage: '英文内容为必填项' })}</div>
           )}
         </Form.Item>
       </Form>

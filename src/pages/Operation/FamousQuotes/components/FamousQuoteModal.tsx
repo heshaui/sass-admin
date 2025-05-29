@@ -3,6 +3,7 @@ import { Modal, Form, Input, message,Select} from 'antd';
 import { getFamousAphorismsDetail, addFamousAphorisms, updateFamousAphorisms } from '@/services/ant-design-pro/operation';
 import LanguageSelector from '@/components/LanguageSelector';
 import  {languages}  from '@/config/language';
+import { useIntl } from 'umi';
 interface FamousQuoteModalProps {
   visible: boolean;
   editingId: number | null;
@@ -22,6 +23,7 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
   onSuccess,
   onCancel,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
   const [language, setLanguage] = useState<string>('en_US');
@@ -66,7 +68,7 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
         });
       }
     } catch (error) {
-      message.error('获取名言详情失败');
+      message.error(intl.formatMessage({ id: 'famousQuotes.message.getDetailFailed' }));
     } finally {
       setLoading(false);
     }
@@ -118,7 +120,7 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
       const values = await form.validateFields();
       if(language==='en_US'){
        if(values.text.trim()===''){
-        message.error('英文内容为必填项，请添加英文内容');
+        message.error(intl.formatMessage({ id: 'famousQuotes.modal.form.englishRequired' }));
         return;
       }
     }
@@ -137,7 +139,7 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
       // 检查是否包含英文内容
       const englishContent = updatedContentList.find(item => item.languageCode === 'en_US')?.languageContent || '';
       if (!englishContent.trim()) {
-        message.error('英文内容为必填项，请添加英文内容');
+        message.error(intl.formatMessage({ id: 'famousQuotes.modal.form.englishRequired' }));
         return;
       }
       
@@ -150,9 +152,9 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
           famousAphorismsContents: updatedContentList
         });
         if(res.code==='0') {
-          message.success('更新成功');
+          message.success(intl.formatMessage({ id: 'famousQuotes.modal.message.updateSuccess' }));
         } else {
-          message.error('更新失败');
+          message.error(intl.formatMessage({ id: 'famousQuotes.modal.message.updateFailed' }));
         }
       } else {
         // 过滤掉内容为空的语言
@@ -166,9 +168,9 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
           
         const res = await addFamousAphorisms(data);
         if(res.code==='0') {
-          message.success('添加成功');
+          message.success(intl.formatMessage({ id: 'famousQuotes.modal.message.addSuccess' }));
         } else {
-          message.error('添加失败');
+          message.error(intl.formatMessage({ id: 'famousQuotes.modal.message.addFailed' }));
         }
       }
       
@@ -195,7 +197,7 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
 
   return (
     <Modal
-      title={editingId ? '编辑名言' : '添加名言'}
+      title={editingId ? intl.formatMessage({ id: 'famousQuotes.modal.edit' }) : intl.formatMessage({ id: 'famousQuotes.modal.add' })}
       open={visible}
       onOk={handleSubmit}
       onCancel={handleCancel}
@@ -203,9 +205,9 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
     >
       <Form form={form} layout="vertical" initialValues={{ langId: 'en_US' }}>
         <Form.Item
-          label="内容语言"
+          label={intl.formatMessage({ id: 'famousQuotes.modal.form.language' })}
           name="langId"
-          rules={[{ required: true, message: '请选择语言' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'famousQuotes.modal.form.language.required' }) }]}
         >
           {
            editingId ? <Select>
@@ -223,13 +225,13 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
         
         <Form.Item
           name="text"
-          label="内容"
+          label={intl.formatMessage({ id: 'famousQuotes.modal.form.content' })}
           rules={[
             ({ getFieldValue }) => ({
               validator: (_, value) => {
                 const currentLang = getFieldValue('langId') || language;
                 if (currentLang === 'en_US' && (!value || value.trim() === '')) {
-                  return Promise.reject(new Error('英语内容为必填项'));
+                  return Promise.reject(new Error(intl.formatMessage({ id: 'famousQuotes.modal.form.englishRequired' })));
                 }
                 return Promise.resolve();
               }
@@ -238,7 +240,7 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
         >
           <Input.TextArea 
             rows={4}
-            placeholder="请输入内容" 
+            placeholder={intl.formatMessage({ id: 'famousQuotes.modal.form.content.placeholder' })} 
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
           />

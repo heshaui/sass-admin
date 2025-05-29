@@ -3,6 +3,7 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { Button, message, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { useIntl } from 'umi';
 import { 
   getAnnouncementList, getAnnouncementContentList, updateAnnouncement, addClassMenu
 } from '@/services/ant-design-pro/operation';
@@ -28,6 +29,7 @@ type AnnouncementItem = {
 };
 
 const AnnouncementManagement: React.FC = () => {
+  const intl = useIntl();
   const [announcementFormVisible, setAnnouncementFormVisible] = useState<boolean>(false);
   const [currentAnnouncement, setCurrentAnnouncement] = useState<AnnouncementItem>();
   const [formType, setFormType] = useState<'create' | 'update'>('create');
@@ -42,14 +44,14 @@ const AnnouncementManagement: React.FC = () => {
        
        const  response = await addClassMenu(formValues);
        if(response.code==='0'&&response.data){
-        message.success('创建成功');
+        message.success(intl.formatMessage({ id: 'announcement.category.create.success', defaultMessage: '创建成功' }));
         setCategoryFormVisible(false);
        }else{
-        message.error('创建失败');
+        message.error(intl.formatMessage({ id: 'announcement.category.create.failed', defaultMessage: '创建失败' }));
        }
       
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'announcement.category.operation.failed', defaultMessage: '操作失败' }));
     } finally {
 
     }
@@ -122,7 +124,7 @@ const AnnouncementManagement: React.FC = () => {
         total: announcementResponse.count || 0,
       };
     } catch (error) {
-      message.error('获取公告列表失败');
+      message.error(intl.formatMessage({ id: 'announcement.management.list.failed', defaultMessage: '获取公告列表失败' }));
       return {
         data: [],
         success: false,
@@ -140,12 +142,12 @@ const AnnouncementManagement: React.FC = () => {
       }
       const response = await updateAnnouncement(data);
       if (response.code==='0'&&response.data) {
-        message.success('删除成功');
+        message.success(intl.formatMessage({ id: 'announcement.management.delete.success', defaultMessage: '删除成功' }));
         announcementActionRef.current?.reload();
         return true;
       }
     } catch (error) {
-      message.error('删除失败');
+      message.error(intl.formatMessage({ id: 'announcement.management.delete.failed', defaultMessage: '删除失败' }));
       return false;
     }
   };
@@ -160,12 +162,14 @@ const AnnouncementManagement: React.FC = () => {
       const response = await updateAnnouncement(data);
       if (response.code==='0'&&response.data) {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        handleTop===1?message.success('取消置顶成功'):message.success('置顶成功');
+        handleTop===1
+          ? message.success(intl.formatMessage({ id: 'announcement.management.untop.success', defaultMessage: '取消置顶成功' }))
+          : message.success(intl.formatMessage({ id: 'announcement.management.top.success', defaultMessage: '置顶成功' }));
         announcementActionRef.current?.reload();
         return true;
       }
     } catch (error) {
-      message.error('置顶失败');
+      message.error(intl.formatMessage({ id: 'announcement.management.top.failed', defaultMessage: '置顶失败' }));
       return false;
     }
   };
@@ -188,19 +192,19 @@ const AnnouncementManagement: React.FC = () => {
   // 公告表格列定义
   const announcementColumns: ProColumns<AnnouncementItem>[] = [
     {
-      title: '序号',
+      title: intl.formatMessage({ id: 'announcement.management.column.id', defaultMessage: '序号' }),
       dataIndex: 'id',
       search: false,
       width: 80,
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'announcement.management.column.description', defaultMessage: '描述' }),
       dataIndex: 'describeText',
       formItemProps: {
         rules: [
           {
             required: true,
-            message: '请输入描述关键词',
+            message: intl.formatMessage({ id: 'announcement.management.description.required', defaultMessage: '请输入描述关键词' }),
           },
         ],
       },
@@ -213,23 +217,23 @@ const AnnouncementManagement: React.FC = () => {
       },
     },
     {
-      title: '标题',
+      title: intl.formatMessage({ id: 'announcement.management.column.title',  }),
       dataIndex: 'title',
       search: false,
     },
     {
-      title: '分类',
+      title: intl.formatMessage({ id: 'announcement.management.column.category', }),
       dataIndex: 'classMenu',
       search: false,
     },
     {
-      title: '发送时间',
+      title: intl.formatMessage({ id: 'announcement.management.column.sendTime',  }),
       dataIndex: 'releaseTime',
       valueType: 'dateTime',
       search:false
     },
     {
-      title: '发送时间',
+      title: intl.formatMessage({ id: 'announcement.management.column.sendTime',  }),
       dataIndex: 'releaseTime',
       valueType: 'dateTimeRange',
       hideInTable: true,
@@ -246,20 +250,24 @@ const AnnouncementManagement: React.FC = () => {
       },
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'announcement.management.column.createTime', defaultMessage: '创建时间' }),
       dataIndex: 'createTime',
       search: false,
       valueType: 'dateTime',
     },
     {
-      title: '发送状态',
+      title: intl.formatMessage({ id: 'announcement.management.column.status', defaultMessage: '发送状态' }),
       dataIndex: 'status',
       valueEnum: {
-        1: { text: '已发送', status: 'Success' },
-        0: { text: '待发布', status: 'Default' },
+        1: { text: intl.formatMessage({ id: 'announcement.management.status.sent', defaultMessage: '已发送' }), status: 'Success' },
+        0: { text: intl.formatMessage({ id: 'announcement.management.status.pending', defaultMessage: '待发布' }), status: 'Default' },
       },
       renderText: (text) => {
-        return text === 0 ? '待发布' : text === 1 ? '已发送' : '待发布';
+        return text === 0 
+          ? intl.formatMessage({ id: 'announcement.management.status.pending', defaultMessage: '待发布' }) 
+          : text === 1 
+            ? intl.formatMessage({ id: 'announcement.management.status.sent', defaultMessage: '已发送' }) 
+            : intl.formatMessage({ id: 'announcement.management.status.pending', defaultMessage: '待发布' });
       },
       search: {
         transform: (value) => {
@@ -270,7 +278,7 @@ const AnnouncementManagement: React.FC = () => {
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'announcement.management.column.action', defaultMessage: '操作' }),
       dataIndex: 'option',
       valueType: 'option',
       search: false,
@@ -281,25 +289,25 @@ const AnnouncementManagement: React.FC = () => {
             handleEditAnnouncement(record);
           }}
         >
-          编辑
+          {intl.formatMessage({ id: 'announcement.management.action.edit', defaultMessage: '编辑' })}
         </a>,
         <a
           key="delete"
           onClick={() => {
             Modal.confirm({
-              title: '确认删除',
-              content: '确认删除后，前台将不显示该公告',
-              okText: '确认',
-              cancelText: '取消',
+              title: intl.formatMessage({ id: 'announcement.management.delete.confirm.title', defaultMessage: '确认删除' }),
+              content: intl.formatMessage({ id: 'announcement.management.delete.confirm.content', defaultMessage: '确认删除后，前台将不显示该公告' }),
+              okText: intl.formatMessage({ id: 'announcement.management.delete.confirm.ok', defaultMessage: '确认' }),
+              cancelText: intl.formatMessage({ id: 'announcement.management.delete.confirm.cancel', defaultMessage: '取消' }),
               onOk: () => handleRemoveAnnouncement(record.id),
             });
           }}
         >
-          删除
+          {intl.formatMessage({ id: 'announcement.management.action.delete', defaultMessage: '删除' })}
         </a>,
         record.onTop===1 ? (
           <a key="untop" onClick={() => handleTop(record.id,record.onTop)}>
-            置顶取消
+            {intl.formatMessage({ id: 'announcement.management.action.untop', defaultMessage: '置顶取消' })}
           </a>
         ) : (
           <a key="top" onClick={() => handleTop(record.id,record.onTop)}>
@@ -322,7 +330,9 @@ const AnnouncementManagement: React.FC = () => {
         }}
         options={false}
         toolBarRender={() => [
-          <Button key="menu" onClick={() => {setCategoryFormVisible(true); setFormType('create');}}>菜单管理</Button>,
+          <Button key="menu" onClick={() => {setCategoryFormVisible(true); setFormType('create');}}>
+            {intl.formatMessage({ id: 'announcement.management.button.menu', defaultMessage: '菜单管理' })}
+          </Button>,
           <Button
             type="primary"
             key="publish"
@@ -332,7 +342,7 @@ const AnnouncementManagement: React.FC = () => {
               setAnnouncementFormVisible(true);
             }}
           >
-            <PlusOutlined /> 发布公告
+            <PlusOutlined /> {intl.formatMessage({ id: 'announcement.management.button.publish', defaultMessage: '发布公告' })}
           </Button>,
         ]}
         request={fetchAnnouncementList}
@@ -364,4 +374,4 @@ const AnnouncementManagement: React.FC = () => {
   );
 };
 
-export default AnnouncementManagement; 
+export default AnnouncementManagement;

@@ -5,8 +5,10 @@ import { PlusOutlined } from '@ant-design/icons';
 import { getFamousAphorismsList,deleteFamousAphorisms } from '@/services/ant-design-pro/operation';
 import LanguageSelector from '@/components/LanguageSelector';
 import FamousQuoteModal from './components/FamousQuoteModal';
+import { useIntl } from 'umi';
 
 const FamousQuotes: React.FC = () => {
+  const intl = useIntl();
   const [visible, setVisible] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [language, setLanguage] = useState('en_US');
@@ -31,21 +33,21 @@ const FamousQuotes: React.FC = () => {
 
   const handleDelete = async (id: number) => {
     Modal.confirm({
-      title: '确认删除',
-      content: '确定要删除这条名言吗？',
+      title: intl.formatMessage({ id: 'famousQuotes.message.deleteConfirm' }),
+      content: intl.formatMessage({ id: 'famousQuotes.message.deleteConfirmContent' }),
       onOk: async () => {
           try {
             const res = await deleteFamousAphorisms(id);
             if(res.code==='0') {
-              message.success('删除成功');
+              message.success(intl.formatMessage({ id: 'famousQuotes.message.deleteSuccess' }));
               actionRef.current?.reload();
             } else {
-              message.error('删除失败');
+              message.error(intl.formatMessage({ id: 'famousQuotes.message.deleteFailed' }));
             }
        
 
         } catch (error) {
-          message.error('删除失败');
+          message.error(intl.formatMessage({ id: 'famousQuotes.message.deleteFailed' }));
         }
       },
     });
@@ -60,13 +62,13 @@ const FamousQuotes: React.FC = () => {
 
   const columns = [
     {
-      title: '编号',
+      title: intl.formatMessage({ id: 'famousQuotes.column.id' }),
       dataIndex: 'id',
       key: 'id',
       width: 80,
     },
     {
-      title: '文本',
+      title: intl.formatMessage({ id: 'famousQuotes.column.text' }),
       dataIndex: 'languageContent',
       key: 'languageContent',
       render: (_, record: any) => {
@@ -77,13 +79,13 @@ const FamousQuotes: React.FC = () => {
       },
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'famousQuotes.column.action' }),
       key: 'action',
       width: 200,
       render: (_, record: any) => (
         <Space>
-          <a onClick={() => handleEdit(record)}>编辑</a>
-          <a onClick={() => handleDelete(record.id)}>删除</a>
+          <a onClick={() => handleEdit(record)}>{ intl.formatMessage({ id: 'famousQuotes.action.edit' }) }</a>
+          <a onClick={() => handleDelete(record.id)}>{ intl.formatMessage({ id: 'famousQuotes.action.delete' }) }</a>
         </Space>
       ),
     },
@@ -96,7 +98,7 @@ const FamousQuotes: React.FC = () => {
       <ProTable
         rowKey="id"
         actionRef={actionRef}
-        headerTitle="名言警句列表"
+        headerTitle={intl.formatMessage({ id: 'famousQuotes.title' })}
         columns={columns}
         request={async (params, sort, filter) => {
           try {
@@ -111,7 +113,7 @@ const FamousQuotes: React.FC = () => {
               total: response.total || response.data?.length || 0,
             };
           } catch (error) {
-            message.error('获取名言警句列表失败');
+            message.error(intl.formatMessage({ id: 'famousQuotes.message.getListFailed' }));
             return {
               data: [],
               success: false,
@@ -121,7 +123,7 @@ const FamousQuotes: React.FC = () => {
         }}
         toolBarRender={() => [
           <Button type="primary" key="add" icon={<PlusOutlined />} onClick={handleAdd}>
-            添加
+            {intl.formatMessage({ id: 'famousQuotes.button.add' })}
           </Button>,
         ]}
         pagination={{ pageSize: 10 }}

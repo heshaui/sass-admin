@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { Button, message, Modal } from 'antd';
+import { useIntl } from 'umi';
 import { getClassMenuList, addClassMenu, updateClassMenu, deleteClassMenu, getClassMenuParams } from '@/services/ant-design-pro/operation';
 import CategoryForm from './CategoryForm';
 
@@ -15,6 +16,7 @@ type CategoryItem = {
 };
 
 const CategoryManagement: React.FC = () => {
+  const intl = useIntl();
   const [categoryFormVisible, setCategoryFormVisible] = useState<boolean>(false);
   const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
   const [formType, setFormType] = useState<'create' | 'update'>('create');
@@ -48,15 +50,19 @@ const CategoryManagement: React.FC = () => {
       }
       
       if (response.code==='0'&& response.data) {
-        message.success(formType === 'create' ? '创建成功' : '更新成功');
+        message.success(formType === 'create' 
+          ? intl.formatMessage({ id: 'announcement.category.create.success', defaultMessage: '创建成功' })
+          : intl.formatMessage({ id: 'announcement.category.update.success', defaultMessage: '更新成功' }));
         setCategoryFormVisible(false);
         // 刷新列表数据
         categoryActionRef.current?.reload();
       } else {
-        message.error(formType === 'create' ? '创建失败' : '更新失败');
+        message.error(formType === 'create'
+          ? intl.formatMessage({ id: 'announcement.category.create.failed', defaultMessage: '创建失败' })
+          : intl.formatMessage({ id: 'announcement.category.update.failed', defaultMessage: '更新失败' }));
       }
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'announcement.category.operation.failed', defaultMessage: '操作失败' }));
     } finally {
       setConfirmLoading(false);
     }
@@ -77,7 +83,7 @@ const CategoryManagement: React.FC = () => {
       
     
     } catch (error) {
-      message.error('获取分类列表失败');
+      message.error(intl.formatMessage({ id: 'announcement.category.list.failed', defaultMessage: '获取分类列表失败' }));
       return {
         data: [],
         success: false,
@@ -101,7 +107,7 @@ const CategoryManagement: React.FC = () => {
       setFormType('update');
       setCategoryFormVisible(true);
     } else {
-      message.error('获取分类信息失败');
+      message.error(intl.formatMessage({ id: 'announcement.category.info.failed', defaultMessage: '获取分类信息失败' }));
     }
   }
 
@@ -111,12 +117,12 @@ const CategoryManagement: React.FC = () => {
       
       const response = await deleteClassMenu(id);
       if (response.code==='0') {
-        message.success('删除成功');
+        message.success(intl.formatMessage({ id: 'announcement.category.delete.success', defaultMessage: '删除成功' }));
         categoryActionRef.current?.reload();
         return true;
       }
     } catch (error) {
-      message.error('删除失败');
+      message.error(intl.formatMessage({ id: 'announcement.category.delete.failed', defaultMessage: '删除失败' }));
       return false;
     }
   };
@@ -124,27 +130,27 @@ const CategoryManagement: React.FC = () => {
   // 分类表格列定义
   const categoryColumns: ProColumns<CategoryItem>[] = [
     {
-      title: '序号',
+      title: intl.formatMessage({ id: 'announcement.category.column.id', defaultMessage: '序号' }),
       dataIndex: 'id',
       search: false,
       width: 80,
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'announcement.category.column.description', defaultMessage: '描述' }),
       dataIndex: 'describe',
     },
     {
-      title: '排序',
+      title: intl.formatMessage({ id: 'announcement.category.column.sort', defaultMessage: '排序' }),
       dataIndex: 'serialNum',
       search: false,
     },
     {
-      title: '创建时间',
+      title: intl.formatMessage({ id: 'announcement.category.column.createTime', defaultMessage: '创建时间' }),
       dataIndex: 'createTime',
       valueType:'dateTime'
     },
     {
-      title: '操作',
+      title: intl.formatMessage({ id: 'announcement.category.column.action', defaultMessage: '操作' }),
       dataIndex: 'option',
       valueType: 'option',
       search: false,
@@ -156,7 +162,7 @@ const CategoryManagement: React.FC = () => {
            
           }}
         >
-          编辑
+          {intl.formatMessage({ id: 'announcement.category.action.edit', defaultMessage: '编辑' })}
         </a>,
         // <a
         //   key="delete"
@@ -190,7 +196,7 @@ const CategoryManagement: React.FC = () => {
               setCurrentCategory(undefined);
               setFormType('create');
             }}>
-              添加分类
+              {intl.formatMessage({ id: 'announcement.category.button.add', defaultMessage: '添加分类' })}
             </Button>
           ]}
           pagination={{
