@@ -21,6 +21,8 @@ import webConfig from './en-US/webConfig';
 import common from './en-US/common';
 import merchantSystem from './en-US/merchantSystem';
 import language from './en-US/language';
+import operation from './en-US/operation';
+import riskControl from './en-US/riskControl';
 
 export default {
   'navBar.lang': 'Languages',
@@ -53,4 +55,6 @@ export default {
   ...common,
   ...merchantSystem,
   ...language,
+  ...operation,
+  ...riskControl,
 };

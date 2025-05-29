@@ -23,6 +23,7 @@ import user from './zh-CN/user';
 import webConfig from './zh-CN/webConfig';
 import merchantSystem from './zh-CN/merchantSystem';
 import language from './zh-CN/language';  
+import operation from './zh-CN/operation';
 
 export default {
   'navBar.lang': '语言',
@@ -57,4 +58,5 @@ export default {
   ...commonConfig,
   ...merchantSystem,
   ...language,
+  ...operation,
 };
