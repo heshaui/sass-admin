@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'umi';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Form, Input, Button, Select, Space, Typography, message } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
@@ -11,6 +12,7 @@ const { Option } = Select;
 const { Title } = Typography;
 
 const RiskControlSuggestions: React.FC = () => {
+  const intl = useIntl();
   // 风控建议数据
   const [suggestionsForm] = Form.useForm();
   const [sensitiveForm] = Form.useForm();
@@ -24,29 +26,30 @@ const RiskControlSuggestions: React.FC = () => {
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
   const [sugEdit, setSugEdit] = useState<any>();
   // 处理建议选项
+  // We're keeping the suggestionOptions variable but not using it directly in the UI
   const suggestionOptions = [
-    '建议禁止提现，并回访用户后再处理',
-    '建议冻结用户提现',
-    '建议禁止提现，回访用户后在处理',
-    '人工审核'
+    intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAndCallback' }),
+    intl.formatMessage({ id: 'riskControl.suggestions.freezeUserWithdrawal' }),
+    intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAndCallbackAgain' }),
+    intl.formatMessage({ id: 'riskControl.suggestions.manualReview' })
   ];
   const suggestion = [
     {
-      label: '建议禁止提现，并回访用户后再处理',
+      label: intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAndCallback' }),
       code: 'prohibit_withdrawa'
     },
 
     {
-      label: '建议冻结用户提现',
+      label: intl.formatMessage({ id: 'riskControl.suggestions.freezeUserWithdrawal' }),
       code: 'freezing_withdrawal'
     },
     {
       code: 'reject_withdrawal_review',
-      label: '提现审核拒绝',
+      label: intl.formatMessage({ id: 'riskControl.suggestions.withdrawalReviewRejected' }),
     },
     {
       code: 'manual_review',
-      label: '人工审核',
+      label: intl.formatMessage({ id: 'riskControl.suggestions.manualReview' }),
     }
   ];
 
@@ -140,7 +143,7 @@ const RiskControlSuggestions: React.FC = () => {
     if (res.code === '0' && res.data) {
       getSugges();
       getTemplate();
-      message.success('保存成功');
+      message.success(intl.formatMessage({ id: 'riskControl.config.saveSuccess' }));
     }
     // 保存后关闭编辑状态
     setEditingSuggestions(false);
@@ -212,7 +215,7 @@ const RiskControlSuggestions: React.FC = () => {
     let res = await saveRiskConditions(data);
     console.log(res);
     if (res.code === '0') {
-      message.success('保存成功');
+      message.success(intl.formatMessage({ id: 'riskControl.config.saveSuccess' }));
       setEditingSensitive(false);
       setEditingSuggestions(false);
       sensitiveForm.resetFields();
@@ -242,7 +245,7 @@ const RiskControlSuggestions: React.FC = () => {
   const handleGoogleCodeSuccess = async (code: string) => {
     const res = await bindGoogleKey({ googleCode: code });
     if (res.code === '0' && res.data) {
-      message.success('绑定成功');
+      message.success(intl.formatMessage({ id: 'riskControl.suggestions.bindSuccess' }));
       clearAllCookies();
       window.location.reload();
     } else {
@@ -264,13 +267,13 @@ const RiskControlSuggestions: React.FC = () => {
       <Card style={{ marginBottom: 30 }}>
         <Form form={suggestionsForm} layout="vertical" onFinish={handleSave}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
-            <Title level={4}>提现处理建议</Title>
+            <Title level={4}>{intl.formatMessage({ id: 'riskControl.suggestions.withdrawalProcessingSuggestions' })}</Title>
             {!editingSuggestions ? (
-              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode === true ? setEditingSuggestions(true) : getGoogleCode()}>编辑</Button>
+              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode === true ? setEditingSuggestions(true) : getGoogleCode()}>{intl.formatMessage({ id: 'riskControl.config.edit' })}</Button>
             ) : (
               <Space>
-                <Button onClick={() => setEditingSuggestions(false)}>取消</Button>
-                <Button type="primary" htmlType="submit">保存</Button>
+                <Button onClick={() => setEditingSuggestions(false)}>{intl.formatMessage({ id: 'riskControl.config.cancel' })}</Button>
+                <Button type="primary" htmlType="submit">{intl.formatMessage({ id: 'riskControl.config.save' })}</Button>
               </Space>
             )}
           </div>
@@ -278,16 +281,16 @@ const RiskControlSuggestions: React.FC = () => {
           <div style={{ padding: 20, marginBottom: 30 }}>
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               <Space align="baseline" size="large">
-                <span style={{ color: 'red' }}>* 风险等级&gt;=</span>
+                <span style={{ color: 'red' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.riskLevelGreaterThanOrEqual' })}</span>
                 <Form.Item
                   name="riskLevel1"
                   style={{ marginBottom: 0, marginRight: 5 }}
                 >
                   <Input style={{ width: 60 }} disabled={!editingSuggestions} />
                 </Form.Item>
-                <span>级</span>
+                <span>{intl.formatMessage({ id: 'riskControl.config.level' })}</span>
 
-                <span style={{ color: 'red', marginLeft: 15 }}>* 处理建议</span>
+                <span style={{ color: 'red', marginLeft: 15 }}>* {intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}</span>
                 <Form.Item
                   name="suggestion1"
                   style={{ marginBottom: 0, width: 500, marginLeft: 5 }}
@@ -304,16 +307,16 @@ const RiskControlSuggestions: React.FC = () => {
               </Space>
 
               <Space align="baseline" size="large">
-                <span style={{ color: 'red' }}>* 风险等级&gt;=</span>
+                <span style={{ color: 'red' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.riskLevelGreaterThanOrEqual' })}</span>
                 <Form.Item
                   name="riskLevel2"
                   style={{ marginBottom: 0, marginRight: 5 }}
                 >
                   <Input style={{ width: 60 }} disabled={!editingSuggestions} />
                 </Form.Item>
-                <span>级</span>
+                <span>{intl.formatMessage({ id: 'riskControl.config.level' })}</span>
 
-                <span style={{ color: 'red', marginLeft: 15 }}>* 处理建议</span>
+                <span style={{ color: 'red', marginLeft: 15 }}>* {intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}</span>
                 <Form.Item
                   name="suggestion2"
                   style={{ marginBottom: 0, width: 500, marginLeft: 5 }}
@@ -330,16 +333,16 @@ const RiskControlSuggestions: React.FC = () => {
               </Space>
 
               <Space align="baseline" size="large">
-                <span style={{ color: 'red' }}>* 风险等级&gt;=</span>
+                <span style={{ color: 'red' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.riskLevelGreaterThanOrEqual' })}</span>
                 <Form.Item
                   name="riskLevel3"
                   style={{ marginBottom: 0, marginRight: 5 }}
                 >
                   <Input style={{ width: 60 }} disabled={!editingSuggestions} />
                 </Form.Item>
-                <span>级</span>
+                <span>{intl.formatMessage({ id: 'riskControl.config.level' })}</span>
 
-                <span style={{ color: 'red', marginLeft: 15 }}>* 处理建议</span>
+                <span style={{ color: 'red', marginLeft: 15 }}>* {intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}</span>
                 <Form.Item
                   name="suggestion3"
                   style={{ marginBottom: 0, width: 500, marginLeft: 5 }}
@@ -364,26 +367,26 @@ const RiskControlSuggestions: React.FC = () => {
         <Form form={sensitiveForm} layout="vertical" onFinish={handleSensitiveSave}>
           <div style={{ marginBottom: 30 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
-              <Title level={4}>敏感信息修改</Title>
+              <Title level={4}>{intl.formatMessage({ id: 'riskControl.suggestions.sensitiveInfoModification' })}</Title>
               {!editingSensitive ? (
-                <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode === true ? setEditingSensitive(true) : getGoogleCode()}>编辑</Button>
+                <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode === true ? setEditingSensitive(true) : getGoogleCode()}>{intl.formatMessage({ id: 'riskControl.config.edit' })}</Button>
               ) : (
                 <Space>
-                  <Button onClick={() => setEditingSensitive(false)}>取消</Button>
-                  <Button type="primary" htmlType="submit">保存</Button>
+                  <Button onClick={() => setEditingSensitive(false)}>{intl.formatMessage({ id: 'riskControl.config.cancel' })}</Button>
+                  <Button type="primary" htmlType="submit">{intl.formatMessage({ id: 'riskControl.config.save' })}</Button>
                 </Space>
               )}
             </div>
 
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ color: 'red', width: '200px' }}>* 修改密码后禁止提现增加</span>
+                <span style={{ color: 'red', width: '200px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAfterPasswordChange' })}</span>
                 <Form.Item name="oneTime" style={{ margin: 0, width: '60px' }}>
                   <Input style={{ width: 60 }} disabled={!editingSensitive} />
                 </Form.Item>
                 <span style={{ marginRight: '20px' }}>H</span>
 
-                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <span style={{ color: 'red', width: '80px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}</span>
                 <Form.Item name="passwordSuggestion" style={{ margin: 0, width: '300px' }}>
                   <Select
                     suffixIcon={<DownOutlined />}
@@ -397,13 +400,13 @@ const RiskControlSuggestions: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ color: 'red', width: '200px' }}>* 解绑2FA后禁止提现增加</span>
+                <span style={{ color: 'red', width: '200px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAfter2FAUnbinding' })}</span>
                 <Form.Item name="twoTime" style={{ margin: 0, width: '60px' }}>
                   <Input style={{ width: 60 }} disabled={!editingSensitive} />
                 </Form.Item>
                 <span style={{ marginRight: '20px' }}>H</span>
 
-                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <span style={{ color: 'red', width: '80px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}</span>
                 <Form.Item name="twofaSuggestion" style={{ margin: 0, width: '300px' }}>
                   <Select
                     suffixIcon={<DownOutlined />}
@@ -417,13 +420,13 @@ const RiskControlSuggestions: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ color: 'red', width: '200px' }}>* 更换手机号后禁止提现增加</span>
+                <span style={{ color: 'red', width: '200px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAfterPhoneChange' })}</span>
                 <Form.Item name="threeTime" style={{ margin: 0, width: '60px' }}>
                   <Input style={{ width: 60 }} disabled={!editingSensitive} />
                 </Form.Item>
                 <span style={{ marginRight: '20px' }}>H</span>
 
-                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <span style={{ color: 'red', width: '80px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}</span>
                 <Form.Item name="phoneSuggestion" style={{ margin: 0, width: '300px' }}>
                   <Select
                     suffixIcon={<DownOutlined />}
@@ -437,13 +440,13 @@ const RiskControlSuggestions: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ color: 'red', width: '200px' }}>* 更换邮箱后禁止提现增加</span>
+                <span style={{ color: 'red', width: '200px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAfterEmailChange' })}</span>
                 <Form.Item name="fourTime" style={{ margin: 0, width: '60px' }}>
                   <Input style={{ width: 60 }} disabled={!editingSensitive} />
                 </Form.Item>
                 <span style={{ marginRight: '20px' }}>H</span>
 
-                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <span style={{ color: 'red', width: '80px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}</span>
                 <Form.Item name="emailSuggestion" style={{ margin: 0, width: '300px' }}>
                   <Select
                     suffixIcon={<DownOutlined />}
@@ -457,13 +460,13 @@ const RiskControlSuggestions: React.FC = () => {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span style={{ color: 'red', width: '200px' }}>* 修改资金密码后禁止提现增加</span>
+                <span style={{ color: 'red', width: '200px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.prohibitWithdrawalAfterFundPasswordChange' })}</span>
                 <Form.Item name="fiveTime" style={{ margin: 0, width: '60px' }}>
                   <Input style={{ width: 60 }} disabled={!editingSensitive} />
                 </Form.Item>
                 <span style={{ marginRight: '20px' }}>H</span>
 
-                <span style={{ color: 'red', width: '80px' }}>* 处理建议</span>
+                <span style={{ color: 'red', width: '80px' }}>* {intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}</span>
                 <Form.Item name="fundPasswordSuggestion" style={{ margin: 0, width: '300px' }}>
                   <Select
                     suffixIcon={<DownOutlined />}
@@ -477,7 +480,7 @@ const RiskControlSuggestions: React.FC = () => {
               </div>
             </Space>
           </div>
-          <Form.Item name="googleCode" required label="谷歌验证码" style={{ marginBottom: 0, width: '30%' }}>
+          <Form.Item name="googleCode" required label={intl.formatMessage({ id: 'riskControl.config.googleVerificationCode' })} style={{ marginBottom: 0, width: '30%' }}>
             <Input disabled={!editingSensitive} />
           </Form.Item>
         </Form>

@@ -1,4 +1,5 @@
 import React, { useState,useEffect } from 'react';
+import { useIntl } from 'umi';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import {Select, DatePicker } from 'antd';
 import { assetAccountReviewList,riskSceneList} from '@/services/ant-design-pro/risk';
@@ -8,7 +9,8 @@ const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const RiskControlAlerts: React.FC = () => {
-  // 筛选条件状态
+  const intl = useIntl();
+  // ${intl.formatMessage({ id: 'riskControl.alerts.filterConditions' })}
   const [filters, setFilters] = useState({
     userId: '',
     alertType: '',
@@ -24,12 +26,12 @@ const RiskControlAlerts: React.FC = () => {
   // 表格列定义
   const columns: ProColumns[] = [
     {
-      title: 'UID',
+      title: intl.formatMessage({ id: 'riskControl.alerts.uid' }),
       dataIndex: 'userId',
       key: 'userId',
     },
     {
-      title: '触发类型',
+      title: intl.formatMessage({ id: 'riskControl.alerts.triggerType' }),
       dataIndex: 'sceneCode',
       key: 'sceneCode',
       valueType:'select',
@@ -41,43 +43,43 @@ const RiskControlAlerts: React.FC = () => {
       }
     },
     {
-      title: '触发原因',
+      title: intl.formatMessage({ id: 'riskControl.alerts.triggerReason' }),
       dataIndex: 'resultContent',
       search:false
     },
     {
-      title: '触发后风控等级',
+      title: intl.formatMessage({ id: 'riskControl.alerts.riskLevelAfterTrigger' }),
       dataIndex: 'riskLevel',
       key: 'riskLevel',
       search:false
     },
     {
-      title: '风控周期',
+      title: intl.formatMessage({ id: 'riskControl.alerts.riskCycle' }),
       dataIndex: 'riskCycle',
       key: 'riskCycle',
       valueType: 'text',
       search:false
     },
     {
-      title: '处理建议',
+      title: intl.formatMessage({ id: 'riskControl.alerts.processingAdvice' }),
       dataIndex: 'code',
       key: 'code',
       valueType: 'text',
       search:false
     },
     {
-      title: '触发时间',
+      title: intl.formatMessage({ id: 'riskControl.alerts.triggerTime' }),
       dataIndex: 'createTime',
       valueType: 'dateTime',
       search:false
     },
     {
-      title: '触发时间',
+      title: intl.formatMessage({ id: 'riskControl.alerts.triggerTime' }),
       dataIndex: 'dateTimeRange',
       valueType: 'dateTimeRange',
       hideInTable:true,
       fieldProps:{
-        placeholder:['开始日期','结束日期']
+        placeholder:[intl.formatMessage({ id: 'riskControl.alerts.startDate' }), intl.formatMessage({ id: 'riskControl.alerts.endDate' })]
       }
     },
   ];

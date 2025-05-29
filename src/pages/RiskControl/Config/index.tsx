@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useIntl } from 'umi';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Form, Input, InputNumber, Button, Row, Col, Space, Typography,message } from 'antd';
 import { riskConditionTemplateList,saveRiskConditions } from '@/services/ant-design-pro/risk';
@@ -9,6 +10,7 @@ import { clearAllCookies } from '@/utils';
 const { Text } = Typography;
 
 const RiskControlConfig: React.FC = () => {
+  const intl = useIntl();
   const [assetForm] = Form.useForm();
   const [moneyForm] = Form.useForm();
   const [theftForm] = Form.useForm();
@@ -57,7 +59,7 @@ const RiskControlConfig: React.FC = () => {
     }
    let res= await saveRiskConditions(data);
    if(res.code==='0'){
-    message.success('保存成功');
+    message.success(intl.formatMessage({ id: 'riskControl.config.saveSuccess' }));
    }else{
     message.error(res.message);
    }
@@ -103,7 +105,7 @@ const RiskControlConfig: React.FC = () => {
     }
     let res= await saveRiskConditions(data);
     if(res.code==='0'){
-      message.success('保存成功');
+      message.success(intl.formatMessage({ id: 'riskControl.config.saveSuccess' }));
     }else{
       message.error(res.message);
     }
@@ -140,7 +142,7 @@ const RiskControlConfig: React.FC = () => {
     }
     let res= await saveRiskConditions(data);
     if(res.code==='0'){
-      message.success('保存成功');
+      message.success(intl.formatMessage({ id: 'riskControl.config.saveSuccess' }));
     }else{
       message.error(res.message);
     }
@@ -229,23 +231,23 @@ const RiskControlConfig: React.FC = () => {
       <Form form={assetForm} onFinish={assetFinish} layout="vertical">
         {/* 资产不平 */}
         <Card
-          title="资产不平"
+          title={intl.formatMessage({ id: 'riskControl.config.assetImbalance' })}
           style={{ marginBottom: 20 }}
           extra={
             editingSection === 'asset' ? (
               <Space>
-                <Button onClick={() => toggleEdit('asset')}>取消</Button>
-                <Button type="primary" onClick={() => assetForm.submit()}>保存</Button>
+                <Button onClick={() => toggleEdit('asset')}>{intl.formatMessage({ id: 'riskControl.config.cancel' })}</Button>
+                <Button type="primary" onClick={() => assetForm.submit()}>{intl.formatMessage({ id: 'riskControl.config.save' })}</Button>
               </Space>
             ) : (
-              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('asset'):getGoogleCode()}>编辑</Button>
+              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('asset'):getGoogleCode()}>{intl.formatMessage({ id: 'riskControl.config.edit' })}</Button>
             )
           }
         >
           <Row gutter={24}>
             <Col span={9}>
               <Form.Item
-                label='资产折合'
+                label={intl.formatMessage({ id: 'riskControl.config.assetEquivalent' })}
                 required
                 name="count"
               >
@@ -253,23 +255,23 @@ const RiskControlConfig: React.FC = () => {
               </Form.Item>
               <Col/>
               <Form.Item
-                label='风控等级'
+                label={intl.formatMessage({ id: 'riskControl.config.riskLevel' })}
                 required
                 name="riskIncrement"
               >
-                  <Input   disabled={editingSection !== 'asset'} suffix="级" />
+                  <Input   disabled={editingSection !== 'asset'} suffix={intl.formatMessage({ id: 'riskControl.config.level' })} />
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item label="报警通知" name="earlyWarning">
-                <Input placeholder="邮箱或手机，以类文通号啓开" disabled={editingSection !== 'asset'} />
+              <Form.Item label={intl.formatMessage({ id: 'riskControl.config.alarmNotification' })} name="earlyWarning">
+                <Input placeholder={intl.formatMessage({ id: 'riskControl.config.emailOrPhoneHint' })} disabled={editingSection !== 'asset'} />
               </Form.Item>
             </Col>
             {
               currentUser?.employeeResp?.googleCode===true&&(
                 <Col span={8}>
-                  <Form.Item label="谷歌验证码" name="googleCode" required>
-                    <Input placeholder="请输入谷歌验证码" disabled={editingSection !== 'asset'} />
+                  <Form.Item label={intl.formatMessage({ id: 'riskControl.config.googleVerificationCode' })} name="googleCode" required>
+                    <Input placeholder={intl.formatMessage({ id: 'riskControl.config.enterGoogleVerificationCode' })} disabled={editingSection !== 'asset'} />
               </Form.Item>
             </Col>
             )
@@ -281,17 +283,17 @@ const RiskControlConfig: React.FC = () => {
       {/* 洗钱嫌疑 */}
       <Form form={moneyForm} onFinish={moneyFinish}  >
         <Card
-          title="洗钱嫌疑"
+          title={intl.formatMessage({ id: 'riskControl.config.moneyLaundering' })}
           className="mt-4"
           style={{ marginBottom: 20 }}
           extra={
             editingSection === 'money' ? (
               <Space>
-                <Button onClick={() => toggleEdit('money')}>取消</Button>
-                <Button type="primary" onClick={() => moneyForm.submit()}>保存</Button>
+                <Button onClick={() => toggleEdit('money')}>{intl.formatMessage({ id: 'riskControl.config.cancel' })}</Button>
+                <Button type="primary" onClick={() => moneyForm.submit()}>{intl.formatMessage({ id: 'riskControl.config.save' })}</Button>
               </Space>
             ) : (
-              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('money'):getGoogleCode()}>编辑</Button>
+              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('money'):getGoogleCode()}>{intl.formatMessage({ id: 'riskControl.config.edit' })}</Button>
             )
           }
         >
@@ -301,22 +303,22 @@ const RiskControlConfig: React.FC = () => {
                 required
                 name='time_window'
               >
-                  <Input disabled={editingSection !== 'money'} suffix="分钟内，累计提现笔数 "/>
+                  <Input disabled={editingSection !== 'money'} suffix={intl.formatMessage({ id: 'riskControl.config.minutesWithdrawalCount' })} />
               </Form.Item>
               </Col>
               <Col span={5}>
               <Form.Item name="count">
-              <Input  disabled={editingSection !== 'money'}  suffix="次"/> 
+              <Input  disabled={editingSection !== 'money'}  suffix={intl.formatMessage({ id: 'riskControl.config.times' })}/> 
               </Form.Item>
               </Col>
 
             <Col span={5}>
               <Form.Item
                required
-                label='风控等级'
+                label={intl.formatMessage({ id: 'riskControl.config.riskLevel' })}
                 name="oneRiskIncrement"
               >
-                  <Input  disabled={editingSection !== 'money'} suffix="级"/>
+                  <Input  disabled={editingSection !== 'money'} suffix={intl.formatMessage({ id: 'riskControl.config.level' })}/>
               </Form.Item>
             </Col>
           </Row>
@@ -330,23 +332,23 @@ const RiskControlConfig: React.FC = () => {
 
               <span style={{color:'red'}}>*</span><span></span>
               <Form.Item
-              label='24小时内充值>'
+              label={intl.formatMessage({ id: 'riskControl.config.rechargeWithin24Hours' })}
                 name='recharge_min' 
               >
-                  <Input min={1}  disabled={editingSection !== 'money'} suffix='USDT 且提现金额大于' />
+                  <Input min={1}  disabled={editingSection !== 'money'} suffix={intl.formatMessage({ id: 'riskControl.config.usdtAndWithdrawalAmountGreaterThan' })} />
               </Form.Item>
               <Form.Item name="withdraw_ratio">
-                <Input min={1} max={100}  disabled={editingSection !== 'money'} suffix='>%的充值金额'/>
+                <Input min={1} max={100}  disabled={editingSection !== 'money'} suffix={intl.formatMessage({ id: 'riskControl.config.percentOfRechargeAmount' })}/>
               </Form.Item>
               </div>
             </Col>
             <Col span={8}>
               <Form.Item
               required
-                label='风控等级'
+                label={intl.formatMessage({ id: 'riskControl.config.riskLevel' })}
                 name="twoRiskIncrement"
               >
-                  <Input min={1}  disabled={editingSection !== 'money'} suffix='级'/>
+                  <Input min={1}  disabled={editingSection !== 'money'} suffix={intl.formatMessage({ id: 'riskControl.config.level' })}/>
               </Form.Item>
             </Col>
           </Row>
@@ -355,7 +357,7 @@ const RiskControlConfig: React.FC = () => {
               <Row gutter={24}>
             <Col span={8}>
               <Form.Item label="谷歌验证码" name="googleCode" required>
-                <Input placeholder="请输入谷歌验证码" disabled={editingSection !== 'money'} />
+                <Input placeholder={intl.formatMessage({ id: 'riskControl.config.enterGoogleVerificationCode' })} disabled={editingSection !== 'money'} />
               </Form.Item>
             </Col>
           </Row>
@@ -368,23 +370,23 @@ const RiskControlConfig: React.FC = () => {
       {/* 被盗预警 */}
       <Form form={theftForm} onFinish={theftFinish} layout="vertical">
         <Card
-          title="被盗预警"
+          title={intl.formatMessage({ id: 'riskControl.config.theftWarning' })}
           className="mt-4"
           extra={
             editingSection === 'theft' ? (
               <Space>
-                <Button onClick={() => toggleEdit('theft')}>取消</Button>
-                <Button type="primary" onClick={() => theftForm.submit()}>保存</Button>
+                <Button onClick={() => toggleEdit('theft')}>{intl.formatMessage({ id: 'riskControl.config.cancel' })}</Button>
+                <Button type="primary" onClick={() => theftForm.submit()}>{intl.formatMessage({ id: 'riskControl.config.save' })}</Button>
               </Space>
             ) : (
-              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('theft'):getGoogleCode()}>编辑</Button>
+              <Button type="primary" onClick={() => currentUser?.employeeResp?.googleCode===true?toggleEdit('theft'):getGoogleCode()}>{intl.formatMessage({ id: 'riskControl.config.edit' })}</Button>
             )
           }
         >
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
-                label={<><span style={{ color: 'red' }}>*</span> 用户提现的IP更换次数占比 &lt;</>}
+                label={<><span style={{ color: 'red' }}>*</span> {intl.formatMessage({ id: 'riskControl.config.userWithdrawalIPChangePercentageLessThan' })}</>}
                 name="oneCount"
               >
                   <InputNumber min={1} disabled={editingSection !== 'theft'} suffix="%"/>
@@ -392,10 +394,10 @@ const RiskControlConfig: React.FC = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
+                label={<><span style={{ color: 'red' }}>*</span> {intl.formatMessage({ id: 'riskControl.config.riskLevelPlus' })}</>}
                 name="oneRiskIncrement"
               >
-                  <InputNumber min={1}  disabled={editingSection !== 'theft'} suffix="级"/>
+                  <InputNumber min={1}  disabled={editingSection !== 'theft'} suffix={intl.formatMessage({ id: 'riskControl.config.level' })}/>
               </Form.Item>
             </Col>
           </Row>
@@ -403,19 +405,19 @@ const RiskControlConfig: React.FC = () => {
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
-                label={<>用户提现地址之前未成功提现 &gt;</>}
+                label={<>{intl.formatMessage({ id: 'riskControl.config.userWithdrawalAddressNoSuccess' })}</>}
                 name="twoCount"
               >
-                  <InputNumber min={1}  disabled={editingSection !== 'theft'} suffix="次" />
+                  <InputNumber min={1}  disabled={editingSection !== 'theft'} suffix={intl.formatMessage({ id: 'riskControl.config.times' })} />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
+                label={<><span style={{ color: 'red' }}>*</span> {intl.formatMessage({ id: 'riskControl.config.riskLevelPlus' })}</>}
                 name="twoRiskIncrement"
               >
           
-                  <InputNumber min={1}  disabled={editingSection !== 'theft'}  suffix="级"  />
+                  <InputNumber min={1}  disabled={editingSection !== 'theft'}  suffix={intl.formatMessage({ id: 'riskControl.config.level' })}  />
               
               </Form.Item>
             </Col>
@@ -424,7 +426,7 @@ const RiskControlConfig: React.FC = () => {
           <Row gutter={24}>
             <Col span={12}>
               <Form.Item
-                label={<>两个不同的账户提现到同一个地址</>}
+                label={<>{intl.formatMessage({ id: 'riskControl.config.twoAccountsWithdrawToSameAddress' })}</>}
                 name="multiAccountWithdrawal"
               >
 
@@ -432,10 +434,10 @@ const RiskControlConfig: React.FC = () => {
             </Col>
             <Col span={12}>
               <Form.Item
-                label={<><span style={{ color: 'red' }}>*</span> 风控等级+</>}
+                label={<><span style={{ color: 'red' }}>*</span> {intl.formatMessage({ id: 'riskControl.config.riskLevelPlus' })}</>}
                 name="threeRiskIncrement"
               >
-                  <InputNumber min={1}  disabled={editingSection !== 'theft'}  suffix="级" />
+                  <InputNumber min={1}  disabled={editingSection !== 'theft'}  suffix={intl.formatMessage({ id: 'riskControl.config.level' })} />
               </Form.Item>
             </Col>
           </Row>
@@ -443,8 +445,8 @@ const RiskControlConfig: React.FC = () => {
             currentUser?.employeeResp?.googleCode===true&&(
               <Row gutter={24}>
             <Col span={8}>
-              <Form.Item label="谷歌验证码" name="googleCode">
-                <Input placeholder="请输入谷歌验证码" disabled={editingSection !== 'theft'} />
+              <Form.Item label={intl.formatMessage({ id: 'riskControl.config.googleVerificationCode' })} name="googleCode">
+                <Input placeholder={intl.formatMessage({ id: 'riskControl.config.enterGoogleVerificationCode' })} disabled={editingSection !== 'theft'} />
               </Form.Item>
             </Col>
           </Row>
