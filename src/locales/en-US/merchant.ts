@@ -151,11 +151,11 @@ export default {
   "free.table.activationTime": "Activation Time",
   "free.table.expiryTime": "Expiry Time",
   "free.table.serviceStatus": "Service Status",
-  "free.table.serviceStatus.active": "Active",
+  "free.table.serviceStatus.notStarted": "Not Started",
   "free.table.serviceStatus.overdue": "Overdue",
   "free.table.paymentStatus": "Payment Status",
   "free.table.paymentStatus.paid": "Paid",
-  "free.table.paymentStatus.free": "Free",
+  "free.table.paymentStatus.notStarted": "Not Started",
   "free.table.action": "Actions",
   "free.table.action.edit": "Edit",
   "free.table.action.convert": "Convert to Paid",
@@ -164,6 +164,15 @@ export default {
   "free.button.new": "New",
   "free.modal.createTitle": "Create Merchant",
   "free.modal.editTitle": "Edit Merchant",
+  
+  // Additional Free Component translations
+  "free.table.merchantId.column": "Merchant ID",
+  "free.table.exchangeName.column": "Exchange Name",
+  "free.table.contact.column": "Contact",
+  "free.table.serviceTime.column": "Service Time",
+  "free.table.registrationTime.label": "Registration Time",
+  "free.table.activationTime.label": "Activation Time",
+  "free.table.expiryTime.label": "Expiry Time",
 
   // MerchantEdit Component
   "merchantEdit.title": "Edit Merchant Info",

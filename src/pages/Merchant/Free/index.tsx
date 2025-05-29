@@ -183,57 +183,59 @@ const Free: React.FC = () => {
 
   // **表格列配置**
   const columns: ProColumns<any>[] = [
-    { title: "商户ID", dataIndex: "tenantId" },
-    { title: "交易所名称", dataIndex: "tenantName" },
+    { title: intl.formatMessage({ id: 'free.table.merchantId.column' }), dataIndex: "tenantId" },
+    { title: intl.formatMessage({ id: 'free.table.exchangeName.column' }), dataIndex: "tenantName" },
     { 
-      title: "联系人", 
+      title: intl.formatMessage({ id: 'free.table.contact.column' }), 
       dataIndex: "tenantContact",
       search: false  // 禁用搜索
     },
     {
-      title: "服务时间",
+      title: intl.formatMessage({ id: 'free.table.serviceTime.column' }),
       dataIndex: "serviceTime",
       search: false,  // 禁用搜索
       render: (_, record) => (
         <div>
-          <div>注册时间：{record.createTime ? dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
-          <div>开通时间：{record.tenantStartTime ? dayjs(record.tenantStartTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
-          <div>到期时间：{record.tenantEndTime ? dayjs(record.tenantEndTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
+          <div>{intl.formatMessage({ id: 'free.table.registrationTime.label' })}：{record.createTime ? dayjs(record.createTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
+          <div>{intl.formatMessage({ id: 'free.table.activationTime.label' })}：{record.tenantStartTime ? dayjs(record.tenantStartTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
+          <div>{intl.formatMessage({ id: 'free.table.expiryTime.label' })}：{record.tenantEndTime ? dayjs(record.tenantEndTime).format("YYYY-MM-DD HH:mm:ss") : "--"}</div>
         </div>
       ),
     },
     {
-      title: "服务状态",
+      title: intl.formatMessage({ id: 'free.table.serviceStatus' }),
       dataIndex: "tenantStatus",
       valueType: 'select',
       valueEnum: {
-        1: { text: '未开始' },
-        0: { text: '已欠费' }
+        1: { text: intl.formatMessage({ id: 'free.table.serviceStatus.notStarted' }) },
+        0: { text: intl.formatMessage({ id: 'free.table.serviceStatus.overdue' }) }
       },
-      render: (_, record) => <div>{record.tenantStatus === 1 ? "未开始" : "已欠费"}</div>,
+      render: (_, record) => <div>{record.tenantStatus === 1 ? 
+        intl.formatMessage({ id: 'free.table.serviceStatus.notStarted' }) : 
+        intl.formatMessage({ id: 'free.table.serviceStatus.overdue' })}</div>,
     },
     {
-      title: "付费状态",
+      title: intl.formatMessage({ id: 'free.table.paymentStatus' }),
       dataIndex: "paymentStatus",
       search: false,
       render: (_, record) => {
           if(record.paymentStatus === 1){
-              return <div>已付费</div>
+              return <div>{intl.formatMessage({ id: 'free.table.paymentStatus.paid' })}</div>
           }else{
-              return <div>未开始</div>
+              return <div>{intl.formatMessage({ id: 'free.table.paymentStatus.notStarted' })}</div>
           }
       },
   },
     {
-      title: "操作",
+      title: intl.formatMessage({ id: 'free.table.action' }),
       search: false,
       dataIndex: "action",
       render: (_, record) => (
         <Space>
-          <a onClick={() => handleEdit(record)}>修改</a>
-          {record.paymentStatus !== 1 ? <a onClick={() => handleConvertToPaid(record)}>转为正式商户</a> : ""}
-          <a onClick={() => handleServerConfig(record)}>服务器配置</a>
-          { !record.isRootTenant && <a onClick={() => handleSave(record)}>创建Root账号</a>}
+          <a onClick={() => handleEdit(record)}>{intl.formatMessage({ id: 'free.table.action.edit' })}</a>
+          {record.paymentStatus !== 1 ? <a onClick={() => handleConvertToPaid(record)}>{intl.formatMessage({ id: 'free.table.action.convert' })}</a> : ""}
+          <a onClick={() => handleServerConfig(record)}>{intl.formatMessage({ id: 'free.table.action.serverConfig' })}</a>
+          { !record.isRootTenant && <a onClick={() => handleSave(record)}>{intl.formatMessage({ id: 'free.table.action.createRoot' })}</a>}
         </Space>
       ),
     },
