@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Input, message, Modal } from 'antd';
+import { useIntl } from 'umi';
 
 interface ValidCodeProps {
   visible: boolean;
@@ -14,11 +15,12 @@ const ValidCode: React.FC<ValidCodeProps> = ({
   onCancel,
   loading = false
 }) => {
+  const intl = useIntl();
   const [googleCode, setGoogleCode] = useState('');
 
   const handleOk = async () => {
     if (!googleCode.trim()) {
-      message.error('请输入谷歌验证码');
+      message.error(intl.formatMessage({ id: 'component.validCode.errorMessage' }));
       return;
     }
     try {
@@ -31,16 +33,16 @@ const ValidCode: React.FC<ValidCodeProps> = ({
 
   return (
     <Modal
-      title="谷歌验证"
+      title={intl.formatMessage({ id: 'component.validCode.title' })}
       open={visible}
       onOk={handleOk}
       onCancel={onCancel}
       confirmLoading={loading}
     >
       <div style={{ marginBottom: 16 }}>
-        <p>请输入谷歌验证码</p>
+        <p>{intl.formatMessage({ id: 'component.validCode.enterCode' })}</p>
         <Input
-          placeholder="谷歌验证码"
+          placeholder={intl.formatMessage({ id: 'component.validCode.placeholder' })}
           value={googleCode}
           onChange={(e) => setGoogleCode(e.target.value)}
           onPressEnter={handleOk}

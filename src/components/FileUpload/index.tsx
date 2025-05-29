@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Upload, message, Spin } from "antd";
 import { PlusOutlined, FileOutlined } from "@ant-design/icons";
 import { uploadFile } from "@/services/ant-design-pro/api";
+import { useIntl } from 'umi';
 
 // Define component props interface
 interface FileUploaderProps {
@@ -9,6 +10,7 @@ interface FileUploaderProps {
 }
 
 const FileUploader: React.FC<FileUploaderProps> = ({ onChange }) => {
+  const intl = useIntl();
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -18,7 +20,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onChange }) => {
     // You can add size limit or specific file type restrictions here
     const isLt10M = file.size / 1024 / 1024 < 10; // Example: 10MB limit
     if (!isLt10M) {
-      message.error("文件大小不能超过10MB!");
+      message.error(intl.formatMessage({ id: 'component.fileUpload.fileSizeLimit' }));
       return Upload.LIST_IGNORE;
     }
     return true;
@@ -43,17 +45,17 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onChange }) => {
       setFileName(file.name); // Store original file name
       onChange?.(response); // Pass URL to parent component
       onSuccess(response);
-      message.success("文件上传成功");
+      message.success(intl.formatMessage({ id: 'component.fileUpload.uploadSuccess' }));
     } catch (error) {
       onError(error);
-      message.error("文件上传失败");
+      message.error(intl.formatMessage({ id: 'component.fileUpload.uploadFailed' }));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Spin spinning={loading} tip="上传中...">
+    <Spin spinning={loading} tip={intl.formatMessage({ id: 'component.fileUpload.uploading' })}>
       <Upload
         name="file"
         listType="picture-card"
@@ -73,7 +75,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ onChange }) => {
         ) : (
           <div>
             <PlusOutlined />
-            <div style={{ marginTop: 8 }}>上传文件</div>
+            <div style={{ marginTop: 8 }}>{intl.formatMessage({ id: 'component.fileUpload.uploadFile' })}</div>
           </div>
         )}
       </Upload>

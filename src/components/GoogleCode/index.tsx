@@ -3,6 +3,7 @@ import { Button, Input, message, Modal } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import styles from './index.module.css';
 import { QRCodeSVG } from 'qrcode.react';
+import { useIntl } from 'umi';
 
 interface GoogleCodeProps {
   secretKey?: string;
@@ -22,14 +23,16 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   onSubmit, 
   onCancel,
   visible = false,
-  title = '绑定谷歌验证',
+  title,
   width = 500,
   maskClosable = false,
   centered = true
 }) => {
+  const intl = useIntl();
+  const defaultTitle = intl.formatMessage({ id: 'component.googleCode.title' });
   const [verificationCode, setVerificationCode] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('验证码错误');
+  const [errorMessage, setErrorMessage] = useState<string>(intl.formatMessage({ id: 'component.googleCode.errorMessage' }));
   const [countdown, setCountdown] = useState<number>(30);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -45,7 +48,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
           // 注意：这里需要一个状态变量来存储提取的密钥，如果 secretKey 是不可变的 prop
         }
       } catch (e) {
-        console.error('解析 TOTP URI 失败:', e);
+        console.error(intl.formatMessage({ id: 'component.googleCode.parseError' }), e);
       }
     }
   }, [qrCodeUrl, secretKey, isTotpUri]);
@@ -60,23 +63,23 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   const handleCopySecretKey = () => {
     navigator.clipboard.writeText(secretKey)
       .then(() => {
-        message.success('密钥已复制到剪贴板');
+        message.success(intl.formatMessage({ id: 'component.googleCode.copySuccess' }));
       })
       .catch(() => {
-        message.error('复制失败，请手动复制');
+        message.error(intl.formatMessage({ id: 'component.googleCode.copyFailed' }));
       });
   };
 
   const handleSubmit = async () => {
     if (!verificationCode) {
       setError(true);
-      setErrorMessage('请输入验证码');
+      setErrorMessage(intl.formatMessage({ id: 'component.googleCode.enterCode' }));
       return;
     }
     
     if (verificationCode.length !== 6) {
       setError(true);
-      setErrorMessage('验证码必须为6位数字');
+      setErrorMessage(intl.formatMessage({ id: 'component.googleCode.codeLength' }));
       return;
     }
 
@@ -86,13 +89,13 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
         const result = await onSubmit(verificationCode);
         if (!result) {
           setError(true);
-          setErrorMessage('验证码错误或已过期');
+          setErrorMessage(intl.formatMessage({ id: 'component.googleCode.codeInvalid' }));
         }
       }
     } catch (err) {
       setError(true);
-      setErrorMessage('验证过程中出现错误，请重试');
-      console.error('验证码提交错误:', err);
+      setErrorMessage(intl.formatMessage({ id: 'component.googleCode.verifyError' }));
+      console.error(intl.formatMessage({ id: 'component.googleCode.submitError' }), err);
     } finally {
       setLoading(false);
     }
@@ -102,34 +105,36 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
 
   const googleCodeContent = (
     <div className={styles.container}>
-      <p className={styles.description}>
-        推荐使用 <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" target="_blank" rel="noopener noreferrer">Google Authenticator</a> 即使您的设备未连接到互联网，您也可以生成验证码
-      </p>
+      <p className={styles.description}
+        dangerouslySetInnerHTML={{
+          __html: intl.formatMessage({ id: 'component.googleCode.recommendation' })
+        }}
+      />
       
       <div className={styles.qrCode}>
         {isTotpUri ? (
           <QRCodeSVG value={qrCodeUrl} size={200} />
         ) : (
-          <img src={qrCodeUrl} alt="谷歌验证器二维码" width={200} height={200} />
+          <img src={qrCodeUrl} alt={intl.formatMessage({ id: 'component.googleCode.qrCodeAlt' })} width={200} height={200} />
         )}
       </div>
       
       <div className={styles.secretKeyContainer}>
-        <div className={styles.secretKeyLabel}>密钥：</div>
+        <div className={styles.secretKeyLabel}>{intl.formatMessage({ id: 'component.googleCode.secretKey' })}</div>
         <div className={styles.secretKey}>{secretKey}</div>
         <Button 
           icon={<CopyOutlined />} 
           className={styles.copyButton}
           onClick={handleCopySecretKey}
-          aria-label="复制密钥"
+          aria-label={intl.formatMessage({ id: 'component.googleCode.copyButton' })}
         />
       </div>
       
       <div className={styles.inputContainer}>
         <span className={styles.required}>*</span>
-        <span className={styles.label}>谷歌验证码：</span>
+        <span className={styles.label}>{intl.formatMessage({ id: 'component.googleCode.verificationCode' })}</span>
         <Input
-          placeholder="6位动态验证码"
+          placeholder={intl.formatMessage({ id: 'component.googleCode.placeholder' })}
           maxLength={6}
           value={verificationCode}
           onChange={(e) => {
@@ -151,7 +156,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
 
   return (
     <Modal
-      title={title}
+      title={title || defaultTitle}
       open={visible}
       onCancel={onCancel}
       width={width}
@@ -161,7 +166,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
       footer={
         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
           <Button key="cancel" onClick={onCancel} className={styles.cancelButton}>
-            取消
+            {intl.formatMessage({ id: 'component.googleCode.cancel' })}
           </Button>
           <Button 
             key="submit" 
@@ -171,7 +176,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
             className={styles.submitButton}
             disabled={verificationCode.length !== 6}
           >
-            提交
+            {intl.formatMessage({ id: 'component.googleCode.submit' })}
           </Button>
         </div>
       }
