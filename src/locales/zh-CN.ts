@@ -22,6 +22,7 @@ import spot from './zh-CN/spot';
 import user from './zh-CN/user';
 import webConfig from './zh-CN/webConfig';
 import merchantSystem from './zh-CN/merchantSystem';
+import language from './zh-CN/language';  
 
 export default {
   'navBar.lang': '语言',
@@ -55,4 +56,5 @@ export default {
   ...fundsTools,
   ...commonConfig,
   ...merchantSystem,
+  ...language,
 };
