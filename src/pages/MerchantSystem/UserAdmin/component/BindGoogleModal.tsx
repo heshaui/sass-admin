@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from 'umi';
-import { Modal, Form, Input, Button, message, Space, Typography, Spin } from 'antd';
+import { Modal, Form, Input, Button, message, Typography, Spin } from 'antd';
 import { sendGoogleKey } from '@/services/ant-design-pro/authAdmin';
 
 const { Text } = Typography;
