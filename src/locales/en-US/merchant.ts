@@ -152,6 +152,7 @@ export default {
   "free.table.expiryTime": "Expiry Time",
   "free.table.serviceStatus": "Service Status",
   "free.table.serviceStatus.notStarted": "Not Started",
+  "free.table.serviceStatus.active": "Active",
   "free.table.serviceStatus.overdue": "Overdue",
   "free.table.paymentStatus": "Payment Status",
   "free.table.paymentStatus.paid": "Paid",

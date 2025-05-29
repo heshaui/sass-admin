@@ -75,7 +75,7 @@ const Package: React.FC = () => {
         packageData.forEach(pkg => {
           const languages = pkg.langs.map(lang => ({
             id: lang.langId,
-            name: lang.remark || lang.lang,
+            name:  lang.lang,
             code: lang.langEncode,
             langPackageId: lang.langPackageId
           }));
@@ -207,7 +207,7 @@ const Package: React.FC = () => {
             style={{ margin: '5px', borderStyle: 'dashed' }}
             onClick={() => showAddLanguageModal(packageType as 'basic' | 'advanced' | 'premium')}
           >
-            <PlusOutlined /> 添加
+            <PlusOutlined /> {intl.formatMessage({ id: 'common.add.title' })}
           </Tag>
         )}
       </>
@@ -289,7 +289,7 @@ const Package: React.FC = () => {
         // 创建要添加的语言对象（用于本地状态更新）
         const newLanguage = {
           id: selectedLanguage.id,
-          name: selectedLanguage.remark || selectedLanguage.lang,
+          name:  selectedLanguage.lang,
           code: selectedLanguage.langEncode,
           lang: selectedLanguage.lang
         };

@@ -164,6 +164,16 @@ export default {
   'free.button.new': '新建',
   'free.modal.createTitle': '新增商户',
   'free.modal.editTitle': '编辑商户',
+    // Additional Free Component translations
+    "free.table.merchantId.column": "商户 ID",
+    "free.table.exchangeName.column": "交易所名称",
+    "free.table.contact.column": "联系人",
+    "free.table.serviceTime.column": "服务时间",
+    "free.table.registrationTime.label": "注册时间",
+    "free.table.activationTime.label": "激活时间",
+    "free.table.expiryTime.label": "到期时间",
+    "free.table.serviceStatus.notStarted": "未开始",
+    "free.table.paymentStatus.notStarted": "未开始",
   
   // MerchantEdit Component
   'merchantEdit.title': '编辑商户信息',

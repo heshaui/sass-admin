@@ -18,6 +18,7 @@ import settings from './en-US/settings';
 import spot from './en-US/spot';
 import user from './en-US/user';
 import webConfig from './en-US/webConfig';
+import common from './en-US/common';
 
 export default {
   'navBar.lang': 'Languages',
@@ -47,4 +48,5 @@ export default {
   ...webConfig,
   ...commonConfig,
   ...login,
+  ...common,
 };
