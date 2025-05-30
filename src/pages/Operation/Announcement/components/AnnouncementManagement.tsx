@@ -311,7 +311,7 @@ const AnnouncementManagement: React.FC = () => {
           </a>
         ) : (
           <a key="top" onClick={() => handleTop(record.id,record.onTop)}>
-            置顶
+            {intl.formatMessage({ id: 'announcement.management.action.top', defaultMessage: '置顶' })}
           </a>
         ),
       ],
