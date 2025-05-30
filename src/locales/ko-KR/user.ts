@@ -134,6 +134,15 @@ export default {
   'userDetail.message.updateEmailError': '이메일 변경 실패',
   'userDetail.message.unbindGoogleAuthReason': '해제 이유를 입력해주세요',
   'userDetail.message.unbindGoogleAuthSuccess': '해绑 성공',
+'userDetail.message.freezeLoginSuccess': '로그인 동결 성공',
+'userDetail.message.unfreezeLoginSuccess': '로그인 동결 해제 성공',
+'userDetail.message.freezeLoginError': '로그인 동결 실패',
+'userDetail.message.unfreezeLoginError': '로그인 동결 해제 실패',
+'userDetail.message.freezeTransactionSuccess': '거래 동결 성공',
+'userDetail.message.unfreezeTransactionSuccess': '거래 동결 해제 성공',
+'userDetail.message.freezeTransactionError': '거래 동결 실패',
+'userDetail.message.unfreezeTransactionError': '거래 동결 해제 실패',
+
   
   // Transaction related
   'userTransaction.title': '거래 상세',

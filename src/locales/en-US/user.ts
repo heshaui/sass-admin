@@ -135,7 +135,16 @@ export default {
     'userDetail.message.updateEmailError': 'Email update failed',
     'userDetail.message.unbindGoogleAuthReason': 'Please enter unbind reason',
     'userDetail.message.unbindGoogleAuthSuccess': 'Unbind successful',
+'userDetail.message.freezeLoginSuccess': 'Login freeze successful',
+'userDetail.message.unfreezeLoginSuccess': 'Login unfreeze successful',
+'userDetail.message.freezeLoginError': 'Login freeze failed',
+'userDetail.message.unfreezeLoginError': 'Login unfreeze failed',
+'userDetail.message.freezeTransactionSuccess': 'Transaction freeze successful',
+'userDetail.message.unfreezeTransactionSuccess': 'Transaction unfreeze successful',
+'userDetail.message.freezeTransactionError': 'Transaction freeze failed',
+'userDetail.message.unfreezeTransactionError': 'Transaction unfreeze failed',
 
+    
   // Transaction related
   'userTransaction.title': 'Transaction Records',
   'userTransaction.summary.title': 'Transaction Summary (Equivalent in USDT)',
