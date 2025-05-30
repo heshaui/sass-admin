@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 import { PageContainer } from '@ant-design/pro-components';
 import { Card, Form, Input, InputNumber, Button, Row, Col, Space, Typography,message } from 'antd';
 import { riskConditionTemplateList,saveRiskConditions } from '@/services/ant-design-pro/risk';

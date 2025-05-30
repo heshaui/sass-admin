@@ -25,7 +25,7 @@ import merchantSystem from './zh-CN/merchantSystem';
 import language from './zh-CN/language';  
 import operation from './zh-CN/operation';
 import permission from './zh-CN/permission';
-
+import riskControl from './zh-CN/riskControl';
 
 export default {
   'navBar.lang': '语言',
@@ -62,4 +62,5 @@ export default {
   ...language,
   ...operation,
   ...permission,
+  ...riskControl,
 };
