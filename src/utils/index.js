@@ -1,5 +1,5 @@
 import * as Icons from '@ant-design/icons';
-
+import { formatMessage } from '@umijs/max';
 const iconMapping = {
   crown: Icons.CrownOutlined,
   home: Icons.HomeOutlined,
@@ -58,12 +58,12 @@ export const generateMenuTree = (menuList) => {
 
 
   // ✅ 将后端返回的权限列表转换成 `antd` 的 `Tree` 组件可识别的格式
-  export const generateTreeData = (permissions) => {
+  export const generateTreeData = (permissions, intl) => {
     const map = new Map();
     const tree = [];
-  
+  console.log("permissions", permissions);
     permissions.forEach((perm) => {
-      map.set(perm.id, { ...perm, key: perm.id, title: perm.title, children: [] });
+      map.set(perm.id, { ...perm, key: perm.id, title: intl ? intl.formatMessage({ id: `permission.${perm.titleKey}` }) : perm.titleKey, children: [] });
     });
   
     permissions.forEach((perm) => {
@@ -78,13 +78,13 @@ export const generateMenuTree = (menuList) => {
   };
 
 
-  export const merchantTreeData = (permissions) => {
+  export const merchantTreeData = (permissions, intl) => {
     console.log("permissions", permissions);
     const map = new Map();
     const tree = [];
   
     permissions.forEach((perm) => {
-      map.set(perm.authorityId, { ...perm, key: perm.authorityId, title: perm.title, children: [] });
+      map.set(perm.authorityId, { ...perm, key: perm.authorityId, title: intl ? intl.formatMessage({ id: `permission.${perm.titleKey}` }) : perm.titleKey, children: [] });
     });
   
     permissions.forEach((perm) => {

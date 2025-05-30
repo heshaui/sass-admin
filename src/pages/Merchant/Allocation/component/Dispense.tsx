@@ -65,7 +65,7 @@ const Dispense: React.FC<RoleModalProps> = ({
   // ✅ 加载树形数据
   useEffect(() => {
     if (allPermissions.length) {
-      setTreeData(generateTreeData(allPermissions)); // 生成树结构
+      setTreeData(generateTreeData(allPermissions, intl)); // 生成树结构
     }
   }, [allPermissions]);
 

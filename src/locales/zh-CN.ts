@@ -24,6 +24,8 @@ import webConfig from './zh-CN/webConfig';
 import merchantSystem from './zh-CN/merchantSystem';
 import language from './zh-CN/language';  
 import operation from './zh-CN/operation';
+import permission from './zh-CN/permission';
+
 
 export default {
   'navBar.lang': '语言',
@@ -59,4 +61,5 @@ export default {
   ...merchantSystem,
   ...language,
   ...operation,
+  ...permission,
 };

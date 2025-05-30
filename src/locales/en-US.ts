@@ -24,6 +24,7 @@ import language from './en-US/language';
 import operation from './en-US/operation';
 import riskControl from './en-US/riskControl';
 import identityVerification from './en-US/IdentityVerification';  
+import permission from './en-US/permission';  
 
 export default {
   'navBar.lang': 'Languages',
@@ -59,4 +60,5 @@ export default {
   ...operation,
   ...riskControl,
   ...identityVerification,
+  ...permission,
 };

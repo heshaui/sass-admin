@@ -244,7 +244,7 @@ export default [
     routes: [
       {
         path: '/merchantSystem/UserAdmin',
-        name: 'userAdmin',
+        name: 'userAdmins',
         component: './MerchantSystem/UserAdmin',
       },
       {
