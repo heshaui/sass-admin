@@ -85,21 +85,21 @@ const RiskControlSuggestions: React.FC = () => {
 
   const handleSave = async (values: any) => {
     let data;
-    if (sugEdit) {
+    if (sugEdit.length > 2) {
       data = {
         riskLevels: [
           {
-            id: sugEdit[0].id,
+            id: sugEdit[0]?.id,
             riskLevel: values.riskLevel1,
             actionTipsCode: values.suggestion1
           },
           {
-            id: sugEdit[1].id,
+            id: sugEdit[1]?.id,
             riskLevel: values.riskLevel2,
             actionTipsCode: values.suggestion2
           },
           {
-            id: sugEdit[2].id,
+            id: sugEdit[2]?.id,
             riskLevel: values.riskLevel3,
             actionTipsCode: values.suggestion3
           }
