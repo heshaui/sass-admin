@@ -2,10 +2,12 @@ import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space,message } from 'antd';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
+import { useIntl } from 'umi';
 import { getTenantAuthorityList} from '@/services/ant-design-pro/merchantSystem';
 import PermissionModal from './component/PermissionModal'; // 引入PermissionModal
 
 const PermissionAdmin: React.FC = () => {
+  const intl = useIntl();
   // 表格数据状态
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -16,81 +18,83 @@ const PermissionAdmin: React.FC = () => {
   // 表格列配置
   const columns = [
     {
-      title: 'ID',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.id' }),
       dataIndex: 'id',
       key: 'id',
        search: false,
     },
     {
-      title: '描述',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.description' }),
       dataIndex: 'description',
       key: 'description',
       search: false,
     },
     {
-      title: '菜单权限',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.type' }),
       dataIndex: 'type',
       key: 'type',
       search: false,
     },
     {
-      title: '操作权限',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.optionType' }),
       dataIndex: 'optionType',
       key: 'optionType',
       search: false,
     },
     {
-      title: '中文标题',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.title' }),
       dataIndex: 'title',
       key: 'title',
     },
     {
-      title: '名称',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.name' }),
       dataIndex: 'name',
       key: 'name',
       search: false,
     },
     {
-      title: '父级ID',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.parentId' }),
       dataIndex: 'parentId',
       key: 'parentId',
       search: false,
     },
     {
-      title: '排序',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.sort' }),
       dataIndex: 'sort',
       key: 'sort',
       search: false,
     },
     {
-      title: '标题',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.title' }),
       dataIndex: 'title',
       key: 'title',
       search: false,
     },
     {
-      title: '页面路径',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.path' }),
       dataIndex: 'path',
       key: 'path',
       search: false,
     },
     {
-      title: '组件路径',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.component' }),
       dataIndex: 'component',
       key: 'component',
       search: false,
     },
     {
-      title: '系统',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.systemType' }),
       dataIndex: 'systemType',
       key: 'systemType',
       search: false,
       render: (text) => {
-        return text === '1' ? '总后台' : text === '2' ? '商户后台' : '通用';
+        return text === '1' ? intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.admin' }) : 
+               text === '2' ? intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.merchant' }) : 
+               intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.common' });
       },
     },
     {
-      title: 'icon',
+      title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.icon' }),
       dataIndex: 'icon',
       key: 'icon',
       search: false,
@@ -124,14 +128,14 @@ const PermissionAdmin: React.FC = () => {
         if (editingRecord) {
           // 编辑
           await updateTenantById({ ...editingRecord, ...values });
-          message.success('编辑成功');
+          message.success(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.edit.success' }));
         } else {
           // 新建
        const res=  await saveTenantAuthority(values);
        if(res.code==='0'){
-        message.success('新建成功');
+        message.success(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.create.success' }));
        }else{
-        message.error('新建失败');
+        message.error(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.create.failed' }));
        }
          
         }
@@ -139,24 +143,24 @@ const PermissionAdmin: React.FC = () => {
         setEditingRecord(null);
         getAuthorityList();
       } catch (error) {
-        message.error('操作失败');
+        message.error(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.operation.failed' }));
       }
     };
   
     // 编辑
-    const handleEdit = (record) => {
+    const handleEdit = (record: any) => {
       setEditingRecord(record);
       setModalVisible(true);
     };
   
     // 删除
-    const handleDelete = async (id) => {
+    const handleDelete = async (id: string | number) => {
       try {
         await deleteTenantById(id);
-        message.success('删除成功');
+        message.success(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.delete.success' }));
         getAuthorityList();
       } catch (error) {
-        message.error('删除失败');
+        message.error(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.delete.failed' }));
       }
     };
 

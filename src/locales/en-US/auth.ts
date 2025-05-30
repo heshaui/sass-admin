@@ -76,4 +76,129 @@ export default {
   'userAdmin.messages.resetGoogleError': 'Reset Google failed',
   'userAdmin.messages.bindGoogleSuccess': 'Bind Google successfully',
   'userAdmin.messages.bindGoogleError': 'Bind Google failed',
+  'userAdmin.actions.create': 'Create',
+  'userAdmin.modal.resetPasswordTitle': 'Confirm Password Reset',
+
+    // Permission Admin Translations
+    'permissionAdmin.table.id': 'ID',
+    'permissionAdmin.table.description': 'Description',
+    'permissionAdmin.table.type': 'Menu Permission',
+    'permissionAdmin.table.optionType': 'Operation Permission',
+    'permissionAdmin.table.title': 'Chinese Title',
+    'permissionAdmin.table.name': 'Name',
+    'permissionAdmin.table.parentId': 'Parent ID',
+    'permissionAdmin.table.sort': 'Sort',
+    'permissionAdmin.table.path': 'Path',
+    'permissionAdmin.table.component': 'Component',
+    'permissionAdmin.table.icon': 'Icon',
+    'permissionAdmin.table.systemType': 'System',
+    'permissionAdmin.table.systemType.admin': 'Admin',
+    'permissionAdmin.table.systemType.merchant': 'Merchant',
+    'permissionAdmin.table.systemType.common': 'Common',
+    'permissionAdmin.table.actions': 'Options',
+    'permissionAdmin.table.actions.edit': 'Edit',
+    'permissionAdmin.table.actions.delete': 'Delete',
+    'permissionAdmin.actions.create': 'Create',
+    'permissionAdmin.messages.editSuccess': 'Edit successfully',
+    'permissionAdmin.messages.createSuccess': 'Create successfully',
+    'permissionAdmin.messages.createError': 'Create failed',
+    'permissionAdmin.messages.deleteSuccess': 'Delete successfully',
+    'permissionAdmin.messages.deleteError': 'Delete failed',
+    'permissionAdmin.messages.operationError': 'Operation failed',
+
+
+      // Permission Modal Translations
+  'permissionModal.title.edit': 'Edit Permission',
+  'permissionModal.title.create': 'Create Permission',
+  'permissionModal.form.systemType': 'System',
+  'permissionModal.form.systemType.admin': 'Admin',
+  'permissionModal.form.systemType.merchant': 'Merchant',
+  'permissionModal.form.systemType.common': 'Common',
+  'permissionModal.form.title': 'Chinese Title',
+  'permissionModal.form.titleKey': 'language',
+  'permissionModal.form.name': 'Name',
+  'permissionModal.form.type': 'Menu Permission',
+  'permissionModal.form.optionType': 'Operation Permission',
+  'permissionModal.form.path': 'Page Path',
+  'permissionModal.form.component': 'Frontend Path',
+  'permissionModal.form.description': 'Description',
+  'permissionModal.form.parentId': 'Parent ID',
+  'permissionModal.form.sort': 'Sort',
+  'permissionModal.form.icon': 'Icon',
+  'permissionModal.form.validation.required': 'Please enter {field}',
+  'permissionModal.form.validation.select': 'Please select {field}',
+
+
+    
+  // UserModal Translations
+  'userModal.title.edit': 'Edit User',
+  'userModal.title.create': 'Create User',
+  'userModal.form.nickname': 'Nickname',
+  'userModal.form.nickname.required': 'Please enter nickname',
+  'userModal.form.nickname.maxLength': 'Nickname must be at most 20 characters',
+  'userModal.form.phone': 'Phone',
+  'userModal.form.phone.maxLength': 'Phone must be at most 15 characters',
+  'userModal.form.email': 'Email',
+  'userModal.form.email.required': 'Please enter email',
+  'userModal.form.email.format': 'Please enter a valid email format',
+  'userModal.form.role': 'Role',
+  'userModal.form.role.required': 'Please select role',
+  'userModal.form.role.atLeastOne': 'Please select at least one role',
+  'userModal.form.role.placeholder': 'Please select role',
+  'userModal.form.status': 'Status',
+  'userModal.form.status.required': 'Please select user status',
+  'userModal.form.status.normal': 'Normal',
+  'userModal.form.status.disabled': 'Disabled',
+  'userModal.messages.fillRequired': 'Please fill all required fields',
+  'userModal.messages.getRoleListError': 'Failed to get role list',
+
+
+    // UserActionDropdown Translations
+    'userActionDropdown.actions': 'Actions',
+    'userActionDropdown.actions.edit': 'Edit',
+    'userActionDropdown.actions.resetPassword': 'Reset Password',
+    'userActionDropdown.actions.resetGoogle': 'Reset Google',
+    'userActionDropdown.actions.disable': 'Disable',
+    'userActionDropdown.actions.delete': 'Delete',
+
+
+      // ResetPasswordModal Translations
+  'resetPasswordModal.title': 'Reset Password',
+  'resetPasswordModal.form.newPassword': 'New Password',
+  'resetPasswordModal.form.newPassword.required': 'Please enter new password',
+  'resetPasswordModal.validation.failed': 'Please fill new password',
+  
+  // ResetGoogleModal Translations
+  'resetGoogleModal.title': 'Reset Google',
+  'resetGoogleModal.confirmation': 'Confirm to reset this user\'s Google authentication?',
+  
+  // BindGoogleModal Translations
+  'bindGoogleModal.title': 'Bind Google',
+  'bindGoogleModal.button.cancel': 'Cancel',
+  'bindGoogleModal.button.confirm': 'Confirm Binding',
+  'bindGoogleModal.text.enterKey': 'Please manually enter the key',
+  'bindGoogleModal.text.key': 'Key: ',
+  'bindGoogleModal.text.fetchFailed': 'Failed to get Google verification information, please try again',
+  'bindGoogleModal.form.googleCode': 'Google Verification Code',
+  'bindGoogleModal.form.googleCode.required': 'Please enter Google verification code',
+  'bindGoogleModal.form.googleCode.placeholder': 'Please enter the 6-digit verification code from the Google verification app',
+  'bindGoogleModal.message.fetchFailed': 'Failed to get Google verification code',
+  'bindGoogleModal.message.fetchFailedDetail': 'Failed to get Google verification code:',
+  'bindGoogleModal.image.qrcode': 'Google Verification QR Code',
+
+
+    
+    // Role Modal Translations
+    'roleModal.title.edit': 'Edit Role',
+    'roleModal.title.create': 'Create Role',
+    'roleModal.form.roleName': 'Role Name',
+    'roleModal.form.roleName.required': 'Please enter role name',
+    'roleModal.form.description': 'Description',
+    'roleModal.form.description.required': 'Please enter role description',
+    'roleModal.form.status': 'Status',
+    'roleModal.form.status.required': 'Please select role status',
+    'roleModal.form.status.placeholder': 'Please select status',
+    'roleModal.form.status.enabled': 'Enabled',
+    'roleModal.form.status.disabled': 'Disabled',
+    'roleModal.validation.fillRequired': 'Please fill all required fields'
 };

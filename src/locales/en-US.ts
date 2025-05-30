@@ -23,6 +23,7 @@ import merchantSystem from './en-US/merchantSystem';
 import language from './en-US/language';
 import operation from './en-US/operation';
 import riskControl from './en-US/riskControl';
+import identityVerification from './en-US/IdentityVerification';  
 
 export default {
   'navBar.lang': 'Languages',
@@ -57,4 +58,5 @@ export default {
   ...language,
   ...operation,
   ...riskControl,
+  ...identityVerification,
 };

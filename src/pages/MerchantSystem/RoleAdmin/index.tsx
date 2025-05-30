@@ -5,24 +5,25 @@ import { getTenantRoleList,saveTenantRole,updateTenantRoleById,getTenantAuthorit
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { useIntl } from 'umi';
 import AddCategoryModal from './component/AddCategoryModal'; // 模态框组件
 import Dispense from './component/Dispense'; // 权限分配组件
 
 // **表格列定义**
-const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: any) => void) => [
-  { title: 'ID', dataIndex: 'roleId', key: 'roleId' },
-  { title: '分类名称', dataIndex: 'roleName', key: 'roleName' },
-  { title: '分类描述', dataIndex: 'describeText', key: 'describeText' },
+const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: any) => void, intl: any) => [
+  { title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.id' }), dataIndex: 'roleId', key: 'roleId' },
+  { title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.roleName' }), dataIndex: 'roleName', key: 'roleName' },
+  { title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.describeText' }), dataIndex: 'describeText', key: 'describeText' },
   {
-    title: '操作',
+    title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.action' }),
     key: 'action',
     render: (_, record: any) => (
       <Space>
         <Button type="link" onClick={() => handleEdit(record)}>
-          修改
+          {intl.formatMessage({ id: 'merchantSystem.roleAdmin.button.edit' })}
         </Button>
         <Button type="primary" onClick={() => handleDispense(record)}>
-          权限分配
+          {intl.formatMessage({ id: 'merchantSystem.roleAdmin.button.assignPermission' })}
         </Button>
       </Space>
     ),
@@ -30,6 +31,7 @@ const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: 
 ];
 
 const Allocation: React.FC = () => {
+  const intl = useIntl();
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
@@ -91,7 +93,7 @@ const Allocation: React.FC = () => {
         // 调用更新 API
         let resp = await updateTenantRoleById({ roleId: editingRecord.roleId, ...formData });
         if (resp.code === '0') {
-          message.success('修改成功');
+          message.success(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.edit.success' }));
         } else {
           message.error(resp.message);
         }
@@ -99,7 +101,7 @@ const Allocation: React.FC = () => {
         // 调用新增 API
         let res = await saveTenantRole(formData);
         if (res.code === '0'){
-          message.success('新增成功');
+          message.success(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.add.success' }));
         } else {
           message.error(res.message);
         }
@@ -108,7 +110,7 @@ const Allocation: React.FC = () => {
       fetchRoleList(); // 重新加载数据
       handleCancel();
     } catch (error) {
-      message.error('操作失败');
+      message.error(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.operation.failed' }));
     }
   };
 
@@ -148,7 +150,7 @@ const Allocation: React.FC = () => {
       );
 
       if (newPermissions.length === 0 && removedPermissions.length === 0) {
-        message.info("没有新的权限需要分配或移除");
+        message.info(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.noPermissionChange' }));
         setDisVisible(false);
         return;
       }
@@ -163,7 +165,7 @@ const Allocation: React.FC = () => {
       if (newPermissions.length > 0) {
         const res = await saveTenantPermissions(data);
         if (res.code !== '0') {
-          message.error('权限分配失败');
+          message.error(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.assignPermission.failed' }));
           return;
         }
       }
@@ -173,16 +175,16 @@ const Allocation: React.FC = () => {
         const allID = roleId.filter(item => removedPermissions.includes(item.permissionsId));
         const deleteRes = await deleteTenantPermissionsByIds(allID.map(item => item.id));
         if (deleteRes.code !== '0') {
-          message.error('权限移除失败');
+          message.error(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.removePermission.failed' }));
           return;
         }
       }
 
-      message.success('权限更新成功');
+      message.success(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.updatePermission.success' }));
       setDisVisible(false);
     } catch (error) {
       console.log(error)
-      message.error('权限分配请求失败');
+      message.error(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.assignPermission.requestFailed' }));
     }
   };
 
@@ -195,10 +197,10 @@ const Allocation: React.FC = () => {
         loading={loading}
         toolBarRender={() => [
           <Button type="primary" key="add" onClick={handleAdd}>
-            添加
+            {intl.formatMessage({ id: 'merchantSystem.roleAdmin.button.add' })}
           </Button>,
         ]}
-        columns={getColumns(handleEdit, handleDispense)}
+        columns={getColumns(handleEdit, handleDispense, intl)}
         dataSource={dataSource}
         pagination={false}
       />

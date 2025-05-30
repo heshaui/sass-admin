@@ -120,10 +120,10 @@ const Rate: React.FC = () => {
       title: intl.formatMessage({ id: 'rate.table.show' }),
       dataIndex: 'status',
       key: 'status',
-      renderText: (text: number) => text === 1 ? '是' : '否',
+      renderText: (text: number) => text === 1 ? intl.formatMessage({ id: 'merchant.status.normal' }) : intl.formatMessage({ id: 'merchant.status.banned' }),
       valueEnum: {
-            1: { text: '是', status: 'Success' },
-            0: { text: '否', status: 'Default' },
+            1: { text: intl.formatMessage({ id: 'merchant.status.normal' }), status: 'Success' },
+            0: { text: intl.formatMessage({ id: 'merchant.status.banned' }), status: 'Default' },
           },
     }] : []),
 
@@ -132,8 +132,8 @@ const Rate: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       valueEnum: {
-        1: { text: '是', status: 'Success' },
-        0: { text: '否', status: 'Default' },
+        1: { text: intl.formatMessage({ id: 'merchant.status.normal' }), status: 'Success' },
+        0: { text: intl.formatMessage({ id: 'merchant.status.banned' }), status: 'Default' },
       },
       render: (_: any, record: any) => [
         <Switch key="switch" checked={record.status === 1} onChange={(checked: boolean) => merchantUpdateRate(record.id, checked ? 1 : 0)} />

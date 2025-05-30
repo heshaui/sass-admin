@@ -20,6 +20,26 @@ export default {
   'merchantSystem.userModal.form.status.required': '请选择用户状态',
   'merchantSystem.userModal.form.status.normal': '正常',
   'merchantSystem.userModal.form.status.disabled': '禁用',
+  
+  // PermissionAdmin form labels
+  'merchantSystem.permissionModal.form.title': '中文标题',
+  'merchantSystem.permissionModal.form.title.required': '请输入名称',
+  'merchantSystem.permissionModal.form.titleKey': '多语言',
+  'merchantSystem.permissionModal.form.name': '名称',
+  'merchantSystem.permissionModal.form.type': '菜单权限',
+  'merchantSystem.permissionModal.form.optionType': '操作权限',
+  'merchantSystem.permissionModal.form.path': '页面路径',
+  'merchantSystem.permissionModal.form.path.required': '请输入页面路径',
+  'merchantSystem.permissionModal.form.component': '前端路径',
+  'merchantSystem.permissionModal.form.component.required': '请输入前端路径',
+  'merchantSystem.permissionModal.form.description': '描述',
+  'merchantSystem.permissionModal.form.description.required': '请输入描述',
+  'merchantSystem.permissionModal.form.parentId': '父级ID',
+  'merchantSystem.permissionModal.form.parentId.required': '请输入父级ID',
+  'merchantSystem.permissionModal.form.sort': '排序',
+  'merchantSystem.permissionModal.form.sort.required': '请输入排序',
+  'merchantSystem.permissionModal.form.icon': 'icon',
+  'merchantSystem.permissionModal.form.icon.required': '请输入icon',
 
   // Table columns
   'merchantSystem.userAdmin.column.id': '管理员ID',
@@ -31,6 +51,29 @@ export default {
   'merchantSystem.userAdmin.column.2fa': '2FA',
   'merchantSystem.userAdmin.column.status': '状态',
   'merchantSystem.userAdmin.column.operations': '操作',
+  
+  // PermissionAdmin columns
+  'merchantSystem.permissionAdmin.column.id': 'ID',
+  'merchantSystem.permissionAdmin.column.description': '描述',
+  'merchantSystem.permissionAdmin.column.type': '菜单权限',
+  'merchantSystem.permissionAdmin.column.optionType': '操作权限',
+  'merchantSystem.permissionAdmin.column.title': '中文标题',
+  'merchantSystem.permissionAdmin.column.name': '名称',
+  'merchantSystem.permissionAdmin.column.parentId': '父级ID',
+  'merchantSystem.permissionAdmin.column.sort': '排序',
+  'merchantSystem.permissionAdmin.column.path': '页面路径',
+  'merchantSystem.permissionAdmin.column.component': '组件路径',
+  'merchantSystem.permissionAdmin.column.systemType': '系统',
+  'merchantSystem.permissionAdmin.column.icon': 'icon',
+  'merchantSystem.permissionAdmin.systemType.admin': '总后台',
+  'merchantSystem.permissionAdmin.systemType.merchant': '商户后台',
+  'merchantSystem.permissionAdmin.systemType.common': '通用',
+  
+  // RoleAdmin columns
+  'merchantSystem.roleAdmin.column.id': 'ID',
+  'merchantSystem.roleAdmin.column.roleName': '分类名称',
+  'merchantSystem.roleAdmin.column.describeText': '分类描述',
+  'merchantSystem.roleAdmin.column.action': '操作',
 
   // Status labels
   'merchantSystem.userAdmin.status.enabled': '已开启',
@@ -52,6 +95,13 @@ export default {
   'merchantSystem.userAdmin.button.delete': '删除',
   'merchantSystem.userAdmin.button.operations': '操作',
   'merchantSystem.userAdmin.button.create': '新建',
+  
+  // RoleAdmin buttons
+  'merchantSystem.roleAdmin.button.edit': '修改',
+  'merchantSystem.roleAdmin.button.assignPermission': '权限分配',
+  'merchantSystem.roleAdmin.button.add': '添加',
+  'merchantSystem.roleAdmin.button.cancel': '取消',
+  'merchantSystem.roleAdmin.button.submit': '提交',
 
   // Modal titles and content
   'merchantSystem.bindGoogleModal.title': '绑定谷歌验证',
@@ -62,6 +112,11 @@ export default {
   'merchantSystem.userModal.title.create': '新建用户',
   'merchantSystem.userAdmin.modal.resetPassword.title': '确认重置密码',
   'merchantSystem.userAdmin.modal.resetPassword.content': '您确定要重置该用户的密码吗？',
+  'merchantSystem.permissionModal.title.edit': '编辑权限',
+  'merchantSystem.permissionModal.title.create': '新建权限',
+  'merchantSystem.roleAdmin.modal.edit': '修改角色',
+  'merchantSystem.roleAdmin.modal.add': '添加角色',
+  'merchantSystem.roleAdmin.modal.assignPermission': '权限分配',
 
   // Messages
   'merchantSystem.bindGoogleModal.message.getGoogleCode.failed': '获取谷歌验证码失败',
@@ -89,5 +144,32 @@ export default {
   'merchantSystem.userAdmin.message.bindGoogle.success': '谷歌验证绑定成功',
   'merchantSystem.userAdmin.message.bindGoogle.failed': '谷歌验证绑定失败',
   'merchantSystem.userAdmin.message.bind.success': '绑定成功',
-  'merchantSystem.userAdmin.message.bindGoogle.error': '绑定谷歌验证失败:'
+  'merchantSystem.userAdmin.message.bindGoogle.error': '绑定谷歌验证失败:',
+  
+  // PermissionAdmin messages
+  'merchantSystem.permissionAdmin.message.edit.success': '编辑成功',
+  'merchantSystem.permissionAdmin.message.create.success': '新建成功',
+  'merchantSystem.permissionAdmin.message.create.failed': '新建失败',
+  'merchantSystem.permissionAdmin.message.operation.failed': '操作失败',
+  'merchantSystem.permissionAdmin.message.delete.success': '删除成功',
+  'merchantSystem.permissionAdmin.message.delete.failed': '删除失败',
+  
+  // RoleAdmin form labels
+  'merchantSystem.roleAdmin.form.roleName': '角色名称',
+  'merchantSystem.roleAdmin.form.roleName.required': '请输入角色名称',
+  'merchantSystem.roleAdmin.form.describeText': '角色描述',
+  'merchantSystem.roleAdmin.form.describeText.required': '请输入角色描述',
+  'merchantSystem.roleAdmin.form.placeholder.maxLength': '20字符',
+  'merchantSystem.roleAdmin.form.permissionList': '权限列表',
+  'merchantSystem.roleAdmin.form.fillRequired': '请填写所有必填项',
+  
+  // RoleAdmin messages
+  'merchantSystem.roleAdmin.message.edit.success': '修改成功',
+  'merchantSystem.roleAdmin.message.add.success': '新增成功',
+  'merchantSystem.roleAdmin.message.operation.failed': '操作失败',
+  'merchantSystem.roleAdmin.message.noPermissionChange': '没有新的权限需要分配或移除',
+  'merchantSystem.roleAdmin.message.assignPermission.failed': '权限分配失败',
+  'merchantSystem.roleAdmin.message.removePermission.failed': '权限移除失败',
+  'merchantSystem.roleAdmin.message.updatePermission.success': '权限更新成功',
+  'merchantSystem.roleAdmin.message.assignPermission.requestFailed': '权限分配请求失败',
 };

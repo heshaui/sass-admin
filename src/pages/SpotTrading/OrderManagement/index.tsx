@@ -378,7 +378,6 @@ const OrderManagement: React.FC = () => {
   return (
     <PageContainer>
       <ProTable<OrderItem>
-        headerTitle="订单列表"
         actionRef={actionRef}
         rowKey="orderId"
         expandable={{

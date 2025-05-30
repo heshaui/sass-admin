@@ -81,11 +81,11 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             setContents(newContents);
             setTitles(newTitles);
           } else {
-            message.error(intl.formatMessage({ id: 'announcement.form.validation.failed', defaultMessage: '获取公告详情失败' }));
+            message.error(intl.formatMessage({ id: 'announcement.form.validation.failed'}));
           }
         } catch (error) {
           console.error('获取公告详情出错:', error);
-          message.error(intl.formatMessage({ id: 'announcement.form.validation.failed', defaultMessage: '获取公告详情出错' }));
+          message.error(intl.formatMessage({ id: 'announcement.form.validation.failed' }));
         } finally {
           setLoading(false);
         }

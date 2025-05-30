@@ -149,7 +149,7 @@ const Root: React.FC = () => {
       search:false, 
     },
     {
-      title: "状态",
+      title: intl.formatMessage({ id: 'merchant.common.status' }),
       dataIndex: "status",
       search:false, 
       render:(_,record)=>{

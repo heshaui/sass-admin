@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Form, Input, Tree, Button } from "antd";
+import { useIntl } from 'umi';
 
 interface AddCategoryModalProps {
   visible: boolean;
@@ -10,6 +11,7 @@ interface AddCategoryModalProps {
 
 const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ visible, onCancel, onSubmit, editingRecord }) => {
   const [form] = Form.useForm();
+  const intl = useIntl();
 
 
  
@@ -35,33 +37,33 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ visible, onCancel, 
 
   return (
     <Modal
-      title={editingRecord ? "修改角色" : "添加角色"}
+      title={editingRecord ? intl.formatMessage({ id: 'merchantSystem.roleAdmin.modal.edit' }) : intl.formatMessage({ id: 'merchantSystem.roleAdmin.modal.add' })}
       open={visible}
       onCancel={onCancel}
       destroyOnClose
       footer={[
         <Button key="cancel" onClick={onCancel}>
-          取消
+          {intl.formatMessage({ id: 'merchantSystem.roleAdmin.button.cancel' })}
         </Button>,
         <Button key="submit" type="primary" onClick={handleOk}>
-          提交
+          {intl.formatMessage({ id: 'merchantSystem.roleAdmin.button.submit' })}
         </Button>,
       ]}
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label="角色名称"
+          label={intl.formatMessage({ id: 'merchantSystem.roleAdmin.form.roleName' })}
           name="roleName"
-          rules={[{ required: true, message: "请输入角色名称" }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'merchantSystem.roleAdmin.form.roleName.required' }) }]}
         >
-          <Input maxLength={20} placeholder="20字符" />
+          <Input maxLength={20} placeholder={intl.formatMessage({ id: 'merchantSystem.roleAdmin.form.placeholder.maxLength' })} />
         </Form.Item>
         <Form.Item
-          label="角色描述"
+          label={intl.formatMessage({ id: 'merchantSystem.roleAdmin.form.describeText' })}
           name="describeText"
-          rules={[{ required: true, message: "请输入角色描述" }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'merchantSystem.roleAdmin.form.describeText.required' }) }]}
         >
-          <Input maxLength={20} placeholder="20字符" />
+          <Input maxLength={20} placeholder={intl.formatMessage({ id: 'merchantSystem.roleAdmin.form.placeholder.maxLength' })} />
         </Form.Item>
       </Form>
     </Modal>

@@ -89,5 +89,73 @@ export default {
   'merchantSystem.userAdmin.message.bindGoogle.success': 'Google authentication bound successfully',
   'merchantSystem.userAdmin.message.bindGoogle.failed': 'Failed to bind Google authentication',
   'merchantSystem.userAdmin.message.bind.success': 'Binding successful',
-  'merchantSystem.userAdmin.message.bindGoogle.error': 'Failed to bind Google authentication:'
+  'merchantSystem.userAdmin.message.bindGoogle.error': 'Failed to bind Google authentication:',
+
+
+    // PermissionAdmin messages
+    'merchantSystem.permissionAdmin.message.edit.success': 'Edit successful',
+    'merchantSystem.permissionAdmin.message.create.success': 'Create successful',
+    'merchantSystem.permissionAdmin.message.create.failed': 'Create failed',
+    'merchantSystem.permissionAdmin.message.operation.failed': 'Operation failed',
+    'merchantSystem.permissionAdmin.message.delete.success': 'Delete successful',
+    'merchantSystem.permissionAdmin.message.delete.failed': 'Delete failed',
+    
+    // RoleAdmin form labels
+    'merchantSystem.roleAdmin.form.roleName': 'Role Name',
+    'merchantSystem.roleAdmin.form.roleName.required': 'Please enter role name',
+    'merchantSystem.roleAdmin.form.describeText': 'Role Description',
+    'merchantSystem.roleAdmin.form.describeText.required': 'Please enter role description',
+    'merchantSystem.roleAdmin.form.placeholder.maxLength': '20 characters',
+    'merchantSystem.roleAdmin.form.permissionList': 'Permission List',
+    'merchantSystem.roleAdmin.form.fillRequired': 'Please fill in all required fields',
+    
+    // RoleAdmin messages
+    'merchantSystem.roleAdmin.message.edit.success': 'Edit successful',
+    'merchantSystem.roleAdmin.message.add.success': 'Create successful',
+    'merchantSystem.roleAdmin.message.operation.failed': 'Operation failed',
+    'merchantSystem.roleAdmin.message.noPermissionChange': 'No new permissions need to be assigned or removed',
+    'merchantSystem.roleAdmin.message.assignPermission.failed': 'Permission assignment failed',
+    'merchantSystem.roleAdmin.message.removePermission.failed': 'Permission removal failed',
+    'merchantSystem.roleAdmin.message.updatePermission.success': 'Permission update successful',
+    'merchantSystem.roleAdmin.message.assignPermission.requestFailed': 'Permission assignment request failed',
+
+
+      // PermissionAdmin columns
+  'merchantSystem.permissionAdmin.column.id': 'ID',
+  'merchantSystem.permissionAdmin.column.description': 'Description',
+  'merchantSystem.permissionAdmin.column.type': 'Menu Permission',
+  'merchantSystem.permissionAdmin.column.optionType': 'Operation Permission',
+  'merchantSystem.permissionAdmin.column.title': 'Chinese Title',
+  'merchantSystem.permissionAdmin.column.name': 'Name',
+  'merchantSystem.permissionAdmin.column.parentId': 'Parent ID',
+  'merchantSystem.permissionAdmin.column.sort': 'Sort',
+  'merchantSystem.permissionAdmin.column.path': 'Page Path',
+  'merchantSystem.permissionAdmin.column.component': 'Component Path',
+  'merchantSystem.permissionAdmin.column.systemType': 'System',
+  'merchantSystem.permissionAdmin.column.icon': 'icon',
+  'merchantSystem.permissionAdmin.systemType.admin': 'Admin',
+  'merchantSystem.permissionAdmin.systemType.merchant': 'Merchant',
+  'merchantSystem.permissionAdmin.systemType.common': 'Common',
+
+
+    // RoleAdmin columns
+    'merchantSystem.roleAdmin.column.id': 'ID',
+    'merchantSystem.roleAdmin.column.roleName': 'Role Name',
+    'merchantSystem.roleAdmin.column.describeText': 'Role Description',
+    'merchantSystem.roleAdmin.column.action': 'Action',
+
+
+      // RoleAdmin buttons
+  'merchantSystem.roleAdmin.button.edit': 'Edit',
+  'merchantSystem.roleAdmin.button.assignPermission': 'Assign Permission',
+  'merchantSystem.roleAdmin.button.add': 'Add',
+  'merchantSystem.roleAdmin.button.cancel': 'Cancel',
+  'merchantSystem.roleAdmin.button.submit': 'Submit',
+
+   // Modal titles and content
+   'merchantSystem.permissionModal.title.edit': 'Edit Permission',
+   'merchantSystem.permissionModal.title.create': 'Create Permission',
+   'merchantSystem.roleAdmin.modal.edit': 'Edit Role',
+   'merchantSystem.roleAdmin.modal.add': 'Add Role',
+   'merchantSystem.roleAdmin.modal.assignPermission': 'Assign Permission',
 };
