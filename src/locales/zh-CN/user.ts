@@ -120,6 +120,14 @@ export default {
   'userDetail.button.bindGoogleAuth': '未绑定，点击前往绑定',
   
   // Messages
+  'userDetail.message.freezeLoginSuccess': '冻结登录操作成功',
+  'userDetail.message.unfreezeLoginSuccess': '解冻登录操作成功',
+  'userDetail.message.freezeLoginError': '冻结登录失败',
+  'userDetail.message.unfreezeLoginError': '解冻登录操作失败',
+  'userDetail.message.freezeTransactionSuccess': '冻结交易操作成功',
+  'userDetail.message.unfreezeTransactionSuccess': '解冻交易操作成功',
+  'userDetail.message.freezeTransactionError': '冻结交易失败',
+  'userDetail.message.unfreezeTransactionError': '解冻交易操作失败',
   'userDetail.message.freezeWithdrawalSuccess': '冻结提现操作成功',
   'userDetail.message.unfreezeWithdrawalSuccess': '解冻提现操作成功',
   'userDetail.message.freezeWithdrawalError': '冻结提现失败',
@@ -134,6 +142,7 @@ export default {
   'userDetail.message.updateEmailError': '邮箱更新失败',
   'userDetail.message.unbindGoogleAuthReason': '请输入解绑原因',
   'userDetail.message.unbindGoogleAuthSuccess': '解绑成功',
+  'userDetail.message.enterOperationReason': '请输入操作原因',
   
   // Transaction related
   'userTransaction.title': '交易流水',
@@ -160,7 +169,8 @@ export default {
   'userTransaction.error.fetchTransactions': '获取交易记录失败',
   'userTransaction.usdt': 'USDT',
 
-  
+  // Google Auth related
+  'assetAdjustment.googleCode.bindSuccess': '谷歌验证码绑定成功',
 
   // Log related
   'log.columns.interfacePath': '接口路径',
@@ -207,4 +217,6 @@ export default {
   'reconciliation.columns.leveragedBuying': '杠杆买入',
   'reconciliation.columns.withdrawalFee': '提现手续费',
   'reconciliation.columns.spotFee': '现货手续费',
+
+
 };

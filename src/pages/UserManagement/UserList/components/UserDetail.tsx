@@ -201,7 +201,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
     
     const res=await bindGoogleKey({ googleCode: code });
     if(res.code==='0'&&res.data){
-      message.success('绑定成功');
+      message.success(intl.formatMessage({ id: 'assetAdjustment.googleCode.bindSuccess' }));
        clearAllCookies();
             window.location.reload();
 
@@ -215,14 +215,14 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const handleLoginAction = async () => {
     try {
       if (!loginReason.trim()) {
-        message.error('请输入操作原因');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterOperationReason' }));
         return;
       }
       
       if (loginActionType === 'freeze') {
         const res= await freezeLogin({ userId: user.userId, remark: loginReason });
         if(res.code==='0'&&res.data){
-          message.success('冻结登录操作成功');
+          message.success(intl.formatMessage({ id: 'userDetail.message.freezeLoginSuccess' }));
           await getLog({current:1,pageSize:10})
 
         }else{
@@ -231,7 +231,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       } else {
         const res= await unfreezeLogin({ userId: user.userId, remark: loginReason });
         if(res.code==='0'&&res.data){
-          message.success('解冻登录操作成功');
+          message.success(intl.formatMessage({ id: 'userDetail.message.unfreezeLoginSuccess' }));
           await getLog({current:1,pageSize:10})
 
         }else{
@@ -240,8 +240,12 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       }
       setLoginModalVisible(false);
     } catch (error) {
-      console.error(`${loginActionType === 'freeze' ? '冻结' : '解冻'}登录失败`, error);
-      message.error(`${loginActionType === 'freeze' ? '冻结' : '解冻'}登录操作失败`);
+      console.error(loginActionType === 'freeze' ? 
+        intl.formatMessage({ id: 'userDetail.message.freezeLoginError' }) : 
+        intl.formatMessage({ id: 'userDetail.message.unfreezeLoginError' }), error);
+      message.error(loginActionType === 'freeze' ? 
+        intl.formatMessage({ id: 'userDetail.message.freezeLoginError' }) : 
+        intl.formatMessage({ id: 'userDetail.message.unfreezeLoginError' }));
     }
    await userDetailInfo();
   };
@@ -250,14 +254,14 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const handleTransactionAction = async () => {
     try {
       if (!transactionReason.trim()) {
-        message.error('请输入操作原因');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterOperationReason' }));
         return;
       }
       
       if (transactionActionType === 'freeze') {
         const res= await freezeTransaction({ userId: user.userId, remark: transactionReason });
         if(res.code==='0'){
-          message.success('冻结交易操作成功');
+          message.success(intl.formatMessage({ id: 'userDetail.message.freezeTransactionSuccess' }));
           await getLog({current:1,pageSize:10})
 
         }else{
@@ -266,7 +270,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       } else {
         const res= await unfreezeTransaction({ userId: user.userId, remark: transactionReason });
         if(res.code==='0'&&res.data){
-          message.success('解冻交易操作成功');
+          message.success(intl.formatMessage({ id: 'userDetail.message.unfreezeTransactionSuccess' }));
           await getLog({current:1,pageSize:10})
 
         }else{ 
@@ -275,8 +279,12 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
       }
       setTransactionModalVisible(false);
     } catch (error) {
-      console.error(`${transactionActionType === 'freeze' ? '冻结' : '解冻'}交易失败`, error);
-      message.error(`${transactionActionType === 'freeze' ? '冻结' : '解冻'}交易操作失败`);
+      console.error(transactionActionType === 'freeze' ? 
+        intl.formatMessage({ id: 'userDetail.message.freezeTransactionError' }) : 
+        intl.formatMessage({ id: 'userDetail.message.unfreezeTransactionError' }), error);
+      message.error(transactionActionType === 'freeze' ? 
+        intl.formatMessage({ id: 'userDetail.message.freezeTransactionError' }) : 
+        intl.formatMessage({ id: 'userDetail.message.unfreezeTransactionError' }));
     }
     await userDetailInfo();
   };
@@ -285,7 +293,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
   const handleWithdrawalAction = async () => {
     try {
       if (!withdrawalReason.trim()) {
-        message.error('请输入操作原因');
+        message.error(intl.formatMessage({ id: 'userDetail.message.enterOperationReason' }));
         return;
       }
       
