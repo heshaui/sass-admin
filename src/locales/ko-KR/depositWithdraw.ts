@@ -97,7 +97,7 @@ export default {
   'withdraw.status.rejected': '거부',
   'withdraw.status.cancelled': '취소',
   'withdraw.status.userCancelled': '사용자 취소',
-  'withdraw.status.unknown': '未知状态',
+  'withdraw.status.unknown': '알 수 없는 상태',
   
   // Action Buttons
   'withdraw.action.review': '검토',

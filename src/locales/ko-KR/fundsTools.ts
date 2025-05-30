@@ -1,106 +1,106 @@
 export default {
   // AssetAdjustment Page
-  'assetAdjustment.title': '资产调整',
-  'assetAdjustment.message.success': '资产调整操作已提交',
-  'assetAdjustment.button.operation': '增减操作',
+  'assetAdjustment.title': '자산 조정',
+  'assetAdjustment.message.success': '자산 조정 작업이 제출되었습니다',
+  'assetAdjustment.button.operation': '증감 작업',
   
   // Table Columns
-  'assetAdjustment.column.id': '编号',
-  'assetAdjustment.column.coinName': '币种',
-  'assetAdjustment.column.amount': '金额',
-  'assetAdjustment.column.description': '备注',
-  'assetAdjustment.column.operator': '操作人',
-  'assetAdjustment.column.createTime': '时间',
+  'assetAdjustment.column.id': 'ID',
+  'assetAdjustment.column.coinName': '코인 이름',
+  'assetAdjustment.column.amount': '금액',
+  'assetAdjustment.column.description': '비고',
+  'assetAdjustment.column.operator': '운영자',
+  'assetAdjustment.column.createTime': '시간',
   
   // AssetAdjustmentForm
-  'assetAdjustment.form.title': '增减代币',
-  'assetAdjustment.form.button.cancel': '取消',
-  'assetAdjustment.form.button.submit': '提交',
+  'assetAdjustment.form.title': '증감 작업',
+  'assetAdjustment.form.button.cancel': '취소',
+  'assetAdjustment.form.button.submit': '제출',
   
   // Form Fields
-  'assetAdjustment.form.label.account': '账户',
-  'assetAdjustment.form.label.direction': '方向',
-  'assetAdjustment.form.label.currency': '币种',
-  'assetAdjustment.form.label.amount': '金额',
-  'assetAdjustment.form.label.description': '备注',
-  'assetAdjustment.form.label.googleCode': '谷歌验证码',
+  'assetAdjustment.form.label.account': '계정',
+  'assetAdjustment.form.label.direction': '방향',
+  'assetAdjustment.form.label.currency': '코인 유형',
+  'assetAdjustment.form.label.amount': '금액',
+  'assetAdjustment.form.label.description': '메모',
+  'assetAdjustment.form.label.googleCode': '구글 인증코드',
   
   // Form Values
-  'assetAdjustment.form.direction.increase': '增币',
-  'assetAdjustment.form.direction.decrease': '减币',
+  'assetAdjustment.form.direction.increase': '코인 증가',
+  'assetAdjustment.form.direction.decrease': '코인 감소',
   
   // Form Placeholders
-  'assetAdjustment.form.placeholder.amount': '金额',
-  'assetAdjustment.form.placeholder.description': '原因',
-  'assetAdjustment.form.placeholder.googleCode': '请输入验证码',
+  'assetAdjustment.form.placeholder.amount': '금액',
+  'assetAdjustment.form.placeholder.description': '이유',
+  'assetAdjustment.form.placeholder.googleCode': '인증코드를 입력하세요',
   
   // Form Validation
-  'assetAdjustment.form.validation.amount': '请输入金额',
-  'assetAdjustment.form.validation.googleCode': '请输入谷歌验证码',
+  'assetAdjustment.form.validation.amount': '금액을 입력해주세요',
+  'assetAdjustment.form.validation.googleCode': '구글 인증코드를 입력해주세요',
   
   // Google Code
-  'assetAdjustment.googleCode.notBound': '未绑定，点击前往绑定',
-  'assetAdjustment.googleCode.bindSuccess': '绑定成功',
+  'assetAdjustment.googleCode.notBound': '바인딩되지 않음, 바인딩하러 가기',
+  'assetAdjustment.googleCode.bindSuccess': '바인딩 성공',
   
   // Account Info
-  'assetAdjustment.account.balance': '账户余额',
-  'assetAdjustment.account.totalIncrease': '累计增发金额',
+  'assetAdjustment.account.balance': '계정 잔액',
+  'assetAdjustment.account.totalIncrease': '누적 증가 금액',
   
   // Notes
-  'assetAdjustment.notes.title': '注意事项:',
-  'assetAdjustment.notes.item1': '增发资产建议谨慎操作，若资金流向用户，您需要承担对应损失；',
-  'assetAdjustment.notes.item2': '建议用于做市服务。',
+  'assetAdjustment.notes.title': '주의사항:',
+  'assetAdjustment.notes.item1': '자산 증가는 신중하게 작업하세요. 자금이 사용자에게 흐르면 해당 손실을 부담해야 합니다;',
+  'assetAdjustment.notes.item2': '마켓 메이킹 서비스에 사용하는 것을 권장합니다.',
   
   // TransferRecords Page
-  'transferRecords.title': '转账记录',
+  'transferRecords.title': '이체 기록',
   
   // TransferRecords Table Columns
-  'transferRecords.column.createTime': '时间',
-  'transferRecords.column.fromAccount': '转出账户',
-  'transferRecords.column.fromAccountType': '转出账户类型',
-  'transferRecords.column.toAccount': '转入账户',
-  'transferRecords.column.toAccountType': '转入账户类型',
-  'transferRecords.column.amount': '转账金额',
-  'transferRecords.column.description': '备注',
-  'transferRecords.column.operator': '操作人',
+  'transferRecords.column.createTime': '시간',
+  'transferRecords.column.fromAccount': '출금 계정',
+  'transferRecords.column.fromAccountType': '출금 계정 유형',
+  'transferRecords.column.toAccount': '입금 계정',
+  'transferRecords.column.toAccountType': '입금 계정 유형',
+  'transferRecords.column.amount': '이체 금액',
+  'transferRecords.column.description': '메모',
+  'transferRecords.column.operator': '운영자',
   
   // TransferTool Page
-  'transferTool.title': '用户间转账',
-  'transferTool.message.success': '转账成功',
+  'transferTool.title': '사용자 간 이체',
+  'transferTool.message.success': '이체 성공',
   
   // TransferTool Form Labels
-  'transferTool.form.label.fromAccount': '转出账户',
-  'transferTool.form.label.toAccount': '转入账户',
-  'transferTool.form.label.uid': 'uid',
-  'transferTool.form.label.currency': '币种',
-  'transferTool.form.label.amount': '转账金额',
-  'transferTool.form.label.googleCode': '谷歌验证码',
-  'transferTool.form.label.description': '备注',
-  'transferTool.form.label.available': '可用',
+  'transferTool.form.label.fromAccount': '출금 계정',
+  'transferTool.form.label.toAccount': '입금 계정',
+  'transferTool.form.label.uid': 'UID',
+  'transferTool.form.label.currency': '코인 유형',
+  'transferTool.form.label.amount': '이체 금액',
+  'transferTool.form.label.googleCode': '구글 인증코드',
+  'transferTool.form.label.description': '메모',
+  'transferTool.form.label.available': '사용 가능',
   
   // TransferTool Form Placeholders
-  'transferTool.form.placeholder.fromAccount': '请选择转出账户',
-  'transferTool.form.placeholder.toAccount': '请选择转入账户',
-  'transferTool.form.placeholder.uid': '请输入uid',
-  'transferTool.form.placeholder.currency': '请选择转账币种',
-  'transferTool.form.placeholder.amount': '请输入',
-  'transferTool.form.placeholder.googleCode': '请输入验证码',
-  'transferTool.form.placeholder.description': '请输入',
+  'transferTool.form.placeholder.fromAccount': '출금 계정을 선택하세요',
+  'transferTool.form.placeholder.toAccount': '입금 계정을 선택하세요',
+  'transferTool.form.placeholder.uid': 'UID를 입력하세요',
+  'transferTool.form.placeholder.currency': '이체할 코인 유형을 선택하세요',
+  'transferTool.form.placeholder.amount': '입력하세요',
+  'transferTool.form.placeholder.googleCode': '인증코드를 입력하세요',
+  'transferTool.form.placeholder.description': '입력하세요',
   
   // TransferTool Form Validation
-  'transferTool.form.validation.fromAccount': '请选择转出账户',
-  'transferTool.form.validation.toAccount': '请选择转入账户',
-  'transferTool.form.validation.fromUid': '请输入转出账户uid',
-  'transferTool.form.validation.toUid': '请输入转入账户uid',
-  'transferTool.form.validation.currency': '请选择币种',
-  'transferTool.form.validation.amount': '请输入转账金额',
-  'transferTool.form.validation.googleCode': '请输入谷歌验证码',
-  'transferTool.form.validation.description': '请输入备注',
+  'transferTool.form.validation.fromAccount': '출금 계정을 선택해주세요',
+  'transferTool.form.validation.toAccount': '입금 계정을 선택해주세요',
+  'transferTool.form.validation.fromUid': '출금 계정 UID를 입력해주세요',
+  'transferTool.form.validation.toUid': '입금 계정 UID를 입력해주세요',
+  'transferTool.form.validation.currency': '코인 유형을 선택해주세요',
+  'transferTool.form.validation.amount': '이체 금액을 입력해주세요',
+  'transferTool.form.validation.googleCode': '구글 인증코드를 입력해주세요',
+  'transferTool.form.validation.description': '메모를 입력해주세요',
   
   // TransferTool Form Buttons
-  'transferTool.form.button.cancel': '取消',
-  'transferTool.form.button.confirm': '确认',
+  'transferTool.form.button.cancel': '취소',
+  'transferTool.form.button.confirm': '확인',
   
   // TransferTool Account Types
-  'transferTool.account.user': '用户账户'
+  'transferTool.account.user': '사용자 계정'
 }
