@@ -293,4 +293,35 @@ export default {
   'announcement.form.language': '언어',
   'announcement.form.language.note': '*여러 언어 동시 편집을 지원합니다. 영어는 필수이며, 다른 언어는 구성 시 표시되고 구성하지 않으면 표시되지 않습니다',
   'announcement.form.title': '제목',
+
+
+    // Famous Quotes
+    'famousQuotes.title': '명언 리스트',
+    'famousQuotes.button.add': '추가',
+    'famousQuotes.column.id': 'ID',
+    'famousQuotes.column.text': '내용',
+    'famousQuotes.column.action': '작업',
+    'famousQuotes.action.edit': '편집',
+    'famousQuotes.action.delete': '삭제',
+    'famousQuotes.message.deleteConfirm': '삭제 확인',
+    'famousQuotes.message.deleteConfirmContent': '정말로 이 명언을 삭제하시겠습니까?',
+    'famousQuotes.message.deleteSuccess': '삭제 성공',
+    'famousQuotes.message.deleteFailed': '삭제 실패',
+    'famousQuotes.message.getListFailed': '명언 목록 가져오기 실패',
+    'famousQuotes.message.getDetailFailed': '명언 상세 가져오기 실패',
+    
+    // Famous Quotes Modal
+    'famousQuotes.modal.add': '명언 추가',
+    'famousQuotes.modal.edit': '명언 편집',
+    'famousQuotes.modal.form.language': '내용 언어',
+    'famousQuotes.modal.form.language.required': '언어를 선택해주세요',
+    'famousQuotes.modal.form.content': '내용',
+    'famousQuotes.modal.form.content.placeholder': '내용을 입력해주세요',
+    'famousQuotes.modal.form.englishRequired': '영문 내용은 필수입니다',
+    'famousQuotes.modal.message.addSuccess': '추가 성공',
+    'famousQuotes.modal.message.addFailed': '추가 실패',
+    'famousQuotes.modal.message.updateSuccess': '수정 성공',
+    'famousQuotes.modal.message.updateFailed': '수정 실패',
+
+  
 };

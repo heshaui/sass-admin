@@ -316,5 +316,34 @@ export default {
   'announcement.category.form.content.placeholder': '请输入内容',
   'announcement.category.form.content.required': '英文内容为必填项',
   'announcement.category.form.validation.english.required': '英文内容为必填项',
-  'announcement.category.form.validation.form.failed': '表单校验失败，请检查必填项'
+  'announcement.category.form.validation.form.failed': '表单校验失败，请检查必填项',
+
+
+    // Famous Quotes
+    'famousQuotes.title': '名言列表',
+    'famousQuotes.button.add': '添加',
+    'famousQuotes.column.id': 'ID',
+    'famousQuotes.column.text': '内容',
+    'famousQuotes.column.action': '操作',
+    'famousQuotes.action.edit': '编辑',
+    'famousQuotes.action.delete': '删除',
+    'famousQuotes.message.deleteConfirm': '确认删除',
+    'famousQuotes.message.deleteConfirmContent': '确定要删除这条名言吗？',
+    'famousQuotes.message.deleteSuccess': '删除成功',
+    'famousQuotes.message.deleteFailed': '删除失败',
+    'famousQuotes.message.getListFailed': '获取名言列表失败',
+    'famousQuotes.message.getDetailFailed': '获取名言详情失败',
+    
+    // Famous Quotes Modal
+    'famousQuotes.modal.add': '添加名言',
+    'famousQuotes.modal.edit': '编辑名言',
+    'famousQuotes.modal.form.language': '内容语言',
+    'famousQuotes.modal.form.language.required': '请选择语言',
+    'famousQuotes.modal.form.content': '内容',
+    'famousQuotes.modal.form.content.placeholder': '请输入内容',
+    'famousQuotes.modal.form.englishRequired': '英文内容是必填项',
+    'famousQuotes.modal.message.addSuccess': '添加成功',
+    'famousQuotes.modal.message.addFailed': '添加失败',
+    'famousQuotes.modal.message.updateSuccess': '更新成功',
+    'famousQuotes.modal.message.updateFailed': '更新失败',
 }
