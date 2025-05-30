@@ -65,7 +65,7 @@ const getPosterImageValue = () => {
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                     {intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language' })} <Select value={language} disabled={true} >
                          <Select.Option value="zh_CN">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.zhCN' })}</Select.Option>
-                        <Select.Option value="zh_TW">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.zhTW' })}</Select.Option>
+                        <Select.Option value="zh_HK">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.zhTW' })}</Select.Option>
                         <Select.Option value="en_US">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.enUS' })}</Select.Option>
                         <Select.Option value="ja_JP">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.jaJP' })}</Select.Option>
                         <Select.Option value="ko_KR">{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.language.koKR' })}</Select.Option>
