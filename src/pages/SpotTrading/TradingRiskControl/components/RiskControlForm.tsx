@@ -1,5 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import { Modal, Form, Input, Select, InputNumber, Button, Row, Col } from 'antd';
+import { useIntl } from '@umijs/max';
 interface RiskControlFormProps {
   visible: boolean;
   onCancel: () => void;
@@ -15,6 +16,7 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
   initialValues,
   loading,
 }) => {
+  const intl = useIntl();
   const [form] = Form.useForm();
   const [priceDeviationPercent, setPriceDeviationPercent] = useState<number>(0);
   const [priceDeviationMinutes, setPriceDeviationMinutes] = useState<number>(0);
@@ -27,7 +29,7 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
       if (initialValues) {
 
         console.log(initialValues, 'initialValues');
-        // 处理初始值格式转换
+        // Process initial value format conversion
         const formattedValues = { ...initialValues };
         if(initialValues.transactionPriceDeviation){
           let data=JSON.parse(initialValues.transactionPriceDeviation);
@@ -64,19 +66,19 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      // 格式化为后端需要的格式
+      // Format values for backend requirements
       const formattedValues = {
         ...values,
       };
       onSubmit(formattedValues);
     } catch (error) {
-      // 表单验证失败
+      // Form validation failed
     }
   };
 
   return (
     <Modal
-      title={'修改风控规则' }
+      title={intl.formatMessage({ id: 'tradingRiskControl.form.title' })}
       open={visible}
       onOk={handleSubmit}
       onCancel={onCancel}
@@ -84,10 +86,10 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
       maskClosable={false}
       footer={[
         <Button key="cancel" onClick={onCancel}>
-          取消
+          {intl.formatMessage({ id: 'tradingRiskControl.form.cancel' })}
         </Button>,
         <Button key="submit" type="primary" loading={loading} onClick={handleSubmit}>
-          提交
+          {intl.formatMessage({ id: 'tradingRiskControl.form.submit' })}
         </Button>,
       ]}
       width={600}
@@ -101,14 +103,14 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
       >
         <Form.Item
           name="symbol"
-          label="币对"
-          rules={[{ required: true, message: '请选择币对' }]}
+          label={intl.formatMessage({ id: 'tradingRiskControl.form.tradingPair' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'tradingRiskControl.form.tradingPairPlaceholder' }) }]}
         >
-         <Input placeholder="请输入币对" value={initialValues?.symbol} disabled={true} />
+         <Input placeholder={intl.formatMessage({ id: 'tradingRiskControl.form.tradingPairPlaceholder' })} value={initialValues?.symbol} disabled={true} />
         </Form.Item>
         
         <Form.Item
-          label={<span style={{ color: '#ff4d4f' }}>交易价格偏离</span>}
+          label={<span style={{ color: '#ff4d4f' }}>{intl.formatMessage({ id: 'tradingRiskControl.form.priceDeviation' })}</span>}
           required
         >
           <Row gutter={8} align="middle">
@@ -116,37 +118,37 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
               <Form.Item
                 name="priceDeviationPercent"
                 noStyle
-                rules={[{ required: true, message: '请输入数值' }]}
+                rules={[{ required: true, message: intl.formatMessage({ id: 'tradingRiskControl.form.enterValue' }) }]}
               >
                 <InputNumber min={0} max={100} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={2} style={{ textAlign: 'center' }}>
-              <span>%</span>
+              <span>{intl.formatMessage({ id: 'tradingRiskControl.form.percent' })}</span>
             </Col>
             <Col span={6}>
-              <span>报警间隔</span>
+              <span>{intl.formatMessage({ id: 'tradingRiskControl.form.alarmInterval' })}</span>
             </Col>
             <Col span={6}>
               <Form.Item
                 name="priceDeviationMinutes"
                 noStyle
-                rules={[{ required: true, message: '请输入时间' }]}
+                rules={[{ required: true, message: intl.formatMessage({ id: 'tradingRiskControl.form.enterTime' }) }]}
               >
                 <InputNumber min={1} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={4} style={{ textAlign: 'center' }}>
-              <span>分钟</span>
+              <span>{intl.formatMessage({ id: 'tradingRiskControl.form.minutes' })}</span>
             </Col>
           </Row>
           <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
-            任意一笔交易与前一笔交易价格偏离&gt;{priceDeviationPercent}%时报警，报警后{priceDeviationMinutes}分钟内不在发送
+            {intl.formatMessage({ id: 'tradingRiskControl.form.priceDeviationTip' }, { percent: priceDeviationPercent, minutes: priceDeviationMinutes })}
           </div>
         </Form.Item>
         
         <Form.Item
-          label={<span style={{ color: '#ff4d4f' }}>近30分钟内价格波动</span>}
+          label={<span style={{ color: '#ff4d4f' }}>{intl.formatMessage({ id: 'tradingRiskControl.form.priceFluctuation' })}</span>}
           required
         >
           <Row gutter={8} align="middle">
@@ -154,43 +156,43 @@ const RiskControlForm: React.FC<RiskControlFormProps> = ({
               <Form.Item
                 name="priceFluctuationPercent"
                 noStyle
-                rules={[{ required: true, message: '请输入数值' }]}
+                rules={[{ required: true, message: intl.formatMessage({ id: 'tradingRiskControl.form.enterValue' }) }]}
               >
                 <InputNumber min={0} max={100} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={2} style={{ textAlign: 'center' }}>
-              <span>%</span>
+              <span>{intl.formatMessage({ id: 'tradingRiskControl.form.percent' })}</span>
             </Col>
             <Col span={6}>
-              <span>报警间隔</span>
+              <span>{intl.formatMessage({ id: 'tradingRiskControl.form.alarmInterval' })}</span>
             </Col>
             <Col span={6}>
               <Form.Item
                 name="priceFluctuationMinutes"
                 noStyle
-                rules={[{ required: true, message: '请输入时间' }]}
+                rules={[{ required: true, message: intl.formatMessage({ id: 'tradingRiskControl.form.enterTime' }) }]}
               >
                 <InputNumber min={1} style={{ width: '100%' }} />
               </Form.Item>
             </Col>
             <Col span={4} style={{ textAlign: 'center' }}>
-              <span>分钟</span>
+              <span>{intl.formatMessage({ id: 'tradingRiskControl.form.minutes' })}</span>
             </Col>
           </Row>
           <div style={{ color: '#ff4d4f', fontSize: '12px', marginTop: '4px' }}>
-            币对近半小时内价格波动&gt;{priceFluctuationPercent}%时报警，报警后{priceFluctuationMinutes}分钟内不在发送
+            {intl.formatMessage({ id: 'tradingRiskControl.form.priceFluctuationTip' }, { percent: priceFluctuationPercent, minutes: priceFluctuationMinutes })}
           </div>
         </Form.Item>
         
         <Form.Item
           name="alarmNotifyEmail"
-          label={<span style={{ color: '#ff4d4f' }}> 报警通知</span>}
+          label={<span style={{ color: '#ff4d4f' }}> {intl.formatMessage({ id: 'tradingRiskControl.form.alarmNotification' })}</span>}
           rules={[
-            { required: true, message: '请输入报警通知邮箱' },
+            { required: true, message: intl.formatMessage({ id: 'tradingRiskControl.form.enterAlarmEmail' }) },
           ]}
         >
-          <Input placeholder="邮箱账号，以英文逗号隔开" />
+          <Input placeholder={intl.formatMessage({ id: 'tradingRiskControl.form.alarmNotificationPlaceholder' })} />
         </Form.Item>
       </Form>
     </Modal>
