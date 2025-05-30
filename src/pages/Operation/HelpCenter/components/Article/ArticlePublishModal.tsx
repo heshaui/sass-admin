@@ -40,7 +40,7 @@ const ArticlePublishModal: React.FC<ArticlePublishModalProps> = ({
     ko_KR: { form: {}, imgList: [], content: '', specContent: '' },
     en_US: { form: {}, imgList: [], content: '', specContent: '' },
     zh_CN: { form: {}, imgList: [], content: '', specContent: '' },
-    zh_TW: { form: {}, imgList: [], content: '', specContent: '' },
+    zh_HK: { form: {}, imgList: [], content: '', specContent: '' },
     ja_JP: { form: {}, imgList: [], content: '', specContent: '' },
   });
   
