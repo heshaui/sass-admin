@@ -3,6 +3,7 @@ export default {
   'userManagement.list.title': '用户列表',
   'userManagement.columns.userId': '用户ID',
   'userManagement.columns.tenantId': '商户id',
+  'userManagement.columns.tenantName': '商户名称',
   'userManagement.columns.account': '账号',
   'userManagement.columns.nickname': '昵称',
   'userManagement.columns.country': '国家',

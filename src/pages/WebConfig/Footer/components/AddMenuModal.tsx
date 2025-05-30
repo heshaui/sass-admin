@@ -35,12 +35,13 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
     fetchPcOptions();
     console.log("editingMenu", editingMenu);
     console.log("parentId", parentId);
-    form.setFieldsValue({
-      values: {
+    if (editingMenu || parentId) {
+      const formValues = {
         bottomName: parentId?.bottomName,
         menuName: editingMenu?.homeBottomTranslation?.bottomName,
         accessPath: editingMenu?.homeBottom?.accessPath,
-        accessType: editingMenu?.homeBottom?.accessType.toString(),
+        // Add null check for accessType to prevent toString() on null
+        accessType: editingMenu?.homeBottom?.accessType ? editingMenu.homeBottom.accessType.toString() : "1",
         show: editingMenu?.homeBottom?.show,
         orderIndex: editingMenu?.homeBottom?.orderIndex,
         parentId: editingMenu?.homeBottom?.parentId,
@@ -48,8 +49,10 @@ const AddMenuModal: React.FC<AddMenuModalProps> = ({ open, onCancel, onSubmit, p
         menuId: editingMenu?.homeBottomTranslation?.menuId,
         languageCode: editingMenu?.homeBottomTranslation?.languageCode,
         languageIcon: editingMenu?.homeBottomTranslation?.languageIcon,
-      }
-    });
+      };
+      
+      form.setFieldsValue({ values: formValues });
+    }
   }, [form, parentId, editingMenu]);
 
   const handleCancel = () => {
