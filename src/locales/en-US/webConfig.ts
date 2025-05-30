@@ -169,7 +169,7 @@ export default {
   'webConfig.webStyle.homeTemplate': 'Home Template',
   'webConfig.webStyle.template': 'Template',
   'webConfig.webStyle.inUse': 'In Use',
-  'webConfig.webStyle.backgroundSetting': 'Background Image Setting',
+  'webConfig.webStyle.backgroundSetting': 'Image Setting',
   'webConfig.webStyle.themeColor': 'Theme Color',
   'webConfig.webStyle.defaultThemeColor': '1. Default theme color: #FF5F1F',
   'webConfig.webStyle.selectThemeColor': '2. Click to select theme color',

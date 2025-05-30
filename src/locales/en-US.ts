@@ -25,6 +25,7 @@ import operation from './en-US/operation';
 import riskControl from './en-US/riskControl';
 import identityVerification from './en-US/IdentityVerification';  
 import permission from './en-US/permission';  
+import inviteFriends from './en-US/InviteFriends';
 
 export default {
   'navBar.lang': 'Languages',
@@ -61,4 +62,5 @@ export default {
   ...riskControl,
   ...identityVerification,
   ...permission,
+  ...inviteFriends,
 };
