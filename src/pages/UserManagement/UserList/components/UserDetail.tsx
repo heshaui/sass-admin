@@ -18,13 +18,14 @@ import UserTransaction from './UserTransaction';
 import Reconciliation from './Reconciliation';
 import Log from './log';
 import { clearAllCookies } from '@/utils';
-import { getTenantKeyParams } from '@/services/ant-design-pro/kv';
+import { getTenantKeyParams, getTenantAdminKeyParams } from '@/services/ant-design-pro/kv';
 
 const { Option } = Select;
 
 
 interface UserDetailProps {
   visible: boolean;
+  tenantId: string | number;
   userId: string | number;
   onClose: () => void;
 }
@@ -32,12 +33,12 @@ interface UserDetailProps {
 
 
 
-const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => {
+const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose, tenantId }) => {
   const intl = useIntl();
   if (!visible || !userId) return null;
   const { initialState,refresh } = useModel('@@initialState');
   const { currentUser } = initialState || {};
-
+   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
 
   // 模态框显示状态
   const [loginModalVisible, setLoginModalVisible] = useState(false);
@@ -75,10 +76,18 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose }) => 
 
 
   const getKvInfo=async ()=>{
-    const result = await getTenantKeyParams({ key: 'out_money' });
-    if(result.code==='0'){
-      setTime(result.data.keyValue);
+    if(isAdmin){
+      const result = await getTenantAdminKeyParams({ key: 'out_money' ,tenantId: tenantId});
+      if(result.code==='0' && result.data) {
+        setTime(result.data.keyValue);
+      }
+    }else{
+      const result = await getTenantKeyParams({ key: 'out_money' });
+      if(result.code==='0'){
+        setTime(result.data.keyValue);
+      }
     }
+   
 
   }
 

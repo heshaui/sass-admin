@@ -4,7 +4,6 @@ import { Tabs, Button, message } from "antd";
 import { useIntl } from 'umi';
 import AvatarUpload from '@/components/AvatarUpload';
 import { 
-  getTenantKvParams,
   updateValue,
   getTenantKeyParams,
   // updateTenantKv, 

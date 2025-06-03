@@ -9,6 +9,9 @@ const DEFAULT_LOGO = isAdmin ? '/index.png' : '';
  * @returns Promise with the logo URL
  */
 export const fetchLogoUrl = async (): Promise<string> => {
+  if(isAdmin){
+    return DEFAULT_LOGO
+  }
   try {
     const data = {
       key: 'logo'

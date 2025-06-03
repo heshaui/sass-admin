@@ -28,6 +28,7 @@ export async function getInitialState(): Promise<{
   
   // Fetch logo from API
   const logoUrl = await fetchLogoUrl();
+
   const settingsWithLogo = {
     ...defaultSettings,
     logo: logoUrl,

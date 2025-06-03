@@ -9,7 +9,7 @@ import ResetGoogleModal from './component/ResetGoogleModal';
 import BindGoogleModal from './component/BindGoogleModal'; // 引入绑定谷歌验证弹框
 import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
 import { useIntl } from 'umi';
-
+import { clearAllCookies } from '@/utils';
 
 
 
@@ -327,6 +327,8 @@ const handleResetGoogleAuth = async () => {
         message.success(intl.formatMessage({ id: 'userAdmin.messages.bindGoogleSuccess' }));
         setBindGoogleVisible(false);
         getUserList(); // 刷新列表
+        clearAllCookies();
+        window.location.reload();
       } else {
         message.error(res.msg || intl.formatMessage({ id: 'userAdmin.messages.bindGoogleError' }));
       }

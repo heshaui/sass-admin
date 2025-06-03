@@ -153,6 +153,7 @@ const UserManagement: React.FC = () => {
         <UserDetail 
           visible={showUserDetail} 
           userId={currentUser?.userId} 
+          tenantId={currentUser?.tenantId}
           onClose={() => setShowUserDetail(false)} 
         />
       </PageContainer>

@@ -106,7 +106,14 @@ export async function cancelKv(data: { id: string }) {
 
 
 export async function getTenantKeyParams(params: any) {
-  return request('/tenant/v1/tenantKeyParams?key='+params.key, {
+  return request( '/tenant/v1/tenantKeyParams?key='+params.key, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function getTenantAdminKeyParams(params: any) {
+  return request( '/tenant-admin/v1/keyValue/tenantKeyParams',{
     method: 'POST',
     data: params,
   });
