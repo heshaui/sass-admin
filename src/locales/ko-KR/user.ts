@@ -3,6 +3,7 @@ export default {
 'userManagement.list.title': '사용자 목록',
 'userManagement.columns.userId': '사용자 ID',
 'userManagement.columns.tenantId': '상점 ID',
+'userManagement.columns.tenantName': '상점 이름',
 'userManagement.columns.account': '계정',
 'userManagement.columns.nickname': '닉네임',
 'userManagement.columns.country': '국가',

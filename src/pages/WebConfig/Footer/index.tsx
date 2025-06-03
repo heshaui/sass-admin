@@ -204,7 +204,7 @@ const Footer: React.FC = () => {
 
       if(response.code==='0' && response.data&&response1.code==='0'&&response1.data){
         message.success(intl.formatMessage({ id: 'webConfig.footer.editSuccess' }));
-        
+        getMenu();
 
       }else{
         message.error(intl.formatMessage({ id: 'webConfig.footer.editFailed' }));

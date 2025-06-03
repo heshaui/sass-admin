@@ -10,7 +10,7 @@ export interface CurrencyIntroFormData {
   coinId?: number | string;
   intro_en_US?: string;
   intro_zh_CN?: string;
-  intro_zh_TW?: string;
+  intro_zh_HK?: string;
   intro_ja_JP?: string;
   intro_ko_KR?: string;
 }
@@ -34,7 +34,7 @@ const CurrencyIntroForm: React.FC<CurrencyIntroFormProps> = ({
   const [wordCount, setWordCount] = useState<Record<string, number>>({
     en_US: 0,
     zh_CN: 0,
-    zh_TW: 0,
+    zh_HK: 0,
     ja_JP: 0,
     ko_KR: 0,
   });
@@ -92,10 +92,10 @@ const getIntroductionVo = async (id:number)=>{
         });
       }
       
-      if (values.intro_zh_TW) {
+      if (values.intro_zh_HK) {
         introductionVoList.push({
-          languageCode: 'zh_TW',
-          introduction: values.intro_zh_TW
+          languageCode: 'zh_HK',
+          introduction: values.intro_zh_HK
         });
       }
       
@@ -165,14 +165,14 @@ const getIntroductionVo = async (id:number)=>{
       ),
     },
     {
-      key: 'zh_TW',
+      key: 'zh_HK',
       label: '繁體中文',
       children: (
-        <Form.Item name="intro_zh_TW" rules={[{ max: 1000, message: intl.formatMessage({ id: 'currency.intro.maxLength' }) }]}>
+        <Form.Item name="intro_zh_HK" rules={[{ max: 1000, message: intl.formatMessage({ id: 'currency.intro.maxLength' }) }]}>
           <Input.TextArea 
             rows={10} 
             placeholder={intl.formatMessage({ id: 'currency.intro.placeholder.zhTW' })} 
-            onChange={(e) => handleTextChange(e, 'zh_TW')}
+            onChange={(e) => handleTextChange(e, 'zh_HK')}
           />
         </Form.Item>
       ),

@@ -62,6 +62,11 @@ const UserManagement: React.FC = () => {
       search: false,
     },
     ...(!isAdmin ? [] : [{
+      title: intl.formatMessage({ id: 'userManagement.columns.tenantName' }),
+      dataIndex: 'tenantName',
+      key: 'tenantName',
+    }]),
+    ...(!isAdmin ? [] : [{
       title: intl.formatMessage({ id: 'userManagement.columns.tenantId' }),
       dataIndex: 'tenantId',
       key: 'tenantId',

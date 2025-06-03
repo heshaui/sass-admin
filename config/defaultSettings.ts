@@ -14,7 +14,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'IMBIT',
+  title: 'IMSaaS',
   pwa: true,
   logo: 'https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/05/21/19f97328-dada-444a-9f0c-5df7889328a3.png',
   iconfontUrl: '',

@@ -2,6 +2,7 @@ export default {
   'userManagement.title': 'User Management',
   'userManagement.list.title': 'User List',
   'userManagement.columns.userId': 'User ID',
+  'userManagement.columns.tenantName': 'Merchant Name',
   'userManagement.columns.tenantId': 'Tenant ID',
   'userManagement.columns.account': 'Account',
   'userManagement.columns.nickname': 'Nickname',

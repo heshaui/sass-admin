@@ -161,7 +161,7 @@ const Background: React.FC = () => {
             >
               <Radio.Button value="en_US">English</Radio.Button>
               <Radio.Button value="zh_CN">{intl.formatMessage({ id: 'webConfig.background.language.zhCN' })}</Radio.Button>
-              <Radio.Button value="zh_TW">{intl.formatMessage({ id: 'webConfig.background.language.zhTW' })}</Radio.Button>
+              <Radio.Button value="zh_HK">{intl.formatMessage({ id: 'webConfig.background.language.zhTW' })}</Radio.Button>
               <Radio.Button value="ja_JP">日本語</Radio.Button>
               <Radio.Button value="ko_KR">한국인</Radio.Button>
             </Radio.Group>
