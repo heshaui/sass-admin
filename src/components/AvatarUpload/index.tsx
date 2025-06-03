@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Upload, message, Image, Spin, Button } from "antd";
+import { Upload, message, Image, Button } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { ossImgFile } from "@/services/ant-design-pro/api";
 import { useIntl } from 'umi';
@@ -13,15 +13,13 @@ interface AvatarUploadProps {
 const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
   const intl = useIntl();
   const [imageUrl, setImageUrl] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   
   // 当外部value变化时更新内部状态
   useEffect(() => {
-    console.log('AvatarUpload value changed:', value);
     if (value) {
       setImageUrl(value);
-    }else{
+    } else {
       setImageUrl('');
     }
   }, [value]);
@@ -29,7 +27,6 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
   // 自定义文件上传方法
   const customUpload = async (options: any) => {
     const { file, onSuccess, onError } = options;
-    setLoading(true);
     
     try {
       const formData = new FormData();
@@ -50,26 +47,22 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
         onError(new Error('上传失败'));
       }
     } catch (error) {
-
       onError(error);
-    } finally {
-      setLoading(false);
     }
   };
 
   // 处理上传成功后的回调
   const handleChange = (info: any) => {
-    console.log('Upload status:', info.file.status);
     if (info.file.status === 'uploading') {
       return;
     }
     if (info.file.status === 'done') {
-      console.log('Upload success, new URL:', info.file.response?.data || '');
+      // 上传成功的处理已在customUpload中完成
     }
   };
 
   // 处理删除图片
-  const handleDelete = (e: React.MouseEvent) => {
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation(); // 阻止事件冒泡，避免触发Upload点击事件
     setImageUrl('');
     if (onChange) {
@@ -77,32 +70,47 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
     }
   };
 
-  console.log('Current imageUrl in render:', imageUrl);
+  // 处理预览点击事件
+  const handlePreview = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation(); // 阻止事件冒泡，避免触发Upload点击事件
+  };
+
+  // 渲染上传按钮
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>
+        {intl.formatMessage({ id: 'component.avatarUpload.upload', defaultMessage: '上传' })}
+      </div>
+    </div>
+  );
 
   return (
-    <Upload
-      name="file"
-      listType="picture-card"
-      className="avatar-uploader"
-      showUploadList={false}
-      customRequest={customUpload}
-      onChange={handleChange}
-    >
-      {loading ? (
-        <Spin />
-      ) : imageUrl ? (
+    <div className="avatar-upload-container" style={{ display: 'inline-block' }}>
+      {imageUrl ? (
         <div 
           className="avatar-wrapper" 
-          style={{ position: 'relative', width: '100%', height: '100%' }}
+          style={{ 
+            position: 'relative', 
+            width: '104px', 
+            height: '104px', 
+            overflow: 'hidden', 
+            border: '1px dashed #d9d9d9', 
+            borderRadius: '8px' 
+          }}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          <Image 
-            src={imageUrl} 
-            alt="avatar" 
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
-            preview={false}
-          />
+          <div onClick={handlePreview}>
+            <Image 
+              src={imageUrl} 
+              alt="avatar" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+              preview={{ 
+                src: imageUrl,
+              }}
+            />
+          </div>
           {isHovering && (
             <Button 
               type="primary" 
@@ -120,12 +128,18 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange }) => {
           )}
         </div>
       ) : (
-        <div>
-          <PlusOutlined />
-          <div style={{ marginTop: 8 }}>{intl.formatMessage({ id: 'component.avatarUpload.upload' })}</div>
-        </div>
+        <Upload
+          name="file"
+          listType="picture-card"
+          className="avatar-uploader"
+          showUploadList={false}
+          customRequest={customUpload}
+          onChange={handleChange}
+        >
+          {uploadButton}
+        </Upload>
       )}
-    </Upload>
+    </div>
   );
 };
 
