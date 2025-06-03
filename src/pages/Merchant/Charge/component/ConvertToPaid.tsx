@@ -77,6 +77,10 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
             format="YYYY-MM-DD HH:mm:ss" 
             placeholder={intl.formatMessage({ id: 'convertToPaid.form.placeholder' })} 
             style={{ width: "100%" }} 
+            disabledDate={(current) => {
+              // Can't select days before today
+              return current && current < dayjs().startOf('day');
+            }}
             onChange={(date) => {
               if (date) {
                 setSelectedTime(date.format("YYYY-MM-DD HH:mm:ss"));
