@@ -10,6 +10,7 @@ import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 import { generateMenuTree } from '@/utils/index';
+import { fetchLogoUrl } from '@/utils/logoUtils';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
 
@@ -24,6 +25,14 @@ export async function getInitialState(): Promise<{
 }> {
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
+  
+  // Fetch logo from API
+  const logoUrl = await fetchLogoUrl();
+  const settingsWithLogo = {
+    ...defaultSettings,
+    logo: logoUrl,
+  };
+  
   const fetchUserInfo = async () => {
     try {
       let msg: any;
@@ -59,12 +68,12 @@ export async function getInitialState(): Promise<{
     return {
       fetchUserInfo,
       currentUser,
-      settings: defaultSettings as Partial<LayoutSettings>,
+      settings: settingsWithLogo as Partial<LayoutSettings>,
     };
   }
   return {
     fetchUserInfo,
-    settings: defaultSettings as Partial<LayoutSettings>,
+    settings: settingsWithLogo as Partial<LayoutSettings>,
   };
 }
 

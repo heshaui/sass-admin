@@ -16,7 +16,7 @@ const Settings: ProLayoutProps & {
   colorWeak: false,
   title: 'IMSaaS',
   pwa: true,
-  logo: 'https://meta2025.oss-ap-northeast-2.aliyuncs.com/2025/05/21/19f97328-dada-444a-9f0c-5df7889328a3.png',
+  logo: '', // Logo will be set dynamically from API
   iconfontUrl: '',
   token: {
     // 参见ts声明，demo 见文档，通过token 修改样式
