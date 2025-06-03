@@ -1,7 +1,8 @@
 import { getTenantKeyParams } from '@/services/ant-design-pro/kv';
 
 // Default logo to use if API call fails
-const DEFAULT_LOGO = '';
+const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+const DEFAULT_LOGO = isAdmin ? '/index.png' : '';
 
 /**
  * Fetches the logo URL from the API

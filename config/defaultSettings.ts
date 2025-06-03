@@ -14,7 +14,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'IMSaaS',
+  title: 'IMBIT',
   pwa: true,
   logo: '', // Logo will be set dynamically from API
   iconfontUrl: '',
