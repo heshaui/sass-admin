@@ -158,7 +158,6 @@ const AuditList: React.FC = () => {
         0: intl.formatMessage({ id: 'auditList.status.rejected' }),
         1: intl.formatMessage({ id: 'auditList.status.approved' }),
         2: intl.formatMessage({ id: 'auditList.status.pending' }),
-        3: intl.formatMessage({ id: 'auditList.status.pending' })
       },
       renderText: (text: number) => {
         return text === 0 ? intl.formatMessage({ id: 'auditList.status.rejected' }) : 
