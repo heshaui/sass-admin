@@ -63,7 +63,7 @@ const WithdrawManage: React.FC = () => {
     let data={
       pageNo:params.current,
       pageSize:params.pageSize,
-      protocolId: params.protocolId,
+      protocolId: params.protocolName,
       addressTxId:params.addressTxId,
       coinId: params.coinName,
       startTime: params.dateTimeRange && params.dateTimeRange[0] ? params.dateTimeRange[0] : null,
@@ -106,15 +106,12 @@ const WithdrawManage: React.FC = () => {
     },
     { 
       title: intl.formatMessage({ id: 'withdraw.column.network' }), 
-      dataIndex: 'protocolId', 
-      key: 'protocolId',
+      dataIndex: 'protocolName', 
+      key: 'protocolName',
       valueEnum: protocolList.reduce((acc, item) => {
         acc[item.id] = { text: item.protocolName, value: item.id };
         return acc;
       }, {} as Record<number, { text: string; value: number }>),
-      render: (protocolId) => (
-        protocolList.find(item => item.id === protocolId)?.protocolName
-      ),
     },
     { 
       title: intl.formatMessage({ id: 'withdraw.column.amount' }), 
