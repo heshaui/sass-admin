@@ -67,7 +67,6 @@ const useStyles = createStyles(({ token }) => ({
     position: 'relative',
   },
   loginForm: {
-    width: '440px',
     padding: '40px',
     backgroundColor: '#fff',
     borderRadius: '8px',
