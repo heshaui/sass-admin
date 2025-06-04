@@ -83,13 +83,13 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   console.log('initialState', initialState);
   
   // Update title with tenantName if available
-  if (initialState?.currentUser?.tenantName && initialState.settings) {
-    if(isAdmin) {
+  
+    if(isAdmin && initialState?.settings) {
       initialState.settings.title = 'IMSaaS'
-    }else{
+    }else if(initialState?.settings && initialState?.currentUser) {
       initialState.settings.title = initialState.currentUser.tenantName;
     }
-  }
+
   
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],

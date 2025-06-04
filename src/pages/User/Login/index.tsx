@@ -367,7 +367,7 @@ const Login: React.FC = () => {
           <LoginForm
             formRef={formRef}
             logo={null}
-            title=''
+            title={isAdmin ? 'IMSaaS' : ''}
             subTitle={isAdmin ? intl.formatMessage({ id: 'pages.login.admin' }) : intl.formatMessage({ id: 'pages.login.merchant' })}
             initialValues={{
               autoLogin: true,
