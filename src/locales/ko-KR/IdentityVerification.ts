@@ -90,6 +90,8 @@ export default {
   'basicConfig.column.updateTime': '수정 시간',
   'basicConfig.column.operator': '관리자',
   'basicConfig.column.action': '작업',
+  'basicConfig.column.cyptocurrency_recharge': '암호화폐 출금',
+  'basicConfig.column.cyptocurrency_withdrawal': '암호화폐 입금',
   
   // BasicConfig Level Values
   'basicConfig.level.unverified': '미인증',

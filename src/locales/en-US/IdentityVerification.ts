@@ -91,6 +91,8 @@ export default {
   'basicConfig.column.updateTime': 'Modification Time',
   'basicConfig.column.operator': 'Administrator',
   'basicConfig.column.action': 'Action',
+  'basicConfig.column.cyptocurrency_recharge': 'Cryptocurrency Recharge',
+  'basicConfig.column.cyptocurrency_withdrawal': 'Cryptocurrency Withdrawal',
 
   // BasicConfig Level Values
   'basicConfig.level.unverified': 'Unverified',

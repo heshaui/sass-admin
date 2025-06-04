@@ -90,6 +90,9 @@ export default {
   'basicConfig.column.updateTime': '修改时间',
   'basicConfig.column.operator': '操作管理员',
   'basicConfig.column.action': '操作',
+  'basicConfig.column.cyptocurrency_recharge': '加密货币充值',
+  'basicConfig.column.cyptocurrency_withdrawal': '加密货币提现',
+
   
   // BasicConfig Level Values
   'basicConfig.level.unverified': '未认证',

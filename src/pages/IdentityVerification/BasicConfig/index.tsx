@@ -140,7 +140,7 @@ const UserLevel: React.FC = () => {
           <ul style={{ paddingLeft: 20, margin: 0 }}>
             {benefitResps.map((item) => (
               <li key={item.levelBenefitId}>
-                {item.benefitName}
+                {intl.formatMessage({id:`basicConfig.column.${item.benefitValue}`})}
                 {` ${intl.formatMessage({ id: 'basicConfig.benefit.status' })}: ${item.status===1 ? 
                     intl.formatMessage({ id: 'basicConfig.benefit.allow' }) : 
                     intl.formatMessage({ id: 'basicConfig.benefit.deny' })}`}
