@@ -108,6 +108,7 @@ const WithdrawManage: React.FC = () => {
       title: intl.formatMessage({ id: 'withdraw.column.network' }), 
       dataIndex: 'protocolName', 
       key: 'protocolName',
+      valueType: 'select',
       valueEnum: protocolList.reduce((acc, item) => {
         acc[item.id] = { text: item.protocolName, value: item.id };
         return acc;
