@@ -36,13 +36,13 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
       const values = await form.validateFields();
       
       // 检查所选日期是否在当前时间的10天内
-      const selectedDate = values.tenantEndTime;
-      const tenDaysLater = dayjs().add(10, 'day');
+      // const selectedDate = values.tenantEndTime;
+      // const tenDaysLater = dayjs().add(10, 'day');
       
-      if (selectedDate.isAfter(tenDaysLater)) {
-        message.error(intl.formatMessage({ id: 'convertToPaid.validation.maxDays' }));
-        return;
-      }
+      // if (selectedDate.isAfter(tenDaysLater)) {
+      //   message.error(intl.formatMessage({ id: 'convertToPaid.validation.maxDays' }));
+      //   return;
+      // }
       
       onSubmit({ ...initialValues, tenantEndTime: values.tenantEndTime.format("YYYY-MM-DD HH:mm:ss") });
       form.resetFields();

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Upload, message, Spin } from "antd";
 import { PlusOutlined, FileOutlined } from "@ant-design/icons";
 import { uploadFile } from "@/services/ant-design-pro/api";
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
 // Define component props interface
 interface FileUploaderProps {

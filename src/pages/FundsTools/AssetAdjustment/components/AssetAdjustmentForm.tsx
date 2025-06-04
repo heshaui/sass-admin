@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Select, Radio, Input, Space, Modal, message } from 'antd';
-import styles from './AssetAdjustmentForm.css';
-import { walletTypeList,tenantWallet,tenantSubWallet} from '@/services/ant-design-pro/fundsTools';
-import {getCurrencyCoinList} from '@/services/ant-design-pro/inviteFriends';
+import { walletTypeList,tenantWallet} from '@/services/ant-design-pro/fundsTools';
 import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import { sendGoogleKey,bindGoogleKey} from '@/services/ant-design-pro/authAdmin';
-import { useModel, useIntl } from 'umi';
+import { useModel, useIntl } from '@umijs/max';
 import GoogleCode from '@/components/GoogleCode';
 import { clearAllCookies } from '@/utils';
 const { Option } = Select;
