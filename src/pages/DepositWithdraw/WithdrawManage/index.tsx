@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Card, Button, Tag, Space } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
@@ -6,6 +6,8 @@ import { fetchWithdrawDepositList,manualProcessing } from '@/services/ant-design
 import DetailModal from './components/DetailModal';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'umi';
+import { protocolTypeList,tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
+
 
 interface WithdrawRecord {
   key: string;
@@ -30,12 +32,40 @@ const WithdrawManage: React.FC = () => {
   const [detailVisible, setDetailVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<WithdrawRecord | null>(null);
   const actionRef = useRef<ActionType>();
+  const [protocolList, setProtocolList] = useState<ProtocolItem[]>([]);
+  const [coinList, setCoinList] = useState<CoinItem[]>([]);
   const navigate = useNavigate();
+
+  const getProtocol= async () => {
+    let data={
+        pageNo:1,
+        pageSize:10000
+    }
+    const res = await protocolTypeList(data);
+    if (res.code === '0') {
+      setProtocolList(res.data.list);
+    }
+  }
+
+
+  const getCoin= async () => {
+    let data={
+      pageNo:1,
+      pageSize:10000
+    }
+    const res = await tenantCurrencyCoinList(data);
+    if (res.code === '0') {
+      setCoinList(res.data.list);
+    }
+  }
+
   const fetchWithdrawData = async (params: any) => {
     let data={
       pageNo:params.current,
       pageSize:params.pageSize,
+      protocolId: params.protocolId,
       addressTxId:params.addressTxId,
+      coinId: params.coinName,
       startTime: params.dateTimeRange && params.dateTimeRange[0] ? params.dateTimeRange[0] : null,
       endTime: params.dateTimeRange && params.dateTimeRange[1] ? params.dateTimeRange[1] : null,
       userId:params.userId,
@@ -69,11 +99,22 @@ const WithdrawManage: React.FC = () => {
       title: intl.formatMessage({ id: 'withdraw.column.coin' }), 
       dataIndex: 'coinName', 
       key: 'coinName',
+      valueEnum: coinList.reduce((acc, item) => {
+        acc[item.id] = { text: item.coinName, value: item.id };
+        return acc;
+      }, {} as Record<number, { text: string; value: number }>),
     },
     { 
       title: intl.formatMessage({ id: 'withdraw.column.network' }), 
       dataIndex: 'protocolId', 
       key: 'protocolId',
+      valueEnum: protocolList.reduce((acc, item) => {
+        acc[item.id] = { text: item.protocolName, value: item.id };
+        return acc;
+      }, {} as Record<number, { text: string; value: number }>),
+      render: (protocolId) => (
+        protocolList.find(item => item.id === protocolId)?.protocolName
+      ),
     },
     { 
       title: intl.formatMessage({ id: 'withdraw.column.amount' }), 
@@ -216,6 +257,10 @@ const WithdrawManage: React.FC = () => {
     setDetailVisible(true);
   };
 
+  useEffect(() => {
+    getProtocol();
+    getCoin()
+  }, []);
   return (
     <PageContainer>
         <ProTable<WithdrawRecord>
