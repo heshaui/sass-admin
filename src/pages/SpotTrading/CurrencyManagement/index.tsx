@@ -671,7 +671,7 @@ const CurrencyManagement: React.FC = () => {
         values.id = extInfo?.id;
         res = await adminUpdateCurrencyCoinExtById(values);
       }else{
-        values.id = extInfo?.id;
+        values.id = extInfo[0]?.id;
         res = await updateTenantCurrencyCoinExtById(values);
       }
       
