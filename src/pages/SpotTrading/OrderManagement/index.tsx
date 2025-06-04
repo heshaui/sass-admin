@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clearAllCookies } from '@/utils';
-import { useIntl } from 'umi';
+import { useIntl,useModel} from 'umi';
 import { sendGoogleKey, bindGoogleKey } from '@/services/ant-design-pro/authAdmin';
 type OrderItem = {
   id: string;
@@ -64,8 +64,10 @@ const OrderManagement: React.FC = () => {
   const [coinList, setCoinList] = useState<any[]>([]);
   const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
-    const [validCodeVisible, setValidCodeVisible] = useState(false);
-
+  const [validCodeVisible, setValidCodeVisible] = useState(false);
+  const { initialState,refresh } = useModel('@@initialState');
+  const { currentUser } = initialState || {};
+  const [orderId, setOrderId] = useState<string | null>(null);  
   const getCoinPair = async () => {
     let data = {
       pageNo: 1,
@@ -79,21 +81,14 @@ const OrderManagement: React.FC = () => {
 
 
   
-  const handleCancel = async (orderId: string) => {
-    try {
-      // 这里添加取消订单的API调用
-      const res = await revocationOrder({ orderId: orderId });
-      if (res.code === '0' && res.data) {
-        message.success(intl.formatMessage({ id: 'order.management.cancelSuccess' }));
-        if (actionRef.current) {
-          actionRef.current.reload();
-        }
-      } else {
-        message.error(intl.formatMessage({ id: 'order.management.cancelFailed' }));
-      }
-    } catch (error) {
-      message.error(intl.formatMessage({ id: 'order.management.cancelFailed' }));
+  const handleCancel = async (orderId: string ) => {
+    setOrderId(orderId)
+    if (currentUser?.employeeResp?.googleCode === true) {
+      setGoogleCodeVisible(true);
+      return;
     }
+    
+
   };
 
 
@@ -120,8 +115,33 @@ const OrderManagement: React.FC = () => {
 
 
   const handleOk=async()=>{
-    
+    try {
+      // 这里添加取消订单的API调用
+      const res = await revocationOrder({ orderId: orderId });
+      if (res.code === '0' && res.data) {
+        message.success(intl.formatMessage({ id: 'order.management.cancelSuccess' }));
+        if (actionRef.current) {
+          actionRef.current.reload();
+        }
+      } else {
+        message.error(intl.formatMessage({ id: 'order.management.cancelFailed' }));
+      }
+    } catch (error) {
+      message.error(intl.formatMessage({ id: 'order.management.cancelFailed' }));
+    }
+    setOrderId(null);
   }
+
+    const getGoogleCode = async () => {
+      const res = await sendGoogleKey();
+      if (res.code === '0') {
+        setGoogleCodeData(res.data);
+        setGoogleCodeVisible(true);
+      } else {
+        message.error(res.message);
+      }
+  
+    }
 
   const statusMap = {
     0: { text: intl.formatMessage({ id: 'order.management.trading' }), color: 'blue' },
@@ -239,9 +259,11 @@ const OrderManagement: React.FC = () => {
       render: (text: string, record: OrderItem) => {
         if (record.status === 0 && !isAdmin) {
           return (
-            <Button type="link" onClick={() => handleCancel(record.orderId)}>
+          
+             <Button type="link"  onClick={() => currentUser?.employeeResp?.googleCode === true ? handleCancel(record.id) : getGoogleCode()}>
               {intl.formatMessage({ id: 'order.management.cancelOrder' })}
-            </Button>
+              </Button>
+
           );
         }
         return (
@@ -388,7 +410,6 @@ const OrderManagement: React.FC = () => {
                 <>
                   {tradeRecords.length > 0 ? (
                     <ProTable<TradeRecord>
-                      headerTitle="成交明细"
                       rowKey="idStr"
                       search={false}
                       options={false}
