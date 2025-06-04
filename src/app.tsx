@@ -13,7 +13,8 @@ import { generateMenuTree } from '@/utils/index';
 import { fetchLogoUrl } from '@/utils/logoUtils';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-
+const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
+const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
@@ -23,15 +24,14 @@ export async function getInitialState(): Promise<{
   loading?: boolean;
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
-  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
-  const isMerchant = process.env.UMI_APP_MERCHANT_FLAG === '1';
+
   
   // Fetch logo from API
   const logoUrl = await fetchLogoUrl();
 
   const settingsWithLogo = {
     ...defaultSettings,
-    logo: logoUrl,
+    logo: logoUrl || undefined,  // Use undefined instead of empty string to prevent 'logo' text from showing
   };
   
   const fetchUserInfo = async () => {
@@ -81,6 +81,16 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   console.log('initialState', initialState);
+  
+  // Update title with tenantName if available
+  if (initialState?.currentUser?.tenantName && initialState.settings) {
+    if(isAdmin) {
+      initialState.settings.title = 'IMSaaS'
+    }else{
+      initialState.settings.title = initialState.currentUser.tenantName;
+    }
+  }
+  
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {

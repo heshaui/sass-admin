@@ -21,7 +21,7 @@ export const fetchLogoUrl = async (): Promise<string> => {
     if (res.code === '0' && res.data) {
       const keyData = JSON.parse(res.data.keyValue);
       // Use dark mode header logo by default
-      return keyData.dark?.headerLogo || DEFAULT_LOGO;
+      return keyData.dark?.headerLogo || '';
     }
     return DEFAULT_LOGO;
   } catch (error) {

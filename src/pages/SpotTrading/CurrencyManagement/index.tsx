@@ -229,24 +229,24 @@ const CurrencyManagement: React.FC = () => {
 
     const columns = [
       { title: intl.formatMessage({ id: 'currency.column.protocolId' }), dataIndex: 'protocolId', key: 'protocolId' },
-      { 
-        title: intl.formatMessage({ id: 'currency.column.mainAddress' }), 
-        dataIndex: 'mainAddress', 
-        key: 'mainAddress',
-        width: 120,
-        ellipsis: true,
-        render: (dom: any, entity: any) => {
-          const text = entity.mainAddress;
-          return text ? (
-            <Typography.Text 
-              style={{ width: 120 }} 
-              ellipsis={{ tooltip: text }}
-            >
-              {text}
-            </Typography.Text>
-          ) : '-';
-        }
-      },
+      // { 
+      //   title: intl.formatMessage({ id: 'currency.column.mainAddress' }), 
+      //   dataIndex: 'mainAddress', 
+      //   key: 'mainAddress',
+      //   width: 120,
+      //   ellipsis: true,
+      //   render: (dom: any, entity: any) => {
+      //     const text = entity.mainAddress;
+      //     return text ? (
+      //       <Typography.Text 
+      //         style={{ width: 120 }} 
+      //         ellipsis={{ tooltip: text }}
+      //       >
+      //         {text}
+      //       </Typography.Text>
+      //     ) : '-';
+      //   }
+      // },
       { 
         title: intl.formatMessage({ id: 'currency.column.contractAddress' }), 
         dataIndex: 'token', 
@@ -513,54 +513,54 @@ const CurrencyManagement: React.FC = () => {
         />
       ),
     },
-    {
-      title: intl.formatMessage({ id: 'currency.column.transfer' }),
-      dataIndex: 'canTransfer',
-      valueEnum:{
-        0: intl.formatMessage({ id: 'currency.switch.off' }),
-        1: intl.formatMessage({ id: 'currency.switch.on' })
-      },
-      render: (_, record) => (
-        <Switch
-          checked={record.canTransfer === 1}
-          onChange={(checked) => {
-            Modal.confirm({
-              title: intl.formatMessage(
-                { id: 'currency.modal.confirm.canTransfer' },
-                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
-              ),
-              onOk: () => {
-                handleSwtich(record,'canTransfer');
-              },
-            });
-          }}
-        />
-      ),
-    },
-    {
-      title: intl.formatMessage({ id: 'currency.column.autoWithdraw' }),
-      dataIndex: 'canAutoWithdraw',
-      valueEnum:{
-        0: intl.formatMessage({ id: 'currency.switch.off' }),
-        1: intl.formatMessage({ id: 'currency.switch.on' })
-      },
-      render: (_, record) => (
-        <Switch
-          checked={record.canAutoWithdraw === 1}
-          onChange={(checked) => {
-            Modal.confirm({
-              title: intl.formatMessage(
-                { id: 'currency.modal.confirm.canAutoWithdraw' },
-                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
-              ),
-              onOk: () => {
-                handleSwtich(record,'canAutoWithdraw');
-              },
-            });
-          }}
-        />
-      ),
-    },
+    // {
+    //   title: intl.formatMessage({ id: 'currency.column.transfer' }),
+    //   dataIndex: 'canTransfer',
+    //   valueEnum:{
+    //     0: intl.formatMessage({ id: 'currency.switch.off' }),
+    //     1: intl.formatMessage({ id: 'currency.switch.on' })
+    //   },
+    //   render: (_, record) => (
+    //     <Switch
+    //       checked={record.canTransfer === 1}
+    //       onChange={(checked) => {
+    //         Modal.confirm({
+    //           title: intl.formatMessage(
+    //             { id: 'currency.modal.confirm.canTransfer' },
+    //             { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+    //           ),
+    //           onOk: () => {
+    //             handleSwtich(record,'canTransfer');
+    //           },
+    //         });
+    //       }}
+    //     />
+    //   ),
+    // },
+    // {
+    //   title: intl.formatMessage({ id: 'currency.column.autoWithdraw' }),
+    //   dataIndex: 'canAutoWithdraw',
+    //   valueEnum:{
+    //     0: intl.formatMessage({ id: 'currency.switch.off' }),
+    //     1: intl.formatMessage({ id: 'currency.switch.on' })
+    //   },
+    //   render: (_, record) => (
+    //     <Switch
+    //       checked={record.canAutoWithdraw === 1}
+    //       onChange={(checked) => {
+    //         Modal.confirm({
+    //           title: intl.formatMessage(
+    //             { id: 'currency.modal.confirm.canAutoWithdraw' },
+    //             { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+    //           ),
+    //           onOk: () => {
+    //             handleSwtich(record,'canAutoWithdraw');
+    //           },
+    //         });
+    //       }}
+    //     />
+    //   ),
+    // },
     {
       title: intl.formatMessage({ id: 'currency.column.createTime' }),
       dataIndex: 'createTime',

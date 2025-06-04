@@ -60,7 +60,7 @@ export default {
   'currency.column.protocolId': '프로토콜 ID',
   'currency.column.mainAddress': '주소',
   'currency.column.contractAddress': '계약 주소',
-  'currency.column.decimals': '소수점',
+  'currency.column.decimals': '정밀도', 
   'currency.column.withdrawFee': '출금 수수료',
   'currency.column.minWithdrawFee': '최소 출금 수수료',
   'currency.column.minWithdraw': '최소 출금량',

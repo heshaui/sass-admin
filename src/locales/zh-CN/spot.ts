@@ -60,7 +60,7 @@ export default {
   'currency.column.protocolId': '协议ID',
   'currency.column.mainAddress': '主地址',
   'currency.column.contractAddress': '合约地址',
-  'currency.column.decimals': '小数位数',
+  'currency.column.decimals': '精度',
   'currency.column.withdrawFee': '提现手续费',
   'currency.column.minWithdrawFee': '最小提现手续费',
   'currency.column.minWithdraw': '最小提现量',

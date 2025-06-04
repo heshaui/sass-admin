@@ -62,7 +62,7 @@ export default {
   'currency.column.protocolId': 'Protocol ID',
   'currency.column.mainAddress': 'Main Address',
   'currency.column.contractAddress': 'Contract Address',
-  'currency.column.decimals': 'Decimal Places',
+  'currency.column.decimals': 'Decimal',
   'currency.column.withdrawFee': 'Withdrawal Fee',
   'currency.column.minWithdrawFee': 'Minimum Withdrawal Fee',
   'currency.column.minWithdraw': 'Minimum Withdrawal Amount',

@@ -14,7 +14,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'IMBIT',
+  title: '', // Title will be set dynamically from currentUser.tenantName
   pwa: true,
   logo: '', // Logo will be set dynamically from API
   iconfontUrl: '',
