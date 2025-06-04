@@ -133,7 +133,6 @@ const Background: React.FC = () => {
     <div style={{display:'flex',flexDirection:'column',textAlign:'center'}}    >
               <Image 
                 src="/home.png" 
-                alt="模板1"
                 width={100}
                 height={100}
               />

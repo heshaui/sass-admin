@@ -23,7 +23,7 @@ export default {
 'webConfig.background.status.afterLogin': '로그인 후',
 
 // Tips
-'webConfig.background.tips': '팁: 권장 크기: 2560*540, 설정하지 않으면 시스템 기본 내용이 사용됩니다!',
+'webConfig.background.tips': '팁: 권장 크기: 1440*820, 설정하지 않으면 시스템 기본 내용이 사용됩니다!',
 
 // EditModal component
 'webConfig.editModal.title': '배경 설정 편집',
@@ -40,7 +40,7 @@ export default {
 'webConfig.editModal.form.subtitle.placeholder': '부제목을 입력해주세요',
 'webConfig.editModal.form.image': '배경 이미지',
 'webConfig.editModal.form.image.required': '배경 이미지를 업로드해주세요',
-'webConfig.editModal.form.image.extra': '권장 크기: 2560*540',
+'webConfig.editModal.form.image.extra': '권장 크기: 1440*820',
 'webConfig.editModal.form.buttonText': '버튼 텍스트',
 'webConfig.editModal.form.buttonText.required': '버튼 텍스트를 입력해주세요',
 'webConfig.editModal.form.buttonText.placeholder': '버튼 텍스트를 입력해주세요',
@@ -153,8 +153,8 @@ export default {
   'webConfig.logo.darkLogoRequired': 'night 버전의 로고를 입력해주세요',
   'webConfig.logo.darkMode': 'night',
   'webConfig.logo.lightMode': 'day',
-'webConfig.logo.headerFooterNote': '(상단 Header/하단 Footer에 적용)',
-'webConfig.logo.browserTabNote': '(브라우저 탭에 적용)',
+'webConfig.logo.headerFooterNote': '(상단 Header/하단 Footer에 적용),높이:30',
+'webConfig.logo.browserTabNote': '(브라우저 탭에 적용),크기:32*32',
   'webConfig.logo.submit': '제출',
   
   // WebStyle component

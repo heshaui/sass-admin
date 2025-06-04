@@ -24,7 +24,7 @@ export default {
 
   // Tips
   'webConfig.background.tips':
-    'Tips: Recommended size: 2560*540, if not configured, system default content will be used!',
+    'Tips: Recommended size: 1440*820, if not configured, system default content will be used!',
 
   // EditModal component
   'webConfig.editModal.title': 'Edit Background Configuration',
@@ -41,7 +41,7 @@ export default {
   'webConfig.editModal.form.subtitle.placeholder': 'Please enter subtitle',
   'webConfig.editModal.form.image': 'Background Image',
   'webConfig.editModal.form.image.required': 'Please upload background image',
-  'webConfig.editModal.form.image.extra': 'Recommended size: 2560*540',
+  'webConfig.editModal.form.image.extra': 'Recommended size: 1440*820',
   'webConfig.editModal.form.buttonText': 'Button Text',
   'webConfig.editModal.form.buttonText.required': 'Please enter button text',
   'webConfig.editModal.form.buttonText.placeholder': 'Please enter button text',
@@ -157,8 +157,8 @@ export default {
   'webConfig.logo.darkLogoRequired': 'Please fill in the dark mode Logo',
   'webConfig.logo.darkMode': 'Dark Mode',
   'webConfig.logo.lightMode': 'Light Mode',
-  'webConfig.logo.headerFooterNote': '(Applicable to top Header/bottom Footer)',
-  'webConfig.logo.browserTabNote': '(Applicable to browser tab)',
+  'webConfig.logo.headerFooterNote': '(Applicable to top Header/bottom Footer),height:30',
+  'webConfig.logo.browserTabNote': '(Applicable to browser tab),size:32*32',
   'webConfig.logo.submit': 'Submit',
 
   // WebStyle component

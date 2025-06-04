@@ -23,7 +23,7 @@ export default {
   'webConfig.background.status.afterLogin': '登录后',
   
   // Tips
-  'webConfig.background.tips': 'Tips: 建议尺寸：2560*540, 若不配置则使用系统默认内容！',
+  'webConfig.background.tips': 'Tips: 建议尺寸：1440*820, 若不配置则使用系统默认内容！',
   
   // EditModal component
   'webConfig.editModal.title': '编辑背景配置',
@@ -40,7 +40,7 @@ export default {
   'webConfig.editModal.form.subtitle.placeholder': '请输入副标题',
   'webConfig.editModal.form.image': '背景图',
   'webConfig.editModal.form.image.required': '请上传背景图',
-  'webConfig.editModal.form.image.extra': '建议尺寸：2560*540',
+  'webConfig.editModal.form.image.extra': '建议尺寸：1440*820',
   'webConfig.editModal.form.buttonText': '按钮文案',
   'webConfig.editModal.form.buttonText.required': '请输入按钮文案',
   'webConfig.editModal.form.buttonText.placeholder': '请输入按钮文案',
@@ -154,8 +154,8 @@ export default {
   'webConfig.logo.darkLogoRequired': '请填写夜间版本的 Logo',
   'webConfig.logo.darkMode': '夜间版',
   'webConfig.logo.lightMode': '日间版',
-  'webConfig.logo.headerFooterNote': '(适用于顶部Header/底部Footer)',
-  'webConfig.logo.browserTabNote': '(适用于浏览器标签)',
+  'webConfig.logo.headerFooterNote': '(适用于顶部Header/底部Footer),高度:30',
+  'webConfig.logo.browserTabNote': '(适用于浏览器标签)尺寸：32*32',
   'webConfig.logo.submit': '提交',
   
   // WebStyle component
