@@ -101,19 +101,19 @@ export const errorConfig: RequestConfig = {
       if (isAdmin) {
         if(currentLang==='zh-CN'){
           newHeaders = {
-            'accept-language': 'zh_CN',
+            'lang': 'zh_CN',
           };
         } else if(currentLang==='en-US'){
           newHeaders = {
-            'accept-language': 'en_US',
+            'lang': 'en_US',
           };
         } else if(currentLang==='ja-JP'){
           newHeaders = {
-            'accept-language': 'ja_JP',
+            'lang': 'ja_JP',
           };
         } else if(currentLang==='ko-KR'){
           newHeaders = {
-            'accept-language': 'ko_KR',
+            'lang': 'ko_KR',
           };
         }
         const token = localStorage.getItem('sa-token-admin');
