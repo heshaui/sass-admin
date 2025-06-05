@@ -153,7 +153,7 @@ export default {
   'webConfig.logo.darkLogoRequired': 'night 버전의 로고를 입력해주세요',
   'webConfig.logo.darkMode': 'night',
   'webConfig.logo.lightMode': 'day',
-'webConfig.logo.headerFooterNote': '(상단 Header/하단 Footer에 적용),높이:30',
+'webConfig.logo.headerFooterNote': '(상단 Header/하단 Footer에 적용),크기:140*28',
 'webConfig.logo.browserTabNote': '(브라우저 탭에 적용),크기:32*32',
   'webConfig.logo.submit': '제출',
   
