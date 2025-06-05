@@ -270,7 +270,7 @@ export default {
   'tradingFees.form.makerFee.required': '请输入Maker手续费',
   'tradingFees.form.takerFee': 'Taker手续费',
   'tradingFees.form.takerFee.required': '请输入Taker手续费',
-  'tradingFees.form.tip': 'Tip: 手续费范围0~25%',
+  'tradingFees.form.tip': 'Tip: 手续费范围0~1%',
   'tradingFees.form.cancel': '取消',
   'tradingFees.form.submit': '提交',
   'tradingFees.form.error': '提交表单时出错:',

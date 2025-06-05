@@ -275,7 +275,7 @@ export default {
   'tradingFees.form.makerFee.required': 'Please enter Maker fee',
   'tradingFees.form.takerFee': 'Taker Fee',
   'tradingFees.form.takerFee.required': 'Please enter Taker fee',
-  'tradingFees.form.tip': 'Tip: Fee range 0-25%',
+  'tradingFees.form.tip': 'Tip: Fee range 0-1%',
   'tradingFees.form.cancel': 'Cancel',
   'tradingFees.form.submit': 'Submit',
   'tradingFees.form.error': 'Error submitting form:',

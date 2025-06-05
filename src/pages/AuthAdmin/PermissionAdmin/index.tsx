@@ -212,10 +212,7 @@ const PermissionAdmin: React.FC = () => {
         pagination={{
           ...pagination,
           showQuickJumper: true,
-          showSizeChanger: true,
-          onChange: (page, pageSize) => {
-            getAuthorityList({ pageNo: page, pageSize });
-          },
+          showSizeChanger: true
         }}
         toolBarRender={() => [
           <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>

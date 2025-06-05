@@ -270,7 +270,7 @@ export default {
   'tradingFees.form.makerFee.required': 'Maker 수수료를 입력해주세요',
   'tradingFees.form.takerFee': 'Taker 수수료',
   'tradingFees.form.takerFee.required': 'Taker 수수료를 입력해주세요',
-  'tradingFees.form.tip': 'Tip: 수수료는 0~25% 사이',
+  'tradingFees.form.tip': 'Tip: 수수료는 0~1% 사이',
   'tradingFees.form.cancel': '取消',
   'tradingFees.form.submit': '제출',
   'tradingFees.form.error': '제출 테이블 폼 오류:',
