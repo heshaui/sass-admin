@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Radio } from 'antd';
 import type { RadioChangeEvent } from 'antd';
+import { tenantLangList } from '@/services/ant-design-pro/WebConfig';
+import { useIntl } from 'umi';
+
 interface LanguageSelectorProps {
   value?: string;
   onChange?: (value: string) => void;
@@ -8,25 +11,35 @@ interface LanguageSelectorProps {
 }
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({ value, onChange,text}) => {
+
+  const intl = useIntl();
+  const [languages, setLanguages] = useState<any[]>([]);
+  useEffect(() => {
+    const fetchLanguages = async () => {
+      let data={
+        pageNo:1,
+        pageSize:10000
+      }
+      const res = await tenantLangList(data);
+      if (res.code === '0') {
+        setLanguages(res.data?.list || []);
+      }
+    };
+    fetchLanguages();
+  }, []);
   // 处理语言选择变化
   const handleLanguageChange = (e: RadioChangeEvent) => {
     onChange?.(e.target.value);
   };
- const languages = [
-    { "key": "en_US", "label": "English" },
-    { "key": "zh_CN", "label": "简体中文" },
-    { "key": "zh_HK", "label": "繁體中文" },
-    { "key": "ja_JP", "label": "日本語" },
-    { "key": "ko_KR", "label": "한국어"}
-]
-const texts=text||'支持多个语言编辑，英文为必填，其他语言配置则显示，不配置不显示';
+
+const texts=text||intl.formatMessage({id:'helpCenter.serviceModal.form.languageNote'});
   return (
       <div>
 
       <Radio.Group value={value} onChange={handleLanguageChange}>
         {languages.map((lang:any) => (
-          <Radio.Button key={lang.key} value={lang.key}>
-            {lang.label}
+          <Radio.Button key={lang.langEncode} value={lang.langEncode}>
+            {lang.lang}
           </Radio.Button>
         ))}
       </Radio.Group>

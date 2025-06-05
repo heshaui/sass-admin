@@ -222,7 +222,6 @@ const BasicConfig: React.FC = () => {
 
       {/* 账户配置 */}
       <Card title={intl.formatMessage({ id: 'inviteFriends.accountConfig.title' })} style={{ marginBottom: 24 }}>
-        {config}
         <Form.Item
           name="enabled"
           label={intl.formatMessage({ id: 'inviteFriends.accountConfig.enabled' })}

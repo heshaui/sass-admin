@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, InputNumber, Modal, message, Radio } from 'antd';
 import { useIntl } from 'umi';
-import { languages } from '@/config/language';
+import  LanguageSelector from '@/components/LanguageSelector';
 
 const { TextArea } = Input;
 
@@ -231,17 +231,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
           required
           name="languageCode"
         >
-          <Radio.Group 
-            value={activeLanguage} 
-            onChange={(e) => handleLanguageChange(e.target.value)}
-          >
-            {languages.map(lang => (
-              <Radio.Button key={lang.key} value={lang.key}>{lang.label}</Radio.Button>
-            ))}
-          </Radio.Group>
-          <div style={{ color: '#999', marginBottom: '15px' }}>
-            {intl.formatMessage({ id: 'announcement.category.form.language.note', defaultMessage: '*内容支持多语言编辑，英文内容为必填，其他语言可选' })}
-          </div>
+          <LanguageSelector value={activeLanguage} onChange={handleLanguageChange} text={intl.formatMessage({ id: 'announcement.category.form.language.note', })} />
         </Form.Item>
         
         {/* 多语言内容编辑区域 */}

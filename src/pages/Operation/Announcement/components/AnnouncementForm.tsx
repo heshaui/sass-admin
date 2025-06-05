@@ -9,7 +9,7 @@ import {
   updateAnnouncementContent,
 } from '@/services/ant-design-pro/operation';
 import SeedEditor from '@/components/SeedEditor';
-import { languages } from '@/config/language';
+import  LanguageSelector from '@/components/LanguageSelector';
 import dayjs from 'dayjs';
 const { Option } = Select;
 
@@ -212,18 +212,18 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
 
       if (response.code === '0' && response.data) {
         message.success(type === 'create' 
-          ? intl.formatMessage({ id: 'announcement.management.create.success', defaultMessage: '创建成功' })
-          : intl.formatMessage({ id: 'announcement.category.update.success', defaultMessage: '更新成功' }));
+          ? intl.formatMessage({ id: 'announcement.management.create.success' })
+          : intl.formatMessage({ id: 'announcement.category.update.success' }));
         onSuccess();
       } else {
         message.error(type === 'create' 
-          ? intl.formatMessage({ id: 'announcement.management.create.failed', defaultMessage: '创建失败' })
-          : intl.formatMessage({ id: 'announcement.category.update.failed', defaultMessage: '更新失败' }));
+          ? intl.formatMessage({ id: 'announcement.management.create.failed' })
+          : intl.formatMessage({ id: 'announcement.category.update.failed' }));
       }
     } catch (error) {
       setLoading(false);
       console.error('提交表单出错:', error);
-      message.error(intl.formatMessage({ id: 'announcement.form.validation.failed', defaultMessage: '表单校验失败' }));
+      message.error(intl.formatMessage({ id: 'announcement.form.validation.failed' }));
     }
   };
 
@@ -248,20 +248,20 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   return (
     <Modal
       title={type === 'create' 
-        ? intl.formatMessage({ id: 'announcement.form.title.create', defaultMessage: '发布公告' })
-        : intl.formatMessage({ id: 'announcement.form.title.update', defaultMessage: '编辑公告' })
+        ? intl.formatMessage({ id: 'announcement.form.title.create' })
+        : intl.formatMessage({ id: 'announcement.form.title.update' })
       }
       visible={visible}
       width={640}
       onCancel={onCancel}
       footer={[
         <Button key="cancel" onClick={onCancel}>
-          {intl.formatMessage({ id: 'announcement.form.button.cancel', defaultMessage: '取消' })}
+          {intl.formatMessage({ id: 'announcement.form.button.cancel' })}
         </Button>,
         <Button key="submit" type="primary" loading={loading} onClick={handleSubmit}>
           {type === 'create' 
-            ? intl.formatMessage({ id: 'announcement.form.button.publish', defaultMessage: '发布' })
-            : intl.formatMessage({ id: 'announcement.form.button.save', defaultMessage: '保存' })
+            ? intl.formatMessage({ id: 'announcement.form.button.publish' })
+            : intl.formatMessage({ id: 'announcement.form.button.save' })
           }
         </Button>,
       ]}
@@ -293,21 +293,21 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
 
         <Form.Item
           name="describeText"
-          label={intl.formatMessage({ id: 'announcement.form.description', defaultMessage: '描述' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'announcement.form.description.required', defaultMessage: '请输入描述' }) }]}
+          label={intl.formatMessage({ id: 'announcement.form.description' })}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'announcement.form.description.required' }) }]}
           required
         >
-          <Input placeholder={intl.formatMessage({ id: 'announcement.form.description.placeholder', defaultMessage: '请输入描述' })} />
+          <Input placeholder={intl.formatMessage({ id: 'announcement.form.description.placeholder' })} />
         </Form.Item>
 
         <Form.Item
           name="releaseType"
-          label={intl.formatMessage({ id: 'announcement.form.sendTime', defaultMessage: '发送时间' })}
+          label={intl.formatMessage({ id: 'announcement.form.sendTime' })}
           required
         >
           <Radio.Group onChange={(e) => setSendType(e.target.value)}>
-            <Radio value={1}>{intl.formatMessage({ id: 'announcement.form.sendTime.immediate', defaultMessage: '立即发送' })}</Radio>
-            <Radio value={2}>{intl.formatMessage({ id: 'announcement.form.sendTime.scheduled', defaultMessage: '定时发送' })}</Radio>
+            <Radio value={1}>{intl.formatMessage({ id: 'announcement.form.sendTime.immediate' })}</Radio>
+            <Radio value={2}>{intl.formatMessage({ id: 'announcement.form.sendTime.scheduled' })}</Radio>
           </Radio.Group>
         </Form.Item>
 
@@ -324,17 +324,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           label={intl.formatMessage({ id: 'announcement.form.language', defaultMessage: '语言' })}
           required
         >
-          <Radio.Group
-            value={activeLanguage}
-            onChange={(e) => handleLanguageChange(e.target.value)}
-          >
-            {languages.map(lang => (
-              <Radio.Button key={lang.key} value={lang.key}>{lang.label}</Radio.Button>
-            ))}
-          </Radio.Group>
-          <div style={{ color: '#999', marginBottom: '15px' }}>
-            {intl.formatMessage({ id: 'announcement.form.language.note', defaultMessage: '*支持多个语言同时编辑，英文为必填，其他语言配置则显示，不配置不显示' })}
-          </div>
+          <LanguageSelector value={activeLanguage} onChange={handleLanguageChange} text={intl.formatMessage({ id: 'announcement.form.language.note', })} />
         </Form.Item>
 
         <Form.Item
