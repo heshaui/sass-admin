@@ -87,6 +87,7 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
    let res=await updateDelayById(data);
    if(res.code==='0'){
     setConvertModalVisible(false);  
+    message.success(intl.formatMessage({ id: 'merchant.common.success' }));
    await fetchMerchant();
    }
     
