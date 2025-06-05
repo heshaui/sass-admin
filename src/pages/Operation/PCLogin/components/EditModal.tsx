@@ -90,7 +90,6 @@ const EditModal: React.FC<EditModalProps> = ({
         <Form.Item
           label={intl.formatMessage({ id: 'pcLogin.modal.form.title' })}
           name="title"
-          rules={[{ required: true, message: intl.formatMessage({ id: 'pcLogin.modal.form.title.required' }) }]}
         >
           <Input placeholder={intl.formatMessage({ id: 'pcLogin.modal.form.title.placeholder' })} />
         </Form.Item>
@@ -107,7 +106,6 @@ const EditModal: React.FC<EditModalProps> = ({
         <Form.Item
           label={intl.formatMessage({ id: 'pcLogin.modal.form.url' })}
           name="url"
-          rules={[{ required: true, message: intl.formatMessage({ id: 'pcLogin.modal.form.url.required' }) }]}
         >
           <Input placeholder={intl.formatMessage({ id: 'pcLogin.modal.form.url.placeholder' })} />
         </Form.Item>

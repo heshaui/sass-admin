@@ -90,7 +90,6 @@ const EditModal: React.FC<EditModalProps> = ({
         <Form.Item
           label={intl.formatMessage({ id: 'webConfig.editModal.form.title' })}
           name="title"
-          rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.editModal.form.title.required' }) }]}
         >
           <Input placeholder={intl.formatMessage({ id: 'webConfig.editModal.form.title.placeholder' })} />
         </Form.Item>
@@ -98,7 +97,6 @@ const EditModal: React.FC<EditModalProps> = ({
         <Form.Item
           label={intl.formatMessage({ id: 'webConfig.editModal.form.subtitle' })}
           name="subtitle"
-          rules={[{ required: true, message: intl.formatMessage({ id: 'webConfig.editModal.form.subtitle.required' }) }]}
         >
           <Input placeholder={intl.formatMessage({ id: 'webConfig.editModal.form.subtitle.placeholder' })} />
         </Form.Item>
