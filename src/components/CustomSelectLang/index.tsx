@@ -3,7 +3,10 @@ import type { MenuProps } from 'antd';
 import React from 'react';
 import { setLocale, getLocale } from '@umijs/max';
 
-export const CustomSelectLang: React.FC = () => {
+interface CustomSelectLangProps {
+  type: number;
+}
+export const CustomSelectLang: React.FC<CustomSelectLangProps> = ({ type }) => {
   const currentLocale = getLocale();
 
   const changeLang = (locale: string) => {
@@ -43,7 +46,7 @@ export const CustomSelectLang: React.FC = () => {
   return (
     <Dropdown menu={{ items }} placement="bottomRight">
       <span style={{ cursor: 'pointer', padding: '0 12px' }}>
-        <img src="/lang.png" alt="language" style={{ height: 20 }} />
+        {type?<img src="/language.png" alt="language" style={{ height: 20 }} />:<img src="/lang.png" alt="language" style={{ height: 20 }} />}
       </span>
     </Dropdown>
   );

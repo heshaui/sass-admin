@@ -2,13 +2,14 @@ import { login, loginCheck, tenantLogin, tenantLoginCheck } from '@/services/ant
 import { emailCode, getFakeCaptcha } from '@/services/ant-design-pro/login';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
-import { Helmet, history, SelectLang, useIntl, useModel } from '@umijs/max';
+import { Helmet, history, useIntl, useModel } from '@umijs/max';
 import { Button, FormInstance, Input, message, Modal,Image} from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import Settings from '../../../../config/defaultSettings';
 import loginImg from './login.png'
+import CustomSelectLang from '@/components/CustomSelectLang';
 const useStyles = createStyles(({ token }) => ({
   container: {
     display: 'flex',
@@ -148,6 +149,7 @@ const useStyles = createStyles(({ token }) => ({
     top: '24px',
     right: '24px',
     cursor: 'pointer',
+    zIndex: 1000,
   },
 }));
 
@@ -156,7 +158,7 @@ const Lang = () => {
 
   return (
     <div className={styles.lang} data-lang>
-      {SelectLang && <SelectLang />}
+      <CustomSelectLang type={1} />
     </div>
   );
 };
@@ -349,6 +351,9 @@ const Login: React.FC = () => {
         </title>
       </Helmet>
       
+      {/* Language Selector */}
+      <Lang />
+      
       {/* Left Panel */}
       <div className={styles.leftPanel}>
         <div className={styles.leftContent}>
@@ -358,6 +363,7 @@ const Login: React.FC = () => {
       
       {/* Right Panel */}
       <div className={styles.rightPanel}>
+        
         <div className={styles.loginForm}>
           
           <LoginForm
@@ -414,7 +420,9 @@ const Login: React.FC = () => {
               />
             </div>
           </LoginForm>
-          <Lang />
+
+          
+   
         </div>
       </div>
 

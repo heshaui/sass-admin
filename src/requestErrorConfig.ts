@@ -95,38 +95,39 @@ export const errorConfig: RequestConfig = {
       
       // 获取当前语言
       const currentLang = getLocale();
-      
-      let newHeaders = {};
+        let lang = 'en_US';
+        if(currentLang==='zh-CN'){
+         
+          lang='zh_CN';
+
+      } else if(currentLang==='en-US'){
+
+          lang='en_US';
+
+      } else if(currentLang==='ja-JP'){
+       
+          lang='ja_JP';
+
+      } else if(currentLang==='ko-KR'){
+       
+          lang='ko_KR';
+
+      }
+
 
       if (isAdmin) {
-        if(currentLang==='zh-CN'){
-          newHeaders = {
-            'lang': 'zh_CN',
-          };
-        } else if(currentLang==='en-US'){
-          newHeaders = {
-            'lang': 'en_US',
-          };
-        } else if(currentLang==='ja-JP'){
-          newHeaders = {
-            'lang': 'ja_JP',
-          };
-        } else if(currentLang==='ko-KR'){
-          newHeaders = {
-            'lang': 'ko_KR',
-          };
-        }
+     
         const token = localStorage.getItem('sa-token-admin');
         config.headers = {
           ...config.headers,
-          ...newHeaders,
+          'lang': lang,
           'sa-token-admin': token?`${token}`:'',
         };
       } else if (isMerchant) {
         const token = localStorage.getItem('sa-token-tenant');
         config.headers = {
           ...config.headers,
-          ...newHeaders,
+          'lang': lang,
           'sa-token-tenant':token?`${token}`:'',
         };
       }
