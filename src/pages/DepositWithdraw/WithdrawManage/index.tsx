@@ -69,6 +69,7 @@ const WithdrawManage: React.FC = () => {
       startTime: params.dateTimeRange && params.dateTimeRange[0] ? params.dateTimeRange[0] : null,
       endTime: params.dateTimeRange && params.dateTimeRange[1] ? params.dateTimeRange[1] : null,
       userId:params.userId,
+      status: params.status,
 
     }
     const res = await fetchWithdrawDepositList(data);
@@ -230,6 +231,13 @@ const WithdrawManage: React.FC = () => {
       dataIndex: 'dateTimeRange',
       valueType: 'dateTimeRange',
       hideInTable: true
+    },
+    { 
+      title: intl.formatMessage({ id: 'withdraw.column.withdrawTime' }), 
+      key: 'createTime',
+      dataIndex: 'createTime',
+      valueType: 'dateTime',
+      search: false
     },
     { 
       title: intl.formatMessage({ id: 'withdraw.column.action' }), 
