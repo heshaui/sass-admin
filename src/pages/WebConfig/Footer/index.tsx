@@ -6,8 +6,8 @@ import { useIntl } from 'umi';
 import { homeBottomList, saveHomeBottom, homeBottomTranslationList, updateHomeBottomTranslationById, updateHomeBottomById, saveHomeBottomFooter, homeBottomFooterList, updateHomeBottomFooterById, deleteHomeBottom, homeBottomParams } from '@/services/ant-design-pro/WebConfig';
 import { updateValue, getTenantKeyParams } from '@/services/ant-design-pro/kv';
 import AddMenuModal from './components/AddMenuModal';
-import { languages } from '@/config/language';
-const languageOptions = languages
+import { tenantLangList } from '@/services/ant-design-pro/WebConfig';
+
 
 const { TextArea } = Input;
 
@@ -23,7 +23,18 @@ const Footer: React.FC = () => {
   const [customCode, setCustomCode] = useState('');
   const [footerId, setFooterId] = useState<number | null>(null);
   const [editingMenu, setEditingMenu] = useState<any>(null);
+    const [languages, setLanguages] = useState<any[]>([]);
   
+    const getLang=async ()=>{
+       let data={
+              pageNo:1,
+              pageSize:10000
+            }
+            const res = await tenantLangList(data);
+            if (res.code === '0') {
+              setLanguages(res.data?.list || []);
+            }
+    }
   // 获取菜单数据
   const getMenu = async () => {
     setLoading(true);
@@ -46,7 +57,9 @@ const Footer: React.FC = () => {
       setLoading(false);
     }
   };
-
+  useEffect(() => {
+    getLang();
+  }, []);
   useEffect(() => {
     getMenu();
   }, [currentLanguage]);
@@ -450,14 +463,14 @@ const Footer: React.FC = () => {
         </div>
         <div style={{ marginBottom: 20 }}> {intl.formatMessage({ id: 'webConfig.footer.enableCustomFooter' })}<Switch checked={isCustomFooter} onChange={handleCustomFooterChange} style={{ marginLeft: 10 }} /></div>
         <div style={{ marginBottom: 16 }}>
-          {languageOptions.map((lang) => (
+          {languages.map((lang) => (
             <Button
-              key={lang.key}
-              type={currentLanguage === lang.key ? 'primary' : 'default'}
-              onClick={() => setCurrentLanguage(lang.key)}
+              key={lang.langEncode}
+              type={currentLanguage === lang.langEncode ? 'primary' : 'default'}
+              onClick={() => setCurrentLanguage(lang.langEncode)}
               style={{ marginRight: 8 }}
             >
-              {lang.label}
+              {lang.lang}
             </Button>
           ))}
         </div>

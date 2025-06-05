@@ -5,8 +5,10 @@ import { useIntl } from "umi";
 import { HomeMenuTranslationList, saveHomeMenu, homeMenuParams,updateHomeMenuById,updateHomeMenuTranslationById,deleteHomeMenu } from "@/services/ant-design-pro/WebConfig";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import AddMenuModals from "./component/AddMenuModals";
-import { languages } from '@/config/language';
-const languageOptions = languages
+
+import { tenantLangList } from '@/services/ant-design-pro/WebConfig';
+
+
 
 const Header: React.FC = () => {
   const intl = useIntl();
@@ -15,6 +17,19 @@ const Header: React.FC = () => {
   const [modalType, setModalType] = useState<boolean>(false);
   const [parentId, setParentId] = useState<any>(null);
   const [editingMenu, setEditingMenu] = useState<any>(null);
+
+      const [languages, setLanguages] = useState<any[]>([]);
+    
+      const getLang=async ()=>{
+         let data={
+                pageNo:1,
+                pageSize:10000
+              }
+              const res = await tenantLangList(data);
+              if (res.code === '0') {
+                setLanguages(res.data?.list || []);
+              }
+      }
 
   // 获取菜单数据
   const getMenu = async () => {
@@ -29,6 +44,9 @@ const Header: React.FC = () => {
       message.error(intl.formatMessage({ id: 'webConfig.header.fetchFailed' }));
     }
   };
+    useEffect(() => {
+      getLang();
+    }, []);
 
   useEffect(() => {
     getMenu();
@@ -317,19 +335,19 @@ const Header: React.FC = () => {
     <PageContainer>
       {/* 语言切换 */}
       <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
-        {languageOptions.map((lang) => (
+        {languages.map((lang) => (
           <Button
-            key={lang.key}
-            type={currentLanguage === lang.key ? "primary" : "default"}
-            onClick={() => setCurrentLanguage(lang.key)}
+            key={lang.langEncode}
+            type={currentLanguage === lang.langEncode ? "primary" : "default"}
+            onClick={() => setCurrentLanguage(lang.langEncode)}
             style={{
-              background: currentLanguage === lang.key ? "#FF6A00" : "#F5F5F5",
-              color: currentLanguage === lang.key ? "#FFF" : "#000",
+              background: currentLanguage === lang.langEncode ? "#FF6A00" : "#F5F5F5",
+              color: currentLanguage === lang.langEncode ? "#FFF" : "#000",
               borderRadius: 8,
               fontWeight: "bold",
             }}
           >
-            {lang.label}
+            {lang.lang}
           </Button>
         ))}
       </div>
