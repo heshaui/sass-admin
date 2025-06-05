@@ -64,8 +64,8 @@ export default {
   'inviteFriends.fundAccount.column.status': '상태',
   'inviteFriends.fundAccount.column.createTime': '추가 시간',
   'inviteFriends.fundAccount.column.action': '작업',
-  'inviteFriends.fundAccount.status.unlocked': '잠금 해제',
-  'inviteFriends.fundAccount.status.locked': '잠김',
+  'inviteFriends.fundAccount.status.unlocked': '미사용',
+  'inviteFriends.fundAccount.status.locked': '사용 중',
   'inviteFriends.fundAccount.action.records': '지급 기록',
   
   // Invite Records

@@ -64,8 +64,8 @@ export default {
   'inviteFriends.fundAccount.column.status': '状态',
   'inviteFriends.fundAccount.column.createTime': '添加时间',
   'inviteFriends.fundAccount.column.action': '操作',
-  'inviteFriends.fundAccount.status.unlocked': '未锁定',
-  'inviteFriends.fundAccount.status.locked': '锁定',
+  'inviteFriends.fundAccount.status.unlocked': '未使用',
+  'inviteFriends.fundAccount.status.locked': '使用中',
   'inviteFriends.fundAccount.action.records': '发放记录',
   
   // Invite Records

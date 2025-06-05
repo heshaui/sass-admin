@@ -67,8 +67,8 @@ export default {
   'inviteFriends.fundAccount.column.status': 'Status',
   'inviteFriends.fundAccount.column.createTime': 'Added Time',
   'inviteFriends.fundAccount.column.action': 'Action',
-  'inviteFriends.fundAccount.status.unlocked': 'Unlocked',
-  'inviteFriends.fundAccount.status.locked': 'Locked',
+  'inviteFriends.fundAccount.status.unlocked': 'Unused',
+  'inviteFriends.fundAccount.status.locked': 'In Use',
   'inviteFriends.fundAccount.action.records': 'Distribution Records',
 
   // Invite Records
