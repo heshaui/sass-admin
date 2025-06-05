@@ -4,6 +4,7 @@ import { Card, Tabs, Tag, Typography, Image, Space } from 'antd';
 import type { TabsProps } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { useIntl } from 'umi';
+import LanguageSelector from '@/components/LanguageSelector';
 import { 
   getTenantKeyParams,
   updateTenantKv, 
@@ -190,7 +191,7 @@ const PCLogin: React.FC = () => {
 
         <div style={{ marginBottom: 20 }}>
           <Space size="middle">
-            {languageOptions.map(lang => (
+            {/* {languageOptions.map(lang => (
               <span 
                 key={lang.key} 
                 style={{ 
@@ -221,8 +222,9 @@ const PCLogin: React.FC = () => {
                   </Tag>
                 )}
               </span>
-            ))}
+            ))} */}
           </Space>
+          <LanguageSelector  value={activeLanguage} onChange={handleLanguageChange} text={''} />
         </div>
 
         <Tabs 

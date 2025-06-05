@@ -157,7 +157,7 @@ export default {
   'webConfig.logo.darkLogoRequired': 'Please fill in the dark mode Logo',
   'webConfig.logo.darkMode': 'Dark Mode',
   'webConfig.logo.lightMode': 'Light Mode',
-  'webConfig.logo.headerFooterNote': '(Applicable to top Header/bottom Footer),size:140*28',
+  'webConfig.logo.headerFooterNote': '(Applicable to top Header/bottom Footer),height:140*28',
   'webConfig.logo.browserTabNote': '(Applicable to browser tab),size:32*32',
   'webConfig.logo.submit': 'Submit',
 

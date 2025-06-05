@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { useIntl } from 'umi';
+import { useIntl,useModel} from 'umi';
 import type { ProColumns } from '@ant-design/pro-components';
 import { Card, message, Tabs, Radio,Button,Image} from 'antd';
 import { getTenantKeyParams,updateValue } from '@/services/ant-design-pro/kv';
 import EditModal from './components/EditModal';
-
+import LanguageSelector from '@/components/LanguageSelector';
 interface TableItem {
   key: string;
   title: string;
@@ -16,6 +16,8 @@ interface TableItem {
 
 const Background: React.FC = () => {
   const intl = useIntl();
+    const { initialState,refresh } = useModel('@@initialState');
+    const { currentUser } = initialState || {};
   const [loading, setLoading] = useState(false);
   const [backgroundData, setBackgroundData] = useState<any>(null);
   const [activeLanguage, setActiveLanguage] = useState('en_US');
@@ -25,6 +27,7 @@ const Background: React.FC = () => {
   const [editingRecord, setEditingRecord] = useState<TableItem | null>(null);
   const [dataSource, setDataSource] = useState<TableItem[]>([]);
   const [selectedTemplate, setSelectedTemplate] = useState('1');
+  console.log(currentUser)
   // 获取背景图数据
   const fetchBackgroundData = async () => {
     try {
@@ -124,7 +127,12 @@ const Background: React.FC = () => {
 
   // 添加查看按钮点击处理函数
   const handleViewWebsite = () => {
-    window.open('https://www.imsaas.work/zh', '_blank');
+    // if (!currentUser?.host) {
+    //   message.error(intl.formatMessage({ id: 'webConfig.background.view.error' }));
+    //   return;
+    // }
+    // window.open(currentUser?.host, '_blank');
+    window.open(currentUser?.host, '_blank');
   };
 
   return (
@@ -154,7 +162,7 @@ const Background: React.FC = () => {
       <Card>
         <div style={{ marginBottom: 24 }}>
           <div style={{ marginBottom: 16 }}>
-            <Radio.Group 
+            {/* <Radio.Group 
               value={activeLanguage} 
               onChange={(e) => setActiveLanguage(e.target.value)}
             >
@@ -163,7 +171,8 @@ const Background: React.FC = () => {
               <Radio.Button value="zh_HK">{intl.formatMessage({ id: 'webConfig.background.language.zhTW' })}</Radio.Button>
               <Radio.Button value="ja_JP">日本語</Radio.Button>
               <Radio.Button value="ko_KR">한국인</Radio.Button>
-            </Radio.Group>
+            </Radio.Group> */}
+            <LanguageSelector  value={activeLanguage} onChange={setActiveLanguage} text={''} />
           </div>
 
           <div style={{ marginBottom: 16 }}>

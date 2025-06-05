@@ -154,7 +154,7 @@ export default {
   'webConfig.logo.darkLogoRequired': '请填写夜间版本的 Logo',
   'webConfig.logo.darkMode': '夜间版',
   'webConfig.logo.lightMode': '日间版',
-  'webConfig.logo.headerFooterNote': '(适用于顶部Header/底部Footer),尺寸:140*28',
+  'webConfig.logo.headerFooterNote': '(适用于顶部Header/底部Footer),高:28',
   'webConfig.logo.browserTabNote': '(适用于浏览器标签)尺寸：32*32',
   'webConfig.logo.submit': '提交',
   

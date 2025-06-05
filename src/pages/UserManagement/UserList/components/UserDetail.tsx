@@ -1,6 +1,5 @@
 import React, { useState ,useEffect} from 'react';
-import { Card, Descriptions, Badge, Space, Button, Modal, message, Input, Form, Select, Tabs } from 'antd';
-import type { UserItem } from '@/services/ant-design-pro/UserManagement';
+import { Card, Descriptions, Space, Button, Modal, message, Input, Form, Select, Tabs } from 'antd';
 import {  ProTable } from '@ant-design/pro-components';
 import { useModel, useIntl } from 'umi';
 import { 
