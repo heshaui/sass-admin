@@ -90,7 +90,7 @@ export default {
   'menu.identityVerification.basicConfig': '기본 설정',
   'menu.identityVerification.auditList': '심사 목록',
   'menu.merchantSystem': '시스템 관리',
-  'menu.merchantSystem.userAdmin': '직원 관리',
+  'menu.merchantSystem.userAdmins': '직원 관리',
   'menu.merchantSystem.roleAdmin': '역할 관리',
   'menu.merchantSystem.permissionAdmin': '권한 목록',
   'menu.inviteFriends': '친구 초대',

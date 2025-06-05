@@ -90,7 +90,7 @@ export default {
   'menu.identityVerification.basicConfig': 'Basic Configuration',
   'menu.identityVerification.auditList': 'Audit List',
   'menu.merchantSystem': 'System Management',
-  'menu.merchantSystem.userAdmin': 'Staff Management',
+  'menu.merchantSystem.userAdmins': 'Staff Management',
   'menu.merchantSystem.roleAdmin': 'Role Management',
   'menu.merchantSystem.permissionAdmin': 'Permission List',
   'menu.inviteFriends': 'Invite Friends',
