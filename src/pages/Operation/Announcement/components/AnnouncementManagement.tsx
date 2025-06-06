@@ -60,8 +60,8 @@ const AnnouncementManagement: React.FC = () => {
   // 获取公告列表
   const fetchAnnouncementList = async (params: any) => {
     try {
-      const { current, pageSize, description, status, sendTime, languageCode } = params;
-      
+      const { current, pageSize, description, sendStatus, sendTime, languageCode } = params;
+        console.log(params)
       // 处理时间范围
       let startTime, endTime;
       if (sendTime && sendTime.length === 2) {
@@ -75,7 +75,7 @@ const AnnouncementManagement: React.FC = () => {
         pageSize,
         describeText: description,
         languageCode: languageCode || 'en_US',
-        status: status,
+        status: sendStatus,
         startTime,
         endTime,
       });
@@ -86,7 +86,7 @@ const AnnouncementManagement: React.FC = () => {
         pageSize,
         describeText: description,
         languageCode: languageCode || 'en_US',
-        status: status,
+        status: sendStatus,
         startTime,
         endTime,
       });
