@@ -384,15 +384,6 @@ const CurrencyManagement: React.FC = () => {
           options={false}
           pagination={false}
           rowKey="id"
-          // toolBarRender={() => [
-          //   <Button
-          //     type="primary"
-          //     icon={<EditOutlined />}
-          //     onClick={() => handleEditExtendInfo(record, extInfo)}
-          //   >
-          //     编辑
-          //   </Button>
-          // ]}
         />
       </div>
     );
@@ -835,11 +826,6 @@ const CurrencyManagement: React.FC = () => {
               {intl.formatMessage({ id: 'currency.action.add' })}
             </Button>,
           ]}
-          rowSelection={{
-            onChange: (_, selectedRows) => {
-              setSelectedRows(selectedRows);
-            },
-          }}
           expandable={{
             expandedRowRender: renderExpandedRow,
             expandedRowKeys,
