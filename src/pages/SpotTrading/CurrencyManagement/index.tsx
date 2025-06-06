@@ -461,9 +461,22 @@ const CurrencyManagement: React.FC = () => {
         1: intl.formatMessage({ id: 'currency.status.normal' }),
         0: intl.formatMessage({ id: 'currency.status.disabled' })
       },
-      renderText: (text: number) => {
-        return text === 1 ? intl.formatMessage({ id: 'currency.status.normal' }) : intl.formatMessage({ id: 'currency.status.disabled' });
-      },
+      render: (_, record) => (
+        <Switch
+          checked={record.canRecharge === 1}
+          onChange={(checked) => {
+            Modal.confirm({
+              title: intl.formatMessage(
+                { id: 'currency.modal.confirm.canRecharge' },
+                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+              ),
+              onOk: () => {
+                // handleSwtich(record,'canRecharge');
+              },
+            });
+          }}
+        />
+      ),
     },
     {
       title: intl.formatMessage({ id: 'currency.column.recharge' }),

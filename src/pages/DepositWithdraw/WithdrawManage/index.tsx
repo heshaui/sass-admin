@@ -7,6 +7,7 @@ import DetailModal from './components/DetailModal';
 import { useNavigate } from 'react-router-dom';
 import { useIntl } from 'umi';
 import { protocolTypeList,tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
+import dayjs from 'dayjs';
 
 
 interface WithdrawRecord {
@@ -66,8 +67,8 @@ const WithdrawManage: React.FC = () => {
       protocolId: params.protocolName,
       addressTxId:params.addressTxId,
       coinId: params.coinName,
-      startTime: params.dateTimeRange && params.dateTimeRange[0] ? params.dateTimeRange[0] : null,
-      endTime: params.dateTimeRange && params.dateTimeRange[1] ? params.dateTimeRange[1] : null,
+      startTime: params.dateTimeRange && params.dateTimeRange[0] ? dayjs(params.dateTimeRange[0]).valueOf() : null,
+      endTime: params.dateTimeRange && params.dateTimeRange[1] ? dayjs(params.dateTimeRange[1]).valueOf() : null,
       userId:params.userId,
       status: params.status,
 
