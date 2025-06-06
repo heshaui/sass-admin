@@ -176,8 +176,8 @@ const CurrencyManagement: React.FC = () => {
       data['status'] = record.status === 1 ? 0 : 1;
     } else if (type === 'recharge') {
       data['recharge'] = record.recharge === 1 ? 0 : 1;
-    } else if (type === 'autoWithdraw') {
-      data['autoWithdraw'] = record.autoWithdraw === 1 ? 0 : 1;
+    } else if (type === 'withdraw') {
+      data['withdraw'] = record.withdraw === 1 ? 0 : 1;
     }
 
     const tip: Record<string, string> = {
@@ -189,6 +189,9 @@ const CurrencyManagement: React.FC = () => {
       }),
       autoWithdraw: intl.formatMessage({ 
         id: record.autoWithdraw === 1 ? 'currency.tip.autoWithdraw.off' : 'currency.tip.autoWithdraw.on' 
+      }),
+      withdraw: intl.formatMessage({ 
+        id: record.withdraw === 1 ? 'currency.tip.canWithdraw.off' : 'currency.tip.canWithdraw.on' 
       }),
     };
 
@@ -228,7 +231,7 @@ const CurrencyManagement: React.FC = () => {
     }
 
     const columns = [
-      { title: intl.formatMessage({ id: 'currency.column.protocolId' }), dataIndex: 'protocolId', key: 'protocolId' },
+      { title: intl.formatMessage({ id: 'currency.column.networkType' }), dataIndex: 'protocolName', key: 'protocolName' },
       // { 
       //   title: intl.formatMessage({ id: 'currency.column.mainAddress' }), 
       //   dataIndex: 'mainAddress', 
@@ -310,27 +313,51 @@ const CurrencyManagement: React.FC = () => {
           />
         )
       },
-      { 
-        title: intl.formatMessage({ id: 'currency.column.autoWithdraw' }), 
-        dataIndex: 'autoWithdraw', 
-        key: 'autoWithdraw',
+      {
+        title: intl.formatMessage({ id: 'currency.column.withdraw' }),
+        dataIndex: 'withdraw',
+        valueEnum:{
+          0: intl.formatMessage({ id: 'currency.switch.off' }),
+          1: intl.formatMessage({ id: 'currency.switch.on' })
+        },
         render: (dom: any, extRecord: any) => (
           <Switch
-            checked={extRecord.autoWithdraw === 1}
+            checked={extRecord.withdraw === 1}
             onChange={(checked) => {
               Modal.confirm({
                 title: intl.formatMessage(
-                  { id: 'currency.modal.confirm.autoWithdraw' },
+                  { id: 'currency.modal.confirm.canWithdraw' },
                   { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
                 ),
                 onOk: () => {
-                  handleExtSwtich(extRecord, 'autoWithdraw');
+                  handleExtSwtich(extRecord,'withdraw');
                 },
               });
             }}
           />
-        )
+        ),
       },
+      // { 
+      //   title: intl.formatMessage({ id: 'currency.column.autoWithdraw' }), 
+      //   dataIndex: 'autoWithdraw', 
+      //   key: 'autoWithdraw',
+      //   render: (dom: any, extRecord: any) => (
+      //     <Switch
+      //       checked={extRecord.autoWithdraw === 1}
+      //       onChange={(checked) => {
+      //         Modal.confirm({
+      //           title: intl.formatMessage(
+      //             { id: 'currency.modal.confirm.autoWithdraw' },
+      //             { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+      //           ),
+      //           onOk: () => {
+      //             handleExtSwtich(extRecord, 'autoWithdraw');
+      //           },
+      //         });
+      //       }}
+      //     />
+      //   )
+      // },
       { title: intl.formatMessage({ id: 'currency.column.minWithdraw' }), dataIndex: 'minWithdraw', key: 'minWithdraw' },
       { title: intl.formatMessage({ id: 'currency.column.maxWithdraw' }), dataIndex: 'maxWithdraw', key: 'maxWithdraw' },
       { title: intl.formatMessage({ id: 'currency.column.minRecharge' }), dataIndex: 'minRecharge', key: 'minRecharge' },
@@ -409,6 +436,12 @@ const CurrencyManagement: React.FC = () => {
           coinId:record.coinId,
           canAutoWithdraw:record.canAutoWithdraw===1?0:1
         }
+      }else if(type==='status'){
+        data={
+          id:record.id,
+          coinId:record.coinId,
+          status:record.status===1?0:1
+        }
       }
       const tip: Record<string, string> = {
         canRecharge: intl.formatMessage({ 
@@ -428,6 +461,9 @@ const CurrencyManagement: React.FC = () => {
     if(res.code==='0'&&res.data){
       message.success(intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }));
       actionRef.current?.reload();
+      if(type==='status'||type==='canWithdraw'||type==='canRecharge'){
+        fetchExtendInfo(record.coinId);
+      }
     }else{
       message.error(intl.formatMessage({ id: 'currency.message.error' }, { action: tip[type] }));
     }
@@ -446,14 +482,14 @@ const CurrencyManagement: React.FC = () => {
       valueType: 'text',
       search: false,
     },
-    {
-      title: intl.formatMessage({ id: 'currency.column.networkType' }),
-      dataIndex: 'mianChain',
-      search: false,
-      renderText: (text: string) => {
-        return text === '1' ? intl.formatMessage({ id: 'currency.mainChain' }) : intl.formatMessage({ id: 'currency.token' });
-      },
-    },
+    // {
+    //   title: intl.formatMessage({ id: 'currency.column.networkType' }),
+    //   dataIndex: 'mianChain',
+    //   search: false,
+    //   renderText: (text: string) => {
+    //     return text === '1' ? intl.formatMessage({ id: 'currency.mainChain' }) : intl.formatMessage({ id: 'currency.token' });
+    //   },
+    // },
     {
       title: intl.formatMessage({ id: 'currency.column.status' }),
       dataIndex: 'status',
@@ -463,15 +499,15 @@ const CurrencyManagement: React.FC = () => {
       },
       render: (_, record) => (
         <Switch
-          checked={record.canRecharge === 1}
+          checked={record.status === 1}
           onChange={(checked) => {
             Modal.confirm({
               title: intl.formatMessage(
-                { id: 'currency.modal.confirm.canRecharge' },
+                { id: 'currency.modal.confirm.status' },
                 { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
               ),
               onOk: () => {
-                // handleSwtich(record,'canRecharge');
+                handleSwtich(record,'status');
               },
             });
           }}
