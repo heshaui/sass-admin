@@ -280,8 +280,8 @@ export default {
   'tradingPair.message.addSuccess': '币对添加成功',
   'tradingPair.message.showStatusSuccess': '币对显示状态设置成功',
   'tradingPair.message.enableStatusSuccess': '币对交易状态设置成功',
-  'tradingPair.message.matchingTypeSuccess': '撥合类型设置成功',
-  'tradingPair.message.matchingTypeFailed': '撥合类型设置失败',
+  'tradingPair.message.matchingTypeSuccess': '撮合类型设置成功',
+  'tradingPair.message.matchingTypeFailed': '撮合类型设置失败',
   'tradingPair.message.cancelOrderSuccess': '撤销订单成功',
   'tradingPair.message.bindSuccess': '绑定成功',
   
@@ -290,7 +290,7 @@ export default {
   'tradingPair.modal.confirmShow': '确定要显示该币对吗？',
   'tradingPair.modal.confirmHide': '确定要隐藏该币对吗？',
   'tradingPair.modal.confirmCancelOrders': '确定要撤销所有{coinSymbol}/{baseSymbol}订单吗？',
-  'tradingPair.modal.matchingType': '撥合类型',
+  'tradingPair.modal.matchingType': '撮合类型',
   
   'tradingPair.column.sortOrder': '排序',
   'tradingPair.column.tradingPair': '币对',
@@ -305,7 +305,7 @@ export default {
   
   'tradingPair.action.edit': '修改',
   'tradingPair.action.cancelOrders': '撤销全部订单',
-  'tradingPair.action.matchingType': '撥合类型',
+  'tradingPair.action.matchingType': '撮合类型',
   
   'tradingPair.table.title': '币对管理',
   'tradingPair.button.add': '添加',

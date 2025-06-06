@@ -3,7 +3,8 @@ import {
   saveExchangeCoin,
   updateExchangeCoinById,
   updateExchangeGroup,
-  revocationExchangeCoinOrder
+  revocationExchangeCoinOrder,
+  selectExchangeGroup
 } from '@/services/ant-design-pro/spot';
 import { PlusOutlined } from '@ant-design/icons';
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
@@ -61,6 +62,7 @@ const TradingPairManagement: React.FC = () => {
   const [googleCodeData, setGoogleCodeData] = useState<any>(null);
   const [validCodeVisible, setValidCodeVisible] = useState(false);
   const [cancelOrder, setCancelOrder] = useState();
+  const [editType, setEditType] = useState<boolean>(false);
 
   const tradingPairCategories = {
     '1': '主流区',
@@ -106,6 +108,15 @@ const TradingPairManagement: React.FC = () => {
       };
     }
   };
+
+  const getExchangeGroupType=async(id: number)=>{
+    const res=await selectExchangeGroup({id})
+    if(res.code==='0'){
+      setEditType(true)
+    }else{
+      setEditType(false)
+    }
+  }
 
   // 处理添加或编辑币对
   const handleAddOrEdit = async (values: any) => {
@@ -355,6 +366,7 @@ const TradingPairManagement: React.FC = () => {
           onClick={() => {
             setCurrentMatchingRow(record);
             setMatchingTypeVisible(true);
+            getExchangeGroupType(record.id)
           }}
         >
           {intl.formatMessage({ id: 'tradingPair.action.matchingType' })}
@@ -413,7 +425,7 @@ const TradingPairManagement: React.FC = () => {
         </Radio.Group>
         <div style={{ display: 'flex', justifyContent: 'center', gap: '8px' }}>
           <Button onClick={() => setMatchingTypeVisible(false)}>{intl.formatMessage({ id: 'tradingPair.button.cancel' })}</Button>
-          <Button type="primary" onClick={handleMatchingTypeSubmit}>
+          <Button type="primary" onClick={handleMatchingTypeSubmit} disabled={editType}>
             {intl.formatMessage({ id: 'tradingPair.button.confirm' })}
           </Button>
         </div>

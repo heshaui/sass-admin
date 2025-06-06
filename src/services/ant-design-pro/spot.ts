@@ -304,3 +304,12 @@ export async function revocationExchangeCoinOrder(params?: Record<string, any>) 
     data: params,
   });
 }
+
+
+
+export async function selectExchangeGroup(params?: Record<string, any>) {
+  return request('/tenant/v1/exchange-coin/selectExchangeGroup?id=' + params.id, {
+    method: 'POST',
+    data: params,
+  });
+}
