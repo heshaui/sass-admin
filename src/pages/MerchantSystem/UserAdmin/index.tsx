@@ -66,13 +66,16 @@ const UserAdmin: React.FC = () => {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.role' }),
       dataIndex: 'role',
       key: 'role',
-      search:false,
       filters: roleOptions.map(role => ({ text: role.roleName, value: role.roleId })),
       onFilter: (value, record) => Number(record.role) === Number(value),
       render: (roleId) => {
         const role = roleOptions.find(r => Number(r.roleId)=== Number(roleId));
         return role ? role.roleName : roleId;
       },
+      valueEnum: roleOptions.reduce((acc, role) => {
+        acc[role.roleId] = { text: role.roleName, value: role.roleId }; 
+        return acc;
+      }, {} as Record<number, { text: string; value: number }>),
     },
     {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.phone' }),
@@ -362,6 +365,7 @@ const handleResetGoogleAuth = async () => {
             phone: params.phone,
             email: params.email,
             status: params.status, // 确保状态参数正确传递
+            role: params.role,
             // 可以添加其他需要的搜索参数
           };
           return await getUserList(queryParams);
