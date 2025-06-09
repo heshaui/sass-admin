@@ -8,12 +8,12 @@ export default {
   'merchant.common.status': '状态',
   'merchant.common.createTime': '创建时间',
   'merchant.common.operation': '操作',
-  
+
   // Status
   'merchant.status.normal': '正常',
   'merchant.status.frozen': '冻结',
   'merchant.status.banned': '禁止',
-  
+
   // Messages
   'merchant.message.fetchListFailed': '获取商户列表失败',
   'merchant.message.roleListFailed': '获取角色列表失败',
@@ -37,26 +37,26 @@ export default {
   'merchant.message.roleAssignSuccess': '角色分配成功',
   'merchant.message.roleAssignFailed': '角色分配失败',
   'merchant.message.roleAssignError': '角色分配异常',
-  
+
   // Form
-  'merchant.form.role.selectLabel': '选择角色',
+  'merchant.form.role.selectLabel': '选择功能',
   'merchant.form.role.placeholder': '请选择角色',
   'merchant.form.role.required': '请选择角色',
-  
+
   // Table Columns
   'merchant.table.id': 'ID',
   'merchant.table.exchangeName': '交易所名称',
   'merchant.table.contact': '联系人',
   'merchant.table.email': '邮箱',
   'merchant.table.phone': '手机号',
-  
+
   // Actions
   'merchant.action.allowLogin': '允许登录',
   'merchant.action.banLogin': '禁止登录',
   'merchant.action.resetPassword': '重置密码',
   'merchant.action.resetGoogle': '重置谷歌',
   'merchant.action.assignRole': '角色分配',
-  
+
   // Account Page
   'account.table.id': 'ID',
   'account.table.walletType': '账户唯一标识',
@@ -68,7 +68,7 @@ export default {
   'account.action.details': '详情',
   'account.message.editAccount': '编辑账户：',
   'account.message.viewAccountDetails': '查看账户详情：',
-  
+
   // Allocation Page
   'allocation.table.id': 'ID',
   'allocation.table.categoryName': '分类名称',
@@ -88,12 +88,12 @@ export default {
   'allocation.message.permissionRemoveFailed': '权限移除失败',
   'allocation.message.permissionUpdateSuccess': '权限更新成功',
   'allocation.message.permissionRequestFailed': '权限分配请求失败',
-  
+
   // Dispense Component
   'dispense.title': '权限分配',
   'dispense.form.permissionList': '权限列表',
   'dispense.message.requiredFields': '请填写所有必填项',
-  
+
   // AddCategoryModal Component
   'addCategory.modal.editTitle': '修改分类',
   'addCategory.modal.addTitle': '添加分类',
@@ -105,7 +105,7 @@ export default {
   'addCategory.form.categoryDescription.label': '分类描述',
   'addCategory.form.categoryDescription.placeholder': '20字符',
   'addCategory.form.categoryDescription.required': '请输入分类描述',
-  
+
   // Charge Component
   'charge.tab.basic': '基本信息',
   'charge.tab.logs': '操作日志',
@@ -130,7 +130,7 @@ export default {
   'charge.log.before': '操作前',
   'charge.log.after': '操作后',
   'charge.log.remarks': '备注信息',
-  
+
   // Free Component
   'free.message.fetchMerchantFailed': '获取商户数据失败',
   'free.message.requestError': '请求错误，请稍后重试',
@@ -142,7 +142,8 @@ export default {
   'free.message.rootAccountCreated': 'root账户创建成功',
   'free.message.rootAccountFailed': 'root账户创建失败',
   'free.modal.createRoot.title': '创建Root账号',
-  'free.modal.createRoot.content': '确认创建后，系统将根据企业信息自动生成Root管理员信息。您可以前往Root管理查看！',
+  'free.modal.createRoot.content':
+    '确认创建后，系统将根据企业信息自动生成Root管理员信息。您可以前往Root管理查看！',
   'free.table.merchantId': '商户ID',
   'free.table.exchangeName': '交易所名称',
   'free.table.contact': '联系人',
@@ -164,17 +165,17 @@ export default {
   'free.button.new': '新建',
   'free.modal.createTitle': '新增商户',
   'free.modal.editTitle': '编辑商户',
-    // Additional Free Component translations
-    "free.table.merchantId.column": "商户 ID",
-    "free.table.exchangeName.column": "交易所名称",
-    "free.table.contact.column": "联系人",
-    "free.table.serviceTime.column": "服务时间",
-    "free.table.registrationTime.label": "注册时间",
-    "free.table.activationTime.label": "激活时间",
-    "free.table.expiryTime.label": "到期时间",
-    "free.table.serviceStatus.notStarted": "未开始",
-    "free.table.paymentStatus.notStarted": "未开始",
-  
+  // Additional Free Component translations
+  'free.table.merchantId.column': '商户 ID',
+  'free.table.exchangeName.column': '交易所名称',
+  'free.table.contact.column': '联系人',
+  'free.table.serviceTime.column': '服务时间',
+  'free.table.registrationTime.label': '注册时间',
+  'free.table.activationTime.label': '激活时间',
+  'free.table.expiryTime.label': '到期时间',
+  'free.table.serviceStatus.notStarted': '未开始',
+  'free.table.paymentStatus.notStarted': '未开始',
+
   // MerchantEdit Component
   'merchantEdit.title': '编辑商户信息',
   'merchantEdit.button.back': '返回',
@@ -195,7 +196,7 @@ export default {
   'merchantEdit.message.invalidMerchantId': '无效的商户ID',
   'merchantEdit.message.updateSuccess': '更新商户信息成功',
   'merchantEdit.message.updateFailed': '更新商户信息失败',
-  
+
   // MerchantDetail Component
   'merchantDetail.title': '商户详情',
   'merchantDetail.button.back': '返回列表',
@@ -228,14 +229,16 @@ export default {
   'merchantDetail.languagePackage.standard': '进阶版',
   'merchantDetail.languagePackage.premium': '高级版',
   'merchantDetail.languagePackage.basicDesc': '基础版: 中英日韩',
-  'merchantDetail.languagePackage.standardDesc': '进阶版: 中英日韩、繁体中文、俄语、越南语、印地语、孟加拉语',
-  'merchantDetail.languagePackage.premiumDesc': '高级版: 中英日韩、繁体中文、俄语、越南语、印地语、孟加拉语、葡萄牙语、德语、爪哇语、土耳其语、意大利语、泰语',
+  'merchantDetail.languagePackage.standardDesc':
+    '进阶版: 中英日韩、繁体中文、俄语、越南语、印地语、孟加拉语',
+  'merchantDetail.languagePackage.premiumDesc':
+    '高级版: 中英日韩、繁体中文、俄语、越南语、印地语、孟加拉语、葡萄牙语、德语、爪哇语、土耳其语、意大利语、泰语',
   'merchantDetail.message.fetchFailed': '获取商户详情失败',
   'merchantDetail.message.requestError': '请求出错，请稍后重试',
   'merchantDetail.message.languageUpdateSuccess': '多语言服务套餐已更新',
   'merchantDetail.message.languageUpdateFailed': '更新失败：',
   'merchantDetail.message.unknownError': '未知错误',
-  
+
   // ConvertToPaid Component
   'convertToPaid.title': '服务延期',
   'convertToPaid.form.duration': '延期时长',
@@ -244,14 +247,14 @@ export default {
   'convertToPaid.validation.maxDays': '服务到期时间不能超过10天！',
   'convertToPaid.note.title': '注意：仅支持交易所到期前10天进行操作',
   'convertToPaid.note.time': '时间为：',
-  
+
   // Free/ConvertToPaid Component
   'free.convertToPaid.title': '转为正式商户',
   'free.convertToPaid.form.expiry': '服务到期',
   'free.convertToPaid.form.placeholder': '请选择到期时间',
   'free.convertToPaid.form.required': '请选择服务到期时间！',
   'free.convertToPaid.message.confirm': '确定转移至付费商户后，服务开始计算，服务有效期至',
-  
+
   // Free/MerchantEdit Component
   'free.merchantEdit.form.merchantId': '商户ID',
   'free.merchantEdit.form.exchangeName': '交易所名称',
@@ -265,7 +268,7 @@ export default {
   'free.merchantEdit.button.submit': '提交',
   'free.merchantEdit.button.create': '新增',
   'free.merchantEdit.button.cancel': '取消',
-  
+
   // Free/RootModal Component
   'free.rootModal.title': '创建root账号',
   'free.rootModal.form.nickname': '昵称',
@@ -283,14 +286,14 @@ export default {
   'free.rootModal.form.remark': '备注',
   'free.rootModal.form.remark.placeholder': '请输入联系人',
   'free.rootModal.message.formError': '请检查表单输入！',
-  
+
   // Free/ServerAdmin Component
   'free.serverAdmin.title': '服务器管理',
   'free.serverAdmin.form.domain': '域名',
   'free.serverAdmin.form.domain.required': '请输入域名',
   'free.serverAdmin.form.domain.placeholder': '请输入域名',
   'free.serverAdmin.message.validateError': '请检查输入内容！',
-  
+
   // Permissions Component
   'permissions.table.id': 'ID',
   'permissions.table.description': '描述',
@@ -316,7 +319,7 @@ export default {
   'permissions.message.deleteSuccess': '删除成功',
   'permissions.message.deleteFailed': '删除失败',
   'permissions.message.operationFailed': '操作失败',
-  
+
   // PermissionModal Component
   'permissions.modal.editTitle': '编辑权限',
   'permissions.modal.createTitle': '新建权限',
