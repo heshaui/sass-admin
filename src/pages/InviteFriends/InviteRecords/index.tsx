@@ -28,6 +28,8 @@ const InviteRecords: React.FC = () => {
     let data={
       pageNo:params.current,
       pageSize:params.pageSize,
+      account:params.account, 
+      parentUserId:params.parentUserId,
     }
     const res = await getUserInviteDetailList(data);
     if(res.code === '0'){
