@@ -84,4 +84,3 @@ export async function getFundAccountsList(params: any) {
   });
 }
 
-

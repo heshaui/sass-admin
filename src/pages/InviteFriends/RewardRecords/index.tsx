@@ -5,7 +5,7 @@ import { Card, Input, DatePicker } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { getGrantRecordList } from '@/services/ant-design-pro/inviteFriends';
 const { RangePicker } = DatePicker;
-
+import dayjs from 'dayjs';
 interface RewardRecord {
   key: string;
   serialNumber: number;
@@ -28,19 +28,23 @@ const RewardRecords: React.FC = () => {
 
 
   const getList=async(params:any)=>{
+    console.log('123',params) 
+    if(!params.dateTimeRange){
+      params.dateTimeRange=[null,null];
+    }
     let data={
       pageNo:params.current,
       pageSize:params.pageSize,
       account:params.account,
-      startTime:params.dateTimeRange[0]?params.dateTimeRange[0]:null,
-      endTime:params.dateTimeRange[1]?params.dateTimeRange[1]:null,
+       startTime:params?.dateTimeRange[0]?dayjs(params?.dateTimeRange[0]).valueOf():null,
+       endTime:params?.dateTimeRange[1]?dayjs(params?.dateTimeRange[1]).valueOf():null,
     }
     const res=await getGrantRecordList(data);
     if(res.code==='0'){
       return {
         data: res.data.list,
         success: true,
-        total: res.data.total,
+        total: res.data.count,
       }
     }
   }
@@ -137,6 +141,7 @@ const RewardRecords: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.dateTimeRange' }),
       valueType: 'dateTimeRange',
+      key: 'dateTimeRange',
       
     },
   ];
@@ -145,7 +150,7 @@ const RewardRecords: React.FC = () => {
     <PageContainer title={intl.formatMessage({ id: 'inviteFriends.rewardRecords.title' })}>
       <ProTable<RewardRecord>
         columns={columns}
-        rowKey="key"
+        rowKey="id"
         pagination={{
           pageSize: 10,
         }}

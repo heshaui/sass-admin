@@ -34,6 +34,7 @@ const InviteRecords: React.FC = () => {
       return {
         data: res.data.list,
         success: true,
+        total:res.data.count
     }
   };
 }
