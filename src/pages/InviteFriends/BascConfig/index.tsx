@@ -134,10 +134,10 @@ const BasicConfig: React.FC = () => {
     console.log(res);
   };
 
-  const getFundAccounts=async()=>{
+  const getFundAccounts=async(params:any)=>{
     let data={
-      pageNo:1,
-      pageSize:10
+      pageNo:params.current,
+      pageSize:params.pageSize
     }
     const res = await getFundAccountsList(data);
     if(res.code==='0'){
