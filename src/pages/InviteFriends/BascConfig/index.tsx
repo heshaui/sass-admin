@@ -137,14 +137,14 @@ const BasicConfig: React.FC = () => {
   const getFundAccounts=async()=>{
     let data={
       pageNo:1,
-      pageSize:10000
+      pageSize:10
     }
     const res = await getFundAccountsList(data);
     if(res.code==='0'){
       return {
         data: res.data.list,
         success: true,
-        total: res.data.total,
+        total: res.data.count,
       }
     }
   }
