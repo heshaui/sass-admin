@@ -13,7 +13,7 @@ export default {
   'rate.table.action.edit': '편집',
   'rate.table.show': '표시 여부',
   'rate.table.enable': '활성화 여부',
-  
+
   'rate.modal.create': '가격 단위 추가',
   'rate.modal.edit': '가격 단위 편집',
   'rate.form.shortName': '약어',
@@ -34,11 +34,14 @@ export default {
   'rate.form.status.required': '활성화 여부를 선택해주세요',
   'rate.form.status.yes': '예',
   'rate.form.status.no': '아니오',
-  
+
+  'rate.form.upload.size': '500,000개 미만으로 업로드하세요.',
+  'rate.form.upload.png': '24*24 png 그림',
+
   'rate.message.update.success': '업데이트 성공',
   'rate.message.update.failed': '작업 실패',
   'rate.message.operation.success': '작업 성공',
   'rate.message.operation.failed': '작업 실패',
-  
-  'pagination.total': '총 {total}개'
+
+  'pagination.total': '총 {total}개',
 };

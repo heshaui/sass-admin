@@ -13,7 +13,7 @@ export default {
   'rate.table.action.edit': '编辑',
   'rate.table.show': '是否显示',
   'rate.table.enable': '是否启用',
-  
+
   'rate.modal.create': '新增计价单位',
   'rate.modal.edit': '编辑计价单位',
   'rate.form.shortName': '简称',
@@ -34,11 +34,14 @@ export default {
   'rate.form.status.required': '请选择是否启用',
   'rate.form.status.yes': '是',
   'rate.form.status.no': '否',
-  
+
+  'rate.form.upload.size': '请上传小于500k',
+  'rate.form.upload.png': '24*24 png图片',
+
   'rate.message.update.success': '更新成功',
   'rate.message.update.failed': '操作失败',
   'rate.message.operation.success': '操作成功',
   'rate.message.operation.failed': '操作失败',
-  
-  'pagination.total': '共 {total} 条'
+
+  'pagination.total': '共 {total} 条',
 };

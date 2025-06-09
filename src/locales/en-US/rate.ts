@@ -13,7 +13,7 @@ export default {
   'rate.table.action.edit': 'Edit',
   'rate.table.show': 'Show',
   'rate.table.enable': 'Enable',
-  
+
   'rate.modal.create': 'Add Rate',
   'rate.modal.edit': 'Edit Rate',
   'rate.form.shortName': 'Short Name',
@@ -34,11 +34,14 @@ export default {
   'rate.form.status.required': 'Please select status',
   'rate.form.status.yes': 'Yes',
   'rate.form.status.no': 'No',
-  
+
+  'rate.form.upload.size': 'Please upload less than 500k',
+  'rate.form.upload.png': '24*24 png picture',
+
   'rate.message.update.success': 'Update successful',
   'rate.message.update.failed': 'Operation failed',
   'rate.message.operation.success': 'Operation successful',
   'rate.message.operation.failed': 'Operation failed',
-  
-  'pagination.total': 'Total {total} items'
+
+  'pagination.total': 'Total {total} items',
 };

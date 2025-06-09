@@ -8,12 +8,12 @@ export default {
   'merchant.common.status': '상태',
   'merchant.common.createTime': '생성 시간',
   'merchant.common.operation': '작업',
-  
+
   // Status
   'merchant.status.normal': '정상',
   'merchant.status.frozen': '동결',
   'merchant.status.banned': '금지',
-  
+
   // Messages
   'merchant.message.fetchListFailed': '상인 목록 가져오기 실패',
   'merchant.message.roleListFailed': '역할 목록 가져오기 실패',
@@ -37,26 +37,26 @@ export default {
   'merchant.message.roleAssignSuccess': '역할 할당 성공',
   'merchant.message.roleAssignFailed': '역할 할당 실패',
   'merchant.message.roleAssignError': '역할 할당 오류',
-  
+
   // Form
-  'merchant.form.role.selectLabel': '역할 선택',
+  'merchant.form.role.selectLabel': '기능 선택',
   'merchant.form.role.placeholder': '역할을 선택해주세요',
   'merchant.form.role.required': '역할을 선택해주세요',
-  
+
   // Table Columns
   'merchant.table.id': 'ID',
   'merchant.table.exchangeName': '거래소 이름',
   'merchant.table.contact': '담당자',
   'merchant.table.email': '이메일',
   'merchant.table.phone': '전화번호',
-  
+
   // Actions
   'merchant.action.allowLogin': '로그인 허용',
   'merchant.action.banLogin': '로그인 금지',
   'merchant.action.resetPassword': '비밀번호 재설정',
   'merchant.action.resetGoogle': '구글 인증 재설정',
   'merchant.action.assignRole': '역할 할당',
-  
+
   // Account Page
   'account.table.id': 'ID',
   'account.table.walletType': '계정 고유 식별자',
@@ -68,7 +68,7 @@ export default {
   'account.action.details': '상세 정보',
   'account.message.editAccount': '계정 편집:',
   'account.message.viewAccountDetails': '계정 상세 정보 보기:',
-  
+
   // Allocation Page
   'allocation.table.id': 'ID',
   'allocation.table.categoryName': '분류 이름',
@@ -88,12 +88,12 @@ export default {
   'allocation.message.permissionRemoveFailed': '권한 제거 실패',
   'allocation.message.permissionUpdateSuccess': '권한 업데이트 성공',
   'allocation.message.permissionRequestFailed': '권한 할당 요청 실패',
-  
+
   // Dispense Component
   'dispense.title': '권한 할당',
   'dispense.form.permissionList': '권한 목록',
   'dispense.message.requiredFields': '모든 필수 항목을 작성해주세요',
-  
+
   // AddCategoryModal Component
   'addCategory.modal.editTitle': '분류 수정',
   'addCategory.modal.addTitle': '분류 추가',
@@ -105,7 +105,7 @@ export default {
   'addCategory.form.categoryDescription.label': '분류 설명',
   'addCategory.form.categoryDescription.placeholder': '20자 이내',
   'addCategory.form.categoryDescription.required': '분류 설명을 입력해주세요',
-  
+
   // Charge Component
   'charge.tab.basic': '기본 정보',
   'charge.tab.logs': '작업 로그',
@@ -130,7 +130,7 @@ export default {
   'charge.log.before': '작업 전',
   'charge.log.after': '작업 후',
   'charge.log.remarks': '비고',
-  
+
   // Free Component
   'free.message.fetchMerchantFailed': '상인 데이터 가져오기 실패',
   'free.message.requestError': '요청 오류, 나중에 다시 시도해주세요',
@@ -142,7 +142,8 @@ export default {
   'free.message.rootAccountCreated': 'root 계정 생성 성공',
   'free.message.rootAccountFailed': 'root 계정 생성 실패',
   'free.modal.createRoot.title': 'Root 계정 생성',
-  'free.modal.createRoot.content': '확인 후 시스템이 기업 정보를 기반으로 Root 관리자 정보를 자동 생성합니다. Root 관리에서 확인할 수 있습니다!',
+  'free.modal.createRoot.content':
+    '확인 후 시스템이 기업 정보를 기반으로 Root 관리자 정보를 자동 생성합니다. Root 관리에서 확인할 수 있습니다!',
   'free.table.merchantId': '상인 ID',
   'free.table.exchangeName': '거래소 이름',
   'free.table.contact': '담당자',
@@ -174,7 +175,7 @@ export default {
   'free.table.expiryTime.label': '만료 시간',
   'free.table.serviceStatus.notStarted': '시작되지 않음',
   'free.table.paymentStatus.notStarted': '시작되지 않음',
-  
+
   // MerchantEdit Component
   'merchantEdit.title': '상인 정보 편집',
   'merchantEdit.button.back': '돌아가기',
@@ -195,7 +196,7 @@ export default {
   'merchantEdit.message.invalidMerchantId': '유효하지 않은 상인 ID',
   'merchantEdit.message.updateSuccess': '상인 정보 업데이트 성공',
   'merchantEdit.message.updateFailed': '상인 정보 업데이트 실패',
-  
+
   // MerchantDetail Component
   'merchantDetail.title': '상인 상세 정보',
   'merchantDetail.button.back': '목록으로 돌아가기',
@@ -228,14 +229,16 @@ export default {
   'merchantDetail.languagePackage.standard': '표준 버전',
   'merchantDetail.languagePackage.premium': '프리미엄 버전',
   'merchantDetail.languagePackage.basicDesc': '기본 버전: 중국어, 영어, 일본어, 한국어',
-  'merchantDetail.languagePackage.standardDesc': '표준 버전: 중국어, 영어, 일본어, 한국어, 번체 중국어, 러시아어, 베트남어, 힌디어, 벵골어',
-  'merchantDetail.languagePackage.premiumDesc': '프리미엄 버전: 중국어, 영어, 일본어, 한국어, 번체 중국어, 러시아어, 베트남어, 힌디어, 벵골어, 포르투갈어, 독일어, 자바어, 터키어, 이탈리아어, 태국어',
+  'merchantDetail.languagePackage.standardDesc':
+    '표준 버전: 중국어, 영어, 일본어, 한국어, 번체 중국어, 러시아어, 베트남어, 힌디어, 벵골어',
+  'merchantDetail.languagePackage.premiumDesc':
+    '프리미엄 버전: 중국어, 영어, 일본어, 한국어, 번체 중국어, 러시아어, 베트남어, 힌디어, 벵골어, 포르투갈어, 독일어, 자바어, 터키어, 이탈리아어, 태국어',
   'merchantDetail.message.fetchFailed': '상인 상세 정보 가져오기 실패',
   'merchantDetail.message.requestError': '요청 오류, 나중에 다시 시도해주세요',
   'merchantDetail.message.languageUpdateSuccess': '다국어 서비스 패키지가 업데이트되었습니다',
   'merchantDetail.message.languageUpdateFailed': '업데이트 실패:',
   'merchantDetail.message.unknownError': '알 수 없는 오류',
-  
+
   // ConvertToPaid Component
   'convertToPaid.title': '서비스 연장',
   'convertToPaid.form.duration': '연장 기간',
@@ -244,14 +247,15 @@ export default {
   'convertToPaid.validation.maxDays': '서비스 만료 시간은 10일을 초과할 수 없습니다!',
   'convertToPaid.note.title': '참고: 거래소 만료 10일 전에만 작업 가능합니다',
   'convertToPaid.note.time': '시간:',
-  
+
   // Free/ConvertToPaid Component
   'free.convertToPaid.title': '정식 상인으로 전환',
   'free.convertToPaid.form.expiry': '서비스 만료',
   'free.convertToPaid.form.placeholder': '만료 시간을 선택해주세요',
   'free.convertToPaid.form.required': '서비스 만료 시간을 선택해주세요!',
-  'free.convertToPaid.message.confirm': '유료 상인으로 전환 확인 후 서비스가 시작되며, 서비스 유효 기간은 다음과 같습니다:',
-  
+  'free.convertToPaid.message.confirm':
+    '유료 상인으로 전환 확인 후 서비스가 시작되며, 서비스 유효 기간은 다음과 같습니다:',
+
   // Free/MerchantEdit Component
   'free.merchantEdit.form.merchantId': '상인 ID',
   'free.merchantEdit.form.exchangeName': '거래소 이름',
@@ -265,7 +269,7 @@ export default {
   'free.merchantEdit.button.submit': '제출',
   'free.merchantEdit.button.create': '추가',
   'free.merchantEdit.button.cancel': '취소',
-  
+
   // Free/RootModal Component
   'free.rootModal.title': 'root 계정 생성',
   'free.rootModal.form.nickname': '닉네임',
@@ -283,14 +287,14 @@ export default {
   'free.rootModal.form.remark': '비고',
   'free.rootModal.form.remark.placeholder': '담당자를 입력해주세요',
   'free.rootModal.message.formError': '양식 입력을 확인해주세요!',
-  
+
   // Free/ServerAdmin Component
   'free.serverAdmin.title': '서버 관리',
   'free.serverAdmin.form.domain': '도메인',
   'free.serverAdmin.form.domain.required': '도메인을 입력해주세요',
   'free.serverAdmin.form.domain.placeholder': '도메인을 입력해주세요',
   'free.serverAdmin.message.validateError': '입력 내용을 확인해주세요!',
-  
+
   // Permissions Component
   'permissions.table.id': 'ID',
   'permissions.table.description': '설명',
@@ -304,7 +308,7 @@ export default {
   'permissions.table.pagePath': '페이지 경로',
   'permissions.table.componentPath': '컴포넌트 경로',
   'permissions.table.icon': '아이콘',
-  
+
   // Permissions Toolbar
   'permissions.toolbar.search': '검색',
   'permissions.toolbar.reset': '초기화',
@@ -315,7 +319,7 @@ export default {
   'permissions.message.deleteSuccess': '삭제 성공',
   'permissions.message.deleteFailed': '삭제 실패',
   'permissions.message.operationFailed': '작업 실패',
-  
+
   // PermissionModal Component
   'permissions.modal.editTitle': '권한 편집',
   'permissions.modal.createTitle': '권한 생성',
@@ -338,5 +342,5 @@ export default {
   'permissions.form.sort': '정렬',
   'permissions.form.sort.required': '정렬을 입력해주세요',
   'permissions.form.icon': '아이콘',
-  'permissions.form.icon.required': '아이콘을 입력해주세요'
+  'permissions.form.icon.required': '아이콘을 입력해주세요',
 };

@@ -1,12 +1,22 @@
-import React, { useRef, useState, createRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useIntl } from '@umijs/max';
-import { PageContainer,ProTable } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ActionType, ProColumns, FormInstance } from '@ant-design/pro-components';
-import { Button, message, Switch,Image } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
-import { ModalForm, ProFormText, ProFormDigit, ProFormSwitch, ProFormItem } from '@ant-design/pro-components';
-import { queryRateList, updateRate, queryTenantRateList,updateExchangeRateById,updateTenantExchangeRate } from '../../services/ant-design-pro/Rate';
-import AvatarUpload from "@/components/AvatarUpload/index";
+import { message, Switch, Image } from 'antd';
+import {
+  ModalForm,
+  ProFormText,
+  ProFormDigit,
+  ProFormSwitch,
+  ProFormItem,
+} from '@ant-design/pro-components';
+import {
+  queryRateList,
+  updateRate,
+  queryTenantRateList,
+  updateExchangeRateById,
+} from '../../services/ant-design-pro/Rate';
+import AvatarUpload from '@/components/AvatarUpload/index';
 
 const Rate: React.FC = () => {
   const actionRef = useRef<ActionType>();
@@ -17,36 +27,35 @@ const Rate: React.FC = () => {
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const formRef = useRef<FormInstance>();
 
-  const merchantUpdateRate=async(id:string,status:number)=>{
-    const res= await updateRate({
+  const merchantUpdateRate = async (id: string, status: number) => {
+    const res = await updateRate({
       id,
       status,
     });
-    if(res.code === '0'){
+    if (res.code === '0') {
       message.success(intl.formatMessage({ id: 'rate.message.operation.success' }));
       actionRef.current?.reload();
-    }else{
+    } else {
       message.error(res.message);
     }
-  }
+  };
 
   // 处理表单提交
   const handleSubmit = async (values: any) => {
     try {
-
-     const res= await updateExchangeRateById({
-          ...values,
-          id: currentRow.id,
-        });
-        if(res.code === '0'){
+      const res = await updateExchangeRateById({
+        ...values,
+        id: currentRow.id,
+      });
+      if (res.code === '0') {
         message.success(intl.formatMessage({ id: 'rate.message.operation.success' }));
-        }else{
-          message.error(res.message);
-        }
-    
+      } else {
+        message.error(res.message);
+      }
+
       setCreateModalVisible(false);
       actionRef.current?.reload();
-      return true;  
+      return true;
     } catch (error) {
       message.error(intl.formatMessage({ id: 'rate.message.operation.failed' }));
       return false;
@@ -58,13 +67,13 @@ const Rate: React.FC = () => {
     setCurrentRow(record);
     setEditMode(true);
     setCreateModalVisible(true);
-    
+
     // 延迟设置表单值，确保表单已完全挂载
     setTimeout(() => {
       formRef.current?.setFieldsValue({
         ...record,
         // 将 status 转换为 boolean 值用于 Switch 组件
-        status: record.status === 1
+        status: record.status === 1,
       });
     }, 100);
   };
@@ -79,13 +88,7 @@ const Rate: React.FC = () => {
       title: intl.formatMessage({ id: 'rate.table.icon' }),
       dataIndex: 'iconUrl',
       search: false,
-      render: (_, record: any) => (
-        <Image 
-          src={record.iconUrl} 
-          width={50} 
-          height={50} 
-        />
-      ),
+      render: (_, record: any) => <Image src={record.iconUrl} width={50} height={50} />,
     },
     {
       title: intl.formatMessage({ id: 'rate.table.shortName' }),
@@ -116,37 +119,55 @@ const Rate: React.FC = () => {
     //     false: { text: '否', status: 'Default' },
     //   },
     // },
-    ...(isAdmin ? [{
-      title: intl.formatMessage({ id: 'rate.table.show' }),
-      dataIndex: 'status',
-      key: 'status',
-      renderText: (text: number) => text === 1 ? intl.formatMessage({ id: 'merchant.status.normal' }) : intl.formatMessage({ id: 'merchant.status.banned' }),
-      valueEnum: {
-            1: { text: intl.formatMessage({ id: 'merchant.status.normal' }), status: 'Success' },
-            0: { text: intl.formatMessage({ id: 'merchant.status.banned' }), status: 'Default' },
+    ...(isAdmin
+      ? [
+          {
+            title: intl.formatMessage({ id: 'rate.table.enable' }),
+            dataIndex: 'status',
+            key: 'status',
+            renderText: (text: number) =>
+              text === 1
+                ? intl.formatMessage({ id: 'merchant.status.normal' })
+                : intl.formatMessage({ id: 'merchant.status.banned' }),
+            valueEnum: {
+              1: { text: intl.formatMessage({ id: 'merchant.status.normal' }), status: 'Success' },
+              0: { text: intl.formatMessage({ id: 'merchant.status.banned' }), status: 'Default' },
+            },
           },
-    }] : []),
+        ]
+      : []),
 
-    ...(!isAdmin ? [{
-      title: intl.formatMessage({ id: 'rate.table.enable' }),
-      dataIndex: 'status',
-      key: 'status',
-      valueEnum: {
-        1: { text: intl.formatMessage({ id: 'merchant.status.normal' }), status: 'Success' },
-        0: { text: intl.formatMessage({ id: 'merchant.status.banned' }), status: 'Default' },
-      },
-      render: (_: any, record: any) => [
-        <Switch key="switch" checked={record.status === 1} onChange={(checked: boolean) => merchantUpdateRate(record.id, checked ? 1 : 0)} />
-      ]
-    }] : []),
+    ...(!isAdmin
+      ? [
+          {
+            title: intl.formatMessage({ id: 'rate.table.enable' }),
+            dataIndex: 'status',
+            key: 'status',
+            valueEnum: {
+              1: { text: intl.formatMessage({ id: 'merchant.status.normal' }), status: 'Success' },
+              0: { text: intl.formatMessage({ id: 'merchant.status.banned' }), status: 'Default' },
+            },
+            render: (_: any, record: any) => [
+              <Switch
+                key="switch"
+                checked={record.status === 1}
+                onChange={(checked: boolean) => merchantUpdateRate(record.id, checked ? 1 : 0)}
+              />,
+            ],
+          },
+        ]
+      : []),
     {
       title: intl.formatMessage({ id: 'rate.table.action' }),
       valueType: 'option',
-      render: (_, record) => [isAdmin?
-        <a key="edit" onClick={() => handleEdit(record)} style={{ color: '#1890ff' }}>
-          {intl.formatMessage({ id: 'rate.table.action.edit' })}
-        </a>:
-       ''
+      render: (_, record) => [
+        isAdmin ? (
+          <a key="edit" onClick={() => handleEdit(record)} style={{ color: '#1890ff' }}>
+            {intl.formatMessage({ id: 'rate.table.action.edit' })}
+          </a>
+        ) : (
+          ''
+        ),
       ],
     },
   ];
@@ -158,7 +179,7 @@ const Rate: React.FC = () => {
         actionRef={actionRef}
         rowKey="id"
         columns={columns}
-        request={async (params, sort, filter) => {
+        request={async (params) => {
           // 转换分页参数名称
           const { current, pageSize, ...restParams } = params;
           const convertedParams = {
@@ -166,8 +187,10 @@ const Rate: React.FC = () => {
             pageNo: current,
             pageSize: pageSize,
           };
-         
-          const response = isAdmin ? await queryRateList(convertedParams) : await queryTenantRateList(convertedParams);
+
+          const response = isAdmin
+            ? await queryRateList(convertedParams)
+            : await queryTenantRateList(convertedParams);
           return {
             data: response.data.list || [],
             success: response.code === '0',
@@ -183,7 +206,11 @@ const Rate: React.FC = () => {
       />
 
       <ModalForm
-        title={editMode ? intl.formatMessage({ id: 'rate.modal.edit' }) : intl.formatMessage({ id: 'rate.modal.create' })}
+        title={
+          editMode
+            ? intl.formatMessage({ id: 'rate.modal.edit' })
+            : intl.formatMessage({ id: 'rate.modal.create' })
+        }
         width="400px"
         open={createModalVisible}
         onOpenChange={setCreateModalVisible}
@@ -191,20 +218,24 @@ const Rate: React.FC = () => {
         formRef={formRef}
         modalProps={{
           destroyOnClose: true,
-          afterClose: () => formRef.current?.resetFields()
+          afterClose: () => formRef.current?.resetFields(),
         }}
       >
         <ProFormText
           name="shortName"
           label={intl.formatMessage({ id: 'rate.form.shortName' })}
           placeholder={intl.formatMessage({ id: 'rate.form.shortName.placeholder' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.shortName.required' }) }]}
+          rules={[
+            { required: true, message: intl.formatMessage({ id: 'rate.form.shortName.required' }) },
+          ]}
         />
         <ProFormText
           name="symbol"
           label={intl.formatMessage({ id: 'rate.form.symbol' })}
           placeholder={intl.formatMessage({ id: 'rate.form.symbol.placeholder' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.symbol.required' }) }]}
+          rules={[
+            { required: true, message: intl.formatMessage({ id: 'rate.form.symbol.required' }) },
+          ]}
         />
         <ProFormDigit
           name="accuracy"
@@ -213,7 +244,9 @@ const Rate: React.FC = () => {
           min={0}
           max={18}
           fieldProps={{ precision: 0 }}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.accuracy.required' }) }]}
+          rules={[
+            { required: true, message: intl.formatMessage({ id: 'rate.form.accuracy.required' }) },
+          ]}
         />
         <ProFormDigit
           name="exchangeRate"
@@ -221,35 +254,43 @@ const Rate: React.FC = () => {
           placeholder={intl.formatMessage({ id: 'rate.form.exchangeRate.placeholder' })}
           min={0}
           fieldProps={{ precision: 2 }}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.exchangeRate.required' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'rate.form.exchangeRate.required' }),
+            },
+          ]}
         />
-        
+
         <ProFormItem
           name="iconUrl"
+          extra={
+            <div style={{ marginBottom: formRef?.current?.getFieldValue('iconUrl') ? 0 : 8 }}>
+              <div>{intl.formatMessage({ id: 'rate.form.upload.size' })}</div>
+              <div>{intl.formatMessage({ id: 'rate.form.upload.png' })}</div>
+            </div>
+          }
           label={intl.formatMessage({ id: 'rate.form.icon' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.icon.required' }) }]}
+          rules={[
+            { required: true, message: intl.formatMessage({ id: 'rate.form.icon.required' }) },
+          ]}
         >
-          <AvatarUpload 
-
-            onChange={(url) => formRef.current?.setFieldsValue({ iconUrl: url })} 
-          />
+          <AvatarUpload onChange={(url) => formRef.current?.setFieldsValue({ iconUrl: url })} />
         </ProFormItem>
         <ProFormSwitch
           name="status"
           label={intl.formatMessage({ id: 'rate.form.status' })}
           checkedChildren={intl.formatMessage({ id: 'rate.form.status.yes' })}
           unCheckedChildren={intl.formatMessage({ id: 'rate.form.status.no' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'rate.form.status.required' }) }]}
+          rules={[
+            { required: true, message: intl.formatMessage({ id: 'rate.form.status.required' }) },
+          ]}
           valuePropName="checked"
           transform={(value) => ({ status: value ? 1 : 0 })}
         />
-       
       </ModalForm>
-
-     
-
     </PageContainer>
   );
 };
 
-export default Rate; 
+export default Rate;

@@ -11,7 +11,6 @@ declare namespace API {
     [property: string]: any;
   };
 
-  
   type EmployeeResp = {
     /**
      * 员工邮箱
@@ -42,12 +41,12 @@ declare namespace API {
      */
     status?: number;
     [property: string]: any;
-}
+  };
 
-/**
- * 管理员权限表，权限数据 顶级父类Id是0
- */
- type TenantAuthority = {
+  /**
+   * 管理员权限表，权限数据 顶级父类Id是0
+   */
+  type TenantAuthority = {
     /**
      * 描述
      */
@@ -89,7 +88,7 @@ declare namespace API {
      */
     type: number;
     [property: string]: any;
-}
+  };
 
   type LoginResult = {
     status?: string;
@@ -129,14 +128,14 @@ declare namespace API {
     deviceType?: String;
   };
 
-type FackeResult={
-  code?: string;
-  data?: { [key: string]: any };
-  failMsg?: Response;
-  message?: string;
-  reqNo?: string;
-  [property: string]: any;
-}
+  type FackeResult = {
+    code?: string;
+    data?: { [key: string]: any };
+    failMsg?: Response;
+    message?: string;
+    reqNo?: string;
+    [property: string]: any;
+  };
 
   type FakeCaptcha = {
     code?: number;
@@ -149,7 +148,6 @@ type FackeResult={
     googleCode?: string;
     emailCode?: string;
     rememberPassword?: boolean;
-
   };
 
   type ErrorResponse = {
@@ -183,133 +181,132 @@ type FackeResult={
     type?: NoticeIconItemType;
   };
 
-
   /**
- * TenantAuthorityVo，权限查询对象
- */
-export type TenantAuthorityVo = {
-  /**
-   * 描述
+   * TenantAuthorityVo，权限查询对象
    */
-  description?: string;
-  /**
-   * 名称
-   */
-  name?: string;
-  pageNo?: number;
-  pageSize?: number;
-  /**
-   * 父级ID
-   */
-  parentId?: number;
-  /**
-   * 中文标题
-   */
-  title?: string;
-  /**
-   * 类型: 1 - 导航栏, 2 - 操作权限
-   */
-  type?: number;
-  [property: string]: any;
-}
-
-
-/**
- * BaseResponsePageRespTenantAuthority
- */
-export type Response = {
-  code?: string;
-  data?: PageRespTenantAuthority;
-  failMsg?: BaseResponse;
-  message?: string;
-  reqNo?: string;
-  [property: string]: any;
-}
-
-/**
-* PageRespTenantAuthority
-*/
-export type PageRespTenantAuthority = {
-  count?: number;
-  list?: TenantAuthority[];
-  [property: string]: any;
-}
-
-/**
-* 管理员权限表，权限数据 顶级父类Id是0
-*/
-export type TenantAuthority = {
-  /**
-   * 描述
-   */
-  description: string;
-  /**
-   * 图标
-   */
-  icon?: string;
-  /**
-   * 主键ID
-   */
-  id?: number;
-  /**
-   * Shiro名称
-   */
-  name: string;
-  /**
-   * 父级ID
-   */
-  parentId: number;
-  /**
-   * 路径
-   */
-  path?: string;
-  /**
-   * 排序
-   */
-  sort: number;
-  /**
-   * 中文标题
-   */
-  title: string;
-  /**
-   * 多语言标题key
-   */
-  titleKey: string;
-  /**
-   * 类型，1 - 导航栏, 2 - 操作权限
-   */
-  type: number;
-  [property: string]: any;
-}
-
-/**
-* BaseResponse
-*/
-export type BaseResponse = {
-  code?: string;
-  data?: { [key: string]: any };
-  failMsg?: BaseResponse;
-  message?: string;
-  reqNo?: string;
-};
-
-type GoogleAuthVo = {
-  /** Google Authenticator code */
-  code: string;
-  /** Google Authenticator secret key */
-  secret?: string;
-};
-
-type GoogleAuthResponse = {
-  /** Response code */
-  code: string;
-  /** Response message */
-  message?: string;
-  /** Response data */
-  data?: {
-    /** Whether the operation was successful */
-    success: boolean;
-    /** Additional message */
-    message?: string;
+  export type TenantAuthorityVo = {
+    /**
+     * 描述
+     */
+    description?: string;
+    /**
+     * 名称
+     */
+    name?: string;
+    pageNo?: number;
+    pageSize?: number;
+    /**
+     * 父级ID
+     */
+    parentId?: number;
+    /**
+     * 中文标题
+     */
+    title?: string;
+    /**
+     * 类型: 1 - 导航栏, 2 - 操作权限
+     */
+    type?: number;
+    [property: string]: any;
   };
-};
+
+  /**
+   * BaseResponsePageRespTenantAuthority
+   */
+  export type Response = {
+    code?: string;
+    data?: PageRespTenantAuthority;
+    failMsg?: BaseResponse;
+    message?: string;
+    reqNo?: string;
+    [property: string]: any;
+  };
+
+  /**
+   * PageRespTenantAuthority
+   */
+  export type PageRespTenantAuthority = {
+    count?: number;
+    list?: TenantAuthority[];
+    [property: string]: any;
+  };
+
+  /**
+   * 管理员权限表，权限数据 顶级父类Id是0
+   */
+  export type TenantAuthority = {
+    /**
+     * 描述
+     */
+    description: string;
+    /**
+     * 图标
+     */
+    icon?: string;
+    /**
+     * 主键ID
+     */
+    id?: number;
+    /**
+     * Shiro名称
+     */
+    name: string;
+    /**
+     * 父级ID
+     */
+    parentId: number;
+    /**
+     * 路径
+     */
+    path?: string;
+    /**
+     * 排序
+     */
+    sort: number;
+    /**
+     * 中文标题
+     */
+    title: string;
+    /**
+     * 多语言标题key
+     */
+    titleKey: string;
+    /**
+     * 类型，1 - 导航栏, 2 - 操作权限
+     */
+    type: number;
+    [property: string]: any;
+  };
+
+  /**
+   * BaseResponse
+   */
+  export type BaseResponse = {
+    code?: string;
+    data?: { [key: string]: any };
+    failMsg?: BaseResponse;
+    message?: string;
+    reqNo?: string;
+  };
+
+  type GoogleAuthVo = {
+    /** Google Authenticator code */
+    code: string;
+    /** Google Authenticator secret key */
+    secret?: string;
+  };
+
+  type GoogleAuthResponse = {
+    /** Response code */
+    code: string;
+    /** Response message */
+    message?: string;
+    /** Response data */
+    data?: {
+      /** Whether the operation was successful */
+      success: boolean;
+      /** Additional message */
+      message?: string;
+    };
+  };
+}
