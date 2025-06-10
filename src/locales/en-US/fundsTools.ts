@@ -104,4 +104,19 @@ export default {
 
   // TransferTool Account Types
   'transferTool.account.user': 'User Account',
+
+  'transferTool.account.company_general_account': 'Company General Account', // 公司总账户
+  'transferTool.account.withdrawal_fee_account': 'Withdrawal Account Type Description', // 转出账户类型描述
+  'transferTool.account.recharge_fee_account': 'Recharge Fee', // 充值手续费
+  'transferTool.account.invite_rebate_account': 'Invitation Rebate Account', // 邀请返佣账户
+  'transferTool.account.fee_account': 'Trading Fee Wallet', // 币对手续费钱包
+  'transferTool.account.virtual_accounts': 'Virtual Accounts', // 虚拟账户
+  'transferTool.account.total_withdrawal_account': 'Company Withdrawal Transfer Account', // 公司提现划转账户
+
+
+  // TransferTool Scene Types
+  'transferTool.scene.M2M': 'User-to-User Transfer',
+  'transferTool.scene.M2U': 'User-to-Company Transfer',
+  'transferTool.scene.U2M': 'Company-to-User Transfer',
+  'transferTool.scene.U2U': 'User-to-User Transfer'
 };

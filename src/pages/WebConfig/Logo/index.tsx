@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { PageContainer } from "@ant-design/pro-components";
-import { Tabs, Button, message } from "antd";
-import { useIntl } from 'umi';
+import { PageContainer } from '@ant-design/pro-components';
+import { Tabs, Button, message, Modal } from 'antd';
+import { useIntl } from '@umijs/max';
 import AvatarUpload from '@/components/AvatarUpload';
-import { 
+import {
   updateValue,
   getTenantKeyParams,
-  // updateTenantKv, 
+  // updateTenantKv,
 } from '@/services/ant-design-pro/kv';
+import { validateImageFile } from '@/utils/validateImage';
 
 const { TabPane } = Tabs;
 
@@ -16,28 +17,29 @@ const Logo: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [darkLogo, setDarkLogo] = useState({ header: '', favicon: '' });
   const [lightLogo, setLightLogo] = useState({ header: '', favicon: '' });
+  const [showImage, setShowImage] = useState('');
 
   // 获取logo数据
   const getLogoData = async () => {
     setLoading(true);
     try {
-      let data={
-        key:'logo'
-      }
+      let data = {
+        key: 'logo',
+      };
       const res = await getTenantKeyParams(data);
       if (res.code === '0' && res.data) {
-        let keyData=JSON.parse(res.data.keyValue) 
-        console.log(keyData)  
+        let keyData = JSON.parse(res.data.keyValue);
+        console.log(keyData);
         const darkData = keyData.dark;
-        const lightData = keyData.light
-        
+        const lightData = keyData.light;
+
         setDarkLogo({
           header: darkData.headerLogo || '',
-          favicon: darkData.favicon || ''
+          favicon: darkData.favicon || '',
         });
         setLightLogo({
           header: lightData.headerLogo || '',
-          favicon: lightData.favicon || ''
+          favicon: lightData.favicon || '',
         });
       }
     } catch (error) {
@@ -66,34 +68,34 @@ const Logo: React.FC = () => {
         if (existingData.code === '0' && existingData.data) {
           const keyData = JSON.parse(existingData.data.keyValue);
           submitData = {
-            keyProperty:'logo',
+            keyProperty: 'logo',
             keyValue: JSON.stringify({
               dark: {
                 headerLogo: darkLogo.header,
-                favicon: darkLogo.favicon
+                favicon: darkLogo.favicon,
               },
-              light: keyData.light // 使用现有的日间版本数据
-            })
+              light: keyData.light, // 使用现有的日间版本数据
+            }),
           };
         }
       } else {
         // 正常提交数据
         submitData = {
-          keyProperty:'logo',
+          keyProperty: 'logo',
           keyValue: JSON.stringify({
             dark: {
               headerLogo: darkLogo.header,
-              favicon: darkLogo.favicon
+              favicon: darkLogo.favicon,
             },
             light: {
               headerLogo: lightLogo.header,
-              favicon: lightLogo.favicon
-            }
-          })
+              favicon: lightLogo.favicon,
+            },
+          }),
         };
       }
 
-      const res = await updateValue(submitData);
+      const res = await updateValue(submitData || { keyValue: '' });
       if (res.code === '0') {
         message.success(intl.formatMessage({ id: 'webConfig.logo.updateSuccess' }));
       } else {
@@ -112,26 +114,69 @@ const Logo: React.FC = () => {
 
   return (
     <PageContainer>
+      <Modal
+        open={!!showImage}
+        centered
+        onCancel={() => setShowImage('')}
+        footer={null}
+        style={{ backgroundColor: 'transparent' }}
+      >
+        <img src={showImage} style={{ width: '100%', height: '100%' }} />
+      </Modal>
       <Tabs defaultActiveKey="1">
         <TabPane tab={intl.formatMessage({ id: 'webConfig.logo.darkMode' })} key="1">
           <div style={{ display: 'flex', marginBottom: 16 }}>
             <div style={{ marginRight: 16 }}>
               <AvatarUpload
+                beforeUpload={(file) =>
+                  validateImageFile(file, {
+                    maxSizeKB: 500,
+                    exactWidth: 140,
+                    exactHeight: 28,
+                    intl
+                  })
+                }
                 value={darkLogo.header}
                 onChange={(value) => {
-                  setDarkLogo(prev => ({ ...prev, header: value }));
+                  setDarkLogo((prev) => ({ ...prev, header: value }));
                 }}
               />
-              <p>{intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}</p>
+              <p>
+                {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.logo.size' })}
+                <br />
+                {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}
+                {darkLogo.header && (
+                  <Button type="link" onClick={() => setShowImage(darkLogo.header)}>
+                    {intl.formatMessage({ id: 'language.button.view' })}
+                  </Button>
+                )}
+              </p>
             </div>
             <div>
               <AvatarUpload
+                beforeUpload={(file) =>
+                  validateImageFile(file, {
+                    maxSizeKB: 500,
+                    exactWidth: 32,
+                    exactHeight: 32,
+                    intl
+                  })
+                }
                 value={darkLogo.favicon}
                 onChange={(value) => {
-                  setDarkLogo(prev => ({ ...prev, favicon: value }));
+                  setDarkLogo((prev) => ({ ...prev, favicon: value }));
                 }}
               />
-              <p>{intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}</p>
+              <p>
+                {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.icon.size' })}
+                <br />
+                {intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}
+                {darkLogo.favicon && (
+                  <Button type="link" onClick={() => setShowImage(darkLogo.favicon)}>
+                    {intl.formatMessage({ id: 'language.button.view' })}
+                  </Button>
+                )}
+              </p>
             </div>
           </div>
           <Button type="primary" loading={loading} onClick={() => handleSubmit('dark')}>
@@ -142,21 +187,55 @@ const Logo: React.FC = () => {
           <div style={{ display: 'flex', marginBottom: 16 }}>
             <div style={{ marginRight: 16 }}>
               <AvatarUpload
+                beforeUpload={(file) =>
+                  validateImageFile(file, {
+                    maxSizeKB: 500,
+                    exactWidth: 140,
+                    exactHeight: 28,
+                    intl
+                  })
+                }
                 value={lightLogo.header}
                 onChange={(value) => {
-                  setLightLogo(prev => ({ ...prev, header: value }));
+                  setLightLogo((prev) => ({ ...prev, header: value }));
                 }}
               />
-              <p>{intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}</p>
+              <p>
+                {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.logo.size' })}
+                <br />
+                {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}
+                {lightLogo.header && (
+                  <Button type="link" onClick={() => setShowImage(lightLogo.header)}>
+                    {intl.formatMessage({ id: 'language.button.view' })}
+                  </Button>
+                )}
+              </p>
             </div>
             <div>
               <AvatarUpload
+                beforeUpload={(file) =>
+                  validateImageFile(file, {
+                    maxSizeKB: 500,
+                    exactWidth: 32,
+                    exactHeight: 32,
+                    intl
+                  })
+                }
                 value={lightLogo.favicon}
                 onChange={(value) => {
-                  setLightLogo(prev => ({ ...prev, favicon: value }));
+                  setLightLogo((prev) => ({ ...prev, favicon: value }));
                 }}
               />
-              <p>{intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}</p>
+              <p>
+                {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.icon.size' })}
+                <br />
+                {intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}
+                {lightLogo.favicon && (
+                  <Button type="link" onClick={() => setShowImage(lightLogo.favicon)}>
+                    {intl.formatMessage({ id: 'language.button.view' })}
+                  </Button>
+                )}
+              </p>
             </div>
           </div>
           <Button type="primary" loading={loading} onClick={() => handleSubmit('light')}>

@@ -10,7 +10,7 @@ export default {
   'riskControl.alerts.startDate': 'Start Date',
   'riskControl.alerts.endDate': 'End Date',
   'riskControl.alerts.filterConditions': 'Filter Condition Status',
-  
+
   // Config page
   'riskControl.config.saveSuccess': 'Save Successful',
   'riskControl.config.assetImbalance': 'Asset Imbalance',
@@ -21,7 +21,7 @@ export default {
   'riskControl.config.riskLevel': 'Risk Control Level',
   'riskControl.config.level': 'Level',
   'riskControl.config.alarmNotification': 'Alarm Notification',
-  'riskControl.config.emailOrPhoneHint': 'Email or phone, separated by commas',
+  'riskControl.config.emailOrPhoneHint': 'Email or mobile phone number, separated by commas',
   'riskControl.config.googleVerificationCode': 'Google Verification Code',
   'riskControl.config.enterGoogleVerificationCode': 'Please enter Google verification code',
   'riskControl.config.moneyLaundering': 'Money Laundering Suspicion',
@@ -35,7 +35,7 @@ export default {
   'riskControl.config.riskLevelPlus': 'Risk Level +',
   'riskControl.config.userWithdrawalAddressNoSuccess': 'User withdrawal address with no previous successful withdrawals >',
   'riskControl.config.twoAccountsWithdrawToSameAddress': 'Two different accounts withdrawing to the same address',
-  
+
   // Suggestions page
   'riskControl.suggestions.riskControlSuggestions': 'Risk Control Suggestions Data',
   'riskControl.suggestions.editingStatus': 'Add/Edit Status',
