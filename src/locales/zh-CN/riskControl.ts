@@ -10,7 +10,7 @@ export default {
   'riskControl.alerts.startDate': '开始日期',
   'riskControl.alerts.endDate': '结束日期',
   'riskControl.alerts.filterConditions': '筛选条件状态',
-  
+
   // Config page
   'riskControl.config.saveSuccess': '保存成功',
   'riskControl.config.assetImbalance': '资产不平',
@@ -21,7 +21,7 @@ export default {
   'riskControl.config.riskLevel': '风控等级',
   'riskControl.config.level': '级',
   'riskControl.config.alarmNotification': '报警通知',
-  'riskControl.config.emailOrPhoneHint': '邮箱或手机，以类文通号啓开',
+  'riskControl.config.emailOrPhoneHint': '邮箱或手机，以英文逗号隔开',
   'riskControl.config.googleVerificationCode': '谷歌验证码',
   'riskControl.config.enterGoogleVerificationCode': '请输入谷歌验证码',
   'riskControl.config.moneyLaundering': '洗钱嫌疑',
@@ -35,7 +35,7 @@ export default {
   'riskControl.config.riskLevelPlus': '风控等级+',
   'riskControl.config.userWithdrawalAddressNoSuccess': '用户提现地址之前未成功提现 >',
   'riskControl.config.twoAccountsWithdrawToSameAddress': '两个不同的账户提现到同一个地址',
-  
+
   // Suggestions page
   'riskControl.suggestions.riskControlSuggestions': '风控建议数据',
   'riskControl.suggestions.editingStatus': '添加编辑状态',
