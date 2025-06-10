@@ -4,7 +4,7 @@ export default {
   'webConfig.background.fetchError': '배경 이미지 데이터 가져오기 실패:',
   'webConfig.background.template': '템플릿',
   'webConfig.background.view': '보기',
-  
+
 // Table columns
 'webConfig.background.column.title': '메인 제목',
 'webConfig.background.column.subtitle': '부제목',
@@ -97,7 +97,7 @@ export default {
   'webConfig.footer.modal.display': '보이기',
   'webConfig.footer.modal.cancel': '취소',
   'webConfig.footer.modal.submit': '제출',
-  
+
   // Header component
   'webConfig.header.fetchFailed': '메뉴 데이터 가져오기 실패',
   'webConfig.header.fetchMenuDetailFailed': '메뉴 상세 정보 가져오기 실패',
@@ -115,7 +115,7 @@ export default {
   'webConfig.header.cancelText': '취소',
   'webConfig.header.addTopLevelMenu': '최상위 메뉴 추가',
   'webConfig.header.fetchAccessPathsFailed': '접근 경로 가져오기 실패:',
-  
+
   // AddMenuModal component
   'webConfig.header.modal.addTitle': '메뉴 추가',
   'webConfig.header.modal.editTitle': '메뉴 편집',
@@ -145,7 +145,7 @@ export default {
   'webConfig.header.modal.display': '보이기',
   'webConfig.header.modal.cancel': '취소',
   'webConfig.header.modal.submit': '제출',
-  
+
   // Logo component
   'webConfig.logo.fetchFailed': '데이터 가져오기 실패',
   'webConfig.logo.updateSuccess': '업데이트 성공',
@@ -153,10 +153,12 @@ export default {
   'webConfig.logo.darkLogoRequired': 'night 버전의 로고를 입력해주세요',
   'webConfig.logo.darkMode': 'night',
   'webConfig.logo.lightMode': 'day',
-'webConfig.logo.headerFooterNote': '(상단 Header/하단 Footer에 적용),높이:28',
-'webConfig.logo.browserTabNote': '(브라우저 탭에 적용),크기:32*32',
+'webConfig.logo.headerFooterNote': '(상단 Header/하단 Footer에 적용)',
+'webConfig.logo.browserTabNote': '(브라우저 탭에 적용)',
   'webConfig.logo.submit': '제출',
-  
+  'webConfig.logo.headerFooterNote.logo.size': '500k 이하로 업로드해주세요. 크기: 140*28',
+  'webConfig.logo.headerFooterNote.icon.size': '500k 이하로 업로드해주세요. 크기: 32*32',
+
   // WebStyle component
   'webConfig.webStyle.fetchFailed': '설정 가져오기 실패:',
   'webConfig.webStyle.saveSuccess': '설정 저장 성공',

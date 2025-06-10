@@ -39,7 +39,7 @@ export default {
     'common.status_update_retry': '状态更新失败，请稍后重试',
     'common.copy': '复制',
     'common.welcome': '欢迎使用Seed Admin',
-  "common.view_detail": "查看详情",   
+  "common.view_detail": "查看详情",
   "common.dictionary.name": "字典名称",
   "common.dictionary.value": "字典值",
   "common.status": "状态",
@@ -62,8 +62,10 @@ export default {
   "common.trc20error": "TRC20地址为空，无法发放",
   "common.select.country": "请选择国家",
   "common.no_data": "暂无数据",
-  
-  
-  
+
+  "common.upload.limit": "大小超过限制",
+  "common.upload.type": "文件类型不正确",
+  "common.upload.env": "当前环境不支持预览图片",
+  "common.upload.dimension": "尺寸错误",
+  "common.upload.dimension.multiple": "尺寸倍数错误",
   };
-  
