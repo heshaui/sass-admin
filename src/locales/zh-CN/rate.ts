@@ -35,6 +35,11 @@ export default {
   'rate.form.status.yes': '是',
   'rate.form.status.no': '否',
 
+  'rate.form.img.png': '只支持上传png格式图片',
+  'rate.form.img.size': '图片大小不能超过500k',
+  'rate.form.img.limit': '图片宽高必须是24的倍数！',
+
+  'rate.form.upload.env': '当前环境不支持预览图片',
   'rate.form.upload.size': '请上传小于500k',
   'rate.form.upload.png': '24*24 png图片',
 

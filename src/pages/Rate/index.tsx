@@ -17,7 +17,9 @@ import {
   updateExchangeRateById,
 } from '../../services/ant-design-pro/Rate';
 import AvatarUpload from '@/components/AvatarUpload/index';
+import type { GetProp, UploadProps } from 'antd';
 
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const Rate: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
@@ -76,6 +78,54 @@ const Rate: React.FC = () => {
         status: record.status === 1,
       });
     }, 100);
+  };
+
+  // 判断图片宽高是24的倍数
+  const isMultipleOf24 = (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      // 确保在浏览器环境下运行
+      if (typeof document === 'undefined') {
+        message.error(intl.formatMessage({ id: 'rate.form.img.env' }));
+        return resolve(false);
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        // 使用 document.createElement 创建 img 元素
+        const img = document.createElement('img');
+        img.onload = () => {
+          const isValid = img.naturalWidth % 24 === 0 && img.naturalHeight % 24 === 0;
+          if (!isValid) {
+            message.error(intl.formatMessage({ id: 'rate.form.img.limit' }));
+          }
+          resolve(isValid);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // 限制图片
+  const beforeUpload = (file: FileType): Promise<boolean> => {
+    // 1. 检查文件类型（仅允许PNG）
+    const isPng = file.type === 'image/png';
+    if (!isPng) {
+      message.error(intl.formatMessage({ id: 'rate.form.img.png' }));
+      return Promise.resolve(false);
+    }
+
+    // 2. 检查文件大小（500KB限制）
+    const MAX_SIZE_KB = 500;
+    const isUnderSizeLimit = file.size / 1024 <= MAX_SIZE_KB;
+    if (!isUnderSizeLimit) {
+      message.error(intl.formatMessage({ id: 'rate.form.img.size' }));
+      return Promise.resolve(false);
+    }
+
+    // 3. 检查图片尺寸（必须是24的倍数）
+    return isMultipleOf24(file);
   };
 
   const columns: ProColumns[] = [
@@ -275,7 +325,10 @@ const Rate: React.FC = () => {
             { required: true, message: intl.formatMessage({ id: 'rate.form.icon.required' }) },
           ]}
         >
-          <AvatarUpload onChange={(url) => formRef.current?.setFieldsValue({ iconUrl: url })} />
+          <AvatarUpload
+            beforeUpload={beforeUpload}
+            onChange={(url) => formRef.current?.setFieldsValue({ iconUrl: url })}
+          />
         </ProFormItem>
         <ProFormSwitch
           name="status"
