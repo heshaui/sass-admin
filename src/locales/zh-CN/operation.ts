@@ -5,12 +5,12 @@ export default {
   'helpCenter.common.add': '添加',
   'helpCenter.common.getDataFailed': '获取数据失败',
   'helpCenter.common.requestError': '请求出错',
-  
+
   // Help Center
   'helpCenter.tab.categoryManagement': '分类管理',
   'helpCenter.tab.articleManagement': '文章管理',
   'helpCenter.tab.selfService': '自助服务',
-  
+
   // Category Management
   'helpCenter.category.title': '帮助中心分类管理',
   'helpCenter.category.button.add': '添加分类',
@@ -36,7 +36,7 @@ export default {
   'helpCenter.category.pagination.total': '共 {total} 条记录',
   'helpCenter.category.type.menu': '菜单',
   'helpCenter.category.type.category': '分类',
-  
+
   // Category Form Modal
   'helpCenter.category.modal.addTitle': '添加分类',
   'helpCenter.category.modal.editTitle': '编辑分类',
@@ -61,7 +61,7 @@ export default {
   'helpCenter.category.form.validation.languageRequired': '请选择语言',
   'helpCenter.category.form.validation.titleRequired': '请输入标题',
   'helpCenter.category.form.validation.languageTitleRequired': '请至少添加一种语言的标题',
-  
+
   // Article Management
   'helpCenter.article.title': '文章列表',
   'helpCenter.article.button.publish': '发布文章',
@@ -94,7 +94,7 @@ export default {
   'helpCenter.selfService.column.nightIcon': '夜间图标',
   'helpCenter.selfService.column.dayIcon': '日间图标',
   'helpCenter.selfService.button.add': '添加',
-  
+
   // Service Modal
   'helpCenter.serviceModal.title': '添加服务',
   'helpCenter.serviceModal.form.icon': '图标',
@@ -195,7 +195,7 @@ export default {
   // PC Login Management
   'pcLogin.tips.1': '若配置，则使用您的配置；若不配置，则使用系统默认；',
   'pcLogin.tips.2': '英文语言&登录为必填项，其他语言若不配置则默认与英文下场景一致；',
-  'pcLogin.tips.3': '图片建议尺寸：126*869',
+  'pcLogin.tips.3': '图片建议尺寸：798*900',
   'pcLogin.tab.login': '登录',
   'pcLogin.tab.register': '注册',
   'pcLogin.column.title': '标题',
@@ -205,7 +205,7 @@ export default {
   'pcLogin.column.action': '操作',
   'pcLogin.action.edit': '编辑',
   'pcLogin.message.getPcLoginFailed': '获取pcLogin数据失败',
-  
+
   // PC Login EditModal
   'pcLogin.modal.title.login': '编辑登录配置',
   'pcLogin.modal.title.register': '编辑注册配置',
@@ -214,7 +214,7 @@ export default {
   'pcLogin.modal.form.title.placeholder': '请输入标题',
   'pcLogin.modal.form.image': '图片',
   'pcLogin.modal.form.image.required': '请上传图片',
-  'pcLogin.modal.form.image.extra': '建议尺寸：126*869',
+  'pcLogin.modal.form.image.extra': '建议尺寸：798*900',
   'pcLogin.modal.form.url': '跳转地址',
   'pcLogin.modal.form.url.required': '请输入跳转地址',
   'pcLogin.modal.form.url.placeholder': '请输入跳转地址',
@@ -224,7 +224,7 @@ export default {
   // Announcement Page
   'announcement.tab.category': '分类管理',
   'announcement.tab.announcement': '公告管理',
-  
+
   // Announcement Management
   'announcement.management.create.success': '创建成功',
   'announcement.management.create.failed': '创建失败',
@@ -333,7 +333,7 @@ export default {
     'famousQuotes.message.deleteFailed': '删除失败',
     'famousQuotes.message.getListFailed': '获取名言列表失败',
     'famousQuotes.message.getDetailFailed': '获取名言详情失败',
-    
+
     // Famous Quotes Modal
     'famousQuotes.modal.add': '添加名言',
     'famousQuotes.modal.edit': '编辑名言',
