@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import { Tabs } from 'antd';
+import React, { useState } from 'react';
 import { useIntl } from 'umi';
 import AnnouncementManagement from './components/AnnouncementManagement';
 import CategoryManagement from './components/CategoryManagement';
-
 
 const { TabPane } = Tabs;
 
 const AnnouncementPage: React.FC = () => {
   const intl = useIntl();
-  const [activeTab, setActiveTab] = useState<string>('announcement');
-
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    const savedTab = localStorage.getItem('announcementActiveTab');
+    return savedTab || 'announcement';
+  });
 
   // 切换标签页
   const handleTabChange = (key: string) => {
     setActiveTab(key);
+    localStorage.setItem('announcementActiveTab', key);
   };
 
   return (
@@ -28,7 +30,10 @@ const AnnouncementPage: React.FC = () => {
           <CategoryManagement />
         </TabPane>
         <TabPane
-          tab={intl.formatMessage({ id: 'announcement.tab.announcement', defaultMessage: '公告管理' })}
+          tab={intl.formatMessage({
+            id: 'announcement.tab.announcement',
+            defaultMessage: '公告管理',
+          })}
           key="announcement"
         >
           <AnnouncementManagement />
@@ -38,4 +43,4 @@ const AnnouncementPage: React.FC = () => {
   );
 };
 
-export default AnnouncementPage; 
+export default AnnouncementPage;
