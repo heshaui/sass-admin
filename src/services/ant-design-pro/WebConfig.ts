@@ -48,7 +48,7 @@ export async function HomeMenuTranslationList(body: API.FackeParams, options?: {
 
 
 
-export async function tenantLangList(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function tenantLangList(body: API.TenantLangParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/tenantLangList', {
     method: 'POST',
     data: body,
@@ -151,7 +151,7 @@ export async function checkUpdate(body: API.FackeParams, options?: { [key: strin
     method: 'POST',
     data: body,
     headers: {
-      'Content-Type': 'application/json', 
+      'Content-Type': 'application/json',
     },
     ...(options || {}),
   });
@@ -378,7 +378,7 @@ export async function deleteHomeBottom(body: API.FackeParams, options?: { [key: 
     ...(options || {}),
   });
 }
-  
+
 
 // /tenant/v1/homeBottomParams
 export async function homeBottomParams(body: API.FackeParams, options?: { [key: string]: any }) {

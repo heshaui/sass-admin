@@ -128,6 +128,11 @@ declare namespace API {
     deviceType?: String;
   };
 
+  type TenantLangParams = {
+    pageNo?: number;
+    pageSize?: number;
+  };
+
   type FackeResult = {
     code?: string;
     data?: { [key: string]: any };

@@ -1,110 +1,117 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { useIntl } from 'umi';
-import { 
-  Card, 
-  Form, 
-  Button, 
-  InputNumber, 
-  Switch, 
-  message, 
-  Alert, 
-  Select, 
-  Radio, 
-  Image
+import { useIntl, useModel } from '@umijs/max';
+import {
+  Card,
+  Form,
+  Button,
+  InputNumber,
+  Switch,
+  message,
+  Select,
+  Radio,
+  Image,
+  Upload,
+  Tabs,
+  TabsProps,
 } from 'antd';
-import { getRewardConfigurationDetail,getCurrencyCoinList,getUserInviteDetailList,getImageConfigurationDetail,saveOrUpdateRewardConfiguration,saveOrUpdateImageConfiguration,getFundAccountsList} from '@/services/ant-design-pro/inviteFriends';
-import LanguageSelector from '@/components/LanguageSelector';
+import {
+  getRewardConfigurationDetail,
+  getCurrencyCoinList,
+  getUserInviteDetailList,
+  getImageConfigurationDetail,
+  saveOrUpdateRewardConfiguration,
+  saveOrUpdateImageConfiguration,
+  getFundAccountsList,
+} from '@/services/ant-design-pro/inviteFriends';
 import type { ProColumns } from '@ant-design/pro-components';
-import AvatarUpload from "@/components/AvatarUpload/index";
-import { getTenantKeyParams,updateValue,updateAccountConfiguration} from '@/services/ant-design-pro/kv';
-import ImageConfigModal from './components/ImageConfigModal';
-import ImagePlaceholder from '@/components/ImagePlaceholder';
+import { getTenantKeyParams, updateAccountConfiguration } from '@/services/ant-design-pro/kv';
+import { tenantLangList } from '@/services/ant-design-pro/WebConfig';
+import AvatarUpload from '@/components/AvatarUpload';
 const { Option } = Select;
-
 
 const BasicConfig: React.FC = () => {
   const intl = useIntl();
+  const { initialState } = useModel('@@initialState');
+  const themeColor = initialState?.settings?.colorPrimary;
   const [form] = Form.useForm();
   const [language, setLanguage] = useState('en_US');
   const [isEditing, setIsEditing] = useState(false);
-  const [coinList,setCoinList]=useState([]);
-  const [config,setConfig]=useState('');
-  const [configId,setConfigId]=useState('');
-  const [imagesConfig, setImagesConfig] = useState<Record<string, {backgroundImage: string, posterImage: string}>>();
-  const [imageModalVisible, setImageModalVisible] = useState(false);
+  const [coinList, setCoinList] = useState([]);
+  const [config, setConfig] = useState('');
+  const [configId, setConfigId] = useState('');
+  const [languages, setLanguages] = useState<any[]>([]);
+  const [imagesConfig, setImagesConfig] =
+    useState<Record<string, { backgroundImage: string; posterImage: string }>>();
 
-
-  const getCoin=async()=>{
-    let data={
-      pageNo:1,
-      pageSize:10000
-    }
-    const res=await getCurrencyCoinList(data);
-    if(res.code==='0'){
+  const getCoin = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
+    };
+    const res = await getCurrencyCoinList(data);
+    if (res.code === '0') {
       setCoinList(res.data.list);
     }
+  };
 
-  }
-
-  const getConfig=async()=>{
-    const res=await getTenantKeyParams({key:'account_configuration'});
-    if(res.code==='0'){
-      console.log(res.data)
-      setConfig(res.data.keyValue);
+  const getConfig = async () => {
+    const res = await getTenantKeyParams({ key: 'account_configuration' });
+    if (res.code === '0') {
+      console.log(res.data);
+      setConfig(res.data?.keyValue);
     }
-  }
+  };
 
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
-  }
+  };
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
-  }
-
-
+  };
 
   //获取图片配置详情
   const getImageDetail = async () => {
     const res = await getImageConfigurationDetail();
     if (res.code === '0') {
-      const imageConfigObj: Record<string, {backgroundImage: string, posterImage: string}> = {};
+      const imageConfigObj: Record<string, { backgroundImage: string; posterImage: string }> = {};
       res.data.forEach((item: any) => {
         imageConfigObj[item.languageCode] = {
           backgroundImage: item.backgroundImageUrl,
-          posterImage: item.posterBackgroundUrl
+          posterImage: item.posterBackgroundUrl,
         };
       });
       setImagesConfig(imageConfigObj);
     }
   };
 
- const saveImage=async(backgroundImage:string,posterImage:string)=>{
-  let data={
-    images:[
-      {
-        languageCode:language,
-        backgroundImageUrl:backgroundImage,
-        posterBackgroundUrl:posterImage
-      }
-    ]
-  }
-  const res=await saveOrUpdateImageConfiguration(data);
-  if(res.code==='0'){
-    message.success(intl.formatMessage({ id: 'inviteFriends.message.imageConfigSaveSuccess' }));
-  }else{
-    message.error(res.message);
-  }
-  await getImageDetail();
- }
- 
-
-  const saveConfiguration = async (values: any) => {
-    let data={
-      ...values,
-      id:configId
+  // 保存图片配置
+  const saveImage = async (backgroundImage: string, posterImage: string) => {
+    let data = {
+      images: [
+        {
+          languageCode: language,
+          backgroundImageUrl: backgroundImage,
+          posterBackgroundUrl: posterImage,
+        },
+      ],
+    };
+    const res = await saveOrUpdateImageConfiguration(data);
+    if (res.code === '0') {
+      message.success(intl.formatMessage({ id: 'inviteFriends.message.imageConfigSaveSuccess' }));
+    } else {
+      message.error(res.message);
     }
+    await getImageDetail();
+  };
+
+  // 保存配置
+  const saveConfiguration = async (values: any) => {
+    let data = {
+      ...values,
+      id: configId,
+    };
     const res = await saveOrUpdateRewardConfiguration(data);
     if (res.code === '0') {
       message.success(intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }));
@@ -112,46 +119,58 @@ const BasicConfig: React.FC = () => {
     } else {
       message.error(res.message);
     }
-  }
+  };
 
   //获取奖励配置详情
   const getConfigurationDetail = async () => {
     const res = await getRewardConfigurationDetail();
-    if(res.code==='0'){
+    if (res.code === '0') {
       setConfigId(res.data.id);
       form.setFieldsValue(res.data);
     }
   };
 
-
   //获取用户邀请详情列表
   const getUserList = async () => {
-    let data={
-      pageNo:1,
-      pageSize:10000
-    }
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
+    };
     const res = await getUserInviteDetailList(data);
     console.log(res);
   };
 
-  const getFundAccounts=async(params:any)=>{
-    let data={
-      pageNo:params.current,
-      pageSize:params.pageSize
-    }
+  // 获取资金账户列表
+  const getFundAccounts = async (params: any) => {
+    let data = {
+      pageNo: params.current,
+      pageSize: params.pageSize,
+    };
     const res = await getFundAccountsList(data);
-    if(res.code==='0'){
+    if (res.code === '0') {
       return {
         data: res.data.list,
         success: true,
         total: res.data.count,
-      }
+      };
     }
-  }
+    return {
+      data: [],
+      success: false,
+      total: 0,
+    };
+  };
 
-  const onFinish = (values: any) => {
-    console.log(intl.formatMessage({ id: 'inviteFriends.message.formSubmitValues' }), values);
-    message.success(intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }));
+  // 获取语言列表
+  const getLanguageList = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
+    };
+    const res = await tenantLangList(data);
+    if (res.code === '0') {
+      setLanguages(res.data?.list || []);
+    }
   };
 
   useEffect(() => {
@@ -160,6 +179,7 @@ const BasicConfig: React.FC = () => {
     getConfigurationDetail();
     getUserList();
     getImageDetail();
+    getLanguageList();
   }, []);
 
   // 定义资金账户列表的列配置
@@ -175,11 +195,11 @@ const BasicConfig: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.status' }),
       dataIndex: 'isLock',
-      render: (text:number) => {
-        return text===0 ? 
-          intl.formatMessage({ id: 'inviteFriends.fundAccount.status.unlocked' }) : 
-          intl.formatMessage({ id: 'inviteFriends.fundAccount.status.locked' })
-      }
+      render: (_, record) => {
+        return record.isLock === 0
+          ? intl.formatMessage({ id: 'inviteFriends.fundAccount.status.unlocked' })
+          : intl.formatMessage({ id: 'inviteFriends.fundAccount.status.locked' });
+      },
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.createTime' }),
@@ -190,170 +210,263 @@ const BasicConfig: React.FC = () => {
       title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.action' }),
       valueType: 'option',
       render: (_, record) => [
-        <a key="records" href="/invite-friends/reward-records">{intl.formatMessage({ id: 'inviteFriends.fundAccount.action.records' })}</a>,
+        <a key="records" href="/invite-friends/reward-records">
+          {intl.formatMessage({ id: 'inviteFriends.fundAccount.action.records' })}
+        </a>,
       ],
     },
   ];
 
-
-  const handleCancel = () => {
-    setImageModalVisible(false);
+  // 保存图片配置
+  const handleSave = (backgroundImage: string, posterImage: string) => {
+    saveImage(backgroundImage, posterImage);
   };
 
-  const handleSave = (backgroundImage:string,posterImage:string) => {
-    setImageModalVisible(false);
-    saveImage(backgroundImage,posterImage);
+  // 处理背景图片变化
+  const handleBackgroundImageChange = (url: string) => {
+    setImagesConfig((prev) => {
+      if (!prev) return { [language]: { backgroundImage: url, posterImage: '' } };
+      return {
+        ...prev,
+        [language]: {
+          ...prev[language],
+          backgroundImage: url,
+        },
+      };
+    });
   };
+
+  // 处理海报图片变化
+  const handlePosterImageChange = (url: string) => {
+    setImagesConfig((prev) => {
+      if (!prev) return { [language]: { backgroundImage: '', posterImage: url } };
+      return {
+        ...prev,
+        [language]: {
+          ...prev[language],
+          posterImage: url,
+        },
+      };
+    });
+  };
+
+  // 邀请页面配置 items
+  const items = languages.map((lang) => {
+    return {
+      label: lang.langEncode,
+      key: lang.langEncode,
+      children: (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            gap: 20,
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
+            <div>
+              <h4>{intl.formatMessage({ id: 'inviteFriends.pageConfig.backgroundTitle' })}</h4>
+              <AvatarUpload onChange={handleBackgroundImageChange} value={imagesConfig?.[language]?.backgroundImage || ''}/>
+              <p>{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.backgroundSize' })}</p>
+            </div>
+            <div>
+              <h4>{intl.formatMessage({ id: 'inviteFriends.pageConfig.posterTitle' })}</h4>
+              <AvatarUpload onChange={handlePosterImageChange} value={imagesConfig?.[language]?.posterImage || ''}/>
+              <p>{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.posterSize' })}</p>
+            </div>
+          </div>
+          <Button type="primary" onClick={() => handleSave(imagesConfig?.[language]?.backgroundImage || '', imagesConfig?.[language]?.posterImage || '')}>
+            保存
+          </Button>
+        </div>
+      ),
+    };
+  });
+
+  // 邀请页面配置 TabBar
+  const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => (
+    <div>
+      <div style={{ display: 'flex', flexDirection: 'row', gap: 20, marginBottom: 20 }}>
+        {languages.map((lang) => (
+          <Button
+            key={lang.langEncode}
+            type={lang.langEncode === language ? 'primary' : 'text'}
+            onClick={() => handleLanguageChange(lang.langEncode)}
+          >
+            {lang.lang}
+          </Button>
+        ))}
+      </div>
+      <div style={{ margin: '20px 0' }}>
+        {intl.formatMessage({ id: 'inviteFriends.accountConfig.tips' })}
+        {intl.formatMessage({ id: 'inviteFriends.pageConfig.languageInfo' })}
+      </div>
+    </div>
+  );
+
   return (
     <PageContainer title={intl.formatMessage({ id: 'inviteFriends.basicConfig.title' })}>
-      {/* 账户余额警告 */}
-      {/* <Alert
-        message={intl.formatMessage({ id: 'inviteFriends.alert.lowBalance.title' })}
-        description={intl.formatMessage({ id: 'inviteFriends.alert.lowBalance.description' })}
-        type="warning"
-        showIcon
-        style={{ marginBottom: 24 }}
-        action={
-          <Button size="small" type="primary">
-            {intl.formatMessage({ id: 'inviteFriends.alert.lowBalance.action' })}
-          </Button>
-        }
-      /> */}
-
       {/* 账户配置 */}
-      <Card title={intl.formatMessage({ id: 'inviteFriends.accountConfig.title' })} style={{ marginBottom: 24 }}>
+      <Card
+        title={intl.formatMessage({ id: 'inviteFriends.accountConfig.title' })}
+        style={{ marginBottom: 24 }}
+      >
         <Form.Item
           name="enabled"
           label={intl.formatMessage({ id: 'inviteFriends.accountConfig.enabled' })}
           valuePropName="checked"
         >
-          <Switch value={config==='1'} onChange={ async (checked)=>{
-           const res= await updateAccountConfiguration({keyProperty:'account_configuration',keyValue:checked?'1':'0'});
-           if(res.code==='0'){
-            message.success(intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }));
-           }else{
-            message.error(res.message);
-           }
-           getConfig();
-          }} />
+          <Switch
+            value={config === '1'}
+            onChange={async (checked) => {
+              const res = await updateAccountConfiguration({
+                keyProperty: 'account_configuration',
+                keyValue: checked ? '1' : '0',
+              });
+              if (res.code === '0') {
+                message.success(
+                  intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }),
+                );
+              } else {
+                message.error(res.message);
+              }
+              getConfig();
+            }}
+          />
         </Form.Item>
         <div className="tips">
-          <p>{intl.formatMessage({ id: 'inviteFriends.accountConfig.tips' })}</p>
-          <p>{intl.formatMessage({ id: 'inviteFriends.accountConfig.tips.content' })}</p>
+          <p style={{ color: themeColor }}>
+            {intl.formatMessage({ id: 'inviteFriends.accountConfig.tips' })}
+            {intl.formatMessage({ id: 'inviteFriends.accountConfig.tips.content' })}
+          </p>
         </div>
       </Card>
 
       {/* 奖励配置 */}
-      <Card 
-        title={intl.formatMessage({ id: 'inviteFriends.rewardConfig.title' })} 
+      <Card
+        title={intl.formatMessage({ id: 'inviteFriends.rewardConfig.title' })}
         style={{ marginBottom: 24 }}
-        extra={<Button type="primary" onClick={toggleEdit}>{isEditing ? intl.formatMessage({ id: 'inviteFriends.rewardConfig.cancel' }) : intl.formatMessage({ id: 'inviteFriends.rewardConfig.edit' })}</Button>}
+        extra={
+          <Button type="primary" onClick={toggleEdit}>
+            {isEditing
+              ? intl.formatMessage({ id: 'inviteFriends.rewardConfig.cancel' })
+              : intl.formatMessage({ id: 'inviteFriends.rewardConfig.edit' })}
+          </Button>
+        }
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={saveConfiguration}
-          disabled={!isEditing}
-        >
+        <Form form={form} onFinish={saveConfiguration} disabled={!isEditing}>
           <Form.Item
             name="coinId"
             label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.coinType' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'inviteFriends.rewardConfig.coinType.placeholder' }) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'inviteFriends.rewardConfig.coinType.placeholder',
+                }),
+              },
+            ]}
           >
             <Select style={{ width: 200 }}>
-              {coinList.map((item:any)=>(
-                <Option value={item.coinId} key={item.coinId}>{item.coinName}</Option>
+              {coinList.map((item: any) => (
+                <Option value={item.coinId} key={item.coinId}>
+                  {item.coinName}
+                </Option>
               ))}
             </Select>
+            <span style={{ marginLeft: 10, color: 'rgba(0,0,0,0.45)' }}>
+              实际手续费币种与返佣币种不一致时,将根据实时汇率折算为返佣币种
+            </span>
           </Form.Item>
-          
+
           <Form.Item
             name="rebateRatio"
             label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.rebateRatio' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'inviteFriends.rewardConfig.rebateRatio.placeholder' }) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'inviteFriends.rewardConfig.rebateRatio.placeholder',
+                }),
+              },
+            ]}
           >
             <InputNumber min={0} max={100} addonAfter="%" style={{ width: 200 }} />
           </Form.Item>
-          
+
           <Form.Item
             name="validTime"
             label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.validTime' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'inviteFriends.rewardConfig.validTime.placeholder' }) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'inviteFriends.rewardConfig.validTime.placeholder',
+                }),
+              },
+            ]}
           >
-            <InputNumber min={1} addonAfter={intl.formatMessage({ id: 'inviteFriends.rewardConfig.validTime.unit' })} style={{ width: 200 }} />
+            <InputNumber
+              min={1}
+              addonAfter={intl.formatMessage({ id: 'inviteFriends.rewardConfig.validTime.unit' })}
+              style={{ width: 200 }}
+            />
           </Form.Item>
-          
+
           <Form.Item
             name="rechargeLimit"
             label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.rechargeLimit' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'inviteFriends.rewardConfig.rechargeLimit.placeholder' }) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({
+                  id: 'inviteFriends.rewardConfig.rechargeLimit.placeholder',
+                }),
+              },
+            ]}
           >
-            <InputNumber min={0} addonAfter={intl.formatMessage({ id: 'inviteFriends.rewardConfig.rechargeLimit.unit' })} style={{ width: 200 }} />
+            <InputNumber
+              min={0}
+              addonAfter={intl.formatMessage({
+                id: 'inviteFriends.rewardConfig.rechargeLimit.unit',
+              })}
+              style={{ width: 200 }}
+            />
           </Form.Item>
-          
+
           <Form.Item
             name="isRealname"
             label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.isRealname' })}
           >
             <Radio.Group>
-              <Radio value="1">{intl.formatMessage({ id: 'inviteFriends.rewardConfig.isRealname.required' })}</Radio>
-              <Radio value="0">{intl.formatMessage({ id: 'inviteFriends.rewardConfig.isRealname.notRequired' })}</Radio>
+              <Radio value="1">
+                {intl.formatMessage({ id: 'inviteFriends.rewardConfig.isRealname.required' })}
+              </Radio>
+              <Radio value="0">
+                {intl.formatMessage({ id: 'inviteFriends.rewardConfig.isRealname.notRequired' })}
+              </Radio>
             </Radio.Group>
           </Form.Item>
 
           {isEditing && (
-            <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                {intl.formatMessage({ id: 'inviteFriends.rewardConfig.save' })}
-              </Button>
-            </Form.Item>
+            <div style={{ textAlign: 'right' }}>
+              <Form.Item>
+                <Button type="primary" htmlType="submit" style={{ marginLeft: 'auto' }}>
+                  {intl.formatMessage({ id: 'inviteFriends.rewardConfig.save' })}
+                </Button>
+              </Form.Item>
+            </div>
           )}
         </Form>
       </Card>
 
       {/* 邀请页面配置 */}
-      <Card title={intl.formatMessage({ id: 'inviteFriends.pageConfig.title' })} style={{ marginBottom: 24 }}>
-       
-      <LanguageSelector value={language} text={intl.formatMessage({ id: 'inviteFriends.pageConfig.languageInfo' })} onChange={handleLanguageChange} />
-      <Button type="primary" onClick={()=>{
-        setImageModalVisible(true);
-      }}>{intl.formatMessage({ id: 'inviteFriends.pageConfig.configImage' })}</Button>
-      <div style={{display:'flex',flexDirection:'row'}}>
-        <div style={{ marginTop: 20, marginRight: 20 }}>
-          <h4>{intl.formatMessage({ id: 'inviteFriends.pageConfig.backgroundTitle' })}</h4>
-          {imagesConfig && imagesConfig[language] ? (
-            <Image 
-              src={imagesConfig[language].backgroundImage} 
-              width={200} 
-              height={150} 
-              style={{ objectFit: 'cover' }}
-            />
-          ) : (
-            <ImagePlaceholder />
-          )}
-        </div>
-        
-        <div style={{ marginTop: 20 }}>
-          <h4>{intl.formatMessage({ id: 'inviteFriends.pageConfig.posterTitle' })}</h4>
-          {imagesConfig && imagesConfig[language] ? (
-            <Image 
-              src={imagesConfig[language].posterImage} 
-              width={200} 
-              height={150} 
-              style={{ objectFit: 'cover' }}
-            />
-          ) : (
-            <ImagePlaceholder />
-          )}
-        </div>
-      </div>
-      <ImageConfigModal
-        visible={imageModalVisible}
-        onCancel={handleCancel}
-        onSave={handleSave}
-        language={language}
-        imagesConfig={imagesConfig}
-      />
+      <Card
+        title={intl.formatMessage({ id: 'inviteFriends.pageConfig.title' })}
+        style={{ marginBottom: 24, height: '100%' }}
+      >
+        <Tabs activeKey={language} renderTabBar={renderTabBar} items={items} />
       </Card>
 
       {/* 资金账户列表 */}
@@ -373,9 +486,8 @@ const BasicConfig: React.FC = () => {
           }}
         />
       </Card>
-
     </PageContainer>
   );
 };
 
-export default BasicConfig; 
+export default BasicConfig;
