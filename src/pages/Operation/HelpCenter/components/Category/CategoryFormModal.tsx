@@ -192,14 +192,14 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({ visible, onCancel
               <Form.Item name="blackIcon" noStyle>
                 <AvatarUpload/>
               </Form.Item>
-              <div>142*72 png图片</div>
+              <div>142*72 png</div>
             </div>
             <div>
               <div style={{ marginBottom: '8px' }}>{intl.formatMessage({ id: 'helpCenter.category.form.dayMode' })}</div>
               <Form.Item name="whiteIcon" noStyle>
                 <AvatarUpload/>
               </Form.Item>
-              <div>142*72 png图片</div>
+              <div>142*72 png</div>
             </div>
           </div>
         </Form.Item>
@@ -228,7 +228,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({ visible, onCancel
         <Form.Item
           label={intl.formatMessage({ id: 'helpCenter.category.form.parentCategory' })}
           name="parentId"
-          rules={[{ required: true, message: intl.formatMessage({ id: 'helpCenter.category.form.validation.parentCategoryRequired' }) }]}
+          rules={[{ required: helpCenterClassList.length > 0, message: intl.formatMessage({ id: 'helpCenter.category.form.validation.parentCategoryRequired' }) }]}
         >
           <Select
             placeholder={intl.formatMessage({ id: 'helpCenter.category.form.selectCategory' })}
