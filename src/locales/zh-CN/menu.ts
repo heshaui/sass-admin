@@ -111,10 +111,10 @@ export default {
   'menu.fundsTools.assetAdjustment': '资产调整',
   'menu.fundsTools.transferTool': '转账工具',
   'menu.fundsTools.transferRecords': '转账记录',
+  'menu.fundsTools.PresentTool': '赠币工具',
   'menu.riskControl': '资金风控',
   'menu.riskControl.config': '风控配置',
   'menu.riskControl.suggestions': '处理建议',
   'menu.riskControl.alerts': '报警记录',
   'menu.riskControl.templates': '风控模板',
- 
 };
