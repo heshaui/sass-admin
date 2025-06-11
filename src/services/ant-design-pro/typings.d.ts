@@ -128,6 +128,20 @@ declare namespace API {
     deviceType?: String;
   };
 
+  type UpdateEndpointInfoParams = {
+    id: number | string;
+    fileUrl: string;
+    langEncode: string;
+  };
+
+  type TenantLangEndpointIdParams = {
+    tenantLangEndPointId?: number;
+  };
+
+  type TenantLangIdParams = {
+    tenantLangId?: number;
+  };
+
   type TenantLangParams = {
     pageNo?: number;
     pageSize?: number;
