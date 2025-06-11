@@ -113,8 +113,17 @@ export default {
   'transferTool.account.total_withdrawal_account': '회사 출금 전환 계정', // 公司提现划转账户
 
   // TransferTool Scene Types
-  'transferTool.scene.M2M': '사용자 간 이체',
-  'transferTool.scene.M2U': '사용자 -> 회사 이체',
-  'transferTool.scene.U2M': '회사 -> 사용자 이체',
-  'transferTool.scene.U2U': '사용자 간 이체'
+  "transferTool.scene.test": "테스트",
+  "transferTool.scene.symbol-order": "스팟 주문 차감",
+  "transferTool.scene.extraction-symbol-order": "출금 - 사용 가능에서 동결로",
+  "transferTool.scene.undo_extraction-symbol-order": "출금 - 동결에서 사용 가능으로",
+  "transferTool.scene.symbol-order-fee": "수수료",
+  "transferTool.scene.canal-symbol-order": "스팟 주문 취소",
+  "transferTool.scene.buy-trade-symbol-order": "판매자 스팟 주문 매칭 이체",
+  "transferTool.scene.sell-trade-symbol-order": "구매자 스팟 주문 매칭 이체",
+  "transferTool.scene.canal_symbol_order": "스팟 주문 - 환불 거절",
+  "transferTool.scene.M2M": "사용자 간 이체",
+  "transferTool.scene.M2U": "사용자에서 회사로 이체",
+  "transferTool.scene.U2M": "회사에서 사용자로 이체",
+  "transferTool.scene.U2U": "사용자 간 이체"
 }

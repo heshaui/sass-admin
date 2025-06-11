@@ -128,6 +128,25 @@ declare namespace API {
     deviceType?: String;
   };
 
+  type UpdateEndpointInfoParams = {
+    id: number | string;
+    fileUrl: string;
+    langEncode: string;
+  };
+
+  type TenantLangEndpointIdParams = {
+    tenantLangEndPointId?: number;
+  };
+
+  type TenantLangIdParams = {
+    tenantLangId?: number;
+  };
+
+  type TenantLangParams = {
+    pageNo?: number;
+    pageSize?: number;
+  };
+
   type FackeResult = {
     code?: string;
     data?: { [key: string]: any };
@@ -291,9 +310,10 @@ declare namespace API {
 
   type GoogleAuthVo = {
     /** Google Authenticator code */
-    code: string;
+    code?: string;
     /** Google Authenticator secret key */
     secret?: string;
+    googleCode?: string;
   };
 
   type GoogleAuthResponse = {

@@ -2,10 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import type { ProColumns } from '@ant-design/pro-components';
 import { getUserList, getUserDetail } from '@/services/ant-design-pro/UserManagement';
-import type { UserItem } from '@/services/ant-design-pro/UserManagement';
 import UserDetail from './components/UserDetail';
 import { useIntl } from '@umijs/max';
 import dayjs from 'dayjs';
+
+interface UserItem {
+  userId: string | number;
+  tenantName?: string;
+  tenantId: string | number;
+  account: string;
+  country: string;
+  phone: string;
+  email: string;
+  // Add other user properties as needed
+  createTime?: string;
+  updateTime?: string;
+  ip: string;
+}
+
+
 const UserManagement: React.FC = () => {
   const intl = useIntl();
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
@@ -13,7 +28,6 @@ const UserManagement: React.FC = () => {
   const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserItem | null>(null);
 
-    
   // Use real API to fetch user data
   const fetchUserList = async (params: any) => {
     setLoading(true);
@@ -21,12 +35,12 @@ const UserManagement: React.FC = () => {
       const response = await getUserList({
         pageNo: params.current,
         pageSize: params.pageSize,
-        ...params
+        ...params,
       });
       setLoading(false);
       return {
-        data: response.data.list|| [],
-        success: response.code==='0'?true:false,
+        data: response.data.list || [],
+        success: response.code === '0' ? true : false,
         total: response.data.count,
       };
     } catch (error) {
@@ -41,7 +55,7 @@ const UserManagement: React.FC = () => {
   };
 
   // Fetch user details
-  const fetchUserDetail = async (userId: string) => {
+  const fetchUserDetail = async (userId: string | number) => {
     try {
       const response = await getUserDetail(userId);
       if (response.code === '0') {
@@ -61,16 +75,24 @@ const UserManagement: React.FC = () => {
       key: 'userId',
       search: false,
     },
-    ...(!isAdmin ? [] : [{
-      title: intl.formatMessage({ id: 'userManagement.columns.tenantName' }),
-      dataIndex: 'tenantName',
-      key: 'tenantName',
-    }]),
-    ...(!isAdmin ? [] : [{
-      title: intl.formatMessage({ id: 'userManagement.columns.tenantId' }),
-      dataIndex: 'tenantId',
-      key: 'tenantId',
-    }]),
+    ...(!isAdmin
+      ? []
+      : [
+          {
+            title: intl.formatMessage({ id: 'userManagement.columns.tenantName' }),
+            dataIndex: 'tenantName',
+            key: 'tenantName',
+          },
+        ]),
+    ...(!isAdmin
+      ? []
+      : [
+          {
+            title: intl.formatMessage({ id: 'userManagement.columns.tenantId' }),
+            dataIndex: 'tenantId',
+            key: 'tenantId',
+          },
+        ]),
     {
       title: intl.formatMessage({ id: 'userManagement.columns.nickname' }),
       dataIndex: 'account',
@@ -107,11 +129,10 @@ const UserManagement: React.FC = () => {
           endTime: value[1] ? new Date(value[1]).getTime() : undefined,
         }),
       },
-      render: (_, record) => (
-        record.createTime 
-          ? dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss') 
-          : intl.formatMessage({ id: 'userManagement.notAvailable' })
-      ),
+      render: (_, record) =>
+        record.createTime
+          ? dayjs(record.createTime).format('YYYY-MM-DD HH:mm:ss')
+          : intl.formatMessage({ id: 'userManagement.notAvailable' }),
     },
     {
       title: intl.formatMessage({ id: 'userManagement.columns.ip' }),
@@ -135,26 +156,25 @@ const UserManagement: React.FC = () => {
       hideInTable: true,
       dataIndex: 'account',
     },
-
   ];
 
-     // Get userId from URL parameters and load user details
-     useEffect(() => {
-      const query = new URLSearchParams(location.search);
-      const userId = query.get('userId');
-      
-      if (userId) {
-        fetchUserDetail(userId);
-      }
-    }, [location.search]);
-  if (showUserDetail) {
+  // Get userId from URL parameters and load user details
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const userId = query.get('userId');
+
+    if (userId) {
+      fetchUserDetail(userId);
+    }
+  }, [location.search]);
+  if (showUserDetail && currentUser) {
     return (
       <PageContainer title={intl.formatMessage({ id: 'userManagement.title' })}>
-        <UserDetail 
-          visible={showUserDetail} 
-          userId={currentUser?.userId} 
+        <UserDetail
+          visible={showUserDetail}
+          userId={currentUser?.userId}
           tenantId={currentUser?.tenantId}
-          onClose={() => setShowUserDetail(false)} 
+          onClose={() => setShowUserDetail(false)}
         />
       </PageContainer>
     );
@@ -170,10 +190,8 @@ const UserManagement: React.FC = () => {
           pageSize: 20,
           showSizeChanger: true,
           showQuickJumper: true,
-          showTotal: (total) => intl.formatMessage(
-            { id: 'userManagement.pagination.total' },
-            { total }
-          ),
+          showTotal: (total) =>
+            intl.formatMessage({ id: 'userManagement.pagination.total' }, { total }),
         }}
         search={{
           labelWidth: 'auto',
@@ -194,4 +212,4 @@ const UserManagement: React.FC = () => {
   );
 };
 
-export default UserManagement; 
+export default UserManagement;

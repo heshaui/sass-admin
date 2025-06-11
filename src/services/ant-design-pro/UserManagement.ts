@@ -1,4 +1,4 @@
-import { request } from 'umi';
+import { request } from '@umijs/max';
 const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
 
 // 用户列表查询参数类型
@@ -68,7 +68,7 @@ export async function getUserList(params: UserListParams) {
 /**
  * 获取用户详情
  */
-export async function getUserDetail(params: UserDetailParams) {
+export async function getUserDetail(params: string | number) {
   return request(isAdmin ? `/tenant-admin/v1/user/userDetail?id=${params}` : `/tenant/v1/userDetail?id=${params}`, {
     method: 'POST',
     data: params,
@@ -176,7 +176,7 @@ export async function updateEmail(params: UpdateEmailParams) {
 }
 
 // /tenant/v1/relieveGoogle
-export async function relieveGoogle(params: RelieveGoogleParams) {
+export async function relieveGoogle(params: any) {
   return request(isAdmin ?'/tenant-admin/v1/user/relieveGoogle' :'/tenant/v1/relieveGoogle', {
     method: 'POST',
     data: params,

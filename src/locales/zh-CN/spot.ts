@@ -72,7 +72,7 @@ export default {
   'currency.log.formSubmit': '表单提交数据:',
   'currency.log.extendInfoFormSubmit': '拓展信息表单提交数据:',
   'currency.log.extendInfoMode': '模式:',
-  
+
   // CurrencyForm component
   'currency.form.validation.failed': '表单验证失败',
   'currency.form.basicInfo': '基本信息',
@@ -114,7 +114,7 @@ export default {
   'currency.form.minWithdrawalAmount': '单次提现最小值',
   'currency.form.maxWithdrawalAmount': '单次提现最大值',
   'currency.form.save': '保存',
-  
+
   // CurrencyIntroForm component
   'currency.intro.title': '币种简介',
   'currency.intro.cancel': '取消',
@@ -130,7 +130,7 @@ export default {
   'currency.intro.saveSuccess': '币种简介保存成功',
   'currency.intro.saveFailed': '币种简介保存失败',
   'currency.intro.formValidationFailed': '表单验证失败',
-  
+
   // ExtendInfoForm component
   'currency.extendInfo.title': '添加同币异链',
   'currency.extendInfo.cancel': '取消',
@@ -169,7 +169,7 @@ export default {
   'currency.extendInfo.pleaseEnterMinDepositAmount': '请输入最小充值量',
   'currency.extendInfo.confirmations': '确认数',
   'currency.extendInfo.pleaseEnterConfirmations': '请输入确认数',
-  
+
   // OrderManagement component
   'order.management.cancelSuccess': '撤销成功',
   'order.management.cancelFailed': '撤销失败',
@@ -216,7 +216,7 @@ export default {
   'order.management.tradeDetails': '成交明细',
   'order.management.noTradeRecords': '暂无成交记录',
   'order.management.orderList': '订单列表',
-  
+
   // CurrencyProtocol component
   'protocol.title': '协议管理',
   'protocol.add': '添加协议',
@@ -236,7 +236,7 @@ export default {
   'protocol.column.action': '操作',
   'protocol.button.cancel': '取消',
   'protocol.button.submit': '提交',
-  
+
   // ProtocolForm component
   'protocol.form.protocolName': '协议名称',
   'protocol.form.protocolName.required': '请输入协议名称',
@@ -254,7 +254,7 @@ export default {
   'protocol.form.chainId': '链 ID',
   'protocol.form.chainId.required': '请选择链 ID',
   'protocol.form.chainId.placeholder': '链 ID',
-  
+
   // TradingFees component
   'tradingFees.updateSuccess': '更新成功',
   'tradingFees.column.tradingPair': '币对',
@@ -262,7 +262,7 @@ export default {
   'tradingFees.column.takerFee': 'Taker手续费',
   'tradingFees.column.action': '操作',
   'tradingFees.button.edit': '编辑',
-  
+
   // EditForm component
   'tradingFees.form.title': '编辑交易手续费',
   'tradingFees.form.tradingPair': '币对',
@@ -274,7 +274,7 @@ export default {
   'tradingFees.form.cancel': '取消',
   'tradingFees.form.submit': '提交',
   'tradingFees.form.error': '提交表单时出错:',
-  
+
   // TradingPairManagement component
   'tradingPair.message.editSuccess': '币对修改成功',
   'tradingPair.message.addSuccess': '币对添加成功',
@@ -284,14 +284,14 @@ export default {
   'tradingPair.message.matchingTypeFailed': '撮合类型设置失败',
   'tradingPair.message.cancelOrderSuccess': '撤销订单成功',
   'tradingPair.message.bindSuccess': '绑定成功',
-  
+
   'tradingPair.modal.confirmEnable': '确定要启用该币对交易吗？',
   'tradingPair.modal.confirmDisable': '确定要禁用该币对交易吗？',
   'tradingPair.modal.confirmShow': '确定要显示该币对吗？',
   'tradingPair.modal.confirmHide': '确定要隐藏该币对吗？',
   'tradingPair.modal.confirmCancelOrders': '确定要撤销所有{coinSymbol}/{baseSymbol}订单吗？',
   'tradingPair.modal.matchingType': '撮合类型',
-  
+
   'tradingPair.column.sortOrder': '排序',
   'tradingPair.column.tradingPair': '币对',
   'tradingPair.column.enableTrading': '是否开放交易',
@@ -302,35 +302,35 @@ export default {
   'tradingPair.column.tag': '币对标签',
   'tradingPair.column.createTime': '添加时间',
   'tradingPair.column.action': '操作',
-  
+
   'tradingPair.action.edit': '修改',
   'tradingPair.action.cancelOrders': '撤销全部订单',
   'tradingPair.action.matchingType': '撮合类型',
-  
+
   'tradingPair.table.title': '币对管理',
   'tradingPair.button.add': '添加',
-  
+
   'tradingPair.status.disabled': '禁用',
   'tradingPair.status.enabled': '启用',
   'tradingPair.status.hidden': '隐藏',
   'tradingPair.status.visible': '显示',
-  
+
   'tradingPair.matchingType.centralized': '集中撥合',
   'tradingPair.matchingType.independent': '独立撥合',
   'tradingPair.button.cancel': '取消',
   'tradingPair.button.confirm': '确定',
-  
+
   // TradingPairForm component
   'tradingPair.form.editTitle': '编辑币对',
   'tradingPair.form.addTitle': '新增币对',
   'tradingPair.form.cancel': '取消',
   'tradingPair.form.confirm': '确定',
   'tradingPair.form.validationFailed': '表单验证失败:',
-  
+
   'tradingPair.form.section.basicInfo': '基本信息',
   'tradingPair.form.section.tradingRules': '交易规则',
   'tradingPair.form.section.depthPrecision': '深度精度设置',
-  
+
   'tradingPair.form.baseCurrency': '基础货币',
   'tradingPair.form.baseCurrency.required': '请选择基础货币',
   'tradingPair.form.quoteCurrency': '计价货币',
@@ -362,10 +362,14 @@ export default {
   'tradingPair.form.depthPrecision3': '深度精度3',
   'tradingPair.form.depthPrecision4': '深度精度4',
   'tradingPair.form.depthPrecision5': '深度精度5',
-  
+
+  'tradingPair.form.priceDeviationPercentage.tips':'订单价格 > 偏差率(订单价格 - 市价 / 市价 * 100%)时订单失败',
+  'tradingPair.form.takerFee.tips': '手续费范围0-1%',
+  'tradingPair.form.depthPrecision.tips': '前端显示深度精度1~5，1~9代表小数位数，即1代表0.1',
+
   'tradingPair.form.yes': '是',
   'tradingPair.form.no': '否',
-  
+
   'tradingPair.category.mainstream': '主流区',
   'tradingPair.category.innovation': '创新区',
   'tradingPair.category.new': '新币区',
