@@ -50,9 +50,15 @@ const AddModal: React.FC<AddModalProps> = ({ onSuccess, existingLanguages = [] }
     if (language && language.length > 0) {
       try {
         // 将选择的ID数组转换为后端需要的数据格式
-        const tenantLangs = language.map(langId => ({
-          langId: langId
-        }));
+        const tenantLangs = language.map(langId => {
+          // Find the corresponding language object from dataSource
+          const langItem = dataSource.find(item => item.id === langId);
+          return {
+            langId: langId,
+            langEncode: langItem?.langEncode,
+            lang: langItem?.lang // Include item.lang in the submission
+          };
+        });
         
         // Cast to any to bypass TypeScript type checking for the API call
         const data: any = {

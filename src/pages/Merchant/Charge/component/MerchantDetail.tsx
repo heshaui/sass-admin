@@ -6,6 +6,8 @@ import { tenantParams,updateTenantById,updateDelayById } from "@/services/ant-de
 import MerchantEdit from "./MerchantEdit";
 import ConvertToPaid from "./ConvertToPaid"
 import dayjs from "dayjs";
+import { langPackageList} from "@/services/ant-design-pro/langPackage";
+
   
 
 interface MerchantDetailProps {
@@ -25,6 +27,12 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
   const [convertModalVisible, setConvertModalVisible] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const [languagePackage, setLanguagePackage] = useState('');
+    // 基础版语言列表
+    const [basicLanguages, setBasicLanguages] = useState<Language[]>([]);
+    // 进阶版语言列表
+    const [advancedLanguages, setAdvancedLanguages] = useState<Language[]>([]);
+    // 高级版语言列表
+    const [premiumLanguages, setPremiumLanguages] = useState<Language[]>([]);
   
 
   // 账户表格列配置
@@ -60,6 +68,42 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
       key: "locked" 
     },
   ];
+  const fetchLanguagePackages = async () => {
+    setLoading(true);
+    try {
+      const response = await langPackageList();
+      if (response.code==='0') {
+        // 处理返回的数据结构
+        const packageData = response.data;
+        
+        // 根据packageId分类处理数据
+        packageData.forEach((pkg:any) => {  
+          const languages = pkg.langs.map((lang:any) => ({
+            id: lang.langId,
+            name:  lang.lang,
+            code: lang.langEncode,
+            langPackageId: lang.langPackageId
+          }));
+          
+          if (pkg.packageId === 1) {
+            setBasicLanguages(languages);
+          } else if (pkg.packageId === 2) {
+            setAdvancedLanguages(languages);
+          } else if (pkg.packageId === 3) {
+            setPremiumLanguages(languages);
+          }
+        });
+      } else {
+        message.error(intl.formatMessage({ id: 'package.message.fetchFailed' }));
+      }
+    } catch (error) {
+      console.error('获取语言包列表出错:', error);
+      message.error(intl.formatMessage({ id: 'package.message.fetchFailed' }) + ', ' + intl.formatMessage({ id: 'package.message.retry' }));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchMerchant = async () => {
     if (!tenantId) return;
     setLoading(true);
@@ -133,7 +177,7 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
   };
 
   useEffect(() => {
-    
+    fetchLanguagePackages();
 
     fetchMerchant();
   }, [tenantId]);
@@ -281,9 +325,9 @@ const MerchantDetail: React.FC<MerchantDetailProps> = ({ tenantId, onBack }) => 
         </Form.Item>
         
         <div style={{ marginTop: 20 }}>
-          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.basicDesc' })}</p>
-          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.standardDesc' })}</p>
-          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.premiumDesc' })}</p>
+          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.basic' })}：{basicLanguages.map(lang => lang.name).join(', ')}</p>
+          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.standard' })}：{advancedLanguages.map(lang => lang.name).join(', ')}</p>
+          <p>{intl.formatMessage({ id: 'merchantDetail.languagePackage.premium' })}：{premiumLanguages.map(lang => lang.name).join(', ')}</p>
         </div>
       </Form>
     </Modal>
