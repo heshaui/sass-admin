@@ -1,25 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useIntl } from 'umi';
-import { Card, Input, DatePicker } from 'antd';
-import type { ProColumns } from '@ant-design/pro-components';
+import type { ProColumns, RequestData } from '@ant-design/pro-components';
 import { getGrantRecordList } from '@/services/ant-design-pro/inviteFriends';
-const { RangePicker } = DatePicker;
 import dayjs from 'dayjs';
 interface RewardRecord {
-  key: string;
+  id: string;
   serialNumber: number;
   uid: string;
-  accountNumber: string;
-  inviterId: string;
+  account: string;
+  parentUserId: string;
   orderId: string;
-  fee: string;
-  commissionRate: string;
-  commissionAmount: string;
-  actualCommissionAmount: string;
-  usdtValue: number;
-  distributionType: string;
-  distributionTime: string;
+  commission: string;
+  rebateRatio: string;
+  rebateAmount: string;
+  actualRebateAmount: string;
+  valuation: number;
+  type: string;
+  createTime: string;
+  coinName: string;
 }
 
 
@@ -36,15 +35,29 @@ const RewardRecords: React.FC = () => {
       pageNo:params.current,
       pageSize:params.pageSize,
       account:params.account,
-       startTime:params?.dateTimeRange[0]?dayjs(params?.dateTimeRange[0]).valueOf():null,
-       endTime:params?.dateTimeRange[1]?dayjs(params?.dateTimeRange[1]).valueOf():null,
+      startTime:params?.dateTimeRange[0]?dayjs(params?.dateTimeRange[0]).valueOf():null,
+      endTime:params?.dateTimeRange[1]?dayjs(params?.dateTimeRange[1]).valueOf():null,
     }
-    const res=await getGrantRecordList(data);
-    if(res.code==='0'){
+    try {
+      const res=await getGrantRecordList(data);
+      if(res.code==='0'){
+        return {
+          data: res.data.list,
+          success: true,
+          total: res.data.count,
+        }
+      }
       return {
-        data: res.data.list,
-        success: true,
-        total: res.data.count,
+        data: [],
+        success: false,
+        total: 0,
+      }
+    } catch (error) {
+      console.error('Failed to fetch reward records:', error);
+      return {
+        data: [],
+        success: false,
+        total: 0,
       }
     }
   }
@@ -104,18 +117,14 @@ const RewardRecords: React.FC = () => {
       dataIndex: 'rebateAmount',
       key: 'rebateAmount',
       search: false,
-      renderText: (record: any) => {
-        return  record?.rebateAmount+" "+record?.coinName
-      }
-    },
+      render: (_, record) => `${record?.rebateAmount} ${record?.coinName}`,
+    },  
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.actualRebateAmount' }),
       dataIndex: 'actualRebateAmount',
       key: 'actualRebateAmount',
       search: false,
-      renderText: (record: any) => {
-        return  record?.actualRebateAmount+" "+record?.coinName
-      }
+      render: (_, record) => `${record?.actualRebateAmount} ${record?.coinName}`,
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.usdtValue' }),
@@ -149,6 +158,7 @@ const RewardRecords: React.FC = () => {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.dateTimeRange' }),
       valueType: 'dateTimeRange',
       key: 'dateTimeRange',
+      hideInTable: true,
       
     },
   ];

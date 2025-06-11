@@ -84,3 +84,11 @@ export async function getFundAccountsList(params: any) {
   });
 }
 
+
+
+export async function batchGrantRebate(params: any) {
+  return request('/tenant/v1/batchGrantRebate', {
+    method: 'POST',
+    data: params,
+  });
+}
