@@ -104,18 +104,25 @@ const RewardRecords: React.FC = () => {
       dataIndex: 'rebateAmount',
       key: 'rebateAmount',
       search: false,
+      renderText: (record: any) => {
+        return  record?.rebateAmount+" "+record?.coinName
+      }
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.actualRebateAmount' }),
       dataIndex: 'actualRebateAmount',
       key: 'actualRebateAmount',
       search: false,
+      renderText: (record: any) => {
+        return  record?.actualRebateAmount+" "+record?.coinName
+      }
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.usdtValue' }),
-      dataIndex: 'usdtValue',
-      key: 'usdtValue',
+      dataIndex: 'valuation',
+      key: 'valuation',
       search: false,
+
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.type' }),
