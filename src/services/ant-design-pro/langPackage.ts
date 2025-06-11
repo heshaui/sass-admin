@@ -76,3 +76,20 @@ export async function languageList(
       ...(options || {}),
     });
   }
+
+  // /tenant-admin/v1/language/saveLangPackages
+  export async function saveLangPackages(
+    body:API.TenantAuthorityVo,
+    options?: { [key: string]: any },
+  ) {
+    return request<API.TenantAuthority>('/tenant-admin/v1/language/saveLangPackages', {
+      method: 'POST',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      ...(options || {}),
+    });
+  }
+  
+  
