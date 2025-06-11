@@ -3,12 +3,12 @@ import { Button, Input, message, Modal } from 'antd';
 import { CopyOutlined } from '@ant-design/icons';
 import styles from './index.module.css';
 import { QRCodeSVG } from 'qrcode.react';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
 interface GoogleCodeProps {
   secretKey?: string;
   qrCodeUrl?: string;
-  onSubmit?: (code: string) => void;
+  onSubmit?: (code: string) => Promise<boolean>;
   onCancel?: () => void;
   visible?: boolean;
   title?: string;
@@ -17,10 +17,10 @@ interface GoogleCodeProps {
   centered?: boolean;
 }
 
-const GoogleCode: React.FC<GoogleCodeProps> = ({ 
+const GoogleCode: React.FC<GoogleCodeProps> = ({
   secretKey,
   qrCodeUrl,
-  onSubmit, 
+  onSubmit,
   onCancel,
   visible = false,
   title,
@@ -41,6 +41,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   useEffect(() => {
     if (isTotpUri && !secretKey) {
       try {
+        if (!qrCodeUrl) return;
         const url = new URL(qrCodeUrl);
         const secret = url.searchParams.get('secret');
         if (secret) {
@@ -61,7 +62,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   }, [visible]);
 
   const handleCopySecretKey = () => {
-    navigator.clipboard.writeText(secretKey)
+    navigator.clipboard.writeText(secretKey || '')
       .then(() => {
         message.success(intl.formatMessage({ id: 'component.googleCode.copySuccess' }));
       })
@@ -76,7 +77,7 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
       setErrorMessage(intl.formatMessage({ id: 'component.googleCode.enterCode' }));
       return;
     }
-    
+
     if (verificationCode.length !== 6) {
       setError(true);
       setErrorMessage(intl.formatMessage({ id: 'component.googleCode.codeLength' }));
@@ -110,26 +111,26 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
           __html: intl.formatMessage({ id: 'component.googleCode.recommendation' })
         }}
       />
-      
+
       <div className={styles.qrCode}>
         {isTotpUri ? (
-          <QRCodeSVG value={qrCodeUrl} size={200} />
+          <QRCodeSVG value={qrCodeUrl || ''} size={200} />
         ) : (
           <img src={qrCodeUrl} alt={intl.formatMessage({ id: 'component.googleCode.qrCodeAlt' })} width={200} height={200} />
         )}
       </div>
-      
+
       <div className={styles.secretKeyContainer}>
         <div className={styles.secretKeyLabel}>{intl.formatMessage({ id: 'component.googleCode.secretKey' })}</div>
         <div className={styles.secretKey}>{secretKey}</div>
-        <Button 
-          icon={<CopyOutlined />} 
+        <Button
+          icon={<CopyOutlined />}
           className={styles.copyButton}
           onClick={handleCopySecretKey}
           aria-label={intl.formatMessage({ id: 'component.googleCode.copyButton' })}
         />
       </div>
-      
+
       <div className={styles.inputContainer}>
         <span className={styles.required}>*</span>
         <span className={styles.label}>{intl.formatMessage({ id: 'component.googleCode.verificationCode' })}</span>
@@ -148,9 +149,9 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
           autoFocus
         />
       </div>
-      
+
       {error && <div id="verification-error" className={styles.errorMessage}>{errorMessage}</div>}
-      
+
     </div>
   );
 
@@ -168,9 +169,9 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
           <Button key="cancel" onClick={onCancel} className={styles.cancelButton}>
             {intl.formatMessage({ id: 'component.googleCode.cancel' })}
           </Button>
-          <Button 
-            key="submit" 
-            type="primary" 
+          <Button
+            key="submit"
+            type="primary"
             onClick={handleSubmit}
             loading={loading}
             className={styles.submitButton}

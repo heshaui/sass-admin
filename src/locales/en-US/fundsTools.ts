@@ -115,8 +115,17 @@ export default {
 
 
   // TransferTool Scene Types
-  'transferTool.scene.M2M': 'User-to-User Transfer',
-  'transferTool.scene.M2U': 'User-to-Company Transfer',
-  'transferTool.scene.U2M': 'Company-to-User Transfer',
-  'transferTool.scene.U2U': 'User-to-User Transfer'
+  "transferTool.scene.test": "Test",
+  "transferTool.scene.symbol-order": "Spot order deduction",
+  "transferTool.scene.extraction-symbol-order": "Withdrawal - Available to Frozen",
+  "transferTool.scene.undo_extraction-symbol-order": "Withdrawal - Frozen to Available",
+  "transferTool.scene.symbol-order-fee": "Fee",
+  "transferTool.scene.canal-symbol-order": "Cancel spot order",
+  "transferTool.scene.buy-trade-symbol-order": "Seller spot order matching transfer",
+  "transferTool.scene.sell-trade-symbol-order": "Buyer spot order matching transfer",
+  "transferTool.scene.canal_symbol_order": "Spot order - Refund rejection",
+  "transferTool.scene.M2M": "User to user transfer",
+  "transferTool.scene.M2U": "User to company transfer",
+  "transferTool.scene.U2M": "Company to user transfer",
+  "transferTool.scene.U2U": "User to user transfer"
 };

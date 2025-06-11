@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useIntl } from '@umijs/max';
-import { Card, Row, Col, Statistic, Tag, Tooltip } from 'antd';
+import { Card, Row, Col, Statistic, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import dayjs from 'dayjs';
-import { userTransactionLogList, userTransactionCount } from '@/services/ant-design-pro/UserManagement';
+import {
+  userTransactionLogList,
+  userTransactionCount,
+} from '@/services/ant-design-pro/UserManagement';
 import { getCurrencyCoinList } from '@/services/ant-design-pro/inviteFriends';
 import { currencyCoinList } from '@/services/ant-design-pro/spot';
 interface TransactionItem {
   id: string;
   type: number;
-  businessType: string;
+  sceneType: SceneTypeMap;
   currency: string;
   amount: number;
   usdtValue: number;
@@ -22,6 +24,23 @@ interface TransactionItem {
 interface UserTransactionProps {
   userId: string | number;
 }
+const sceneTypeMap = {
+  'test': 'transferTool.scene.test',
+  'symbol-order': 'transferTool.scene.symbol-order',
+  'extraction-symbol-order': 'transferTool.scene.extraction-symbol-order',
+  'undo_extraction-symbol-order': 'transferTool.scene.undo_extraction-symbol-order',
+  'symbol-order-fee': 'transferTool.scene.symbol-order-fee',
+  'canal-symbol-order': 'transferTool.scene.canal-symbol-order',
+  'buy-trade-symbol-order': 'transferTool.scene.buy-trade-symbol-order',
+  'sell-trade-symbol-order': 'transferTool.scene.sell-trade-symbol-order',
+  'canal_symbol_order': 'transferTool.scene.canal_symbol_order',
+  'M2M': 'transferTool.scene.M2M',
+  'M2U': 'transferTool.scene.M2U',
+  'U2M': 'transferTool.scene.U2M',
+  'U2U': 'transferTool.scene.U2U',
+};
+
+type SceneTypeMap = keyof typeof sceneTypeMap;
 
 const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
   const intl = useIntl();
@@ -29,30 +48,28 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
   const [currencyList, setCurrencyList] = useState<any[]>([]);
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const [statistics, setStatistics] = useState({
-    currentAssets:0,
-    netInflow:0,
-    profitLoss:0,
-    totalInflow:0,
-    totalOutflow:0
+    currentAssets: 0,
+    netInflow: 0,
+    profitLoss: 0,
+    totalInflow: 0,
+    totalOutflow: 0,
   });
 
-
-  const getCurrencyList=async()=>{
-    let data={
-      pageNo:1,
-      pageSize:10000
+  const getCurrencyList = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
+    };
+    let res;
+    if (isAdmin) {
+      res = await currencyCoinList(data);
+    } else {
+      res = await getCurrencyCoinList(data);
     }
-    let res
-    if(isAdmin){
-       res=await currencyCoinList(data)
-    }else{
-       res=await getCurrencyCoinList(data)
+    if (res.code === '0') {
+      setCurrencyList(res.data.list);
     }
-    if(res.code==='0'){
-      setCurrencyList(res.data.list)
-    }
-  }
-
+  };
 
   const columns: ProColumns<TransactionItem>[] = [
     {
@@ -65,32 +82,31 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
         2: { text: intl.formatMessage({ id: 'userTransaction.type.decrease' }) },
         3: { text: intl.formatMessage({ id: 'userTransaction.type.freeze' }) },
         4: { text: intl.formatMessage({ id: 'userTransaction.type.unfreeze' }) },
-
-
       },
-      render: (_, record) => (
-         // 1 增加 2 扣减 3 冻结 4 解冻
-        record.transactionType === 1 
+      render: (_, record) =>
+        // 1 增加 2 扣减 3 冻结 4 解冻
+        record.transactionType === 1
           ? intl.formatMessage({ id: 'userTransaction.type.increase' })
-          : record.transactionType === 2 
-            ? intl.formatMessage({ id: 'userTransaction.type.decrease' })
-            : record.transactionType === 3 
-              ? intl.formatMessage({ id: 'userTransaction.type.freeze' })
-              : intl.formatMessage({ id: 'userTransaction.type.unfreeze' })
-       
-      ),
-
+          : record.transactionType === 2
+          ? intl.formatMessage({ id: 'userTransaction.type.decrease' })
+          : record.transactionType === 3
+          ? intl.formatMessage({ id: 'userTransaction.type.freeze' })
+          : intl.formatMessage({ id: 'userTransaction.type.unfreeze' }),
     },
     {
       title: intl.formatMessage({ id: 'userTransaction.columns.business' }),
       dataIndex: 'sceneType',
       width: 120,
       search: false,
+      render: (_, record) => {
+        const text = sceneTypeMap[record.sceneType];
+        return intl.formatMessage({ id: text });
+      },
     },
     {
       title: intl.formatMessage({ id: 'userTransaction.columns.currency' }),
       dataIndex: 'coinId',
-      valueEnum:currencyList.reduce((prev, curr) => {
+      valueEnum: currencyList.reduce((prev, curr) => {
         prev[curr.coinId] = { text: curr.coinName };
         return prev;
       }, {}),
@@ -118,12 +134,12 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
   ];
   const getStatistics = async () => {
     const res = await userTransactionCount({
-      userId
+      userId,
     });
     if (res.code === '0') {
       setStatistics(res.data);
     }
-  }
+  };
 
   const fetchTransactionData = async (params: any) => {
     setLoading(true);
@@ -131,7 +147,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
       const requestParams = {
         userId,
         pageNo: params.current,
-        pageSize: params.pageSize
+        pageSize: params.pageSize,
       };
 
       const res = await userTransactionLogList(requestParams);
@@ -143,8 +159,11 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
           total: res.data.count || 0,
         };
       }
-
-
+      return {
+        data: [],
+        success: false,
+        total: 0,
+      };
     } catch (error) {
       console.error(intl.formatMessage({ id: 'userTransaction.error.fetchTransactions' }), error);
       return {
@@ -185,24 +204,24 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
               pageSize: 10,
               showSizeChanger: true,
               showQuickJumper: true,
-              showTotal: (total) => intl.formatMessage(
-                { id: 'userManagement.pagination.total' },
-                { total }
-              ),
+              showTotal: (total) =>
+                intl.formatMessage({ id: 'userManagement.pagination.total' }, { total }),
             }}
           />
         </Col>
 
         <Col span={6}>
-          <Card 
-            title={intl.formatMessage({ id: 'userTransaction.summary.title' })} 
+          <Card
+            title={intl.formatMessage({ id: 'userTransaction.summary.title' })}
             bordered={false}
           >
             <Statistic
               title={
                 <span>
                   {intl.formatMessage({ id: 'userTransaction.stats.totalInflow' })}
-                  <Tooltip title={intl.formatMessage({ id: 'userTransaction.tooltip.totalInflow' })}>
+                  <Tooltip
+                    title={intl.formatMessage({ id: 'userTransaction.tooltip.totalInflow' })}
+                  >
                     <InfoCircleOutlined />
                   </Tooltip>
                 </span>
@@ -218,7 +237,9 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
               title={
                 <span>
                   {intl.formatMessage({ id: 'userTransaction.stats.totalOutflow' })}
-                  <Tooltip title={intl.formatMessage({ id: 'userTransaction.tooltip.totalOutflow' })}>
+                  <Tooltip
+                    title={intl.formatMessage({ id: 'userTransaction.tooltip.totalOutflow' })}
+                  >
                     <InfoCircleOutlined />
                   </Tooltip>
                 </span>
@@ -235,14 +256,16 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
                 height: '2px',
                 background: '#f0f0f0',
                 margin: '20px 0',
-                position: 'relative'
+                position: 'relative',
               }}
             >
-              <div style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%'
-              }}></div>
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                }}
+              ></div>
             </div>
 
             <Statistic
@@ -274,14 +297,16 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
                 height: '2px',
                 background: '#f0f0f0',
                 margin: '20px 0',
-                position: 'relative'
+                position: 'relative',
               }}
             >
-              <div style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%'
-              }}></div>
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                }}
+              ></div>
             </div>
 
             <Statistic
@@ -305,4 +330,4 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
   );
 };
 
-export default UserTransaction; 
+export default UserTransaction;

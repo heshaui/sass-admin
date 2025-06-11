@@ -291,9 +291,10 @@ declare namespace API {
 
   type GoogleAuthVo = {
     /** Google Authenticator code */
-    code: string;
+    code?: string;
     /** Google Authenticator secret key */
     secret?: string;
+    googleCode?: string;
   };
 
   type GoogleAuthResponse = {
