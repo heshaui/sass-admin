@@ -18,7 +18,7 @@ interface TransactionItem {
   amount: number;
   usdtValue: number;
   time: string;
-  transactionType: number;
+  transactionType: TransactionTypeMap;
 }
 
 interface UserTransactionProps {
@@ -39,8 +39,18 @@ const sceneTypeMap = {
   'U2M': 'transferTool.scene.U2M',
   'U2U': 'transferTool.scene.U2U',
 };
-
 type SceneTypeMap = keyof typeof sceneTypeMap;
+
+const transactionTypeMap = {
+  1: 'userTransaction.type.increaseBalance',
+  2: 'userTransaction.type.decreaseBalance',
+  3: 'userTransaction.type.balanceToFrozen',
+  4: 'userTransaction.type.frozenToBalance',
+  5: 'userTransaction.type.decreaseFrozen',
+  6: 'userTransaction.type.increaseFrozen',
+};
+
+type TransactionTypeMap = keyof typeof transactionTypeMap;
 
 const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
   const intl = useIntl();
@@ -76,22 +86,8 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
       title: intl.formatMessage({ id: 'userTransaction.columns.type' }),
       dataIndex: 'transactionType',
       width: 100,
-      valueEnum: {
-        // 1 增加 2 扣减 3 冻结 4 解冻
-        1: { text: intl.formatMessage({ id: 'userTransaction.type.increase' }) },
-        2: { text: intl.formatMessage({ id: 'userTransaction.type.decrease' }) },
-        3: { text: intl.formatMessage({ id: 'userTransaction.type.freeze' }) },
-        4: { text: intl.formatMessage({ id: 'userTransaction.type.unfreeze' }) },
-      },
       render: (_, record) =>
-        // 1 增加 2 扣减 3 冻结 4 解冻
-        record.transactionType === 1
-          ? intl.formatMessage({ id: 'userTransaction.type.increase' })
-          : record.transactionType === 2
-          ? intl.formatMessage({ id: 'userTransaction.type.decrease' })
-          : record.transactionType === 3
-          ? intl.formatMessage({ id: 'userTransaction.type.freeze' })
-          : intl.formatMessage({ id: 'userTransaction.type.unfreeze' }),
+        intl.formatMessage({ id: transactionTypeMap[record.transactionType] }),
     },
     {
       title: intl.formatMessage({ id: 'userTransaction.columns.business' }),
@@ -213,7 +209,6 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
         <Col span={6}>
           <Card
             title={intl.formatMessage({ id: 'userTransaction.summary.title' })}
-            bordered={false}
           >
             <Statistic
               title={
