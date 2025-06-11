@@ -114,7 +114,7 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange, beforeUplo
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          <div onClick={handlePreview}>
+          <div onClick={handlePreview} style={{ width: '100%', height: '100%'  }}>
             <Image
               src={imageUrl}
               alt="avatar"
