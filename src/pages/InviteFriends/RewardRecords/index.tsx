@@ -89,8 +89,8 @@ const RewardRecords: React.FC = () => {
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.fee' }),
-      dataIndex: 'fee',
-      key: 'fee',
+      dataIndex: 'commission',
+      key: 'commission',
       search: false,
     },
     {
