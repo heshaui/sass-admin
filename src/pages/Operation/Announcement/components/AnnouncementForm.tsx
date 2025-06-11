@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Form, Input, Select, DatePicker, Modal, Radio, Button, message } from 'antd';
-import { useIntl } from 'umi';
+import LanguageSelector from '@/components/LanguageSelector';
+import SeedEditor from '@/components/SeedEditor';
 import {
   addAnnouncement,
-  updateAnnouncement,
   getAnnouncementParams,
   getClassMenuList,
+  updateAnnouncement,
   updateAnnouncementContent,
 } from '@/services/ant-design-pro/operation';
-import SeedEditor from '@/components/SeedEditor';
-import  LanguageSelector from '@/components/LanguageSelector';
+import { Button, DatePicker, Form, Input, message, Modal, Radio, Select } from 'antd';
 import dayjs from 'dayjs';
+import React, { useEffect, useRef, useState } from 'react';
+import { useIntl } from 'umi';
 const { Option } = Select;
 
 export type AnnouncementFormProps = {
@@ -62,7 +62,9 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
               classMenu: informAnnouncement.classMenu,
               describeText: informAnnouncement.describeText,
               releaseType: informAnnouncement.releaseType,
-              releaseTime: informAnnouncement.releaseTime ? dayjs(Number(informAnnouncement.releaseTime)) : undefined,
+              releaseTime: informAnnouncement.releaseTime
+                ? dayjs(Number(informAnnouncement.releaseTime))
+                : undefined,
             });
 
             // 设置发送类型状态
@@ -81,7 +83,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             setContents(newContents);
             setTitles(newTitles);
           } else {
-            message.error(intl.formatMessage({ id: 'announcement.form.validation.failed'}));
+            message.error(intl.formatMessage({ id: 'announcement.form.validation.failed' }));
           }
         } catch (error) {
           console.error('获取公告详情出错:', error);
@@ -96,18 +98,17 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
     console.log(values, 'values');
   }, [type, values, visible, form]);
 
-
   const getMenu = async () => {
     let data = {
       pageNo: 1,
       pageSize: 10000,
-    }
+    };
     const response = await getClassMenuList(data);
     if (response.code === '0' && response.data) {
       console.log(response.data, 'response.data');
       setMenuList(response.data.list);
     }
-  }
+  };
 
   const handleContentChange = (lang: string, content: string) => {
     setContents((prev) => ({
@@ -135,28 +136,38 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
       }
 
       if (!contents.en_US) {
-        message.error(intl.formatMessage({ id: 'announcement.form.validation.english.content.required', defaultMessage: '请填写英语内容' }));
+        message.error(
+          intl.formatMessage({
+            id: 'announcement.form.validation.english.content.required',
+            defaultMessage: '请填写英语内容',
+          }),
+        );
         return;
       }
 
       if (!titles.en_US) {
-        message.error(intl.formatMessage({ id: 'announcement.form.validation.english.title.required', defaultMessage: '请填写英语标题' }));
+        message.error(
+          intl.formatMessage({
+            id: 'announcement.form.validation.english.title.required',
+            defaultMessage: '请填写英语标题',
+          }),
+        );
         return;
       }
 
       setLoading(true);
-     
+
       // 准备多语言内容列表
       const contentsList = Object.entries(contents).map(([languageCode, content]) => {
         // 在update模式下，从已存储的announcementContents中查找匹配的ID
         let contentId;
         if (type === 'update' && announcementContents.length > 0) {
           const matchedContent = announcementContents.find(
-            (item: any) => item.languageCode === languageCode
+            (item: any) => item.languageCode === languageCode,
           );
           contentId = matchedContent?.id;
         }
-        
+
         return {
           languageCode,
           title: titles[languageCode] || titles.en_US,
@@ -182,28 +193,27 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
             classMenu: fieldsValue.classMenu, // 使用表单选择的值，不硬编码
             releaseType: fieldsValue.releaseType,
             releaseTime: fieldsValue.releaseType === 2 ? fieldsValue.releaseTime?.valueOf() : null,
-          }
-          ,
-          informAnnouncementContents: contentsList
+          },
+          informAnnouncementContents: contentsList,
         };
 
         response = await addAnnouncement(createData);
       } else {
         // 更新公告
         const data = {
-            id: values?.id,
-            title: mainTitle,
-            status: 1,
-            describeText: fieldsValue.describeText,
-            classMenu: fieldsValue.classMenu,
-            releaseType: fieldsValue.releaseType,
-            releaseTime: fieldsValue.releaseType === 2 ? fieldsValue.releaseTime?.valueOf() : null,
+          id: values?.id,
+          title: mainTitle,
+          status: 1,
+          describeText: fieldsValue.describeText,
+          classMenu: fieldsValue.classMenu,
+          releaseType: fieldsValue.releaseType,
+          releaseTime: fieldsValue.releaseType === 2 ? fieldsValue.releaseTime?.valueOf() : null,
         };
 
         const datas = {
-          informAnnouncementContents: contentsList
-        }
-        
+          informAnnouncementContents: contentsList,
+        };
+
         response = await updateAnnouncement(data);
         await updateAnnouncementContent(datas); // 不需要存储返回值
       }
@@ -211,14 +221,18 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
       setLoading(false);
 
       if (response.code === '0' && response.data) {
-        message.success(type === 'create' 
-          ? intl.formatMessage({ id: 'announcement.management.create.success' })
-          : intl.formatMessage({ id: 'announcement.category.update.success' }));
+        message.success(
+          type === 'create'
+            ? intl.formatMessage({ id: 'announcement.management.create.success' })
+            : intl.formatMessage({ id: 'announcement.category.update.success' }),
+        );
         onSuccess();
       } else {
-        message.error(type === 'create' 
-          ? intl.formatMessage({ id: 'announcement.management.create.failed' })
-          : intl.formatMessage({ id: 'announcement.category.update.failed' }));
+        message.error(
+          type === 'create'
+            ? intl.formatMessage({ id: 'announcement.management.create.failed' })
+            : intl.formatMessage({ id: 'announcement.category.update.failed' }),
+        );
       }
     } catch (error) {
       setLoading(false);
@@ -247,9 +261,10 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
 
   return (
     <Modal
-      title={type === 'create' 
-        ? intl.formatMessage({ id: 'announcement.form.title.create' })
-        : intl.formatMessage({ id: 'announcement.form.title.update' })
+      title={
+        type === 'create'
+          ? intl.formatMessage({ id: 'announcement.form.title.create' })
+          : intl.formatMessage({ id: 'announcement.form.title.update' })
       }
       visible={visible}
       width={640}
@@ -259,10 +274,9 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           {intl.formatMessage({ id: 'announcement.form.button.cancel' })}
         </Button>,
         <Button key="submit" type="primary" loading={loading} onClick={handleSubmit}>
-          {type === 'create' 
+          {type === 'create'
             ? intl.formatMessage({ id: 'announcement.form.button.publish' })
-            : intl.formatMessage({ id: 'announcement.form.button.save' })
-          }
+            : intl.formatMessage({ id: 'announcement.form.button.save' })}
         </Button>,
       ]}
       destroyOnClose
@@ -276,17 +290,25 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           sendType: 1,
         }}
       >
-
-
         <Form.Item
           name="classMenu"
           label={intl.formatMessage({ id: 'announcement.form.category', defaultMessage: '分类' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'announcement.form.category.required', defaultMessage: '请选择分类' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({
+                id: 'announcement.form.category.required',
+                defaultMessage: '请选择分类',
+              }),
+            },
+          ]}
           required
         >
           <Select>
             {menuList.map((item: any) => (
-              <Option value={item.id}>{item.describe}</Option>
+              <Option value={item.id} key={item.id}>
+                {item.describe}
+              </Option>
             ))}
           </Select>
         </Form.Item>
@@ -294,10 +316,17 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
         <Form.Item
           name="describeText"
           label={intl.formatMessage({ id: 'announcement.form.description' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'announcement.form.description.required' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'announcement.form.description.required' }),
+            },
+          ]}
           required
         >
-          <Input placeholder={intl.formatMessage({ id: 'announcement.form.description.placeholder' })} />
+          <Input
+            placeholder={intl.formatMessage({ id: 'announcement.form.description.placeholder' })}
+          />
         </Form.Item>
 
         <Form.Item
@@ -306,17 +335,24 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           required
         >
           <Radio.Group onChange={(e) => setSendType(e.target.value)}>
-            <Radio value={1}>{intl.formatMessage({ id: 'announcement.form.sendTime.immediate' })}</Radio>
-            <Radio value={2}>{intl.formatMessage({ id: 'announcement.form.sendTime.scheduled' })}</Radio>
+            <Radio value={1}>
+              {intl.formatMessage({ id: 'announcement.form.sendTime.immediate' })}
+            </Radio>
+            <Radio value={2}>
+              {intl.formatMessage({ id: 'announcement.form.sendTime.scheduled' })}
+            </Radio>
           </Radio.Group>
         </Form.Item>
 
         {sendType === 2 && (
-          <Form.Item
-            name="releaseTime"
-            label=""
-          >
-            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" style={{ width: '100%' }} />
+          <Form.Item name="releaseTime" label="">
+            {/* 日期选择限制 */}
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              style={{ width: '100%' }}
+              disabledDate={(current) => current && current < dayjs().startOf('day')}
+            />
           </Form.Item>
         )}
 
@@ -324,14 +360,14 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           label={intl.formatMessage({ id: 'announcement.form.language', defaultMessage: '语言' })}
           required
         >
-          <LanguageSelector value={activeLanguage} onChange={handleLanguageChange} text={intl.formatMessage({ id: 'announcement.form.language.note', })} />
+          <LanguageSelector
+            value={activeLanguage}
+            onChange={handleLanguageChange}
+            text={intl.formatMessage({ id: 'announcement.form.language.note' })}
+          />
         </Form.Item>
 
-        <Form.Item
-          name="title"
-          label="标题"
-          hidden={true}
-        >
+        <Form.Item name="title" label="标题" hidden={true}>
           <Input />
         </Form.Item>
 
@@ -340,12 +376,20 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           required={activeLanguage === 'en_US'}
         >
           <Input
-            placeholder={intl.formatMessage({ id: 'announcement.form.title.placeholder', defaultMessage: '请输入标题' })}
+            placeholder={intl.formatMessage({
+              id: 'announcement.form.title.placeholder',
+              defaultMessage: '请输入标题',
+            })}
             value={titles[activeLanguage] || ''}
             onChange={(e) => handleTitleChange(activeLanguage, e.target.value)}
           />
           {activeLanguage === 'en_US' && !titles.en_US && (
-            <div style={{ color: 'red' }}>{intl.formatMessage({ id: 'announcement.form.title.required', defaultMessage: '英文标题为必填项' })}</div>
+            <div style={{ color: 'red' }}>
+              {intl.formatMessage({
+                id: 'announcement.form.title.required',
+                defaultMessage: '英文标题为必填项',
+              })}
+            </div>
           )}
         </Form.Item>
 
@@ -356,11 +400,18 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           <SeedEditor
             initialContent={contents[activeLanguage] || ''}
             onChange={(content) => handleContentChange(activeLanguage, content)}
-            ref={(node) => { editorRef.current = node; }}
+            ref={(node) => {
+              editorRef.current = node;
+            }}
             key={activeLanguage}
           />
           {activeLanguage === 'en_US' && !contents.en_US && (
-            <div style={{ color: 'red' }}>{intl.formatMessage({ id: 'announcement.form.content.required', defaultMessage: '英文内容为必填项' })}</div>
+            <div style={{ color: 'red' }}>
+              {intl.formatMessage({
+                id: 'announcement.form.content.required',
+                defaultMessage: '英文内容为必填项',
+              })}
+            </div>
           )}
         </Form.Item>
       </Form>
@@ -368,4 +419,4 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   );
 };
 
-export default AnnouncementForm; 
+export default AnnouncementForm;

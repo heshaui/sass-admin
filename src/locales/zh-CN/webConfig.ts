@@ -4,7 +4,7 @@ export default {
   'webConfig.background.fetchError': '获取背景图数据失败:',
   'webConfig.background.template': '模板',
   'webConfig.background.view': '查看',
-  
+
   // Table columns
   'webConfig.background.column.title': '主标题',
   'webConfig.background.column.subtitle': '副标题',
@@ -13,7 +13,7 @@ export default {
   'webConfig.background.column.url': '跳转地址',
   'webConfig.background.column.action': '操作',
   'webConfig.background.action.edit': '编辑',
-  
+
   // Language and mode options
   'webConfig.background.language.zhCN': '简体中文',
   'webConfig.background.language.zhTW': '繁體中文',
@@ -21,16 +21,16 @@ export default {
   'webConfig.background.mode.light': '日间版',
   'webConfig.background.status.beforeLogin': '登录前',
   'webConfig.background.status.afterLogin': '登录后',
-  
+
   // Tips
   'webConfig.background.tips': 'Tips: 建议尺寸：1440*820, 若不配置则使用系统默认内容！',
-  
+
   // EditModal component
   'webConfig.editModal.title': '编辑背景配置',
   'webConfig.editModal.saveSuccess': '保存成功',
   'webConfig.editModal.saveFailed': '保存失败',
   'webConfig.editModal.saveError': '保存数据失败:',
-  
+
   // Form items
   'webConfig.editModal.form.title': '主标题',
   'webConfig.editModal.form.title.required': '请输入主标题',
@@ -47,7 +47,7 @@ export default {
   'webConfig.editModal.form.url': '跳转地址',
   'webConfig.editModal.form.url.required': '请输入跳转地址',
   'webConfig.editModal.form.url.placeholder': '请输入跳转地址',
-  
+
   // Footer component
   'webConfig.footer.fetchFailed': '获取菜单数据失败',
   'webConfig.footer.fetchCustomStatusFailed': '获取自定义Footer状态失败',
@@ -67,7 +67,7 @@ export default {
   'webConfig.footer.saveFailed': '保存失败',
   'webConfig.footer.networkError': '网络错误',
   'webConfig.footer.unknownError': '未知错误',
-  
+
   // Footer UI text
   'webConfig.footer.title': 'Footer配置',
   'webConfig.footer.customFooter': '自定义Footer',
@@ -81,7 +81,7 @@ export default {
   'webConfig.footer.deleteConfirm': '确定要删除{name}菜单吗？',
   'webConfig.footer.confirmText': '确定',
   'webConfig.footer.cancelText': '取消',
-  
+
   // AddMenuModal component
   'webConfig.footer.modal.addTitle': '添加菜单',
   'webConfig.footer.modal.editTitle': '编辑菜单',
@@ -98,7 +98,7 @@ export default {
   'webConfig.footer.modal.display': '是否显示',
   'webConfig.footer.modal.cancel': '取消',
   'webConfig.footer.modal.submit': '提交',
-  
+
   // Header component
   'webConfig.header.fetchFailed': '获取菜单数据失败',
   'webConfig.header.fetchMenuDetailFailed': '获取菜单详情失败',
@@ -116,7 +116,7 @@ export default {
   'webConfig.header.cancelText': '取消',
   'webConfig.header.addTopLevelMenu': '添加一级菜单',
   'webConfig.header.fetchAccessPathsFailed': '获取访问路径失败:',
-  
+
   // AddMenuModals component
   'webConfig.header.modal.addTitle': '添加菜单',
   'webConfig.header.modal.editTitle': '编辑菜单',
@@ -146,7 +146,7 @@ export default {
   'webConfig.header.modal.display': '是否显示',
   'webConfig.header.modal.cancel': '取消',
   'webConfig.header.modal.submit': '提交',
-  
+
   // Logo component
   'webConfig.logo.fetchFailed': '获取数据失败',
   'webConfig.logo.updateSuccess': '更新成功',
@@ -154,10 +154,12 @@ export default {
   'webConfig.logo.darkLogoRequired': '请填写夜间版本的 Logo',
   'webConfig.logo.darkMode': '夜间版',
   'webConfig.logo.lightMode': '日间版',
-  'webConfig.logo.headerFooterNote': '(适用于顶部Header/底部Footer),高:28',
-  'webConfig.logo.browserTabNote': '(适用于浏览器标签)尺寸：32*32',
+  'webConfig.logo.headerFooterNote': '(适用于顶部Header/底部Footer)',
+  'webConfig.logo.browserTabNote': '(适用于浏览器标签)',
   'webConfig.logo.submit': '提交',
-  
+  'webConfig.logo.headerFooterNote.logo.size': '请上传小于500k 尺寸: 140*28',
+  'webConfig.logo.headerFooterNote.icon.size': '请上传小于500k 尺寸: 32*32',
+
   // WebStyle component
   'webConfig.webStyle.fetchFailed': '获取配置失败:',
   'webConfig.webStyle.saveSuccess': '配置保存成功',

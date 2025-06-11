@@ -35,6 +35,11 @@ export default {
   'rate.form.status.yes': '예',
   'rate.form.status.no': '아니오',
 
+  'rate.form.img.png': 'PNG 형식 이미지 업로드만 지원합니다.',
+  'rate.form.img.size': '이미지 크기는 500k를 초과할 수 없습니다.',
+  'rate.form.img.limit': '이미지의 너비와 높이는 24의 배수여야 합니다!',
+
+  'rate.form.upload.env': '현재 환경에서는 이미지 미리보기가 지원되지 않습니다.',
   'rate.form.upload.size': '500,000개 미만으로 업로드하세요.',
   'rate.form.upload.png': '24*24 png 그림',
 

@@ -39,7 +39,7 @@ export default {
     'common.status_update_retry': '상태 업데이트 실패, 나중에 다시 시도하세요',
     'common.copy': '복사',
     'common.welcome': 'Seed Admin에 오신 것을 환영합니다',
-  "common.view_detail": "상세 보기",   
+  "common.view_detail": "상세 보기",
   "common.dictionary.name": "사전 이름",
   "common.dictionary.value": "사전 값",
   "common.status": "상태",
@@ -62,4 +62,10 @@ export default {
   "common.trc20error": "TRC20 주소가 비어 있어 발급할 수 없습니다",
   "common.select.country": "국가를 선택하세요",
   "common.no_data": "데이터 없음",
+
+  "common.upload.limit": "용량 초과",
+  "common.upload.type": "지원하지 않는 파일 형식",
+  "common.upload.env": "현재 환경에서 이미지 미리보기가 지원되지 않습니다",
+  "common.upload.dimension": "잘못된 이미지 크기",
+  "common.upload.dimension.multiple": "잘못된 이미지 크기",
 };

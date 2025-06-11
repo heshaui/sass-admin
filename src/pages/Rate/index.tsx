@@ -17,7 +17,10 @@ import {
   updateExchangeRateById,
 } from '../../services/ant-design-pro/Rate';
 import AvatarUpload from '@/components/AvatarUpload/index';
+import type { GetProp, UploadProps } from 'antd';
+import { validateImageFile } from '@/utils/validateImage';
 
+type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const Rate: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const intl = useIntl();
@@ -275,7 +278,18 @@ const Rate: React.FC = () => {
             { required: true, message: intl.formatMessage({ id: 'rate.form.icon.required' }) },
           ]}
         >
-          <AvatarUpload onChange={(url) => formRef.current?.setFieldsValue({ iconUrl: url })} />
+          <AvatarUpload
+            beforeUpload={(file) =>
+              validateImageFile(file, {
+                allowedTypes: ['image/png'],
+                maxSizeKB: 500,
+                exactWidth: 24,
+                exactHeight: 24,
+                intl
+              })
+            }
+            onChange={(url) => formRef.current?.setFieldsValue({ iconUrl: url })}
+          />
         </ProFormItem>
         <ProFormSwitch
           name="status"
