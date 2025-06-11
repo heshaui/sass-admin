@@ -98,7 +98,7 @@ const TransferRecords: React.FC = () => {
       key: 'fromAccountType',
       render: (_, record) => {
         const text = fromAccountTypeMap[record.fromAccountType];
-        return intl.formatMessage({ id: text });
+        return text ? intl.formatMessage({ id: text }) : record.fromAccountType;
       }
     },
     {
@@ -112,7 +112,7 @@ const TransferRecords: React.FC = () => {
       key: 'sceneType',
       render: (_, record) => {
         const text = sceneTypeMap[record.sceneType];
-        return intl.formatMessage({ id: text });
+        return text ? intl.formatMessage({ id: text }) : record.sceneType;
       }
     },
     {
