@@ -110,15 +110,18 @@ const AvatarUpload: React.FC<AvatarUploadProps> = ({ value, onChange, beforeUplo
             overflow: 'hidden',
             border: '1px dashed #d9d9d9',
             borderRadius: '8px',
+            display: 'flex',
           }}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
-          <div onClick={handlePreview} style={{ width: '100%', height: '100%'  }}>
+          <div onClick={handlePreview}>
             <Image
               src={imageUrl}
               alt="avatar"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              width={102}
+              height={102}
+              style={{ width: '100%', height: '100%', objectFit: 'fill', display: 'block' }}
               preview={{
                 src: imageUrl,
               }}
