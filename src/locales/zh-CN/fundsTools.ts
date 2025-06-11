@@ -114,9 +114,17 @@ export default {
   'transferTool.account.total_withdrawal_account': '公司提现划转账户',
 
   // TransferTool Scene Types
+  'transferTool.scene.test': '测试',
+  'transferTool.scene.symbol-order': '币币下单扣款',
+  'transferTool.scene.extraction-symbol-order': '提现-可用-冻结',
+  'transferTool.scene.undo_extraction-symbol-order': '提现-冻结-可用',
+  'transferTool.scene.symbol-order-fee': '手续费',
+  'transferTool.scene.canal-symbol-order': '取消币币订单',
+  'transferTool.scene.buy-trade-symbol-order': '卖方币币订单戳和划转',
+  'transferTool.scene.sell-trade-symbol-order': '买方币币订单戳和划转',
+  'transferTool.scene.canal_symbol_order': '币币下单-拒绝回款',
   'transferTool.scene.M2M': '用户间转账',
   'transferTool.scene.M2U': '用户转公司',
   'transferTool.scene.U2M': '公司转用户',
   'transferTool.scene.U2U': '用户间转账',
-
 }

@@ -18,7 +18,7 @@ export default {
   'userManagement.notAvailable': '--',
   'userManagement.error.fetchList': '获取用户列表失败',
   'userManagement.error.fetchDetail': '获取用户详情失败',
-  
+
   // User Detail
   'userDetail.title': '用户详情',
   'userDetail.return': '返回',
@@ -39,7 +39,7 @@ export default {
   'userDetail.verification.verified': '已认证',
   'userDetail.verification.unverified': '未认证',
   'userDetail.idNumber.none': '暂无',
-  
+
   // Action buttons
   'userDetail.action.edit': '修改',
   'userDetail.action.freezeLogin': '冻结登录',
@@ -49,14 +49,14 @@ export default {
   'userDetail.action.freezeWithdrawal': '冻结提现',
   'userDetail.action.unfreezeWithdrawal': '解冻提现',
   'userDetail.action.unbindGoogleAuth': '解绑谷歌验证',
-  
+
   // Tabs
   'userDetail.tab.assets': '资产',
   'userDetail.tab.transactions': '流水',
   'userDetail.tab.reconciliation': '对账',
   'userDetail.tab.logs': '日志',
   'userDetail.tab.operationLogs': '操作日志',
-  
+
   // Operation logs
   'userDetail.operationLog.operationTime': '操作时间',
   'userDetail.operationLog.adminId': '管理员Id',
@@ -66,7 +66,7 @@ export default {
   'userDetail.operationLog.afterValue': '修改后',
   'userDetail.operationLog.remark': '备注',
   'userDetail.operationLog.total': '共 {total} 条记录',
-  
+
   // Modal titles
   'userDetail.modal.confirmFreezeLogin': '确认冻结登录',
   'userDetail.modal.confirmUnfreezeLogin': '确认解冻登录',
@@ -77,7 +77,7 @@ export default {
   'userDetail.modal.updatePhone': '更改手机号',
   'userDetail.modal.updateEmail': '更改邮箱',
   'userDetail.modal.unbindGoogleAuth': '解绑谷歌验证',
-  
+
   // Modal content
   'userDetail.modal.confirmFreezeLoginText': '您确定要冻结用户 {account} (ID: {userId}) 的登录权限吗？',
   'userDetail.modal.confirmUnfreezeLoginText': '您确定要解冻用户 {account} (ID: {userId}) 的登录权限吗？',
@@ -94,7 +94,7 @@ export default {
   'userDetail.modal.updatePhoneWarning': '更改手机号后，{time}小时内无法出金，请确保已告知终端用户！',
   'userDetail.modal.updateEmailWarning': '更改邮箱后，{time}小时内无法出金，请确保已告知终端用户！',
   'userDetail.modal.unbindGoogleAuthDescription': '解绑谷歌后，该用户可登录账号重新绑定！',
-  
+
   // Form labels
   'userDetail.form.freezeReason': '冻结原因：',
   'userDetail.form.unfreezeReason': '解冻原因：',
@@ -105,7 +105,7 @@ export default {
   'userDetail.form.googleAuthCode': '谷歌验证码：',
   'userDetail.form.remark': '备注：',
   'userDetail.form.unbindGoogleAuthReason': '解绑原因：',
-  
+
   // Placeholders
   'userDetail.placeholder.enterFreezeReason': '请输入冻结原因',
   'userDetail.placeholder.enterUnfreezeReason': '请输入解冻原因',
@@ -113,13 +113,13 @@ export default {
   'userDetail.placeholder.enterNewEmail': '请输入新邮箱',
   'userDetail.placeholder.enterGoogleAuthCode': '请输入验证码',
   'userDetail.placeholder.enterRemark': '请输入原因，50字符以内',
-  
+
   // Button text
   'userDetail.button.confirm': '确认',
   'userDetail.button.cancel': '取消',
   'userDetail.button.submit': '提交',
   'userDetail.button.bindGoogleAuth': '未绑定，点击前往绑定',
-  
+
   // Messages
   'userDetail.message.freezeLoginSuccess': '冻结登录操作成功',
   'userDetail.message.unfreezeLoginSuccess': '解冻登录操作成功',
@@ -144,7 +144,7 @@ export default {
   'userDetail.message.unbindGoogleAuthReason': '请输入解绑原因',
   'userDetail.message.unbindGoogleAuthSuccess': '解绑成功',
   'userDetail.message.enterOperationReason': '请输入操作原因',
-  
+
   // Transaction related
   'userTransaction.title': '交易流水',
   'userTransaction.summary.title': '流水概况(折合USDT)',
@@ -154,10 +154,12 @@ export default {
   'userTransaction.columns.amount': '数量',
   'userTransaction.columns.usdtValue': '折合USDT',
   'userTransaction.columns.time': '时间',
-  'userTransaction.type.increase': '增加',
-  'userTransaction.type.decrease': '扣减',
-  'userTransaction.type.freeze': '冻结',
-  'userTransaction.type.unfreeze': '解冻',
+  'userTransaction.type.increaseBalance': '可用余额增加',
+  'userTransaction.type.decreaseBalance': '可用余额扣减',
+  'userTransaction.type.balanceToFrozen': '可用转冻结',
+  'userTransaction.type.frozenToBalance': '冻结转可用',
+  'userTransaction.type.decreaseFrozen': '冻结余额扣减',
+  'userTransaction.type.increaseFrozen': '冻结余额增加',
   'userTransaction.stats.totalInflow': '总流入',
   'userTransaction.stats.totalOutflow': '总流出',
   'userTransaction.stats.netInflow': '净流入',

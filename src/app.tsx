@@ -9,6 +9,7 @@ import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
+// @ts-ignore
 import { generateMenuTree } from '@/utils/index';
 import { fetchLogoUrl } from '@/utils/logoUtils';
 const isDev = process.env.NODE_ENV === 'development';
@@ -25,7 +26,7 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.CurrentUser | undefined>;
 }> {
 
-  
+
   // Fetch logo from API
   const logoUrl = await fetchLogoUrl();
 
@@ -33,7 +34,7 @@ export async function getInitialState(): Promise<{
     ...defaultSettings,
     logo: logoUrl || undefined,  // Use undefined instead of empty string to prevent 'logo' text from showing
   };
-  
+
   const fetchUserInfo = async () => {
     try {
       let msg: any;
@@ -81,16 +82,16 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   console.log('initialState', initialState);
-  
+
   // Update title with tenantName if available
-  
+
     if(isAdmin && initialState?.settings) {
       initialState.settings.title = 'IMSaaS'
     }else if(initialState?.settings && initialState?.currentUser) {
       initialState.settings.title = initialState.currentUser.tenantName;
     }
 
-  
+
   return {
     actionsRender: () => [<Question key="doc" />, <SelectLang key="SelectLang" />],
     avatarProps: {

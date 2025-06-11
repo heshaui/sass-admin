@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Radio } from 'antd';
 import type { RadioChangeEvent } from 'antd';
 import { tenantLangList } from '@/services/ant-design-pro/WebConfig';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
 interface LanguageSelectorProps {
   value?: string;

@@ -17,10 +17,19 @@ const fromAccountTypeMap = {
 };
 
 const sceneTypeMap = {
+  'test': 'transferTool.scene.test',
+  'symbol-order': 'transferTool.scene.symbol-order',
+  'extraction-symbol-order': 'transferTool.scene.extraction-symbol-order',
+  'undo_extraction-symbol-order': 'transferTool.scene.undo_extraction-symbol-order',
+  'symbol-order-fee': 'transferTool.scene.symbol-order-fee',
+  'canal-symbol-order': 'transferTool.scene.canal-symbol-order',
+  'buy-trade-symbol-order': 'transferTool.scene.buy-trade-symbol-order',
+  'sell-trade-symbol-order': 'transferTool.scene.sell-trade-symbol-order',
+  'canal_symbol_order': 'transferTool.scene.canal_symbol_order',
   'M2M': 'transferTool.scene.M2M',
   'M2U': 'transferTool.scene.M2U',
   'U2M': 'transferTool.scene.U2M',
-  'U2U': 'transferTool.scene.U2U'
+  'U2U': 'transferTool.scene.U2U',
 };
 
 type FromAccountTypeMap = keyof typeof fromAccountTypeMap;

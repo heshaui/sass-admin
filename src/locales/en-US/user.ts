@@ -50,14 +50,14 @@ export default {
     'userDetail.action.freezeWithdrawal': 'Freeze Withdrawal',
     'userDetail.action.unfreezeWithdrawal': 'Unfreeze Withdrawal',
     'userDetail.action.unbindGoogleAuth': 'Unbind Google Auth',
-    
+
     // Tabs
     'userDetail.tab.assets': 'Asset',
     'userDetail.tab.transactions': 'Transaction',
     'userDetail.tab.reconciliation': 'Reconciliation',
     'userDetail.tab.logs': 'Log',
     'userDetail.tab.operationLogs': 'Operation Log',
-    
+
     // Operation logs
     'userDetail.operationLog.operationTime': 'Operation Time',
     'userDetail.operationLog.adminId': 'Admin ID',
@@ -67,7 +67,7 @@ export default {
     'userDetail.operationLog.afterValue': 'After Value',
     'userDetail.operationLog.remark': 'Remark',
     'userDetail.operationLog.total': 'Total of {total} records',
-  
+
   // Modal titles
   'userDetail.modal.confirmFreezeLogin': 'Confirm Freeze Login',
   'userDetail.modal.confirmUnfreezeLogin': 'Confirm Unfreeze Login',
@@ -78,7 +78,7 @@ export default {
   'userDetail.modal.updatePhone': 'Update Phone',
   'userDetail.modal.updateEmail': 'Update Email',
   'userDetail.modal.unbindGoogleAuth': 'Unbind Google Auth',
-  
+
   // Modal content
   'userDetail.modal.confirmFreezeLoginText': 'You sure to freeze user {account} (ID: {userId}) login permission?',
   'userDetail.modal.confirmUnfreezeLoginText': 'You sure to unfreeze user {account} (ID: {userId}) login permission?',
@@ -114,13 +114,13 @@ export default {
     'userDetail.placeholder.enterNewEmail': 'Please enter new email',
     'userDetail.placeholder.enterGoogleAuthCode': 'Please enter verification code',
     'userDetail.placeholder.enterRemark': 'Please enter reason, 50 characters maximum',
-    
+
     // Button text
     'userDetail.button.confirm': 'Confirm',
     'userDetail.button.cancel': 'Cancel',
     'userDetail.button.submit': 'Submit',
     'userDetail.button.bindGoogleAuth': 'Not bound, click to bind',
-    
+
     // Messages
     'userDetail.message.freezeWithdrawalSuccess': 'Freeze withdrawal operation successful',
     'userDetail.message.unfreezeWithdrawalSuccess': 'Unfreeze withdrawal operation successful',
@@ -145,7 +145,7 @@ export default {
 'userDetail.message.freezeTransactionError': 'Transaction freeze failed',
 'userDetail.message.unfreezeTransactionError': 'Transaction unfreeze failed',
 
-    
+
   // Transaction related
   'userTransaction.title': 'Transaction Records',
   'userTransaction.summary.title': 'Transaction Summary (Equivalent in USDT)',
@@ -155,10 +155,12 @@ export default {
   'userTransaction.columns.amount': 'Amount',
   'userTransaction.columns.usdtValue': 'Equivalent in USDT',
   'userTransaction.columns.time': 'Time',
-  'userTransaction.type.increase': 'Increase',
-  'userTransaction.type.decrease': 'Decrease',
-  'userTransaction.type.freeze': 'Freeze',
-  'userTransaction.type.unfreeze': 'Unfreeze',
+  'userTransaction.type.increaseBalance': 'Available balance increase',
+  'userTransaction.type.decreaseBalance': 'Available balance deduction',
+  'userTransaction.type.balanceToFrozen': 'Available to frozen transfer',
+  'userTransaction.type.frozenToBalance': 'Frozen to available transfer',
+  'userTransaction.type.decreaseFrozen': 'Frozen balance deduction',
+  'userTransaction.type.increaseFrozen': 'Frozen balance increase',
   'userTransaction.stats.totalInflow': 'Total Inflow',
   'userTransaction.stats.totalOutflow': 'Total Outflow',
   'userTransaction.stats.netInflow': 'Net Inflow',

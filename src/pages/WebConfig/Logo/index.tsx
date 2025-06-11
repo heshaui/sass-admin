@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-components';
-import { Tabs, Button, message, Modal } from 'antd';
+import { Button, message, Modal } from 'antd';
 import { useIntl } from '@umijs/max';
 import AvatarUpload from '@/components/AvatarUpload';
 import {
   updateValue,
   getTenantKeyParams,
-  // updateTenantKv,
 } from '@/services/ant-design-pro/kv';
 import { validateImageFile } from '@/utils/validateImage';
+import icon_position from './icon-position.png';
+import logo_position from './logo-position.png';
 
-const { TabPane } = Tabs;
 
 const Logo: React.FC = () => {
   const intl = useIntl();
@@ -114,6 +114,7 @@ const Logo: React.FC = () => {
 
   return (
     <PageContainer>
+      {/* 查看logo 放置哪里 */}
       <Modal
         open={!!showImage}
         centered
@@ -123,7 +124,63 @@ const Logo: React.FC = () => {
       >
         <img src={showImage} style={{ width: '100%', height: '100%' }} />
       </Modal>
-      <Tabs defaultActiveKey="1">
+      {/* 上传logo 默认是light 模式 */}
+      <div style={{ display: 'flex', marginBottom: 16 }}>
+        <div style={{ marginRight: 16 }}>
+          <AvatarUpload
+            beforeUpload={(file) =>
+              validateImageFile(file, {
+                maxSizeKB: 500,
+                exactWidth: 140,
+                exactHeight: 28,
+                intl,
+              })
+            }
+            value={lightLogo.header}
+            onChange={(value) => {
+              setLightLogo((prev) => ({ ...prev, header: value }));
+            }}
+          />
+          <p style={{ marginTop: 8 }}>
+            {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.logo.size' })}
+            <br />
+            {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}
+            <Button type="link" onClick={() => setShowImage(logo_position)}>
+              {intl.formatMessage({ id: 'language.button.view' })}
+            </Button>
+          </p>
+        </div>
+        <div>
+          <AvatarUpload
+            beforeUpload={(file) =>
+              validateImageFile(file, {
+                maxSizeKB: 500,
+                exactWidth: 32,
+                exactHeight: 32,
+                intl,
+              })
+            }
+            value={lightLogo.favicon}
+            onChange={(value) => {
+              setLightLogo((prev) => ({ ...prev, favicon: value }));
+            }}
+          />
+          <p style={{ marginTop: 8 }}>
+            {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.icon.size' })}
+            <br />
+            {intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}
+            <Button type="link" onClick={() => setShowImage(icon_position)}>
+              {intl.formatMessage({ id: 'language.button.view' })}
+            </Button>
+          </p>
+        </div>
+      </div>
+      {/* 提交 */}
+      <Button type="primary" loading={loading} onClick={() => handleSubmit('light')}>
+        {intl.formatMessage({ id: 'webConfig.logo.submit' })}
+      </Button>
+      {/* 日夜间模式 一期不做 */}
+      {/* <Tabs defaultActiveKey="1">
         <TabPane tab={intl.formatMessage({ id: 'webConfig.logo.darkMode' })} key="1">
           <div style={{ display: 'flex', marginBottom: 16 }}>
             <div style={{ marginRight: 16 }}>
@@ -133,7 +190,7 @@ const Logo: React.FC = () => {
                     maxSizeKB: 500,
                     exactWidth: 140,
                     exactHeight: 28,
-                    intl
+                    intl,
                   })
                 }
                 value={darkLogo.header}
@@ -145,11 +202,9 @@ const Logo: React.FC = () => {
                 {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.logo.size' })}
                 <br />
                 {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}
-                {darkLogo.header && (
-                  <Button type="link" onClick={() => setShowImage(darkLogo.header)}>
-                    {intl.formatMessage({ id: 'language.button.view' })}
-                  </Button>
-                )}
+                <Button type="link" onClick={() => setShowImage(darkLogo.header)}>
+                  {intl.formatMessage({ id: 'language.button.view' })}
+                </Button>
               </p>
             </div>
             <div>
@@ -159,7 +214,7 @@ const Logo: React.FC = () => {
                     maxSizeKB: 500,
                     exactWidth: 32,
                     exactHeight: 32,
-                    intl
+                    intl,
                   })
                 }
                 value={darkLogo.favicon}
@@ -171,11 +226,9 @@ const Logo: React.FC = () => {
                 {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.icon.size' })}
                 <br />
                 {intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}
-                {darkLogo.favicon && (
-                  <Button type="link" onClick={() => setShowImage(darkLogo.favicon)}>
-                    {intl.formatMessage({ id: 'language.button.view' })}
-                  </Button>
-                )}
+                <Button type="link" onClick={() => setShowImage(darkLogo.favicon)}>
+                  {intl.formatMessage({ id: 'language.button.view' })}
+                </Button>
               </p>
             </div>
           </div>
@@ -192,7 +245,7 @@ const Logo: React.FC = () => {
                     maxSizeKB: 500,
                     exactWidth: 140,
                     exactHeight: 28,
-                    intl
+                    intl,
                   })
                 }
                 value={lightLogo.header}
@@ -204,11 +257,9 @@ const Logo: React.FC = () => {
                 {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.logo.size' })}
                 <br />
                 {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote' })}
-                {lightLogo.header && (
-                  <Button type="link" onClick={() => setShowImage(lightLogo.header)}>
-                    {intl.formatMessage({ id: 'language.button.view' })}
-                  </Button>
-                )}
+                <Button type="link" onClick={() => setShowImage(lightLogo.header)}>
+                  {intl.formatMessage({ id: 'language.button.view' })}
+                </Button>
               </p>
             </div>
             <div>
@@ -218,7 +269,7 @@ const Logo: React.FC = () => {
                     maxSizeKB: 500,
                     exactWidth: 32,
                     exactHeight: 32,
-                    intl
+                    intl,
                   })
                 }
                 value={lightLogo.favicon}
@@ -230,11 +281,9 @@ const Logo: React.FC = () => {
                 {intl.formatMessage({ id: 'webConfig.logo.headerFooterNote.icon.size' })}
                 <br />
                 {intl.formatMessage({ id: 'webConfig.logo.browserTabNote' })}
-                {lightLogo.favicon && (
-                  <Button type="link" onClick={() => setShowImage(lightLogo.favicon)}>
-                    {intl.formatMessage({ id: 'language.button.view' })}
-                  </Button>
-                )}
+                <Button type="link" onClick={() => setShowImage(lightLogo.favicon)}>
+                  {intl.formatMessage({ id: 'language.button.view' })}
+                </Button>
               </p>
             </div>
           </div>
@@ -242,7 +291,7 @@ const Logo: React.FC = () => {
             {intl.formatMessage({ id: 'webConfig.logo.submit' })}
           </Button>
         </TabPane>
-      </Tabs>
+      </Tabs> */}
     </PageContainer>
   );
 };
