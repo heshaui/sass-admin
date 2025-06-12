@@ -262,7 +262,7 @@ const OrderManagement: React.FC = () => {
           return (
           
              <Button type="link"  onClick={() => currentUser?.employeeResp?.googleCode === true ? handleCancel(record.orderId) : getGoogleCode()}>
-              {intl.formatMessage({ id: 'order.management.cancelOrder' })}{JSON.stringify(currentUser)}
+              {intl.formatMessage({ id: 'order.management.cancelOrder' })}
               </Button>
 
           );
