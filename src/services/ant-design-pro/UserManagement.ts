@@ -48,7 +48,7 @@ export interface UpdateEmailParams {
 
 // 操作日志查询参数
 export interface OperationLogParams {
-  userId: string | number;
+  userId?: string | number;
   pageSize?: number;
   pageNo?: number;
   startTime?: string;
