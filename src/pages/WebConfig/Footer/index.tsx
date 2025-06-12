@@ -2,12 +2,22 @@ import { PlusOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, message, Space, Switch, Input, Popconfirm } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
-import { homeBottomList, saveHomeBottom, homeBottomTranslationList, updateHomeBottomTranslationById, updateHomeBottomById, saveHomeBottomFooter, homeBottomFooterList, updateHomeBottomFooterById, deleteHomeBottom, homeBottomParams } from '@/services/ant-design-pro/WebConfig';
+import { useIntl } from '@umijs/max';
+import {
+  homeBottomList,
+  saveHomeBottom,
+  homeBottomTranslationList,
+  updateHomeBottomTranslationById,
+  updateHomeBottomById,
+  saveHomeBottomFooter,
+  homeBottomFooterList,
+  updateHomeBottomFooterById,
+  deleteHomeBottom,
+  homeBottomParams,
+} from '@/services/ant-design-pro/WebConfig';
 import { updateValue, getTenantKeyParams } from '@/services/ant-design-pro/kv';
 import AddMenuModal from './components/AddMenuModal';
 import { tenantLangList } from '@/services/ant-design-pro/WebConfig';
-
 
 const { TextArea } = Input;
 
@@ -23,18 +33,18 @@ const Footer: React.FC = () => {
   const [customCode, setCustomCode] = useState('');
   const [footerId, setFooterId] = useState<number | null>(null);
   const [editingMenu, setEditingMenu] = useState<any>(null);
-    const [languages, setLanguages] = useState<any[]>([]);
-  
-    const getLang=async ()=>{
-       let data={
-              pageNo:1,
-              pageSize:10000
-            }
-            const res = await tenantLangList(data);
-            if (res.code === '0') {
-              setLanguages(res.data?.list || []);
-            }
+  const [languages, setLanguages] = useState<any[]>([]);
+
+  const getLang = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
+    };
+    const res = await tenantLangList(data);
+    if (res.code === '0') {
+      setLanguages(res.data?.list || []);
     }
+  };
   // 获取菜单数据
   const getMenu = async () => {
     setLoading(true);
@@ -42,8 +52,8 @@ const Footer: React.FC = () => {
       let data = {
         pageNo: 1,
         pageSize: 1000,
-        languageCode: currentLanguage
-      }
+        languageCode: currentLanguage,
+      };
       const res = await homeBottomList(data);
       if (res.code === '0') {
         setMenuData(res?.data);
@@ -105,8 +115,8 @@ const Footer: React.FC = () => {
 
   // 打开弹窗
   const handleModal = (item: any = null) => {
-    console.log("item", item);
-    setEditingMenu(null)
+    console.log('item', item);
+    setEditingMenu(null);
     setParentId(item);
     setModalType(true);
   };
@@ -119,8 +129,8 @@ const Footer: React.FC = () => {
 
   // 处理表单提交
   const handleSubmit = async (values: any) => {
-    if(editingMenu!=null){
-    await handleEditSubmit(values);
+    if (editingMenu != null) {
+      await handleEditSubmit(values);
       return;
     }
     let show;
@@ -129,8 +139,8 @@ const Footer: React.FC = () => {
     } else {
       show = 0;
     }
-    console.log("values", values);
-    console.log("parentId", parentId);
+    console.log('values', values);
+    console.log('parentId', parentId);
     try {
       const data = {
         homeBottom: {
@@ -157,14 +167,19 @@ const Footer: React.FC = () => {
         getMenu(); // 重新获取菜单数据
         setParentId(null);
       } else {
-        message.error(intl.formatMessage({ id: 'webConfig.footer.addFailed' }) + (response.message || intl.formatMessage({ id: 'webConfig.footer.unknownError' })));
+        message.error(
+          intl.formatMessage({ id: 'webConfig.footer.addFailed' }) +
+            (response.message || intl.formatMessage({ id: 'webConfig.footer.unknownError' })),
+        );
       }
     } catch (error) {
       console.log(error);
-      message.error(intl.formatMessage({ id: 'webConfig.footer.submitFailed' }) + (error || intl.formatMessage({ id: 'webConfig.footer.networkError' })));
+      message.error(
+        intl.formatMessage({ id: 'webConfig.footer.submitFailed' }) +
+          (error || intl.formatMessage({ id: 'webConfig.footer.networkError' })),
+      );
     }
   };
-
 
   const handleEditSubmit = async (values: any) => {
     let show;
@@ -174,60 +189,55 @@ const Footer: React.FC = () => {
       show = 0;
     }
 
-    console.log("editingMenu", editingMenu);
+    console.log('editingMenu', editingMenu);
 
-      // const data = {
-      //   homeBottom: {
-      //     menuDescription: values.values.menuDescription,
-      //     parentId: parentId?.bottomId || 0,
-      //     orderIndex: 1,
-      //     bottomDescription: values.values.bottomDescription,
-      //     show: show,
-      //     languageKey: currentLanguage,
-      //     accessType: values.values.accessType,
-      //     accessPath: values.values.accessPath,
-      //   },
-      //   homeBottomTranslation: {
-      //     languageCode: currentLanguage,
-      //     languagePath: '/home/zh_CN',
-      //     bottomName: values.values.menuName,
-      //   },
-      // };
-      let data={
-        id:editingMenu?.homeBottom.id,
-        menuDescription: values.values.menuDescription,
-        parentId: editingMenu?.homeBottom.parentId || 0,
-        orderIndex: 1,
-        bottomDescription: values.values.bottomDescription,
-        show: show,
-        languageKey: currentLanguage,
-        accessType: values.values.accessType,
-        accessPath: values.values.accessPath,
-      }
+    // const data = {
+    //   homeBottom: {
+    //     menuDescription: values.values.menuDescription,
+    //     parentId: parentId?.bottomId || 0,
+    //     orderIndex: 1,
+    //     bottomDescription: values.values.bottomDescription,
+    //     show: show,
+    //     languageKey: currentLanguage,
+    //     accessType: values.values.accessType,
+    //     accessPath: values.values.accessPath,
+    //   },
+    //   homeBottomTranslation: {
+    //     languageCode: currentLanguage,
+    //     languagePath: '/home/zh_CN',
+    //     bottomName: values.values.menuName,
+    //   },
+    // };
+    let data = {
+      id: editingMenu?.homeBottom.id,
+      menuDescription: values.values.menuDescription,
+      parentId: editingMenu?.homeBottom.parentId || 0,
+      orderIndex: 1,
+      bottomDescription: values.values.bottomDescription,
+      show: show,
+      languageKey: currentLanguage,
+      accessType: values.values.accessType,
+      accessPath: values.values.accessPath,
+    };
 
-      let data1={
-        id:editingMenu?.homeBottomTranslation.id,
-        bottomId:editingMenu?.homeBottom.id,
-        languageCode:currentLanguage, 
-        languagePath: '/home/zh_CN',
-        bottomName: values.values.menuName,
-      }
-      const response = await updateHomeBottomById(data);
-      const response1 = await updateHomeBottomTranslationById(data1)
+    let data1 = {
+      id: editingMenu?.homeBottomTranslation.id,
+      bottomId: editingMenu?.homeBottom.id,
+      languageCode: currentLanguage,
+      languagePath: '/home/zh_CN',
+      bottomName: values.values.menuName,
+    };
+    const response = await updateHomeBottomById(data);
+    const response1 = await updateHomeBottomTranslationById(data1);
 
-      if(response.code==='0' && response.data&&response1.code==='0'&&response1.data){
-        message.success(intl.formatMessage({ id: 'webConfig.footer.editSuccess' }));
-        getMenu();
-
-      }else{
-        message.error(intl.formatMessage({ id: 'webConfig.footer.editFailed' }));
-      }
-      setModalType(false);
-      setEditingMenu(null);
-   
-
-
-
+    if (response.code === '0' && response.data && response1.code === '0' && response1.data) {
+      message.success(intl.formatMessage({ id: 'webConfig.footer.editSuccess' }));
+      getMenu();
+    } else {
+      message.error(intl.formatMessage({ id: 'webConfig.footer.editFailed' }));
+    }
+    setModalType(false);
+    setEditingMenu(null);
   };
 
   const handleDelete = async (id: number) => {
@@ -237,11 +247,17 @@ const Footer: React.FC = () => {
         message.success(intl.formatMessage({ id: 'webConfig.footer.deleteSuccess' }));
         getMenu(); // 重新获取菜单数据
       } else {
-        message.error(intl.formatMessage({ id: 'webConfig.footer.deleteFailed' }) + (response.message || intl.formatMessage({ id: 'webConfig.footer.unknownError' })));
+        message.error(
+          intl.formatMessage({ id: 'webConfig.footer.deleteFailed' }) +
+            (response.message || intl.formatMessage({ id: 'webConfig.footer.unknownError' })),
+        );
       }
     } catch (error) {
       console.log(error);
-      message.error(intl.formatMessage({ id: 'webConfig.footer.deleteFailed' }) + (error || intl.formatMessage({ id: 'webConfig.footer.networkError' })));
+      message.error(
+        intl.formatMessage({ id: 'webConfig.footer.deleteFailed' }) +
+          (error || intl.formatMessage({ id: 'webConfig.footer.networkError' })),
+      );
     }
   };
 
@@ -249,7 +265,7 @@ const Footer: React.FC = () => {
   const handleEdit = async (item: any) => {
     try {
       const res = await homeBottomParams({ id: item.bottomId });
-      if (res.code === "0") {
+      if (res.code === '0') {
         // 查找父级菜单信息
         let parentMenuInfo = null;
         if (res.data.homeBottom.parentId) {
@@ -268,7 +284,7 @@ const Footer: React.FC = () => {
           };
           parentMenuInfo = findParentMenu(menuData, res.data.homeBottom.parentId);
         }
-        console.log("parentMenuInfo", parentMenuInfo);
+        console.log('parentMenuInfo', parentMenuInfo);
 
         setEditingMenu(res.data);
         setParentId(parentMenuInfo);
@@ -284,18 +300,16 @@ const Footer: React.FC = () => {
   // 递归渲染菜单
   const renderMenu = (menuList: any[]) => {
     // 过滤出父级菜单（parentId === 0）
-    const parentMenus = menuList.filter(item => item.parentId === 0);
+    const parentMenus = menuList.filter((item) => item.parentId === 0);
 
     return parentMenus.map((parentItem) => {
       // 找出当前父菜单的所有子菜单
-      const childMenus = menuList.filter(item => item.parentId === parentItem.bottomId);
+      const childMenus = menuList.filter((item) => item.parentId === parentItem.bottomId);
 
       return (
         <div key={parentItem.bottomId} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-
           {/* 父级菜单 */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-
             <Button
               style={{
                 background: '#F5F5F5',
@@ -308,23 +322,34 @@ const Footer: React.FC = () => {
               }}
             >
               <Popconfirm
-                title={intl.formatMessage({ id: 'webConfig.footer.deleteConfirm' }, { name: parentItem.bottomName })}
-                onConfirm={(e) => { e?.stopPropagation(); handleDelete(parentItem.bottomId); }}
+                title={intl.formatMessage(
+                  { id: 'webConfig.footer.deleteConfirm' },
+                  { name: parentItem.bottomName },
+                )}
+                onConfirm={(e) => {
+                  e?.stopPropagation();
+                  handleDelete(parentItem.bottomId);
+                }}
                 okText={intl.formatMessage({ id: 'webConfig.footer.confirmText' })}
                 cancelText={intl.formatMessage({ id: 'webConfig.footer.cancelText' })}
               >
-
-                <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
+                <DeleteOutlined
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ color: '#ff4d4f', marginRight: 8 }}
+                />
               </Popconfirm>
               {parentItem.bottomName}
-              <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
-                <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(parentItem); }} style={{ color: "#1890ff" }} />
+              <div style={{ position: 'absolute', right: '8px', display: 'flex', gap: '6px' }}>
+                <EditOutlined
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(parentItem);
+                  }}
+                  style={{ color: '#1890ff' }}
+                />
               </div>
             </Button>
-            <div style={{ display: "flex", alignItems: "center" }}>
-
-
-            </div>
+            <div style={{ display: 'flex', alignItems: 'center' }}></div>
             <Button
               onClick={() => handleModal(parentItem)}
               style={{
@@ -345,10 +370,8 @@ const Footer: React.FC = () => {
           {/* 子菜单 */}
           {childMenus.length > 0 && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-
               {childMenus.map((child) => (
                 <div key={child.bottomId} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-
                   <Button
                     style={{
                       background: '#F5F5F5',
@@ -361,19 +384,37 @@ const Footer: React.FC = () => {
                     }}
                   >
                     <Popconfirm
-                      title={intl.formatMessage({ id: 'webConfig.footer.deleteConfirm' }, { name: child.menuName })}
-                      onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.bottomId); }}
+                      title={intl.formatMessage(
+                        { id: 'webConfig.footer.deleteConfirm' },
+                        { name: child.menuName },
+                      )}
+                      onConfirm={(e) => {
+                        e?.stopPropagation();
+                        handleDelete(child.bottomId);
+                      }}
                       okText={intl.formatMessage({ id: 'webConfig.footer.confirmText' })}
                       cancelText={intl.formatMessage({ id: 'webConfig.footer.cancelText' })}
                     >
-                      <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
+                      <DeleteOutlined
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ color: '#ff4d4f', marginRight: 8 }}
+                      />
                     </Popconfirm>
                     • {child.bottomName}
-                    <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
-                      <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(child); }} style={{ color: "#1890ff" }} />
+                    <div
+                      style={{ position: 'absolute', right: '8px', display: 'flex', gap: '6px' }}
+                    >
+                      <EditOutlined
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(child);
+                        }}
+                        style={{ color: '#1890ff' }}
+                      />
                     </div>
                   </Button>
-                  <Button
+                  {/* 暂时不支持添加二级以下菜单 */}
+                  {/* <Button
                     onClick={() => handleModal(child)}
                     style={{
                       background: '#FF6A00',
@@ -387,7 +428,7 @@ const Footer: React.FC = () => {
                     }}
                   >
                     <PlusOutlined />
-                  </Button>
+                  </Button> */}
                 </div>
               ))}
             </div>
@@ -402,7 +443,7 @@ const Footer: React.FC = () => {
     try {
       const response = await updateValue({
         keyProperty: 'footer_setting',
-        keyValue: checked ? '1' : '0'
+        keyValue: checked ? '1' : '0',
       });
       if (response.code === '0') {
         setIsCustomFooter(checked);
@@ -427,24 +468,28 @@ const Footer: React.FC = () => {
         const data = {
           id: footerId,
           languageCode: currentLanguage,
-          codeContent: customCode
+          codeContent: customCode,
         };
         const response = await updateHomeBottomFooterById(data);
         if (response.code === '0') {
           message.success(intl.formatMessage({ id: 'webConfig.footer.updateSuccess' }));
         } else {
-          message.error(response.message || intl.formatMessage({ id: 'webConfig.footer.updateFailed' }));
+          message.error(
+            response.message || intl.formatMessage({ id: 'webConfig.footer.updateFailed' }),
+          );
         }
       } else {
         const data = {
           languageCode: currentLanguage,
-          codeContent: customCode
+          codeContent: customCode,
         };
         const response = await saveHomeBottomFooter(data);
         if (response.code === '0') {
           message.success(intl.formatMessage({ id: 'webConfig.footer.saveSuccess' }));
         } else {
-          message.error(response.message || intl.formatMessage({ id: 'webConfig.footer.saveFailed' }));
+          message.error(
+            response.message || intl.formatMessage({ id: 'webConfig.footer.saveFailed' }),
+          );
         }
       }
     } catch (error) {
@@ -461,7 +506,15 @@ const Footer: React.FC = () => {
             <span>{intl.formatMessage({ id: 'webConfig.footer.customFooter' })}</span>
           </div>
         </div>
-        <div style={{ marginBottom: 20 }}> {intl.formatMessage({ id: 'webConfig.footer.enableCustomFooter' })}<Switch checked={isCustomFooter} onChange={handleCustomFooterChange} style={{ marginLeft: 10 }} /></div>
+        <div style={{ marginBottom: 20 }}>
+          {' '}
+          {intl.formatMessage({ id: 'webConfig.footer.enableCustomFooter' })}
+          <Switch
+            checked={isCustomFooter}
+            onChange={handleCustomFooterChange}
+            style={{ marginLeft: 10 }}
+          />
+        </div>
         <div style={{ marginBottom: 16 }}>
           {languages.map((lang) => (
             <Button
@@ -485,7 +538,6 @@ const Footer: React.FC = () => {
             </div>
 
             {/* 语言切换 */}
-
 
             {/* 代码编辑区域 */}
             <TextArea
@@ -516,7 +568,9 @@ const Footer: React.FC = () => {
                 borderBottom: '2px solid #ddd',
               }}
             >
-              <Button style={{ background: '#F5F5F5', color: '#000', fontWeight: 'bold' }}>Logo</Button>
+              <Button style={{ background: '#F5F5F5', color: '#000', fontWeight: 'bold' }}>
+                Logo
+              </Button>
               <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginLeft: 20 }}>
                 {menuData && menuData.length > 0 && renderMenu(menuData)}
 
@@ -545,7 +599,7 @@ const Footer: React.FC = () => {
         onCancel={handleCancel}
         onSubmit={handleSubmit}
         parentId={parentId}
-        editingMenu={editingMenu} 
+        editingMenu={editingMenu}
       />
     </PageContainer>
   );
