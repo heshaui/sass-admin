@@ -46,26 +46,23 @@ const InviteRecords: React.FC = () => {
 
 const handleSend = async (record: InviteRecord) => {
   try {
-    let amount
-    let actualCoinId
+
     const getUserGrantRebateRes = await getUserGrantRebate({userId:record.userId});
-    console.log(getUserGrantRebateRes)
     if(getUserGrantRebateRes.code === '0'){
 
+      const res = await grantUserRebates({ userId: record.userId, amount:getUserGrantRebateRes.data.amount,actualCoinId:getUserGrantRebateRes.data.actualCoinId});
+    
+      if (res.code === '0'&&res.data) {
+        // Refresh the table data after successful distribution
+        proTableRef.current?.reload();
+        message.success(intl.formatMessage({ id: 'common.success' }) || 'Distribution successful');
+      } else {
+        message.error(res.msg || intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
+      }
     }
     
-    // Call the API with the user ID
-    const res = await grantUserRebates({ userId: record.userId, amount:record.accumulate,actualCoinId:record.actualCoinId});
-    
+   
 
-    
-    if (res.code === '0'&&res.data) {
-      // Refresh the table data after successful distribution
-      proTableRef.current?.reload();
-      message.success(intl.formatMessage({ id: 'common.success' }) || 'Distribution successful');
-    } else {
-      message.error(res.msg || intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
-    }
   } catch (error) {
     console.error('Manual distribution error:', error);
     message.error(intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
