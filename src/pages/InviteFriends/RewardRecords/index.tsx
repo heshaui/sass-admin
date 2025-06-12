@@ -19,6 +19,7 @@ interface RewardRecord {
   type: string;
   createTime: string;
   coinName: string;
+  actualCoinName: string;
 }
 
 
@@ -105,6 +106,7 @@ const RewardRecords: React.FC = () => {
       dataIndex: 'commission',
       key: 'commission',
       search: false,
+      render: (_, record) => `${record?.commission} ${record?.coinName}`,
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.rebateRatio' }),
@@ -124,7 +126,7 @@ const RewardRecords: React.FC = () => {
       dataIndex: 'actualRebateAmount',
       key: 'actualRebateAmount',
       search: false,
-      render: (_, record) => `${record?.actualRebateAmount} ${record?.coinName}`,
+      render: (_, record) => `${record?.actualRebateAmount} ${record?.actualCoinName}`,
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.usdtValue' }),
