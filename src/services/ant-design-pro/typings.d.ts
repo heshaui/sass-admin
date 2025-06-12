@@ -200,6 +200,28 @@ declare namespace API {
     type?: NoticeIconItemType;
   };
 
+  type AuthAdminUserAdminListItem = {
+    id: number;
+    nickname: string;
+    role: string;
+    email: string;
+    phone: string;
+    remark: string | null;
+    googleCode: string | null;
+    createTime: number;
+    updateTime: number;
+    status: number;
+  };
+
+  type RoleListItem = {
+    roleId: number;
+    roleName: string;
+    describe: string;
+    createTime: number;
+    updateTime: number;
+    status: number;
+  };
+
   /**
    * TenantAuthorityVo，权限查询对象
    */
@@ -314,6 +336,7 @@ declare namespace API {
     /** Google Authenticator secret key */
     secret?: string;
     googleCode?: string;
+    id?: number;
   };
 
   type GoogleAuthResponse = {

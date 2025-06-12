@@ -12,7 +12,8 @@ export default {
   'roleAdmin.table.actions.delete': 'Delete',
   'roleAdmin.actions.create': 'Create',
   'roleAdmin.messages.deleteConfirm.title': 'Delete Confirmation',
-  'roleAdmin.messages.deleteConfirm.content': 'Are you sure you want to delete this role? This action cannot be undone.',
+  'roleAdmin.messages.deleteConfirm.content':
+    'Are you sure you want to delete this role? This action cannot be undone.',
   'roleAdmin.messages.deleteConfirm.okText': 'Confirm',
   'roleAdmin.messages.deleteConfirm.cancelText': 'Cancel',
   'roleAdmin.messages.deleteSuccess': 'Role deleted successfully',
@@ -26,7 +27,6 @@ export default {
   'roleAdmin.messages.addPermissionError': 'Failed to add permission',
   'roleAdmin.messages.removePermissionError': 'Failed to remove permission',
   'roleAdmin.messages.permissionAssignSuccess': 'Permission allocation successful',
-
 
   // User Admin Translations
   'userAdmin.table.id': 'Admin ID',
@@ -59,7 +59,8 @@ export default {
 
   'userAdmin.table.actions.edit': 'Edit',
   'userAdmin.table.actions.resetPassword': 'Reset Password',
-  'userAdmin.table.actions.resetPassword.confirm': 'You sure you want to reset this user\'s password?',
+  'userAdmin.table.actions.resetPassword.confirm':
+    "You sure you want to reset this user's password?",
   'userAdmin.table.actions.resetPassword.success': 'Password reset successfully',
   'userAdmin.table.actions.resetPassword.error': 'Password reset failed',
   'userAdmin.table.actions.bindGoogle': 'Bind Google',
@@ -79,35 +80,34 @@ export default {
   'userAdmin.actions.create': 'Create',
   'userAdmin.modal.resetPasswordTitle': 'Confirm Password Reset',
 
-    // Permission Admin Translations
-    'permissionAdmin.table.id': 'ID',
-    'permissionAdmin.table.description': 'Description',
-    'permissionAdmin.table.type': 'Menu Permission',
-    'permissionAdmin.table.optionType': 'Operation Permission',
-    'permissionAdmin.table.title': 'Chinese Title',
-    'permissionAdmin.table.name': 'Name',
-    'permissionAdmin.table.parentId': 'Parent ID',
-    'permissionAdmin.table.sort': 'Sort',
-    'permissionAdmin.table.path': 'Path',
-    'permissionAdmin.table.component': 'Component',
-    'permissionAdmin.table.icon': 'Icon',
-    'permissionAdmin.table.systemType': 'System',
-    'permissionAdmin.table.systemType.admin': 'Admin',
-    'permissionAdmin.table.systemType.merchant': 'Merchant',
-    'permissionAdmin.table.systemType.common': 'Common',
-    'permissionAdmin.table.actions': 'Options',
-    'permissionAdmin.table.actions.edit': 'Edit',
-    'permissionAdmin.table.actions.delete': 'Delete',
-    'permissionAdmin.actions.create': 'Create',
-    'permissionAdmin.messages.editSuccess': 'Edit successfully',
-    'permissionAdmin.messages.createSuccess': 'Create successfully',
-    'permissionAdmin.messages.createError': 'Create failed',
-    'permissionAdmin.messages.deleteSuccess': 'Delete successfully',
-    'permissionAdmin.messages.deleteError': 'Delete failed',
-    'permissionAdmin.messages.operationError': 'Operation failed',
+  // Permission Admin Translations
+  'permissionAdmin.table.id': 'ID',
+  'permissionAdmin.table.description': 'Description',
+  'permissionAdmin.table.type': 'Menu Permission',
+  'permissionAdmin.table.optionType': 'Operation Permission',
+  'permissionAdmin.table.title': 'Chinese Title',
+  'permissionAdmin.table.name': 'Name',
+  'permissionAdmin.table.parentId': 'Parent ID',
+  'permissionAdmin.table.sort': 'Sort',
+  'permissionAdmin.table.path': 'Path',
+  'permissionAdmin.table.component': 'Component',
+  'permissionAdmin.table.icon': 'Icon',
+  'permissionAdmin.table.systemType': 'System',
+  'permissionAdmin.table.systemType.admin': 'Admin',
+  'permissionAdmin.table.systemType.merchant': 'Merchant',
+  'permissionAdmin.table.systemType.common': 'Common',
+  'permissionAdmin.table.actions': 'Options',
+  'permissionAdmin.table.actions.edit': 'Edit',
+  'permissionAdmin.table.actions.delete': 'Delete',
+  'permissionAdmin.actions.create': 'Create',
+  'permissionAdmin.messages.editSuccess': 'Edit successfully',
+  'permissionAdmin.messages.createSuccess': 'Create successfully',
+  'permissionAdmin.messages.createError': 'Create failed',
+  'permissionAdmin.messages.deleteSuccess': 'Delete successfully',
+  'permissionAdmin.messages.deleteError': 'Delete failed',
+  'permissionAdmin.messages.operationError': 'Operation failed',
 
-
-      // Permission Modal Translations
+  // Permission Modal Translations
   'permissionModal.title.edit': 'Edit Permission',
   'permissionModal.title.create': 'Create Permission',
   'permissionModal.form.systemType': 'System',
@@ -128,8 +128,6 @@ export default {
   'permissionModal.form.validation.required': 'Please enter {field}',
   'permissionModal.form.validation.select': 'Please select {field}',
 
-
-    
   // UserModal Translations
   'userModal.title.edit': 'Edit User',
   'userModal.title.create': 'Create User',
@@ -152,53 +150,59 @@ export default {
   'userModal.messages.fillRequired': 'Please fill all required fields',
   'userModal.messages.getRoleListError': 'Failed to get role list',
 
+  'userModal.form.remark': 'Remark',
+  'userModal.form.bindGoogle': 'Bind Google',
+  'userModal.form.notBindGoogle': 'Not bound',
+  'userModal.form.gotoBind': 'Bind',
+  'userModal.form.click': 'Click',
+  'userModal.form.email.invalid': 'Invalid email address',
+  'userModal.form.phone.invalid': 'Invalid phone number',
 
-    // UserActionDropdown Translations
-    'userActionDropdown.actions': 'Actions',
-    'userActionDropdown.actions.edit': 'Edit',
-    'userActionDropdown.actions.resetPassword': 'Reset Password',
-    'userActionDropdown.actions.resetGoogle': 'Reset Google',
-    'userActionDropdown.actions.disable': 'Disable',
-    'userActionDropdown.actions.delete': 'Delete',
+  // UserActionDropdown Translations
+  'userActionDropdown.actions': 'Actions',
+  'userActionDropdown.actions.edit': 'Edit',
+  'userActionDropdown.actions.resetPassword': 'Reset Password',
+  'userActionDropdown.actions.resetGoogle': 'Reset Google',
+  'userActionDropdown.actions.disable': 'Disable',
+  'userActionDropdown.actions.delete': 'Delete',
 
-
-      // ResetPasswordModal Translations
+  // ResetPasswordModal Translations
   'resetPasswordModal.title': 'Reset Password',
   'resetPasswordModal.form.newPassword': 'New Password',
   'resetPasswordModal.form.newPassword.required': 'Please enter new password',
   'resetPasswordModal.validation.failed': 'Please fill new password',
-  
+
   // ResetGoogleModal Translations
   'resetGoogleModal.title': 'Reset Google',
-  'resetGoogleModal.confirmation': 'Confirm to reset this user\'s Google authentication?',
-  
+  'resetGoogleModal.confirmation': "Confirm to reset this user's Google authentication?",
+
   // BindGoogleModal Translations
   'bindGoogleModal.title': 'Bind Google',
   'bindGoogleModal.button.cancel': 'Cancel',
   'bindGoogleModal.button.confirm': 'Confirm Binding',
   'bindGoogleModal.text.enterKey': 'Please manually enter the key',
   'bindGoogleModal.text.key': 'Key: ',
-  'bindGoogleModal.text.fetchFailed': 'Failed to get Google verification information, please try again',
+  'bindGoogleModal.text.fetchFailed':
+    'Failed to get Google verification information, please try again',
   'bindGoogleModal.form.googleCode': 'Google Verification Code',
   'bindGoogleModal.form.googleCode.required': 'Please enter Google verification code',
-  'bindGoogleModal.form.googleCode.placeholder': 'Please enter the 6-digit verification code from the Google verification app',
+  'bindGoogleModal.form.googleCode.placeholder':
+    'Please enter the 6-digit verification code from the Google verification app',
   'bindGoogleModal.message.fetchFailed': 'Failed to get Google verification code',
   'bindGoogleModal.message.fetchFailedDetail': 'Failed to get Google verification code:',
   'bindGoogleModal.image.qrcode': 'Google Verification QR Code',
 
-
-    
-    // Role Modal Translations
-    'roleModal.title.edit': 'Edit Role',
-    'roleModal.title.create': 'Create Role',
-    'roleModal.form.roleName': 'Role Name',
-    'roleModal.form.roleName.required': 'Please enter role name',
-    'roleModal.form.description': 'Description',
-    'roleModal.form.description.required': 'Please enter role description',
-    'roleModal.form.status': 'Status',
-    'roleModal.form.status.required': 'Please select role status',
-    'roleModal.form.status.placeholder': 'Please select status',
-    'roleModal.form.status.enabled': 'Enabled',
-    'roleModal.form.status.disabled': 'Disabled',
-    'roleModal.validation.fillRequired': 'Please fill all required fields'
+  // Role Modal Translations
+  'roleModal.title.edit': 'Edit Role',
+  'roleModal.title.create': 'Create Role',
+  'roleModal.form.roleName': 'Role Name',
+  'roleModal.form.roleName.required': 'Please enter role name',
+  'roleModal.form.description': 'Description',
+  'roleModal.form.description.required': 'Please enter role description',
+  'roleModal.form.status': 'Status',
+  'roleModal.form.status.required': 'Please select role status',
+  'roleModal.form.status.placeholder': 'Please select status',
+  'roleModal.form.status.enabled': 'Enabled',
+  'roleModal.form.status.disabled': 'Disabled',
+  'roleModal.validation.fillRequired': 'Please fill all required fields',
 };

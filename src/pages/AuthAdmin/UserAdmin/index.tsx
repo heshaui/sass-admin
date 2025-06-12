@@ -1,56 +1,45 @@
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { PageContainer, ProColumns, ProTable } from '@ant-design/pro-components';
 import { Dropdown, Menu, Button, Tag, message, Modal } from 'antd';
-import { PlusOutlined,DownOutlined } from '@ant-design/icons';
+import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import { employeeList,saveEmployee,deleteEmployeeById,resetPassword,updateEmployeeById,bindGoogleKey,relieveGoogleKey} from '@/services/ant-design-pro/authAdmin';
+import {
+  employeeList,
+  saveEmployee,
+  deleteEmployeeById,
+  resetPassword,
+  updateEmployeeById,
+  bindGoogleKey,
+  relieveGoogleKey,
+} from '@/services/ant-design-pro/authAdmin';
 import UserModal from './component/UserModal'; // 引入UserModal
 import ResetPasswordModal from './component/ResetPasswordModal';
 import ResetGoogleModal from './component/ResetGoogleModal';
 import BindGoogleModal from './component/BindGoogleModal'; // 引入绑定谷歌验证弹框
+import { useIntl } from '@umijs/max';
 import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
-import { useIntl } from 'umi';
+
+//@ts-ignore
 import { clearAllCookies } from '@/utils';
-
-
 
 const UserAdmin: React.FC = () => {
   const intl = useIntl();
-   const [data, setData] = useState([]);
-   const [loading, setLoading] = useState(false);
-   const [modalVisible, setModalVisible] = useState(false); // 控制用户弹框
-   const [resetPasswordVisible, setResetPasswordVisible] = useState(false); // 控制重置密码弹框
-   const [resetGoogleVisible, setResetGoogleVisible] = useState(false); // 控制重置谷歌弹框
-   const [bindGoogleVisible, setBindGoogleVisible] = useState(false); // 控制绑定谷歌弹框
-   const [editingRecord, setEditingRecord] = useState(null); // 当前操作的记录
-   const [roleOptions, setRoleOptions] = useState([]); // 添加角色选项状态
- 
-   // 获取角色列表
-   const getRoleList = async () => {
-     try {
-      let data={
-        pageNo:1,
-        pageSize:10000
-      }
-       const res = await fetchRoleListApi(data);
-       if (res?.data) {
-         setRoleOptions(res.data.list || []);
-       }
-     } catch (error) {
-       console.error(intl.formatMessage({ id: 'userAdmin.messages.getRoleListError' }), error);
-     }
-   };
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); // 控制用户弹框
+  const [resetPasswordVisible, setResetPasswordVisible] = useState(false); // 控制重置密码弹框
+  const [resetGoogleVisible, setResetGoogleVisible] = useState(false); // 控制重置谷歌弹框
+  const [bindGoogleVisible, setBindGoogleVisible] = useState(false); // 控制绑定谷歌弹框
+  const [editingRecord, setEditingRecord] = useState<API.AuthAdminUserAdminListItem | null>(null); // 当前操作的记录
+  const [roleOptions, setRoleOptions] = useState<API.RoleListItem[]>([]); // 添加角色选项状态
+  const [showGoogleKey, setShowGoogleKey] = useState(false);
 
-   useEffect(() => {
-     getRoleList(); // 获取角色列表
-   }, []);
-    
   // 表格的列配置
-  const columns = [
+  const columns: ProColumns<API.AuthAdminUserAdminListItem>[] = [
     {
       title: intl.formatMessage({ id: 'userAdmin.table.id' }),
       dataIndex: 'id',
       key: 'id',
-      search:false
+      search: false,
     },
     {
       title: intl.formatMessage({ id: 'userAdmin.table.nickname' }),
@@ -61,24 +50,24 @@ const UserAdmin: React.FC = () => {
       title: intl.formatMessage({ id: 'userAdmin.table.remark' }),
       dataIndex: 'remark',
       key: 'remark',
-      search:false
+      search: false,
     },
     {
       title: intl.formatMessage({ id: 'userAdmin.table.role' }),
       dataIndex: 'role',
       key: 'role',
       search: false,
-      filters: roleOptions.map(role => ({ text: role.roleName, value: String(role.roleId) })),
-      onFilter: (value: string, record: any) => {
+      filters: roleOptions.map((role) => ({ text: role.roleName, value: String(role.roleId) })),
+      onFilter: (value, record) => {
         if (!record.role) return false;
         const userRoles = String(record.role).split(',').map(Number);
         return userRoles.includes(Number(value));
       },
-      render: (roleIds: string) => {
-        if (!roleIds) return '-';
-        const ids = String(roleIds).split(',').map(Number);
-        const roles = roleOptions.filter(r => ids.includes(Number(r.roleId)));
-        return roles.map(r => r.roleName).join(', ') || '-';
+      render: (_, record: API.AuthAdminUserAdminListItem) => {
+        if (!record.role) return '-';
+        const ids = String(record.role).split(',').map(Number);
+        const roles = roleOptions.filter((r) => ids.includes(Number(r.roleId)));
+        return roles.map((r) => r.roleName).join(', ') || '-';
       },
     },
     {
@@ -90,27 +79,35 @@ const UserAdmin: React.FC = () => {
       title: intl.formatMessage({ id: 'userAdmin.table.email' }),
       dataIndex: 'email',
       key: 'email',
-      render: (text: string) => (text ? text : '--'),
+      render: (_, record: API.AuthAdminUserAdminListItem) => record.email || '-',
     },
     {
       title: '2FA',
       dataIndex: 'googleCode',
       key: 'googleCode',
-      search:false,
-      render: (text: string) => {
-        return text && text !== '-' ? (
-          <Tag color="green">{intl.formatMessage({ id: 'userAdmin.table.googleCode.enabled' })}</Tag>
+      search: false,
+      render: (_, record: API.AuthAdminUserAdminListItem) => {
+        return record.googleCode && record.googleCode !== '-' ? (
+          <Tag color="green">
+            {intl.formatMessage({ id: 'userAdmin.table.googleCode.enabled' })}
+          </Tag>
         ) : (
           <Tag color="red">{intl.formatMessage({ id: 'userAdmin.table.googleCode.disabled' })}</Tag>
         );
       },
       filters: [
-        { text: intl.formatMessage({ id: 'userAdmin.table.googleCode.enabled' }), value: 'enabled' },
-        { text: intl.formatMessage({ id: 'userAdmin.table.googleCode.disabled' }), value: 'disabled' },
+        {
+          text: intl.formatMessage({ id: 'userAdmin.table.googleCode.enabled' }),
+          value: 'enabled',
+        },
+        {
+          text: intl.formatMessage({ id: 'userAdmin.table.googleCode.disabled' }),
+          value: 'disabled',
+        },
       ],
-      onFilter: (value: string, record: any) => {
+      onFilter: (value, record) => {
         if (value === 'enabled') {
-          return record.googleCode && record.googleCode !== '';
+          return !!(record.googleCode && record.googleCode !== '');
         }
         return !record.googleCode || record.googleCode === '';
       },
@@ -121,7 +118,10 @@ const UserAdmin: React.FC = () => {
       valueType: 'select',
       valueEnum: {
         0: { text: intl.formatMessage({ id: 'userAdmin.table.status.disabled' }), status: 'Error' },
-        1: { text: intl.formatMessage({ id: 'userAdmin.table.status.enabled' }), status: 'Success' }
+        1: {
+          text: intl.formatMessage({ id: 'userAdmin.table.status.enabled' }),
+          status: 'Success',
+        },
       },
       filters: true,
       onFilter: true,
@@ -130,8 +130,8 @@ const UserAdmin: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'userAdmin.table.actions' }),
       key: 'action',
-      search:false,
-      render: (_, record: any) => (
+      search: false,
+      render: (_: any, record: API.AuthAdminUserAdminListItem) => (
         <Dropdown
           overlay={
             <Menu>
@@ -144,13 +144,19 @@ const UserAdmin: React.FC = () => {
                   setEditingRecord(record);
                   Modal.confirm({
                     title: intl.formatMessage({ id: 'userAdmin.modal.resetPasswordTitle' }),
-                    content: intl.formatMessage({ id: 'userAdmin.table.actions.resetPassword.confirm' }),
+                    content: intl.formatMessage({
+                      id: 'userAdmin.table.actions.resetPassword.confirm',
+                    }),
                     onOk: async () => {
                       try {
                         await resetPassword({ id: record.id });
-                        message.success(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordSuccess' }));
+                        message.success(
+                          intl.formatMessage({ id: 'userAdmin.messages.resetPasswordSuccess' }),
+                        );
                       } catch (error) {
-                        message.error(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordError' }));
+                        message.error(
+                          intl.formatMessage({ id: 'userAdmin.messages.resetPasswordError' }),
+                        );
                       }
                     },
                   });
@@ -199,7 +205,7 @@ const UserAdmin: React.FC = () => {
     setLoading(true);
     try {
       const queryParams = { ...params };
-      
+
       const res = await employeeList(queryParams);
       if (res?.data) {
         setData(res.data.list || []);
@@ -224,104 +230,98 @@ const UserAdmin: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-    // 新建/编辑用户提交
-    const handleSubmit = async (values) => {
-      console.log('values',values);
-      try {
-        if (editingRecord) {
-          // 编辑用户
-         const res= await updateEmployeeById({ ...editingRecord, ...values });
-          if(res.code==='0'){
-            message.success(intl.formatMessage({ id: 'userAdmin.messages.editSuccess' }));
-          }else{
-            message.error(intl.formatMessage({ id: 'userAdmin.messages.editError' }));
-          }
+  // 新建/编辑用户提交
+  const handleSubmit = async (values: API.AuthAdminUserAdminListItem) => {
+    console.log('values', values);
+    try {
+      if (editingRecord) {
+        // 编辑用户
+        const res = await updateEmployeeById({ ...editingRecord, ...values });
+        if (res.code === '0') {
+          message.success(intl.formatMessage({ id: 'userAdmin.messages.editSuccess' }));
         } else {
-          // 新建用户
-        const res=  await saveEmployee(values);
-          if(res.code==='0'){
-            message.success(intl.formatMessage({ id: 'userAdmin.messages.createSuccess' }));
-          }else if(res.code==='11111'){
-            message.error(res.message);
-          }else{
-            message.error(intl.formatMessage({ id: 'userAdmin.messages.createError' }));
-          }
-           
-
-
-          
+          message.error(intl.formatMessage({ id: 'userAdmin.messages.editError' }));
         }
-        setModalVisible(false);  // 关闭弹窗
-        setEditingRecord(null);  // 清空编辑记录
-        getUserList();  // 刷新用户列表
-      } catch (error) {
-        message.error(intl.formatMessage({ id: 'userAdmin.messages.operationError' }));
+      } else {
+        // 新建用户
+        const res = await saveEmployee(values);
+        if (res.code === '0') {
+          message.success(intl.formatMessage({ id: 'userAdmin.messages.createSuccess' }));
+        } else if (res.code === '11111') {
+          message.error(res.message);
+        } else {
+          message.error(intl.formatMessage({ id: 'userAdmin.messages.createError' }));
+        }
       }
-    };
-  
-    // 编辑用户
-    const handleEdit = (record) => {
-      setEditingRecord(record);  // 设置编辑记录
-      setModalVisible(true);  // 打开弹窗
-    };
-  
-    // 删除用户
-    const handleDelete = async (userId) => {
-      try {
-        // 调用API删除用户
-        await deleteEmployeeById({ userId });
-        message.success(intl.formatMessage({ id: 'userAdmin.messages.deleteSuccess' }));
-        getUserList();  // 刷新用户列表
-      } catch (error) {
-        message.error(intl.formatMessage({ id: 'userAdmin.messages.deleteError' }));
-      }
-    };
+      setModalVisible(false); // 关闭弹窗
+      setEditingRecord(null); // 清空编辑记录
+      getUserList(); // 刷新用户列表
+    } catch (error) {
+      message.error(intl.formatMessage({ id: 'userAdmin.messages.operationError' }));
+    }
+  };
 
-// 重置密码
-const handleResetPassword = async (values) => {
-  try {
-   const res= await resetPassword({ id: editingRecord.id });
-    if(res.code==='0'){
-      message.success(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordSuccess' }));
-    }else{
+  // 编辑用户
+  const handleEdit = (record: API.AuthAdminUserAdminListItem) => {
+    setEditingRecord(record); // 设置编辑记录
+    setModalVisible(true); // 打开弹窗
+  };
+
+  // 删除用户
+  const handleDelete = async (userId: number) => {
+    try {
+      // 调用API删除用户
+      await deleteEmployeeById({ userId });
+      message.success(intl.formatMessage({ id: 'userAdmin.messages.deleteSuccess' }));
+      getUserList(); // 刷新用户列表
+    } catch (error) {
+      message.error(intl.formatMessage({ id: 'userAdmin.messages.deleteError' }));
+    }
+  };
+
+  // 重置密码
+  const handleResetPassword = async () => {
+    if (!editingRecord) return;
+    try {
+      const res = await resetPassword({ id: editingRecord.id });
+      if (res.code === '0') {
+        message.success(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordSuccess' }));
+      } else {
+        message.error(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordError' }));
+      }
+      setResetPasswordVisible(false);
+    } catch (error) {
       message.error(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordError' }));
     }
-    setResetPasswordVisible(false);
-  } catch (error) {
-    message.error(intl.formatMessage({ id: 'userAdmin.messages.resetPasswordError' }));
-  }
-};
+  };
 
-// 重置谷歌
-const handleResetGoogleAuth = async () => {
-  try {
-    const res=await relieveGoogleKey({ id: editingRecord.id});
-    if(res.code==='0'){
-      message.success(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleSuccess' }));
-    }else{
-      message.error(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleError' }));
-    }
-    setResetGoogleVisible(false);
-  } catch (error) {
-    message.error(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleError' }));
-  }
-};
-  
-    useEffect(() => {
-      getUserList();  // 获取用户列表
-    }, []);
-
-  // 处理绑定谷歌验证
-  const handleBindGoogleAuth = async (values) => {
+  // 重置谷歌
+  const handleResetGoogleAuth = async () => {
     try {
       if (!editingRecord) return;
-      
+      const res = await relieveGoogleKey({ id: editingRecord.id });
+      if (res.code === '0') {
+        message.success(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleSuccess' }));
+      } else {
+        message.error(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleError' }));
+      }
+      setResetGoogleVisible(false);
+    } catch (error) {
+      message.error(intl.formatMessage({ id: 'userAdmin.messages.resetGoogleError' }));
+    }
+  };
+
+  // 处理绑定谷歌验证
+  const handleBindGoogleAuth = async (values: any) => {
+    try {
+      if (!editingRecord) return;
+
       const params = {
         googleCode: values.googleCode,
       };
-      
+
       const res = await bindGoogleKey(params);
       if (res.code === '0') {
         message.success(intl.formatMessage({ id: 'userAdmin.messages.bindGoogleSuccess' }));
@@ -330,13 +330,34 @@ const handleResetGoogleAuth = async () => {
         clearAllCookies();
         window.location.reload();
       } else {
-        message.error(res.msg || intl.formatMessage({ id: 'userAdmin.messages.bindGoogleError' }));
+        message.error(
+          res.message || intl.formatMessage({ id: 'userAdmin.messages.bindGoogleError' }),
+        );
       }
     } catch (error) {
       console.error(intl.formatMessage({ id: 'userAdmin.messages.bindGoogleError.detail' }), error);
       message.error(intl.formatMessage({ id: 'userAdmin.messages.bindGoogleError' }));
     }
   };
+
+  const getRoleList = async () => {
+    try {
+      let data = {
+        pageNo: 1,
+        pageSize: 10000,
+      };
+      const res = await fetchRoleListApi(data);
+      if (res?.data) {
+        setRoleOptions(res.data.list || []);
+      }
+    } catch (error) {
+      console.error(intl.formatMessage({ id: 'userAdmin.messages.getRoleListError' }), error);
+    }
+  };
+
+  useEffect(() => {
+    getRoleList(); // 获取角色列表
+  }, []);
 
   return (
     <PageContainer>
@@ -374,18 +395,24 @@ const handleResetGoogleAuth = async () => {
           showSizeChanger: true,
         }}
         toolBarRender={() => [
-          <Button key="create" icon={<PlusOutlined />} type="primary" onClick={() => setModalVisible(true)}>
+          <Button
+            key="create"
+            icon={<PlusOutlined />}
+            type="primary"
+            onClick={() => setModalVisible(true)}
+          >
             {intl.formatMessage({ id: 'userAdmin.actions.create' })}
           </Button>,
         ]}
       />
-        {/* 用户弹框 */}
-       <UserModal
+      {/* 用户弹框 */}
+      <UserModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSubmit={handleSubmit}
         initialValues={editingRecord}
-        roleOptions={roleOptions}
+        setBindGoogleVisible={setBindGoogleVisible}
+        setShowGoogleKey={setShowGoogleKey}
       />
 
       {/* 重置密码弹框 */}
@@ -401,13 +428,14 @@ const handleResetGoogleAuth = async () => {
         onClose={() => setResetGoogleVisible(false)}
         onSubmit={handleResetGoogleAuth}
       />
-      
+
       {/* 绑定谷歌弹框 */}
       <BindGoogleModal
         visible={bindGoogleVisible}
+        showGoogleKey={showGoogleKey}
         onClose={() => setBindGoogleVisible(false)}
         onSubmit={handleBindGoogleAuth}
-        userId={editingRecord?.id}
+        userId={editingRecord?.id || null}
       />
     </PageContainer>
   );

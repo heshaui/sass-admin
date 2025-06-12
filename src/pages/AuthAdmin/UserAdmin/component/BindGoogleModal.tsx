@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Button, message, Space, Typography, Spin } from 'antd';
+import { Modal, Form, Input, Button, message, Typography, Spin } from 'antd';
 import { sendGoogleKey } from '@/services/ant-design-pro/authAdmin';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
 const { Text } = Typography;
 
 interface BindGoogleModalProps {
   visible: boolean;
+  showGoogleKey?: boolean;
   onClose: () => void;
   onSubmit: (values: { googleCode: string; secretKey: string }) => void;
   userId: number | null;
 }
 
-const BindGoogleModal: React.FC<BindGoogleModalProps> = ({ visible, onClose, onSubmit, userId }) => {
+const BindGoogleModal: React.FC<BindGoogleModalProps> = ({
+  visible,
+  showGoogleKey,
+  onClose,
+  onSubmit,
+  userId,
+}) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -20,15 +27,17 @@ const BindGoogleModal: React.FC<BindGoogleModalProps> = ({ visible, onClose, onS
 
   // 获取谷歌验证信息
   const fetchGoogleKeyData = async () => {
-    if (!visible || !userId) return;
-    
+    if (!visible) return;
+
     setLoading(true);
     try {
       const res = await sendGoogleKey({ userId });
       if (res.code === '0' && res.data) {
         setGoogleData(res.data);
       } else {
-        message.error(res.msg || intl.formatMessage({ id: 'bindGoogleModal.message.fetchFailed' }));
+        message.error(
+          res.message || intl.formatMessage({ id: 'bindGoogleModal.message.fetchFailed' }),
+        );
       }
     } catch (error) {
       console.error(intl.formatMessage({ id: 'bindGoogleModal.message.fetchFailedDetail' }), error);
@@ -51,12 +60,10 @@ const BindGoogleModal: React.FC<BindGoogleModalProps> = ({ visible, onClose, onS
       if (googleData && googleData.secretKey) {
         onSubmit({
           googleCode: values.googleCode,
-          secretKey: googleData.secretKey
+          secretKey: googleData.secretKey,
         });
       }
-    } catch (error) {
-
-    }
+    } catch (error) {}
   };
 
   return (
@@ -68,9 +75,11 @@ const BindGoogleModal: React.FC<BindGoogleModalProps> = ({ visible, onClose, onS
         <Button key="cancel" onClick={onClose}>
           {intl.formatMessage({ id: 'bindGoogleModal.button.cancel' })}
         </Button>,
-        <Button key="submit" type="primary" onClick={handleSubmit}>
-          {intl.formatMessage({ id: 'bindGoogleModal.button.confirm' })}
-        </Button>,
+        !showGoogleKey && (
+          <Button key="submit" type="primary" onClick={handleSubmit}>
+            {intl.formatMessage({ id: 'bindGoogleModal.button.confirm' })}
+          </Button>
+        ),
       ]}
       maskClosable={false}
     >
@@ -82,9 +91,9 @@ const BindGoogleModal: React.FC<BindGoogleModalProps> = ({ visible, onClose, onS
             </div>
             {/* {googleData.codeUri && (
               <div style={{ marginBottom: 16 }}>
-                <img 
-                  src={googleData.codeUri} 
-                  alt={intl.formatMessage({ id: 'bindGoogleModal.image.qrcode' })} 
+                <img
+                  src={googleData.codeUri}
+                  alt={intl.formatMessage({ id: 'bindGoogleModal.image.qrcode' })}
                   style={{ width: 200, height: 200 }}
                 />
               </div>
@@ -92,31 +101,46 @@ const BindGoogleModal: React.FC<BindGoogleModalProps> = ({ visible, onClose, onS
             {googleData.secretKey && (
               <div style={{ marginBottom: 16 }}>
                 <Text>{intl.formatMessage({ id: 'bindGoogleModal.text.key' })}</Text>
-                <Text copyable strong>{googleData.secretKey}</Text>
+                <Text copyable strong>
+                  {googleData.secretKey}
+                </Text>
               </div>
             )}
           </div>
-        ) : !loading && (
-          <div style={{ textAlign: 'center', marginBottom: 20 }}>
-            <Text type="danger">{intl.formatMessage({ id: 'bindGoogleModal.text.fetchFailed' })}</Text>
-          </div>
+        ) : (
+          !loading && (
+            <div style={{ textAlign: 'center', marginBottom: 20 }}>
+              <Text type="danger">
+                {intl.formatMessage({ id: 'bindGoogleModal.text.fetchFailed' })}
+              </Text>
+            </div>
+          )
         )}
 
-        <Form
-          form={form}
-          layout="vertical"
-        >
-          <Form.Item
-            name="googleCode"
-            label={intl.formatMessage({ id: 'bindGoogleModal.form.googleCode' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'bindGoogleModal.form.googleCode.required' }) }]}
-          >
-            <Input placeholder={intl.formatMessage({ id: 'bindGoogleModal.form.googleCode.placeholder' })} maxLength={6} />
-          </Form.Item>
-        </Form>
+        {!showGoogleKey && (
+          <Form form={form} layout="vertical">
+            <Form.Item
+              name="googleCode"
+              label={intl.formatMessage({ id: 'bindGoogleModal.form.googleCode' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({ id: 'bindGoogleModal.form.googleCode.required' }),
+                },
+              ]}
+            >
+              <Input
+                placeholder={intl.formatMessage({
+                  id: 'bindGoogleModal.form.googleCode.placeholder',
+                })}
+                maxLength={6}
+              />
+            </Form.Item>
+          </Form>
+        )}
       </Spin>
     </Modal>
   );
 };
 
-export default BindGoogleModal; 
+export default BindGoogleModal;

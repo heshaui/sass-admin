@@ -68,7 +68,7 @@ export default {
   'userAdmin.messages.bindGoogleError.detail': '绑定谷歌验证失败:',
   'userAdmin.actions.create': '新建',
   'userAdmin.modal.resetPasswordTitle': '确认重置密码',
-  
+
   // UserModal Translations
   'userModal.title.edit': '编辑用户',
   'userModal.title.create': '新建用户',
@@ -90,7 +90,15 @@ export default {
   'userModal.form.status.disabled': '禁用',
   'userModal.messages.fillRequired': '请填写所有必填项',
   'userModal.messages.getRoleListError': '获取角色列表失败',
-  
+
+  'userModal.form.remark': '备注',
+  'userModal.form.bindGoogle': '绑定谷歌',
+  'userModal.form.notBindGoogle': '未绑定谷歌',
+  'userModal.form.gotoBind': '前往绑定',
+  'userModal.form.click': '点击',
+  'userModal.form.email.invalid': '邮箱格式不对',
+  'userModal.form.phone.invalid': '手机号格式不对',
+
   // UserActionDropdown Translations
   'userActionDropdown.actions': '操作',
   'userActionDropdown.actions.edit': '修改',
@@ -98,17 +106,17 @@ export default {
   'userActionDropdown.actions.resetGoogle': '重置谷歌',
   'userActionDropdown.actions.disable': '禁用',
   'userActionDropdown.actions.delete': '删除',
-  
+
   // ResetPasswordModal Translations
   'resetPasswordModal.title': '重置密码',
   'resetPasswordModal.form.newPassword': '新密码',
   'resetPasswordModal.form.newPassword.required': '请输入新密码',
   'resetPasswordModal.validation.failed': '请填写新密码',
-  
+
   // ResetGoogleModal Translations
   'resetGoogleModal.title': '重置谷歌身份验证',
   'resetGoogleModal.confirmation': '确定要重置此用户的谷歌身份验证吗？',
-  
+
   // BindGoogleModal Translations
   'bindGoogleModal.title': '绑定谷歌验证',
   'bindGoogleModal.button.cancel': '取消',
@@ -122,7 +130,7 @@ export default {
   'bindGoogleModal.message.fetchFailed': '获取谷歌验证码失败',
   'bindGoogleModal.message.fetchFailedDetail': '获取谷歌验证码失败:',
   'bindGoogleModal.image.qrcode': '谷歌验证二维码',
-  
+
   // Permission Admin Translations
   'permissionAdmin.table.id': 'ID',
   'permissionAdmin.table.description': '描述',
@@ -149,7 +157,7 @@ export default {
   'permissionAdmin.messages.deleteSuccess': '删除成功',
   'permissionAdmin.messages.deleteError': '删除失败',
   'permissionAdmin.messages.operationError': '操作失败',
-  
+
   // Permission Modal Translations
   'permissionModal.title.edit': '编辑权限',
   'permissionModal.title.create': '新建权限',
@@ -170,7 +178,7 @@ export default {
   'permissionModal.form.icon': 'icon',
   'permissionModal.form.validation.required': '请输入{field}',
   'permissionModal.form.validation.select': '请选择{field}',
-  
+
   // Role Modal Translations
   'roleModal.title.edit': '编辑角色',
   'roleModal.title.create': '新建角色',
