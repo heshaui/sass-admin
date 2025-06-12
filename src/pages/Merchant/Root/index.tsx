@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PageContainer, ProTable, ProColumns } from '@ant-design/pro-components';
 import { Space, message, Modal } from 'antd';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 import RootModal from './component/RootModal';
 import {
   tenantRootList,
