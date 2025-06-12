@@ -375,10 +375,11 @@ const BasicConfig: React.FC = () => {
                 </Option>
               ))}
             </Select>
-            <span style={{ marginLeft: 10, color: 'rgba(0,0,0,0.45)' }}>
+           
+          </Form.Item>
+          <span style={{ marginLeft: 10, color: 'rgba(0,0,0,0.45)' }}>
               实际手续费币种与返佣币种不一致时,将根据实时汇率折算为返佣币种
             </span>
-          </Form.Item>
 
           <Form.Item
             name="rebateRatio"
