@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import { useIntl } from 'umi';
-import { Tag, Button, Space, message } from 'antd';
+import {  Button, Space, message } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
-import { getUserInviteDetailList,batchGrantRebate } from '@/services/ant-design-pro/inviteFriends';
+import { getUserInviteDetailList,grantUserRebates,getUserGrantRebate} from '@/services/ant-design-pro/inviteFriends';
 
 interface InviteRecord {
   id: string;
@@ -15,6 +15,7 @@ interface InviteRecord {
   inviteStatus: number; // 1: success, 0: failed
   distributeStatus: number; // 1: distributed, 0: undistributed
   key?: string;
+  actualCoinId?: string;
 }
 
 
@@ -45,10 +46,16 @@ const InviteRecords: React.FC = () => {
 
 const handleSend = async (record: InviteRecord) => {
   try {
+    let amount
+    let actualCoinId
+    const getUserGrantRebateRes = await getUserGrantRebate({userId:record.userId});
+    console.log(getUserGrantRebateRes)
+    if(getUserGrantRebateRes.code === '0'){
 
+    }
     
     // Call the API with the user ID
-    const res = await batchGrantRebate({ ids: record.id });
+    const res = await grantUserRebates({ userId: record.userId, amount:record.accumulate,actualCoinId:record.actualCoinId});
     
 
     

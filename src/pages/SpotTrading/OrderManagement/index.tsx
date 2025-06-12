@@ -84,7 +84,7 @@ const OrderManagement: React.FC = () => {
   const handleCancel = async (orderId: string ) => {
     setOrderId(orderId)
     if (currentUser?.employeeResp?.googleCode === true) {
-      setGoogleCodeVisible(true);
+      setValidCodeVisible(true);
       return;
     }
     
@@ -114,10 +114,10 @@ const OrderManagement: React.FC = () => {
   };
 
 
-  const handleOk=async()=>{
+  const handleOk=async(googleCode:any)=>{
     try {
       // 这里添加取消订单的API调用
-      const res = await revocationOrder({ orderId: orderId });
+      const res = await revocationOrder({ orderId: orderId,googleCode:googleCode });
       if (res.code === '0' && res.data) {
         message.success(intl.formatMessage({ id: 'order.management.cancelSuccess' }));
         if (actionRef.current) {
@@ -130,6 +130,7 @@ const OrderManagement: React.FC = () => {
       message.error(intl.formatMessage({ id: 'order.management.cancelFailed' }));
     }
     setOrderId(null);
+    setValidCodeVisible(false);
   }
 
     const getGoogleCode = async () => {
@@ -260,8 +261,8 @@ const OrderManagement: React.FC = () => {
         if (record.status === 0 && !isAdmin) {
           return (
           
-             <Button type="link"  onClick={() => currentUser?.employeeResp?.googleCode === true ? handleCancel(record.id) : getGoogleCode()}>
-              {intl.formatMessage({ id: 'order.management.cancelOrder' })}
+             <Button type="link"  onClick={() => currentUser?.employeeResp?.googleCode === true ? handleCancel(record.orderId) : getGoogleCode()}>
+              {intl.formatMessage({ id: 'order.management.cancelOrder' })}{JSON.stringify(currentUser)}
               </Button>
 
           );
