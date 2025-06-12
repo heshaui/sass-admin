@@ -8,7 +8,7 @@ import { useIntl } from '@umijs/max';
 interface GoogleCodeProps {
   secretKey?: string;
   qrCodeUrl?: string;
-  onSubmit?: (code: string) => Promise<boolean>;
+  onSubmit?: (code: string) => Promise<boolean | void>;
   onCancel?: () => void;
   visible?: boolean;
   title?: string;
@@ -26,13 +26,15 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   title,
   width = 500,
   maskClosable = false,
-  centered = true
+  centered = true,
 }) => {
   const intl = useIntl();
   const defaultTitle = intl.formatMessage({ id: 'component.googleCode.title' });
   const [verificationCode, setVerificationCode] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>(intl.formatMessage({ id: 'component.googleCode.errorMessage' }));
+  const [errorMessage, setErrorMessage] = useState<string>(
+    intl.formatMessage({ id: 'component.googleCode.errorMessage' }),
+  );
   const [countdown, setCountdown] = useState<number>(30);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -62,7 +64,8 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
   }, [visible]);
 
   const handleCopySecretKey = () => {
-    navigator.clipboard.writeText(secretKey || '')
+    navigator.clipboard
+      .writeText(secretKey || '')
       .then(() => {
         message.success(intl.formatMessage({ id: 'component.googleCode.copySuccess' }));
       })
@@ -106,9 +109,10 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
 
   const googleCodeContent = (
     <div className={styles.container}>
-      <p className={styles.description}
+      <p
+        className={styles.description}
         dangerouslySetInnerHTML={{
-          __html: intl.formatMessage({ id: 'component.googleCode.recommendation' })
+          __html: intl.formatMessage({ id: 'component.googleCode.recommendation' }),
         }}
       />
 
@@ -116,12 +120,19 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
         {isTotpUri ? (
           <QRCodeSVG value={qrCodeUrl || ''} size={200} />
         ) : (
-          <img src={qrCodeUrl} alt={intl.formatMessage({ id: 'component.googleCode.qrCodeAlt' })} width={200} height={200} />
+          <img
+            src={qrCodeUrl}
+            alt={intl.formatMessage({ id: 'component.googleCode.qrCodeAlt' })}
+            width={200}
+            height={200}
+          />
         )}
       </div>
 
       <div className={styles.secretKeyContainer}>
-        <div className={styles.secretKeyLabel}>{intl.formatMessage({ id: 'component.googleCode.secretKey' })}</div>
+        <div className={styles.secretKeyLabel}>
+          {intl.formatMessage({ id: 'component.googleCode.secretKey' })}
+        </div>
         <div className={styles.secretKey}>{secretKey}</div>
         <Button
           icon={<CopyOutlined />}
@@ -133,7 +144,9 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
 
       <div className={styles.inputContainer}>
         <span className={styles.required}>*</span>
-        <span className={styles.label}>{intl.formatMessage({ id: 'component.googleCode.verificationCode' })}</span>
+        <span className={styles.label}>
+          {intl.formatMessage({ id: 'component.googleCode.verificationCode' })}
+        </span>
         <Input
           placeholder={intl.formatMessage({ id: 'component.googleCode.placeholder' })}
           maxLength={6}
@@ -150,8 +163,11 @@ const GoogleCode: React.FC<GoogleCodeProps> = ({
         />
       </div>
 
-      {error && <div id="verification-error" className={styles.errorMessage}>{errorMessage}</div>}
-
+      {error && (
+        <div id="verification-error" className={styles.errorMessage}>
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 
