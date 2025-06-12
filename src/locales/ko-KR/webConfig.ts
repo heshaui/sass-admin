@@ -70,7 +70,7 @@ export default {
 // Footer UI text
 'webConfig.footer.title': 'Footer 설정',
 'webConfig.footer.customFooter': '사용자 정의 Footer',
-'webConfig.footer.enableCustomFooter': '사용자 정의 Footer 활성화',
+'webConfig.footer.enableCustomFooter': '맞춤 바닥글 활성화',
 'webConfig.footer.tips.title': '팁:',
 'webConfig.footer.tips.line1': '사용자 정의 Footer를 활성화하면 프론트엔드 하단 스타일이 이 코드를 기반으로 표시됩니다;',
 'webConfig.footer.tips.line2': '영어는 필수이며, 다른 언어를 입력하지 않으면 기본적으로 영어 스타일이 사용됩니다.',

@@ -71,7 +71,7 @@ export default {
   // Footer UI text
   'webConfig.footer.title': 'Footer配置',
   'webConfig.footer.customFooter': '自定义Footer',
-  'webConfig.footer.enableCustomFooter': '收否开启自定义Footer',
+  'webConfig.footer.enableCustomFooter': '是否开启自定义Footer',
   'webConfig.footer.tips.title': 'Tips:',
   'webConfig.footer.tips.line1': '开启自定义Footer,前台底部样式将基于此处代码显示;',
   'webConfig.footer.tips.line2': '英文为必填，其他语言不填，默认使用英文样式。',
