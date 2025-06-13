@@ -166,4 +166,7 @@ export default {
   'presentTool.steps.bulkGift.failed': '批量赠币失败',
   'presentTool.steps.bulkGift.count':
     '{coinName}：累计{count}人；累计金额{coinAmount}≈{rateAmount}{rate}',
+  'presentTool.steps.bulkGift.loading': '赠币处理中，请稍等几分钟。',
+  'presentTool.steps.bulkGift.success2': '操作成功！',
+  'presentTool.steps.download.empty': '下载内容为空',
 };

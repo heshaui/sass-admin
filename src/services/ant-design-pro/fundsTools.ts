@@ -97,6 +97,7 @@ export async function getCoinGiftTemplate(): Promise<any> {
   return request('/tenant/v1/coin-gift/template', {
     method: 'GET',
     responseType: 'blob',
+    getResponse: true, // 获取完整响应，包括headers等信息
   });
 }
 // 批量赠币导入验证
@@ -107,14 +108,19 @@ export async function getCoinGiftCheckImport({
   file: File;
   type: string;
 }): Promise<any> {
+  const formData = new FormData();
+  formData.append('file', file);
+
   return request('/tenant/v1/coin-gift/check-import?type=' + type, {
     method: 'POST',
-    data: file,
+    data: formData,
+    requestType: 'form', // 确保使用正确的请求类型
+    // headers: { "Content-Type": "multipart/form-data" },
   });
 }
 //确认导入执行数据
-export async function getCoinGiftConfirmImport(): Promise<any> {
-  return request('/tenant/v1/coin-gift/confirm-import', {
+export async function getCoinGiftConfirmImport({ batchId }: { batchId: string }): Promise<any> {
+  return request('/tenant/v1/coin-gift/confirm-import?batchId=' + batchId, {
     method: 'POST',
   });
 }
@@ -125,8 +131,8 @@ export async function getCoinGiftConfirmImport(): Promise<any> {
 //   });
 // }
 // 查询赠币导入处理状态
-export async function getCoinGiftImportStatus(): Promise<any> {
-  return request('/tenant/v1/coin-gift/import-status', {
+export async function getCoinGiftImportStatus({ batchId }: { batchId: string }): Promise<any> {
+  return request('/tenant/v1/coin-gift/import-status?batchId=' + batchId, {
     method: 'GET',
   });
 }

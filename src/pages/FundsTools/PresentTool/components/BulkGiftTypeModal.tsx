@@ -2,7 +2,7 @@ import { useIntl } from '@umijs/max';
 import type { SelectProps } from 'antd';
 import { Button, Form, Modal, Select } from 'antd';
 import React, { useState } from 'react';
-import BulkGift from '../components/BulkGift';
+import BulkGift from './BulkGiftModal';
 
 // const { Option } = Select;
 

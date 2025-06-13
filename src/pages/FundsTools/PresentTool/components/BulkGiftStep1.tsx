@@ -1,25 +1,45 @@
 import { getCoinGiftCheckImport, getCoinGiftTemplate } from '@/services/ant-design-pro/fundsTools';
 import { DownloadOutlined, RightCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { useIntl } from '@umijs/max';
-import { message, Upload } from 'antd';
-import React, { useEffect } from 'react';
+import { Button, message, Upload } from 'antd';
+import React, { useState } from 'react';
 import styles from './styles/gift.module.less';
 
 // const { Option } = Select;
 
 interface BulkGiftProps {
   type: string;
-  setps1Next: () => void;
+  onCancel: () => void;
+  onNext: () => void;
 }
 
-const BulkGiftSetp1: React.FC<BulkGiftProps> = ({ type, setps1Next }) => {
+const BulkGiftSetp1: React.FC<BulkGiftProps> = ({ type, onCancel, onNext }) => {
   const intl = useIntl();
-  // const [form] = Form.useForm();
-  // const [typeList, setTypeList] = useState<SelectProps['options']>([]);
+  const [steps1NextFlag, setSteps1NextFlag] = useState(false);
+
+  const handleNext = () => {
+    if (!steps1NextFlag) return;
+    onNext();
+  };
   const downloadTemplate = async () => {
     try {
-      // 直接获取blob数据
-      const blob = await getCoinGiftTemplate();
+      // 获取响应对象，包含数据和headers
+      const response = await getCoinGiftTemplate();
+
+      // 检查是否有响应数据
+      if (!response || !response.data) {
+        message.error(intl.formatMessage({ id: 'presentTool.steps.download.failed' }));
+        return;
+      }
+
+      // 从响应中提取blob数据
+      const blob = response.data;
+
+      // 检查blob是否为空
+      if (blob.size === 0) {
+        message.error(intl.formatMessage({ id: 'presentTool.steps.download.empty' }));
+        return;
+      }
 
       // 创建一个URL对象
       const url = window.URL.createObjectURL(blob);
@@ -47,7 +67,7 @@ const BulkGiftSetp1: React.FC<BulkGiftProps> = ({ type, setps1Next }) => {
       return;
     }
     if (info.file.status === 'done') {
-      setps1Next();
+      setSteps1NextFlag(true);
       // 上传成功的处理已在customUpload中完成
     }
   };
@@ -55,37 +75,37 @@ const BulkGiftSetp1: React.FC<BulkGiftProps> = ({ type, setps1Next }) => {
   const customUpload = async (options: any) => {
     const { file, onSuccess, onError } = options;
     try {
-      const formData = new FormData();
-      formData.append('file', file);
+      // 直接调用API，FormData处理已移至API函数内部
       const res = await getCoinGiftCheckImport(
         { file: file, type: type },
         //  {headers: { "Content-Type": "multipart/form-data" }, }
       );
       if (res.code === '0') {
-        // const url = res.data.data || '';
-
+        sessionStorage.setItem('checkData', JSON.stringify(res.data));
         onSuccess(res, file);
         message.success(
           intl.formatMessage({
             id: 'presentTool.steps.upload.success',
-            defaultMessage: '上传成功',
+            defaultMessage: intl.formatMessage({ id: 'presentTool.steps.upload.success' }), //'上传成功',
           }),
         );
       } else {
+        console.error('Upload error1:', res);
         message.error(
           intl.formatMessage({
             id: 'presentTool.steps.upload.failed',
-            defaultMessage: '上传失败',
+            defaultMessage: intl.formatMessage({ id: 'presentTool.steps.upload.failed' }), //'上传失败',
           }),
         );
-        onError(new Error('上传失败'));
+        onError(
+          new Error(res.message || intl.formatMessage({ id: 'presentTool.steps.upload.failed' })),
+        );
       }
     } catch (error) {
+      console.error('Upload error2:', error);
       onError(error);
     }
   };
-
-  useEffect(() => {}, []);
 
   return (
     <div style={{ marginTop: '20px' }}>
@@ -131,6 +151,16 @@ const BulkGiftSetp1: React.FC<BulkGiftProps> = ({ type, setps1Next }) => {
         <li>{intl.formatMessage({ id: 'presentTool.steps.tip1' })}</li>
         <li>{intl.formatMessage({ id: 'presentTool.steps.tip2' })}</li>
       </ul>
+      <div className={styles.button_box}>
+        <div>
+          <Button key="cancel" onClick={onCancel} style={{ marginRight: 10 }}>
+            {intl.formatMessage({ id: 'presentTool.button.cancel' })}
+          </Button>
+          <Button key="next" type={'primary'} onClick={handleNext} disabled={!steps1NextFlag}>
+            {intl.formatMessage({ id: 'presentTool.button.next' })}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

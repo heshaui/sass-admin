@@ -8,7 +8,7 @@ import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import type { SelectProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
-import BulkGiftType from './components/BulkGiftType';
+import BulkGiftType from './components/BulkGiftTypeModal';
 import GiftModal from './components/GiftModal';
 const { RangePicker } = DatePicker;
 
