@@ -111,6 +111,7 @@ export default {
   'menu.fundsTools.assetAdjustment': '자산 조정',
   'menu.fundsTools.transferTool': '이체 도구',
   'menu.fundsTools.transferRecords': '이체 기록',
+  'menu.fundsTools.PresentTool': '코인 증정 도구',
   'menu.riskControl': '리스크 컨트롤',
   'menu.riskControl.config': '설정 관리',
   'menu.riskControl.suggestions': '처리 제안',
