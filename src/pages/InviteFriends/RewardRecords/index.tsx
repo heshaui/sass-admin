@@ -28,7 +28,6 @@ const RewardRecords: React.FC = () => {
 
 
   const getList=async(params:any)=>{
-    console.log('123',params) 
     if(!params.dateTimeRange){
       params.dateTimeRange=[null,null];
     }
@@ -36,6 +35,7 @@ const RewardRecords: React.FC = () => {
       pageNo:params.current,
       pageSize:params.pageSize,
       account:params.account,
+      type:params.type,
       startTime:params?.dateTimeRange[0]?dayjs(params?.dateTimeRange[0]).valueOf():null,
       endTime:params?.dateTimeRange[1]?dayjs(params?.dateTimeRange[1]).valueOf():null,
     }
@@ -140,9 +140,9 @@ const RewardRecords: React.FC = () => {
       dataIndex: 'type',
       key: 'type',
       valueEnum: {
-        '0': { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.distribute.undistributed' }) },
-        '1': { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.type.auto' }) },
-        '2': { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.type.manual' }) },
+        0: { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.distribute.undistributed' }) },
+        1: { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.type.auto' }) },
+        2: { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.type.manual' }) },
       },
       formItemProps: {
         label: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.type' }),
