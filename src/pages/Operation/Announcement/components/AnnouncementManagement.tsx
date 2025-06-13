@@ -2,6 +2,7 @@ import {
   addClassMenu,
   getAnnouncementContentList,
   getAnnouncementList,
+  getClassMenuList,
   updateAnnouncement,
 } from '@/services/ant-design-pro/operation';
 import { PlusOutlined } from '@ant-design/icons';
@@ -9,8 +10,8 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { Button, message, Modal } from 'antd';
 import dayjs from 'dayjs';
-import React, { useRef, useState } from 'react';
-import { useIntl } from 'umi';
+import React, { useEffect, useRef, useState } from 'react';
+import { useIntl } from '@umijs/max';
 import AnnouncementForm from './AnnouncementForm';
 import CategoryForm from './CategoryForm';
 
@@ -38,6 +39,7 @@ const AnnouncementManagement: React.FC = () => {
   const [formType, setFormType] = useState<'create' | 'update'>('create');
   const [categoryFormVisible, setCategoryFormVisible] = useState<boolean>(false);
   const announcementActionRef = useRef<ActionType>();
+  const [menuList, setMenuList] = useState<any[]>([]);
   const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
   console.log(setCurrentCategory);
   const handleCategoryFormSuccess = async (formValues: Record<string, any>) => {
@@ -69,6 +71,18 @@ const AnnouncementManagement: React.FC = () => {
     } finally {
     }
   };
+
+  const getMenu = async () => {
+      let data = {
+        pageNo: 1,
+        pageSize: 10000,
+      };
+      const response = await getClassMenuList(data);
+      if (response.code === '0' && response.data) {
+        console.log(response.data, 'response.data');
+        setMenuList(response.data.list);
+      }
+    };
 
   // 获取公告列表
   const fetchAnnouncementList = async (params: any) => {
@@ -277,6 +291,7 @@ const AnnouncementManagement: React.FC = () => {
       title: intl.formatMessage({ id: 'announcement.management.column.category' }),
       dataIndex: 'classMenu',
       search: false,
+      render:(_, record) => menuList.find(item => item.id === record.classMenu)?.describe || '-'
     },
     {
       title: intl.formatMessage({ id: 'announcement.management.column.sendTime' }),
@@ -423,6 +438,10 @@ const AnnouncementManagement: React.FC = () => {
       ],
     },
   ];
+
+  useEffect(() => {
+    getMenu();
+  }, []);
 
   return (
     <>
