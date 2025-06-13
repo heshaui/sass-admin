@@ -9,7 +9,7 @@ interface BulkGiftProps {
   open: boolean;
   type: string;
   onCancel: () => void;
-  onSubmit?: () => void;
+  onSubmit: () => void;
 }
 // interface walletListType {
 //   id: number,
@@ -22,7 +22,7 @@ interface BulkGiftProps {
 //   coinId: string,
 //   tenantId: string
 // }
-const BulkGift: React.FC<BulkGiftProps> = ({ open, type, onCancel }) => {
+const BulkGift: React.FC<BulkGiftProps> = ({ open, type, onCancel, onSubmit }) => {
   const intl = useIntl();
   // const [form] = Form.useForm();
   // const [walletList, setWalletList] = useState<walletListType>({} as walletListType);
@@ -89,6 +89,16 @@ const BulkGift: React.FC<BulkGiftProps> = ({ open, type, onCancel }) => {
   const onNext = () => {
     setCurrent(current + 1);
   };
+  const handleSubmit = () => {
+    onSubmit();
+    setCurrent(0);
+    sessionStorage.removeItem('checkData');
+  };
+  const handleCancel = () => {
+    setCurrent(0);
+    sessionStorage.removeItem('checkData');
+    onCancel();
+  };
 
   // useEffect(() => {
   //   if(!open) return;
@@ -99,7 +109,7 @@ const BulkGift: React.FC<BulkGiftProps> = ({ open, type, onCancel }) => {
   const items = [
     {
       title: intl.formatMessage({ id: 'presentTool.steps.step1' }), //基本信息
-      content: <BulkGiftStep1 type={type} onCancel={onCancel} onNext={onNext} />,
+      content: <BulkGiftStep1 type={type} onCancel={handleCancel} onNext={onNext} />,
     },
     {
       title: intl.formatMessage({ id: 'presentTool.steps.step2' }), //上传照片
@@ -109,14 +119,21 @@ const BulkGift: React.FC<BulkGiftProps> = ({ open, type, onCancel }) => {
     },
     {
       title: intl.formatMessage({ id: 'presentTool.steps.step3' }), //已提交
-      content: <BulkGiftStep3 onPrevious={onPrevious} current={current} onCancel={onCancel} />,
+      content: (
+        <BulkGiftStep3
+          onPrevious={onPrevious}
+          current={current}
+          onCancel={handleSubmit}
+          open={open}
+        />
+      ),
     },
   ];
   return (
     <Modal
       title={intl.formatMessage({ id: 'presentTool.modal.gift.title' })}
       open={open}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       // footer={[
       //   current > 0 ? (
       //     <Button key="previous" onClick={onPrevious}>

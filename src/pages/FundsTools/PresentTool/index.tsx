@@ -61,11 +61,13 @@ const TransferTool: React.FC = () => {
     const res = await tenantCurrencyCoinList(data);
     if (res.code === '0') {
       setCoinOptions(
-        res.data.list.map((item: any) => ({
-          ...item,
-          label: item.coinName,
-          value: item.id,
-        })),
+        res.data.list
+          .map((item: any) => ({
+            ...item,
+            label: item.coinName,
+            value: item.coinName,
+          }))
+          .filter((item: any) => item.status !== 0),
       );
     }
   };
@@ -80,6 +82,9 @@ const TransferTool: React.FC = () => {
       title: intl.formatMessage({ id: 'presentTool.table.column.time' }), //'赠币日期',
       dataIndex: 'createTime',
       key: 'createTime',
+      render: (text) => {
+        return dayjs(text).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
     {
       title: 'UID',

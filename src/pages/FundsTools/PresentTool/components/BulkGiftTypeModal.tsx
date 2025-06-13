@@ -64,7 +64,6 @@ const BulkGiftType: React.FC<BulkGiftTypeProps> = ({ open, onCancel, onSubmit })
   };
   const onGiftSubmit = () => {
     onSubmit();
-    handleCancel();
   };
 
   // useEffect(() => {
