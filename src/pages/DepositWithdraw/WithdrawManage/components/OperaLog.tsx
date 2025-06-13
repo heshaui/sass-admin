@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 // import type { ProFormInstance } from '@ant-design/pro-components';
 import { gatewayAccessLogList } from '@/services/ant-design-pro/UserManagement';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 // interface LogRecord {
 //   id: string;
 //   path: string;
