@@ -195,7 +195,7 @@ const handleSend = async () => {
             {intl.formatMessage({ id: 'common.cancel' })}
           </Button>,
           <Button key="submit" type="primary" onClick={handleSend} disabled={amount === 0||amount===null}>
-            {intl.formatMessage({ id: 'common' })}
+            {intl.formatMessage({ id: 'common.ok' })}
           </Button>,
         ]}
       >
