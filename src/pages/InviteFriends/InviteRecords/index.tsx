@@ -187,20 +187,20 @@ const handleSend = async () => {
         dateFormatter="string"
       />
       <Modal
-        title="手动发放"
+        title={intl.formatMessage({ id: 'inviteFriends.inviteRecords.action.manualDistribute' })}
         open={isModalVisible}
         onCancel={handleModalCancel}
         footer={[
           <Button key="cancel" onClick={handleModalCancel}>
-            取消
+            {intl.formatMessage({ id: 'common.cancel' })}
           </Button>,
           <Button key="submit" type="primary" onClick={handleSend} disabled={amount === 0||amount===null}>
-            发放
+            {intl.formatMessage({ id: 'common' })}
           </Button>,
         ]}
       >
         <div style={{ marginBottom: '20px' }}>
-          <div style={{ marginBottom: '10px' }}>发放金额</div>
+          <div style={{ marginBottom: '10px' }}>{intl.formatMessage({ id: 'inviteFriends.rewardRecords.amount' })}</div>
           <Input 
             value={amount} 
             onChange={(e) => setAmount(e.target.value)} 
@@ -210,7 +210,7 @@ const handleSend = async () => {
           />
         </div>
         <div style={{ border: '1px solid #1677ff', borderRadius: '4px', padding: '10px', backgroundColor: '#f0f5ff' }}>
-          <p style={{ margin: 0 }}>确认发放后，资产将立即发放至用户的现货账户。</p>
+          <p style={{ margin: 0 }}>{intl.formatMessage({ id: 'inviteFriends.rewardRecords.confirm' })}</p>
         </div>
       </Modal>
     </PageContainer>

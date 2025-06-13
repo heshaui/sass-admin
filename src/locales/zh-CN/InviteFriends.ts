@@ -109,5 +109,10 @@ export default {
   
   // Distribution Types
   'inviteFriends.rewardRecords.type.auto': '自动',
-  'inviteFriends.rewardRecords.type.manual': '手动'
+  'inviteFriends.rewardRecords.type.manual': '手动',
+
+
+  'inviteFriends.rewardRecords.amount': '发放金额',
+  'inviteFriends.rewardRecords.confirm': '确认发放后，资产将立即发放至用户的现货账户。',
+
 }
