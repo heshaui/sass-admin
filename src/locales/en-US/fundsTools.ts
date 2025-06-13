@@ -97,6 +97,7 @@ export default {
   'transferTool.form.validation.amount': 'Please enter transfer amount',
   'transferTool.form.validation.googleCode': 'Please enter Google verification code',
   'transferTool.form.validation.description': 'Please enter notes',
+  'transferTool.form.validation.enterNumber': 'Please enter number',
 
   // TransferTool Form Buttons
   'transferTool.form.button.cancel': 'Cancel',

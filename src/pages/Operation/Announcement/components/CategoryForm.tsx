@@ -1,7 +1,7 @@
 import LanguageSelector from '@/components/LanguageSelector';
 import { Form, Input, InputNumber, message, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
 const { TextArea } = Input;
 

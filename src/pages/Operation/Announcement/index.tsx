@@ -1,7 +1,7 @@
 import { PageContainer } from '@ant-design/pro-components';
 import { Tabs } from 'antd';
 import React, { useState } from 'react';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 import AnnouncementManagement from './components/AnnouncementManagement';
 import CategoryManagement from './components/CategoryManagement';
 

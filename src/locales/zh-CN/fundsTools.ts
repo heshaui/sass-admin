@@ -96,6 +96,7 @@ export default {
   'transferTool.form.validation.amount': '请输入转账金额',
   'transferTool.form.validation.googleCode': '请输入谷歌验证码',
   'transferTool.form.validation.description': '请输入备注',
+  'transferTool.form.validation.enterNumber': '请输入数字',
 
   // TransferTool Form Buttons
   'transferTool.form.button.cancel': '取消',

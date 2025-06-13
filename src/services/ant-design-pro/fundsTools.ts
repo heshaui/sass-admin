@@ -79,6 +79,14 @@ export async function getCoinGiftList(params?: Record<string, any>) {
   });
 }
 
+// /tenant/v1/user-wallet/userWalletParams
+export async function userWalletParams(params: { idString: string }) {
+  return request('/tenant/v1/user-wallet/userWalletParams', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 // 单个赠币
 export async function getCoinGift(params?: Record<string, any>) {
   return request('/tenant/v1/coin-gift/gift', {
