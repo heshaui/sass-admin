@@ -110,6 +110,8 @@ export default {
   // Distribution Types
   'inviteFriends.rewardRecords.type.auto': '自动',
   'inviteFriends.rewardRecords.type.manual': '手动',
+  'inviteFriends.rewardRecords.distribute.undistributed': '未发放',
+
 
 
   'inviteFriends.rewardRecords.amount': '发放金额',

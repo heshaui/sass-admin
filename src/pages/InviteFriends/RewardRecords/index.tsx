@@ -140,7 +140,7 @@ const RewardRecords: React.FC = () => {
       dataIndex: 'type',
       key: 'type',
       valueEnum: {
-        // 1 增加 2 扣减 3 冻结 4 解冻
+        '0': { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.distribute.undistributed' }) },
         '1': { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.type.auto' }) },
         '2': { text: intl.formatMessage({ id: 'inviteFriends.rewardRecords.type.manual' }) },
       },
