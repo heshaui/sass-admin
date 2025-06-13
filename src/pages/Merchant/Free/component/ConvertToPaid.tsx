@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
-import { Modal, Form, DatePicker, Button, message } from "antd";
-import { useIntl } from 'umi';
-import dayjs from "dayjs";
+import React, { useEffect, useState } from 'react';
+import { Modal, Form, DatePicker, message } from 'antd';
+import { useIntl } from '@umijs/max';
+import dayjs from 'dayjs';
 
 interface ConvertToPaidProps {
   visible: boolean;
@@ -10,15 +10,23 @@ interface ConvertToPaidProps {
   initialValues?: any;
 }
 
-const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubmit, initialValues }) => {
+const ConvertToPaid: React.FC<ConvertToPaidProps> = ({
+  visible,
+  onCancel,
+  onSubmit,
+  initialValues,
+}) => {
   const intl = useIntl();
   const [form] = Form.useForm();
+  const [curSelectTime, setCurSelectTime] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialValues) {
-      form.setFieldsValue({
-        tenantEndTime: initialValues.tenantEndTime ? dayjs(initialValues.tenantEndTime) : null,
-      });
+      setCurSelectTime(
+        initialValues.tenantEndTime
+          ? dayjs(initialValues.tenantEndTime).format('YYYY-MM-DD HH:mm:ss')
+          : null,
+      );
     }
   }, [initialValues, visible]);
 
@@ -26,7 +34,10 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      onSubmit({ ...initialValues, tenantEndTime: values.tenantEndTime.format("YYYY-MM-DD HH:mm:ss") });
+      onSubmit({
+        ...initialValues,
+        tenantEndTime: values.tenantEndTime.format('YYYY-MM-DD HH:mm:ss'),
+      });
       form.resetFields();
     } catch (error) {
       message.error(intl.formatMessage({ id: 'free.convertToPaid.form.required' }));
@@ -34,40 +45,40 @@ const ConvertToPaid: React.FC<ConvertToPaidProps> = ({ visible, onCancel, onSubm
   };
 
   return (
-    <Modal 
-      title={intl.formatMessage({ id: 'free.convertToPaid.title' })} 
-      open={visible} 
-      onCancel={onCancel} 
-      onOk={handleOk} 
+    <Modal
+      title={intl.formatMessage({ id: 'free.convertToPaid.title' })}
+      open={visible}
+      onCancel={onCancel}
+      onOk={handleOk}
       width={500}
     >
       <Form form={form} layout="vertical">
         <Form.Item
           name="tenantEndTime"
           label={
-            <span style={{ fontWeight: "bold", fontSize: 16 }}>
+            <span style={{ fontWeight: 'bold', fontSize: 16 }}>
               {intl.formatMessage({ id: 'free.convertToPaid.form.expiry' })}
             </span>
           }
-          rules={[{ 
-            required: true, 
-            message: intl.formatMessage({ id: 'free.convertToPaid.form.required' }) 
-          }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'free.convertToPaid.form.required' }),
+            },
+          ]}
         >
-          <DatePicker 
-            showTime 
-            format="YYYY-MM-DD HH:mm:ss" 
-            placeholder={intl.formatMessage({ id: 'free.convertToPaid.form.placeholder' })} 
-            style={{ width: "100%" }} 
+          <DatePicker
+            onChange={(value) => setCurSelectTime(value.format('YYYY-MM-DD HH:mm:ss'))}
+            showTime
+            minDate={dayjs()}
+            format="YYYY-MM-DD HH:mm:ss"
+            placeholder={intl.formatMessage({ id: 'free.convertToPaid.form.placeholder' })}
+            style={{ width: '100%' }}
           />
         </Form.Item>
         <p>
-          {intl.formatMessage({ id: 'free.convertToPaid.message.confirm' })}{" "}
-          <strong>
-            {initialValues?.tenantEndTime 
-              ? dayjs(initialValues.tenantEndTime).format("YYYY-MM-DD HH:mm:ss")
-              : '-'}
-          </strong>！
+          {intl.formatMessage({ id: 'free.convertToPaid.message.confirm' })}
+          <strong>{curSelectTime || '-'}</strong>！
         </p>
       </Form>
     </Modal>
