@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import { useIntl } from 'umi';
-import {  Button, Space, message } from 'antd';
+import {  Button, Space, message, Modal, Input } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { getUserInviteDetailList,grantUserRebates,getUserGrantRebate} from '@/services/ant-design-pro/inviteFriends';
 
@@ -24,6 +24,10 @@ const InviteRecords: React.FC = () => {
   const intl = useIntl();
   const [userList, setUserList] = useState<InviteRecord[]>([]);
   const proTableRef = useRef<any>();
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [currentRecord, setCurrentRecord] = useState<InviteRecord | null>(null);
+  const [amount, setAmount] = useState<string>('');
+  const [coinType, setCoinType] = useState<string>('');
 
   //获取用户邀请详情列表
   const getUserList = async (params:any) => {
@@ -44,25 +48,47 @@ const InviteRecords: React.FC = () => {
 }
 
 
-const handleSend = async (record: InviteRecord) => {
+const showModal = async (record: InviteRecord) => {
   try {
-
     const getUserGrantRebateRes = await getUserGrantRebate({userId:record.userId});
     if(getUserGrantRebateRes.code === '0'){
-
-      const res = await grantUserRebates({ userId: record.userId, amount:getUserGrantRebateRes.data.amount,actualCoinId:getUserGrantRebateRes.data.actualCoinId});
-    
-      if (res.code === '0'&&res.data) {
-        // Refresh the table data after successful distribution
-        proTableRef.current?.reload();
-        message.success(intl.formatMessage({ id: 'common.success' }) || 'Distribution successful');
-      } else {
-        message.error(res.msg || intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
-      }
+      setCurrentRecord(record);
+      setAmount(getUserGrantRebateRes.data.amount);
+      setCoinType(getUserGrantRebateRes.data.actualCoinId );
+      setIsModalVisible(true);
+    } else {
+      message.error(getUserGrantRebateRes.msg || intl.formatMessage({ id: 'common.fail' }) || 'Failed to get user information');
     }
-    
-   
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    message.error(intl.formatMessage({ id: 'common.fail' }) || 'Failed to get user information');
+  }
+}
 
+const handleModalCancel = () => {
+  setIsModalVisible(false);
+  setCurrentRecord(null);
+}
+
+const handleSend = async () => {
+  if (!currentRecord) return;
+  
+  try {
+    const res = await grantUserRebates({ 
+      userId: currentRecord.userId, 
+      amount: amount,
+      actualCoinId: coinType
+    });
+    
+    if (res.code === '0' && res.data) {
+      // Refresh the table data after successful distribution
+      proTableRef.current?.reload();
+      message.success(intl.formatMessage({ id: 'common.success' }) || 'Distribution successful');
+      setIsModalVisible(false);
+      setCurrentRecord(null);
+    } else {
+      message.error(res.msg || intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
+    }
   } catch (error) {
     console.error('Manual distribution error:', error);
     message.error(intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
@@ -131,7 +157,7 @@ const handleSend = async (record: InviteRecord) => {
         <Space>
           {record.distributeStatus === 0 && 
            record.inviteStatus === 1 && (
-            <Button type="link" style={{ color: '#1677ff' }} onClick={() => handleSend(record)}>
+            <Button type="link" style={{ color: '#1677ff' }} onClick={() => showModal(record)}>
               {intl.formatMessage({ id: 'inviteFriends.inviteRecords.action.manualDistribute' })}
             </Button>
           )}
@@ -160,6 +186,33 @@ const handleSend = async (record: InviteRecord) => {
         request={getUserList}
         dateFormatter="string"
       />
+      <Modal
+        title="手动发放"
+        open={isModalVisible}
+        onCancel={handleModalCancel}
+        footer={[
+          <Button key="cancel" onClick={handleModalCancel}>
+            取消
+          </Button>,
+          <Button key="submit" type="primary" onClick={handleSend} disabled={amount === 0||amount===null}>
+            发放
+          </Button>,
+        ]}
+      >
+        <div style={{ marginBottom: '20px' }}>
+          <div style={{ marginBottom: '10px' }}>发放金额</div>
+          <Input 
+            value={amount} 
+            onChange={(e) => setAmount(e.target.value)} 
+            addonAfter={coinType} 
+            disabled={true}
+            style={{ width: '40%' }} 
+          />
+        </div>
+        <div style={{ border: '1px solid #1677ff', borderRadius: '4px', padding: '10px', backgroundColor: '#f0f5ff' }}>
+          <p style={{ margin: 0 }}>确认发放后，资产将立即发放至用户的现货账户。</p>
+        </div>
+      </Modal>
     </PageContainer>
   );
 };
