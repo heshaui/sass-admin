@@ -66,14 +66,14 @@ const RewardRecords: React.FC = () => {
   const columns: ProColumns<RewardRecord>[] = [
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.id' }),
-      dataIndex: 'serialNumber',
-      key: 'serialNumber',
+      dataIndex: 'id',
+      key: 'id',
       search: false,
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.uid' }),
-      dataIndex: 'uid',
-      key: 'uid',
+      dataIndex: 'userId',
+      key: 'userId',
       search: false,
     },
     {
