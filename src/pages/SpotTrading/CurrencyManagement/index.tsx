@@ -8,16 +8,19 @@ import {
   adminUpdateCurrencyCoinExtById,
   adminUpdateCurrencyCoinById,
   saveTenantCurrencyCoinExt,
-  updateTenantCurrencyCoinExtById
+  updateTenantCurrencyCoinExtById,
 } from '@/services/ant-design-pro/spot';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, message, Modal, Space, Spin, Switch, Typography } from 'antd';
 import React, { useRef, useState } from 'react';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 import CurrencyForm from './components/CurrencyForm';
 import ExtendInfoForm, { ExtendInfoFormData } from './components/ExtendInfoForm';
-import CurrencyIntroForm, { CurrencyIntroFormData } from './components/CurrencyIntroForm';
+// import CurrencyIntroForm from './components/CurrencyIntroForm';
+import Introduction from './components/Introduction';
+import { CurrencyIntroFormData } from './index.d';
+
 // 币种类型定义
 type CurrencyItem = {
   id: number;
@@ -30,10 +33,10 @@ type CurrencyItem = {
   createdAt: string;
   updatedAt: string;
   sortId?: string; // 排序ID
-  canRecharge:number;
-  canWithdraw:number;
-  canTransfer:number;
-  canAutoWithdraw:number;
+  canRecharge: number;
+  canWithdraw: number;
+  canTransfer: number;
+  canAutoWithdraw: number;
 };
 
 const CurrencyManagement: React.FC = () => {
@@ -41,10 +44,7 @@ const CurrencyManagement: React.FC = () => {
   const actionRef = useRef<ActionType>();
   const [selectedRows, setSelectedRows] = useState<CurrencyItem[]>([]);
   const [extInfo, setExtInfo] = useState<any>(null);
-
-  const [data, setData] = useState<CurrencyItem[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [total, setTotal] = useState<number>(0);
   const [current, setCurrent] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
   const [formVisible, setFormVisible] = useState<boolean>(false);
@@ -64,33 +64,33 @@ const CurrencyManagement: React.FC = () => {
 
     const res = isAdmin
       ? await currencyCoinList({
-        pageNo: current,
-        pageSize: pageSize,
-        keyword:params.keyword,
-        coinName:params.coinName,
-        status:params.status,
-        symbol:params.symbol,
-        recharge:params.recharge,
-        networkType:params.networkType,
-        canWithdraw:params.canWithdraw,
-        canRecharge:params.canRecharge,
-        canTransfer:params.canTransfer,
-        canAutoWithdraw:params.canAutoWithdraw,
-      })
+          pageNo: current,
+          pageSize: pageSize,
+          keyword: params.keyword,
+          coinName: params.coinName,
+          status: params.status,
+          symbol: params.symbol,
+          recharge: params.recharge,
+          networkType: params.networkType,
+          canWithdraw: params.canWithdraw,
+          canRecharge: params.canRecharge,
+          canTransfer: params.canTransfer,
+          canAutoWithdraw: params.canAutoWithdraw,
+        })
       : await tenantCurrencyCoinList({
-        pageNo: current,
-        pageSize: pageSize,
-        keyword:params.keyword,
-        coinName:params.coinName,
-        status:params.status,
-        recharge:params.recharge,
-        symbol:params.symbol,
-        networkType:params.networkType,
-        canWithdraw:params.canWithdraw,
-        canRecharge:params.canRecharge,
-        canTransfer:params.canTransfer,
-        canAutoWithdraw:params.canAutoWithdraw,
-      });
+          pageNo: current,
+          pageSize: pageSize,
+          keyword: params.keyword,
+          coinName: params.coinName,
+          status: params.status,
+          recharge: params.recharge,
+          symbol: params.symbol,
+          networkType: params.networkType,
+          canWithdraw: params.canWithdraw,
+          canRecharge: params.canRecharge,
+          canTransfer: params.canTransfer,
+          canAutoWithdraw: params.canAutoWithdraw,
+        });
     if (res.code === '0') {
       return {
         data: res.data.list,
@@ -120,7 +120,7 @@ const CurrencyManagement: React.FC = () => {
       });
 
       if (res.code === '0') {
-        setExpandedData(res.data.list );
+        setExpandedData(res.data.list);
       } else {
         message.error(res.message || '获取拓展信息失败');
       }
@@ -181,17 +181,20 @@ const CurrencyManagement: React.FC = () => {
     }
 
     const tip: Record<string, string> = {
-      status: intl.formatMessage({ 
-        id: record.status === 1 ? 'currency.tip.status.disable' : 'currency.tip.status.enable' 
+      status: intl.formatMessage({
+        id: record.status === 1 ? 'currency.tip.status.disable' : 'currency.tip.status.enable',
       }),
-      recharge: intl.formatMessage({ 
-        id: record.recharge === 1 ? 'currency.tip.recharge.off' : 'currency.tip.recharge.on' 
+      recharge: intl.formatMessage({
+        id: record.recharge === 1 ? 'currency.tip.recharge.off' : 'currency.tip.recharge.on',
       }),
-      autoWithdraw: intl.formatMessage({ 
-        id: record.autoWithdraw === 1 ? 'currency.tip.autoWithdraw.off' : 'currency.tip.autoWithdraw.on' 
+      autoWithdraw: intl.formatMessage({
+        id:
+          record.autoWithdraw === 1
+            ? 'currency.tip.autoWithdraw.off'
+            : 'currency.tip.autoWithdraw.on',
       }),
-      withdraw: intl.formatMessage({ 
-        id: record.withdraw === 1 ? 'currency.tip.canWithdraw.off' : 'currency.tip.canWithdraw.on' 
+      withdraw: intl.formatMessage({
+        id: record.withdraw === 1 ? 'currency.tip.canWithdraw.off' : 'currency.tip.canWithdraw.on',
       }),
     };
 
@@ -203,7 +206,9 @@ const CurrencyManagement: React.FC = () => {
     }
 
     if (res.code === '0' && res.data) {
-      message.success(intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }));
+      message.success(
+        intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }),
+      );
       // 更新扩展数据
       fetchExtendInfo(record.coinId);
     } else {
@@ -213,7 +218,7 @@ const CurrencyManagement: React.FC = () => {
 
   // 渲染展开行
   const renderExpandedRow = (record: CurrencyItem) => {
-    const extInfo = expandedData
+    const extInfo = expandedData;
     const { Text } = Typography;
 
     if (expandLoading[record.coinId]) {
@@ -231,18 +236,22 @@ const CurrencyManagement: React.FC = () => {
     }
 
     const columns = [
-      { title: intl.formatMessage({ id: 'currency.column.networkType' }), dataIndex: 'protocolName', key: 'protocolName' },
-      // { 
-      //   title: intl.formatMessage({ id: 'currency.column.mainAddress' }), 
-      //   dataIndex: 'mainAddress', 
+      {
+        title: intl.formatMessage({ id: 'currency.column.networkType' }),
+        dataIndex: 'protocolName',
+        key: 'protocolName',
+      },
+      // {
+      //   title: intl.formatMessage({ id: 'currency.column.mainAddress' }),
+      //   dataIndex: 'mainAddress',
       //   key: 'mainAddress',
       //   width: 120,
       //   ellipsis: true,
       //   render: (dom: any, entity: any) => {
       //     const text = entity.mainAddress;
       //     return text ? (
-      //       <Typography.Text 
-      //         style={{ width: 120 }} 
+      //       <Typography.Text
+      //         style={{ width: 120 }}
       //         ellipsis={{ tooltip: text }}
       //       >
       //         {text}
@@ -250,28 +259,31 @@ const CurrencyManagement: React.FC = () => {
       //     ) : '-';
       //   }
       // },
-      { 
-        title: intl.formatMessage({ id: 'currency.column.contractAddress' }), 
-        dataIndex: 'token', 
+      {
+        title: intl.formatMessage({ id: 'currency.column.contractAddress' }),
+        dataIndex: 'token',
         key: 'token',
         width: 120,
         ellipsis: true,
         render: (dom: any, entity: any) => {
           const text = entity.token;
           return text ? (
-            <Typography.Text 
-              style={{ width: 120 }} 
-              ellipsis={{ tooltip: text }}
-            >
+            <Typography.Text style={{ width: 120 }} ellipsis={{ tooltip: text }}>
               {text}
             </Typography.Text>
-          ) : '-';
-        }
+          ) : (
+            '-'
+          );
+        },
       },
-      { title: intl.formatMessage({ id: 'currency.column.decimals' }), dataIndex: 'decimals', key: 'decimals' },
-      { 
-        title: intl.formatMessage({ id: 'currency.column.status' }), 
-        dataIndex: 'status', 
+      {
+        title: intl.formatMessage({ id: 'currency.column.decimals' }),
+        dataIndex: 'decimals',
+        key: 'decimals',
+      },
+      {
+        title: intl.formatMessage({ id: 'currency.column.status' }),
+        dataIndex: 'status',
         key: 'status',
         render: (dom: any, extRecord: any) => (
           <Switch
@@ -280,7 +292,11 @@ const CurrencyManagement: React.FC = () => {
               Modal.confirm({
                 title: intl.formatMessage(
                   { id: 'currency.modal.confirm.status' },
-                  { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                  {
+                    action: intl.formatMessage({
+                      id: checked ? 'currency.switch.on' : 'currency.switch.off',
+                    }),
+                  },
                 ),
                 onOk: () => {
                   handleExtSwtich(extRecord, 'status');
@@ -288,13 +304,21 @@ const CurrencyManagement: React.FC = () => {
               });
             }}
           />
-        )
+        ),
       },
-      { title: intl.formatMessage({ id: 'currency.column.withdrawFee' }), dataIndex: 'withdrawFee', key: 'withdrawFee' },
-      { title: intl.formatMessage({ id: 'currency.column.minWithdrawFee' }), dataIndex: 'minWithdrawFee', key: 'minWithdrawFee' },
-      { 
-        title: intl.formatMessage({ id: 'currency.column.recharge' }), 
-        dataIndex: 'recharge', 
+      {
+        title: intl.formatMessage({ id: 'currency.column.withdrawFee' }),
+        dataIndex: 'withdrawFee',
+        key: 'withdrawFee',
+      },
+      {
+        title: intl.formatMessage({ id: 'currency.column.minWithdrawFee' }),
+        dataIndex: 'minWithdrawFee',
+        key: 'minWithdrawFee',
+      },
+      {
+        title: intl.formatMessage({ id: 'currency.column.recharge' }),
+        dataIndex: 'recharge',
         key: 'recharge',
         render: (dom: any, extRecord: any) => (
           <Switch
@@ -303,7 +327,11 @@ const CurrencyManagement: React.FC = () => {
               Modal.confirm({
                 title: intl.formatMessage(
                   { id: 'currency.modal.confirm.recharge' },
-                  { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                  {
+                    action: intl.formatMessage({
+                      id: checked ? 'currency.switch.on' : 'currency.switch.off',
+                    }),
+                  },
                 ),
                 onOk: () => {
                   handleExtSwtich(extRecord, 'recharge');
@@ -311,14 +339,14 @@ const CurrencyManagement: React.FC = () => {
               });
             }}
           />
-        )
+        ),
       },
       {
         title: intl.formatMessage({ id: 'currency.column.withdraw' }),
         dataIndex: 'withdraw',
-        valueEnum:{
+        valueEnum: {
           0: intl.formatMessage({ id: 'currency.switch.off' }),
-          1: intl.formatMessage({ id: 'currency.switch.on' })
+          1: intl.formatMessage({ id: 'currency.switch.on' }),
         },
         render: (dom: any, extRecord: any) => (
           <Switch
@@ -327,19 +355,23 @@ const CurrencyManagement: React.FC = () => {
               Modal.confirm({
                 title: intl.formatMessage(
                   { id: 'currency.modal.confirm.canWithdraw' },
-                  { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                  {
+                    action: intl.formatMessage({
+                      id: checked ? 'currency.switch.on' : 'currency.switch.off',
+                    }),
+                  },
                 ),
                 onOk: () => {
-                  handleExtSwtich(extRecord,'withdraw');
+                  handleExtSwtich(extRecord, 'withdraw');
                 },
               });
             }}
           />
         ),
       },
-      // { 
-      //   title: intl.formatMessage({ id: 'currency.column.autoWithdraw' }), 
-      //   dataIndex: 'autoWithdraw', 
+      // {
+      //   title: intl.formatMessage({ id: 'currency.column.autoWithdraw' }),
+      //   dataIndex: 'autoWithdraw',
       //   key: 'autoWithdraw',
       //   render: (dom: any, extRecord: any) => (
       //     <Switch
@@ -358,20 +390,36 @@ const CurrencyManagement: React.FC = () => {
       //     />
       //   )
       // },
-      { title: intl.formatMessage({ id: 'currency.column.minWithdraw' }), dataIndex: 'minWithdraw', key: 'minWithdraw' },
-      { title: intl.formatMessage({ id: 'currency.column.maxWithdraw' }), dataIndex: 'maxWithdraw', key: 'maxWithdraw' },
-      { title: intl.formatMessage({ id: 'currency.column.minRecharge' }), dataIndex: 'minRecharge', key: 'minRecharge' },
-      { title: intl.formatMessage({ id: 'currency.column.confirms' }), dataIndex: 'confirms', key: 'confirms' },
+      {
+        title: intl.formatMessage({ id: 'currency.column.minWithdraw' }),
+        dataIndex: 'minWithdraw',
+        key: 'minWithdraw',
+      },
+      {
+        title: intl.formatMessage({ id: 'currency.column.maxWithdraw' }),
+        dataIndex: 'maxWithdraw',
+        key: 'maxWithdraw',
+      },
+      {
+        title: intl.formatMessage({ id: 'currency.column.minRecharge' }),
+        dataIndex: 'minRecharge',
+        key: 'minRecharge',
+      },
+      {
+        title: intl.formatMessage({ id: 'currency.column.confirms' }),
+        dataIndex: 'confirms',
+        key: 'confirms',
+      },
       {
         title: intl.formatMessage({ id: 'currency.column.action' }),
-        dataIndex:'action',
-        key:'action',
-        render:(dom: any, record: any)=>(
-          <Button type='link' onClick={()=>handleEditExtendInfo(record,extInfo)}>
+        dataIndex: 'action',
+        key: 'action',
+        render: (dom: any, record: any) => (
+          <Button type="link" onClick={() => handleEditExtendInfo(record, extInfo)}>
             {intl.formatMessage({ id: 'currency.action.edit' })}
           </Button>
-        )
-      }
+        ),
+      },
     ];
 
     return (
@@ -401,64 +449,72 @@ const CurrencyManagement: React.FC = () => {
     }
   };
 
-  const handleSwtich=async(record:CurrencyItem,type:string)=>{
-    let data
-      if(type==='canRecharge'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          canRecharge:record.canRecharge===1?0:1
-        }
-      }else if(type==='canWithdraw'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          canWithdraw:record.canWithdraw===1?0:1
-        }
-      }else if(type==='canTransfer'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          canTransfer:record.canTransfer===1?0:1
-        }
-      }else if(type==='canAutoWithdraw'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          canAutoWithdraw:record.canAutoWithdraw===1?0:1
-        }
-      }else if(type==='status'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          status:record.status===1?0:1
-        }
-      }
-      const tip: Record<string, string> = {
-        canRecharge: intl.formatMessage({ 
-          id: record.canRecharge === 1 ? 'currency.tip.canRecharge.off' : 'currency.tip.canRecharge.on' 
-        }),
-        canWithdraw: intl.formatMessage({ 
-          id: record.canWithdraw === 1 ? 'currency.tip.canWithdraw.off' : 'currency.tip.canWithdraw.on' 
-        }),
-        canTransfer: intl.formatMessage({ 
-          id: record.canTransfer === 1 ? 'currency.tip.canTransfer.off' : 'currency.tip.canTransfer.on' 
-        }),
-        canAutoWithdraw: intl.formatMessage({ 
-          id: record.canAutoWithdraw === 1 ? 'currency.tip.canAutoWithdraw.off' : 'currency.tip.canAutoWithdraw.on' 
-        }),
-      }
-    let res=await adminUpdateCurrencyCoinById(data);
-    if(res.code==='0'&&res.data){
-      message.success(intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }));
+  const handleSwtich = async (record: CurrencyItem, type: string) => {
+    let data;
+    if (type === 'canRecharge') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        canRecharge: record.canRecharge === 1 ? 0 : 1,
+      };
+    } else if (type === 'canWithdraw') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        canWithdraw: record.canWithdraw === 1 ? 0 : 1,
+      };
+    } else if (type === 'canTransfer') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        canTransfer: record.canTransfer === 1 ? 0 : 1,
+      };
+    } else if (type === 'canAutoWithdraw') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        canAutoWithdraw: record.canAutoWithdraw === 1 ? 0 : 1,
+      };
+    } else if (type === 'status') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        status: record.status === 1 ? 0 : 1,
+      };
+    }
+    const tip: Record<string, string> = {
+      canRecharge: intl.formatMessage({
+        id:
+          record.canRecharge === 1 ? 'currency.tip.canRecharge.off' : 'currency.tip.canRecharge.on',
+      }),
+      canWithdraw: intl.formatMessage({
+        id:
+          record.canWithdraw === 1 ? 'currency.tip.canWithdraw.off' : 'currency.tip.canWithdraw.on',
+      }),
+      canTransfer: intl.formatMessage({
+        id:
+          record.canTransfer === 1 ? 'currency.tip.canTransfer.off' : 'currency.tip.canTransfer.on',
+      }),
+      canAutoWithdraw: intl.formatMessage({
+        id:
+          record.canAutoWithdraw === 1
+            ? 'currency.tip.canAutoWithdraw.off'
+            : 'currency.tip.canAutoWithdraw.on',
+      }),
+    };
+    let res = await adminUpdateCurrencyCoinById(data);
+    if (res.code === '0' && res.data) {
+      message.success(
+        intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }),
+      );
       actionRef.current?.reload();
-      if(type==='status'||type==='canWithdraw'||type==='canRecharge'){
+      if (type === 'status' || type === 'canWithdraw' || type === 'canRecharge') {
         fetchExtendInfo(record.coinId);
       }
-    }else{
+    } else {
       message.error(intl.formatMessage({ id: 'currency.message.error' }, { action: tip[type] }));
     }
-  }
+  };
 
   // 表格列定义
   const columns: ProColumns<CurrencyItem>[] = [
@@ -484,9 +540,9 @@ const CurrencyManagement: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'currency.column.status' }),
       dataIndex: 'status',
-      valueEnum:{
+      valueEnum: {
         1: intl.formatMessage({ id: 'currency.status.normal' }),
-        0: intl.formatMessage({ id: 'currency.status.disabled' })
+        0: intl.formatMessage({ id: 'currency.status.disabled' }),
       },
       render: (_, record) => (
         <Switch
@@ -495,10 +551,14 @@ const CurrencyManagement: React.FC = () => {
             Modal.confirm({
               title: intl.formatMessage(
                 { id: 'currency.modal.confirm.status' },
-                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                {
+                  action: intl.formatMessage({
+                    id: checked ? 'currency.switch.on' : 'currency.switch.off',
+                  }),
+                },
               ),
               onOk: () => {
-                handleSwtich(record,'status');
+                handleSwtich(record, 'status');
               },
             });
           }}
@@ -508,9 +568,9 @@ const CurrencyManagement: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'currency.column.recharge' }),
       dataIndex: 'canRecharge',
-      valueEnum:{
+      valueEnum: {
         0: intl.formatMessage({ id: 'currency.switch.off' }),
-        1: intl.formatMessage({ id: 'currency.switch.on' })
+        1: intl.formatMessage({ id: 'currency.switch.on' }),
       },
       render: (_, record) => (
         <Switch
@@ -519,10 +579,14 @@ const CurrencyManagement: React.FC = () => {
             Modal.confirm({
               title: intl.formatMessage(
                 { id: 'currency.modal.confirm.canRecharge' },
-                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                {
+                  action: intl.formatMessage({
+                    id: checked ? 'currency.switch.on' : 'currency.switch.off',
+                  }),
+                },
               ),
               onOk: () => {
-                handleSwtich(record,'canRecharge');
+                handleSwtich(record, 'canRecharge');
               },
             });
           }}
@@ -532,9 +596,9 @@ const CurrencyManagement: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'currency.column.withdraw' }),
       dataIndex: 'canWithdraw',
-      valueEnum:{
+      valueEnum: {
         0: intl.formatMessage({ id: 'currency.switch.off' }),
-        1: intl.formatMessage({ id: 'currency.switch.on' })
+        1: intl.formatMessage({ id: 'currency.switch.on' }),
       },
       render: (_, record) => (
         <Switch
@@ -543,10 +607,14 @@ const CurrencyManagement: React.FC = () => {
             Modal.confirm({
               title: intl.formatMessage(
                 { id: 'currency.modal.confirm.canWithdraw' },
-                { action: intl.formatMessage({ id: checked ? 'currency.switch.on' : 'currency.switch.off' }) }
+                {
+                  action: intl.formatMessage({
+                    id: checked ? 'currency.switch.on' : 'currency.switch.off',
+                  }),
+                },
               ),
               onOk: () => {
-                handleSwtich(record,'canWithdraw');
+                handleSwtich(record, 'canWithdraw');
               },
             });
           }}
@@ -614,24 +682,24 @@ const CurrencyManagement: React.FC = () => {
       render: (_, record) =>
         isAdmin
           ? [
-            <Button key="edit" onClick={() => handleEdit(record)}>
-              {intl.formatMessage({ id: 'currency.action.edit' })}
-            </Button>,
-            <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
-              {intl.formatMessage({ id: 'currency.action.addExtendInfo' })}
-            </Button>,
-          ]
+              <Button key="edit" onClick={() => handleEdit(record)}>
+                {intl.formatMessage({ id: 'currency.action.edit' })}
+              </Button>,
+              <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
+                {intl.formatMessage({ id: 'currency.action.addExtendInfo' })}
+              </Button>,
+            ]
           : [
-            <Button key="edit" onClick={() => handleEdit(record)}>
-              {intl.formatMessage({ id: 'currency.action.edit' })}
-            </Button>,
-            <Button key="detail" onClick={() => handleDetail(record)}>
-              {intl.formatMessage({ id: 'currency.action.currencyIntro' })}
-            </Button>,
-            <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
-              {intl.formatMessage({ id: 'currency.action.addSameChain' })}
-            </Button>,
-          ],
+              <Button key="edit" onClick={() => handleEdit(record)}>
+                {intl.formatMessage({ id: 'currency.action.edit' })}
+              </Button>,
+              <Button key="detail" onClick={() => handleDetail(record)}>
+                {intl.formatMessage({ id: 'currency.action.currencyIntro' })}
+              </Button>,
+              <Button key="extendInfo" onClick={() => handleExtendInfo(record)}>
+                {intl.formatMessage({ id: 'currency.action.addSameChain' })}
+              </Button>,
+            ],
     },
   ];
 
@@ -649,25 +717,23 @@ const CurrencyManagement: React.FC = () => {
   };
 
   const handlePublish = (record: CurrencyItem) => {
-    message.success(intl.formatMessage({ id: 'currency.message.publishOnline' }, { name: record.name }));
+    message.success(
+      intl.formatMessage({ id: 'currency.message.publishOnline' }, { name: record.name }),
+    );
     // 实现发布上线逻辑
   };
 
   const handleAddSameChain = (record: CurrencyItem) => {
-    message.success(intl.formatMessage({ id: 'currency.message.addSameChain' }, { name: record.name }));
+    message.success(
+      intl.formatMessage({ id: 'currency.message.addSameChain' }, { name: record.name }),
+    );
     // 实现添加同币异链逻辑
   };
 
   const handleDetail = async (record: CurrencyItem) => {
-
-      
-
-        setCurrentIntroData(record);
-        setIntroFormVisible(true);
-
-
-
-
+    console.log('handleDetail', record);
+    setCurrentIntroData(record);
+    setIntroFormVisible(true);
   };
 
   const handleExtendInfo = (record: CurrencyItem) => {
@@ -677,24 +743,29 @@ const CurrencyManagement: React.FC = () => {
 
   const handleExtendInfoSubmit = async (values: ExtendInfoFormData) => {
     console.log(
-      intl.formatMessage({ id: 'currency.log.extendInfoFormSubmit' }), 
-      values, 
-      intl.formatMessage({ id: 'currency.log.extendInfoMode' }), 
-      extendInfoMode
+      intl.formatMessage({ id: 'currency.log.extendInfoFormSubmit' }),
+      values,
+      intl.formatMessage({ id: 'currency.log.extendInfoMode' }),
+      extendInfoMode,
     );
 
     let res;
     if (extendInfoMode === 'add') {
       if (isAdmin) {
         res = await adminSaveCurrencyCoinExt(values);
-      }else{
+      } else {
         res = await saveTenantCurrencyCoinExt(values);
       }
 
       if (res && res.code === '0') {
-        message.success(intl.formatMessage({ 
-          id: extendInfoMode === 'add' ? 'currency.message.addExtendInfoSuccess' : 'currency.message.updateExtendInfoSuccess' 
-        }));
+        message.success(
+          intl.formatMessage({
+            id:
+              extendInfoMode === 'add'
+                ? 'currency.message.addExtendInfoSuccess'
+                : 'currency.message.updateExtendInfoSuccess',
+          }),
+        );
 
         // 更新已展开行的数据
         if (expandedRowKeys.length > 0) {
@@ -710,15 +781,20 @@ const CurrencyManagement: React.FC = () => {
       if (isAdmin) {
         values.id = extInfo?.id;
         res = await adminUpdateCurrencyCoinExtById(values);
-      }else{
+      } else {
         values.id = extInfo[0]?.id;
         res = await updateTenantCurrencyCoinExtById(values);
       }
-      
+
       if (res && res.code === '0') {
-        message.success(intl.formatMessage({ 
-          id: extendInfoMode === 'add' ? 'currency.message.addExtendInfoSuccess' : 'currency.message.updateExtendInfoSuccess' 
-        }));
+        message.success(
+          intl.formatMessage({
+            id:
+              extendInfoMode === 'add'
+                ? 'currency.message.addExtendInfoSuccess'
+                : 'currency.message.updateExtendInfoSuccess',
+          }),
+        );
 
         // 更新已展开行的数据
         if (expandedRowKeys.length > 0) {
@@ -739,7 +815,9 @@ const CurrencyManagement: React.FC = () => {
       message.warning(intl.formatMessage({ id: 'currency.message.warning.selectDelete' }));
       return;
     }
-    message.success(intl.formatMessage({ id: 'currency.message.batchDelete' }, { count: selectedRows.length }));
+    message.success(
+      intl.formatMessage({ id: 'currency.message.batchDelete' }, { count: selectedRows.length }),
+    );
     // 这里实现批量删除逻辑
   };
 
@@ -752,7 +830,7 @@ const CurrencyManagement: React.FC = () => {
       } else {
         res = await saveTenantCurrencyCoin(values);
       }
-      if (res.code === '0'&&res.data) {
+      if (res.code === '0' && res.data) {
         message.success(intl.formatMessage({ id: 'currency.message.addSuccess' }));
         setFormVisible(false);
         actionRef.current?.reload();
@@ -762,19 +840,20 @@ const CurrencyManagement: React.FC = () => {
     } else {
       let res;
 
-        console.log(currentCurrency);
-        let data={
-          id:currentCurrency?.id,
-          coinId:currentCurrency?.coinId,
-          ...values
-        }
-        res = await adminUpdateCurrencyCoinById(data);
+      console.log(currentCurrency);
+      let data = {
+        id: currentCurrency?.id,
+        coinId: currentCurrency?.coinId,
+        ...values,
+      };
+      res = await adminUpdateCurrencyCoinById(data);
 
-      if (res.code === '0'&&res.data) {
-        message.success(intl.formatMessage({ id: 'currency.message.editSuccess' }, { name: values.coinName }));
+      if (res.code === '0' && res.data) {
+        message.success(
+          intl.formatMessage({ id: 'currency.message.editSuccess' }, { name: values.coinName }),
+        );
       } else {
         message.error(intl.formatMessage({ id: 'currency.message.editError' }));
-      
       }
       setFormVisible(false);
     }
@@ -794,7 +873,7 @@ const CurrencyManagement: React.FC = () => {
       // 这里应该是保存币种简介的API调用
       // 示例代码，需要替换为实际API
       const res = await saveCurrencyIntro(values);
-      
+
       if (res.code === '0') {
         message.success(intl.formatMessage({ id: 'currency.message.introSaveSuccess' }));
         setIntroFormVisible(false);
@@ -845,17 +924,23 @@ const CurrencyManagement: React.FC = () => {
 
       <ExtendInfoForm
         visible={extendInfoVisible}
-        initialValues={currentCurrency}
+        initialValues={currentIntroData}
         onSubmit={handleExtendInfoSubmit}
         onCancel={handleExtendInfoCancel}
         mode={extendInfoMode}
       />
-
+      {/*
       <CurrencyIntroForm
         visible={introFormVisible}
         initialValues={currentIntroData || undefined}
         onSubmit={handleIntroFormSubmit}
         onCancel={handleIntroFormCancel}
+      /> */}
+
+      <Introduction
+        visible={introFormVisible}
+        initialValues={currentIntroData}
+        setVisible={setIntroFormVisible}
       />
     </PageContainer>
   );

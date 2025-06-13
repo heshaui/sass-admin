@@ -1,0 +1,28 @@
+export  type CurrencyIntroFormData = {
+  id: number;
+  coinId: number;
+  coinName: string;
+  iconUrl: string;
+  canAutoWithdraw: number;
+  canRecharge: number;
+  canTransfer: number;
+  canWithdraw: number;
+  isPlatformCoin: number;
+  minWithdrawAmount: string;
+  nameDefault: string;
+  sort: number;
+  status: number;
+  unit: string;
+  unitScale: number;
+  tenantId: string;
+  createTime: number;
+  updateTime: number;
+  mianChain: number;
+  maxWithdrawAmount: string;
+  minTopUp: string;
+  memoTag: number;
+  issuingDate: string;
+  transactionNum: number;
+  maxSupplyQuantity: number;
+  introductionVoList: [];
+};

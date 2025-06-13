@@ -130,6 +130,7 @@ export default {
   'currency.intro.saveSuccess': '코인 소개 저장 성공',
   'currency.intro.saveFailed': '코인 소개 저장 실패',
   'currency.intro.formValidationFailed': '표单 검증 실패',
+  'currency.intro.enUS_Required': '영문은 필수',
 
   // ExtendInfoForm component
   'currency.extendInfo.title': '동일 코인 추가',
