@@ -96,6 +96,7 @@ export default {
   'transferTool.form.validation.amount': '이체 금액을 입력해주세요',
   'transferTool.form.validation.googleCode': '구글 인증코드를 입력해주세요',
   'transferTool.form.validation.description': '메모를 입력해주세요',
+  'transferTool.form.validation.enterNumber': '숫자를 입력해주세요',
 
   // TransferTool Form Buttons
   'transferTool.form.button.cancel': '취소',
