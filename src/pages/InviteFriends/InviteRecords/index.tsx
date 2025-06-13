@@ -35,7 +35,9 @@ const InviteRecords: React.FC = () => {
       pageNo:params.current,
       pageSize:params.pageSize,
       account:params.account, 
-      parentUserId:params.parentUserId,
+      userId:params.userId,
+      inviteStatus:params.inviteStatus,
+      distributeStatus:params.distributeStatus
     }
     const res = await getUserInviteDetailList(data);
     if(res.code === '0'){
@@ -106,23 +108,27 @@ const handleSend = async () => {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.userId' }),
       dataIndex: 'userId',
       key: 'userId',
+
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.account' }),
       dataIndex: 'account',
       key: 'account',
-      search: false,
+
     },
+
     {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.parentUserId' }),
       dataIndex: 'parentUserId',
       key: 'parentUserId',
+      search:false
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.createTime' }),
       dataIndex: 'createTime',
       key: 'createTime',
       valueType: 'dateTime',
+      search:false
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.accumulate' }),
