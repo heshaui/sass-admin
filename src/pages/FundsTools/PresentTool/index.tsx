@@ -1,94 +1,142 @@
-import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Card, ConfigProvider, DatePicker, Form, Input, Select } from 'antd';
-import React, { useState } from 'react';
+import { PageContainer } from '@ant-design/pro-components';
+import { Button, Card, ConfigProvider, DatePicker, Form, Input, Select, Table } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import { useIntl } from 'umi';
 
+import { getCoinGiftList } from '@/services/ant-design-pro/fundsTools';
+import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import type { SelectProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import dayjs from 'dayjs';
+import BulkGiftType from './components/BulkGiftType';
+import GiftModal from './components/GiftModal';
 const { RangePicker } = DatePicker;
 
 interface TransferRecord {
-  key: string;
-  createTime: string;
-  fromAccount: string;
-  fromAccountType: string;
-  toAccount: string;
-  toAccountType: string;
-  amount: string;
-  remark: string;
-  operator: string;
+  id: number;
+  batchId: string;
+  userId: number;
+  amount: number;
+  coinName: string;
+  coinId: string;
+  employeeId: number;
+  createTime: number;
+  updateTime: number;
+  tenantId: string;
+  type: string;
 }
 const TransferTool: React.FC = () => {
   const intl = useIntl();
   const [form] = Form.useForm();
 
   const [loading] = useState<boolean>(false);
-  const [coinOptions] = useState<SelectProps['options']>([]);
-
+  const [coinOptions, setCoinOptions] = useState<SelectProps['options']>([]);
+  const [tableData, setTableData] = useState<TransferRecord[]>([]);
+  const pagination = useRef({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
+  const [giftOpen, setGiftOpen] = useState(false);
+  const [bulkGiftOpen, setBulkGiftOpen] = useState(false);
   const typeOptions: SelectProps['options'] = [
     {
-      label: '全部',
+      label: intl.formatMessage({ id: 'presentTool.select.all' }), //'全部‘
       value: '',
     },
     {
-      label: '做市赠币',
-      value: '1',
+      label: intl.formatMessage({ id: 'presentTool.select.market' }), //'做市赠币'
+      value: 'MARKET_GIFT',
     },
     {
-      label: '活动赠币',
-      value: '2',
+      label: intl.formatMessage({ id: 'presentTool.select.activity' }), //'活动赠币'
+      value: 'ACTIVITY_GIFT',
     },
   ];
+  const getCoin = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
+    };
+    const res = await tenantCurrencyCoinList(data);
+    if (res.code === '0') {
+      setCoinOptions(
+        res.data.list.map((item: any) => ({
+          ...item,
+          label: item.coinName,
+          value: item.id,
+        })),
+      );
+    }
+  };
+
   const columns: ColumnsType<TransferRecord> = [
     {
-      title: intl.formatMessage({ id: 'transferRecords.column.createTime' }),
+      title: 'Bulk ID',
+      dataIndex: 'batchId',
+      key: 'batchId',
+    },
+    {
+      title: intl.formatMessage({ id: 'presentTool.table.column.time' }), //'赠币日期',
       dataIndex: 'createTime',
       key: 'createTime',
     },
     {
-      title: intl.formatMessage({ id: 'transferRecords.column.fromAccount' }),
-      dataIndex: 'fromAccountId',
-      key: 'fromAccountId',
+      title: 'UID',
+      dataIndex: 'userId',
+      key: 'userId',
     },
     {
-      title: intl.formatMessage({ id: 'transferRecords.column.fromAccountType' }),
-      dataIndex: 'fromAccountType',
-      key: 'fromAccountType',
+      title: intl.formatMessage({ id: 'presentTool.table.column.type' }), //'类型',
+      dataIndex: 'type',
+      key: 'type',
+      render: (text) => {
+        return text && text.toUpperCase() === 'MARKET_GIFT'
+          ? intl.formatMessage({ id: 'presentTool.select.market' })
+          : text && text.toUpperCase() === 'ACTIVITY_GIFT'
+          ? intl.formatMessage({ id: 'presentTool.select.activity' })
+          : '--';
+      },
     },
     {
-      title: intl.formatMessage({ id: 'transferRecords.column.toAccount' }),
-      dataIndex: 'toAccountType',
-      key: 'toAccountType',
-    },
-    {
-      title: intl.formatMessage({ id: 'transferRecords.column.toAccountType' }),
-      dataIndex: 'sceneType',
-      key: 'sceneType',
-    },
-    {
-      title: intl.formatMessage({ id: 'transferRecords.column.amount' }),
+      title: intl.formatMessage({ id: 'presentTool.table.column.amount' }), //'赠币数量',
       dataIndex: 'amount',
       key: 'amount',
     },
     {
-      title: intl.formatMessage({ id: 'transferRecords.column.description' }),
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: intl.formatMessage({ id: 'transferRecords.column.operator' }),
-      dataIndex: 'operateId',
-      key: 'operateId',
+      title: intl.formatMessage({ id: 'presentTool.table.column.adminID' }), //'管理员ID',
+      dataIndex: 'employeeId',
+      key: 'employeeId',
     },
   ];
   const onFinish = async () => {
     // 实现赠币查询逻辑
+    form.validateFields().then(async (values) => {
+      const params = {
+        startTime: values.time && values.time[0] ? values.time[0].startOf('day').valueOf() : null,
+        endTime: values.time && values.time[1] ? values.time[1].endOf('day').valueOf() : null,
+        userId: values.uid || null,
+        coinId: values.coinId || null,
+        batchId: values.bulkId || null,
+        type: values.type || null,
+        pageNo: pagination.current.current,
+        pageSize: pagination.current.pageSize,
+      };
+      const res = await getCoinGiftList(params);
+      if (res.code === '0') {
+        setTableData(res.data.list);
+        pagination.current.total = res.data.count;
+      }
+    });
   };
-
-  // useEffect(() => {
-  //   walletData();
-  //   getCoin();
-  // }, []);
+  const onGiftFinish = async () => {
+    pagination.current.current = 1;
+    await onFinish();
+  };
+  useEffect(() => {
+    onFinish();
+    getCoin();
+  }, []);
 
   return (
     <ConfigProvider
@@ -104,45 +152,86 @@ const TransferTool: React.FC = () => {
       <PageContainer>
         <Card title={intl.formatMessage({ id: 'presentTool.title' })}>
           <Form form={form} name="advanced_search" layout="inline" onFinish={onFinish}>
-            <Form.Item name="type" label={'类型'} initialValue="">
+            <Form.Item
+              name="type"
+              label={intl.formatMessage({ id: 'presentTool.tip.type' })}
+              initialValue=""
+            >
               <Select style={{ width: 180 }} options={typeOptions}></Select>
             </Form.Item>
             <Form.Item name="uid" label={'UID'} initialValue="">
-              <Input placeholder="请输入UID" />
+              <Input placeholder={intl.formatMessage({ id: 'presentTool.tip.input' })} allowClear />
             </Form.Item>
-            <Form.Item name="coinId" label={'币种'} initialValue="">
-              <Select style={{ width: 180 }} options={coinOptions}></Select>
+            <Form.Item
+              name="coinId"
+              label={intl.formatMessage({ id: 'presentTool.tip.currency' })}
+              initialValue=""
+            >
+              <Select style={{ width: 180 }} options={coinOptions} allowClear></Select>
             </Form.Item>
             <Form.Item name="bulkId" label={'Bulk ID'} initialValue="">
-              <Input placeholder="请输入" />
+              <Input placeholder={intl.formatMessage({ id: 'presentTool.tip.input' })} allowClear />
             </Form.Item>
-            <Form.Item name="time" label="时间">
-              <RangePicker />
+            <Form.Item name="time" label={intl.formatMessage({ id: 'presentTool.tip.time' })}>
+              <RangePicker
+                allowClear
+                placeholder={[
+                  intl.formatMessage({ id: 'presentTool.tip.start' }),
+                  intl.formatMessage({ id: 'presentTool.tip.end' }),
+                ]}
+                // minDate={dayjs().subtract(6, 'month')}
+                maxDate={dayjs().endOf('day')}
+              />
             </Form.Item>
             <Form.Item>
               <Button type="primary" htmlType="submit">
-                查询
+                {intl.formatMessage({ id: 'presentTool.button.submit' })}
               </Button>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="button">
-                赠币
+              <Button type="primary" htmlType="button" onClick={() => setGiftOpen(true)}>
+                {/*  赠币*/}
+                {intl.formatMessage({ id: 'presentTool.button.gift' })}
               </Button>
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="button">
-                批量赠币
+              <Button type="primary" htmlType="button" onClick={() => setBulkGiftOpen(true)}>
+                {/*批量赠币  */}
+                {intl.formatMessage({ id: 'presentTool.button.bulkGift' })}
               </Button>
             </Form.Item>
           </Form>
           <div>
-            <ProTable
+            {/* <ProTable
               columns={columns}
+              request={onFinish}
+
               search={false}
               loading={loading}
               pagination={{ pageSize: 10 }}
+            /> */}
+            <Table
+              columns={columns}
+              dataSource={tableData}
+              pagination={{
+                pageSize: 10,
+                total: pagination.current.total,
+                current: pagination.current.current,
+                onChange: (page, pageSize) => {
+                  pagination.current.current = page;
+                  pagination.current.pageSize = pageSize;
+                  onFinish();
+                },
+              }}
+              loading={loading}
             />
           </div>
+          <GiftModal open={giftOpen} onCancel={() => setGiftOpen(false)} onSubmit={onGiftFinish} />
+          <BulkGiftType
+            open={bulkGiftOpen}
+            onCancel={() => setBulkGiftOpen(false)}
+            onSubmit={onGiftFinish}
+          />
         </Card>
       </PageContainer>
     </ConfigProvider>
