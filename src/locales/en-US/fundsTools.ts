@@ -104,4 +104,76 @@ export default {
 
   // TransferTool Account Types
   'transferTool.account.user': 'User Account',
+  // PresentTool Page
+  'presentTool.title': 'Coin Gifting Tool',
+
+  'presentTool.select.all': 'All',
+  'presentTool.select.market': 'Market Making Gift',
+  'presentTool.select.activity': 'Event Gift',
+
+  'presentTool.tip.type': 'Type',
+  'presentTool.tip.time': 'Time',
+  'presentTool.tip.currency': 'Currency',
+  'presentTool.tip.input': 'Please input',
+  'presentTool.tip.start': 'Start Time',
+  'presentTool.tip.end': 'End Time',
+  'presentTool.tip.text': 'User and Amount',
+  'presentTool.tip.tip1': 'Format: UID:Amount. Separate multiple accounts with English ","',
+  'presentTool.tip.tip2': 'For example: 12345:123,987654321:456',
+
+  'presentTool.button.submit': 'Query',
+  'presentTool.button.gift': 'Gift Coin',
+  'presentTool.button.bulkGift': 'Bulk Gift',
+  'presentTool.button.cancel': 'Cancel',
+  'presentTool.button.submit2': 'Submit',
+  'presentTool.button.previous': 'Previous',
+  'presentTool.button.next': 'Next',
+
+  'presentTool.table.column.time': 'Gifting Date',
+  'presentTool.table.column.type': 'Type',
+  'presentTool.table.column.amount': 'Gifting Amount',
+  'presentTool.table.column.adminID': 'Admin ID',
+
+  'presentTool.modal.gift.title': 'New Coin Gift',
+  'presentTool.modal.gift.typeError': 'Type cannot be empty',
+  'presentTool.modal.gift.coinTypeError': 'Currency cannot be empty',
+  'presentTool.modal.gift.amountError': 'User and gifting amount cannot be empty',
+  'presentTool.modal.gift.success': 'Coin gifting successful',
+  'presentTool.modal.gift.balance': 'Available Balance',
+
+  'presentTool.steps.step1': 'Download and Upload File',
+  'presentTool.steps.step2': 'Data Check',
+  'presentTool.steps.step3': 'Bulk Coin Gifting',
+
+  'presentTool.steps.tip': 'Friendly Reminder',
+  'presentTool.steps.tip1':
+    '1. This module involves asset operations. Please ensure UIDs are correct and operate with caution!',
+  'presentTool.steps.tip2':
+    '2. Before gifting coins, confirm that the gifting account has sufficient assets. If not, please go to the Fund Tool - Transfer Tool to make a transfer.',
+  'presentTool.steps.downloadTemplate': 'Download Template and Fill in Information',
+  'presentTool.steps.download': 'Download Template',
+  'presentTool.steps.downloadTip':
+    'Please import data according to the template format. Do not modify or delete the header.',
+  'presentTool.steps.uploadFile': 'Fill in Information and Upload File',
+  'presentTool.steps.upload': 'Upload File',
+  'presentTool.steps.uploadTip':
+    'File suffix must be .xlsx. Up to 1000 pieces of data can be imported.',
+  'presentTool.steps.template': 'Bulk Coin Gifting Template',
+  'presentTool.steps.download.success': 'Template downloaded successfully',
+  'presentTool.steps.download.failed': 'Template download failed',
+  'presentTool.steps.upload.success': 'File uploaded successfully',
+  'presentTool.steps.upload.failed': 'File upload failed',
+  'presentTool.steps.check.success': 'Data check successful',
+  'presentTool.steps.check.failed': 'Data check failed',
+  'presentTool.steps.bulkGift.success': 'Bulk coin gifting successful',
+  'presentTool.steps.bulkGift.failed': 'Bulk coin gifting failed',
+  'presentTool.steps.bulkGift.count':
+    '{coinName}: Total {count} people; Total amount {coinAmount}≈{rateAmount}{rate}',
+  'presentTool.steps.bulkGift.count2':
+    '{coinName}: Total {count} people; Total amount {coinAmount}',
+  'presentTool.steps.bulkGift.processing': 'Coin gifting in progress, please wait a few minutes.',
+  'presentTool.steps.bulkGift.notFound': 'Coin gifting started, please wait...',
+  'presentTool.steps.bulkGift.success2': 'Operation successful!',
+  'presentTool.steps.bulkGift.failed2': 'Operation failed!',
+  'presentTool.steps.download.empty': 'Download content is empty',
 };
