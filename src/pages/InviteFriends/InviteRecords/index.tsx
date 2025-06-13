@@ -108,15 +108,14 @@ const handleSend = async () => {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.userId' }),
       dataIndex: 'userId',
       key: 'userId',
+      search:false
 
     },
     {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.account' }),
       dataIndex: 'account',
       key: 'account',
-
     },
-
     {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.parentUserId' }),
       dataIndex: 'parentUserId',
