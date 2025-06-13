@@ -113,6 +113,7 @@ export default {
   // Distribution Types
   'inviteFriends.rewardRecords.type.auto': 'Automatic',
   'inviteFriends.rewardRecords.type.manual': 'Manual',
+  'inviteFriends.rewardRecords.distribute.undistributed': 'Undistributed',
 
   'inviteFriends.rewardRecords.amount': 'Distribution Amount',
   'inviteFriends.rewardRecords.confirm': 'Confirm distribution, assets will be immediately distributed to the user\'s spot account.',

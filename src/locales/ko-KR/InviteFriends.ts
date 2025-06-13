@@ -110,6 +110,7 @@ export default {
   // Distribution Types
   'inviteFriends.rewardRecords.type.auto': '자동',
   'inviteFriends.rewardRecords.type.manual': '수동',
+  'inviteFriends.rewardRecords.distribute.undistributed': '미지급',
 
   'inviteFriends.rewardRecords.amount': '지급 금액',
   'inviteFriends.rewardRecords.confirm': '지급 후, 자산이 즉시 사용자의 수비 계정으로 지급됩니다.',
