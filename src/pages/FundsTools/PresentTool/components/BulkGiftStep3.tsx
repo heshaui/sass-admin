@@ -2,9 +2,8 @@ import { getCoinGiftImportStatus } from '@/services/ant-design-pro/fundsTools';
 import { useIntl } from '@umijs/max';
 import { Button, Image, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import failImg from './images/fail.svg';
 import loadingImg from './images/loading.png';
-import successImg from './images/success.png';
+import { default as failImg, default as successImg } from './images/success.png';
 import styles from './styles/gift.module.less';
 
 interface BulkGiftProps {
