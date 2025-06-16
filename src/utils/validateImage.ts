@@ -26,31 +26,38 @@ export const validateImageFile = (
       const isAllowedType = options.allowedTypes.includes(file.type);
       if (!isAllowedType) {
         message.error(options.intl.formatMessage({ id: 'common.upload.type' }));
-        return resolve(false);
+        resolve(false);
+        return;
       }
     } else {
       // 如果没有指定allowedTypes，则检查是否是图片类型
       if (!file.type.startsWith('image/')) {
         message.error(options.intl.formatMessage({ id: 'common.upload.type' }));
-        return resolve(false);
+        resolve(false);
+        return;
       }
     }
 
     // 2. 检查文件大小（如果指定了maxSizeKB）
     if (options.maxSizeKB && file.size / 1024 > options.maxSizeKB) {
       message.error(options.intl.formatMessage({ id: 'common.upload.limit' }));
-      return resolve(false);
+      resolve(false);
+      return;
     }
 
     // 3. 检查是否需要验证尺寸
     const needDimensionCheck =
       options.exactWidth || options.exactHeight || options.widthMultiple || options.heightMultiple;
-    if (!needDimensionCheck) return resolve(true);
+    if (!needDimensionCheck) {
+      resolve(true);
+      return;
+    }
 
     // 4. 浏览器环境检查
     if (typeof document === 'undefined') {
       message.error(options.intl.formatMessage({ id: 'common.upload.env' }));
-      return resolve(false);
+      resolve(false);
+      return;
     }
 
     // 5. 读取并验证图片尺寸

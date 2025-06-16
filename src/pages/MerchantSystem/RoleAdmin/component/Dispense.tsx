@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Form, message, Tree } from 'antd';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
+//@ts-ignore
 import { merchantTreeData } from '@/utils/index';
 
 interface RoleModalProps {
@@ -12,15 +13,15 @@ interface RoleModalProps {
 }
 
 // ✅ 解析回显数据，获取已选中的权限 ID
-const extractCheckedKeys = (rolePermissions) => {
-  return rolePermissions.map((item) => item);
+const extractCheckedKeys = (rolePermissions: any[]) => {
+  return rolePermissions.map((item: any) => item);
 };
 
 // 添加一个辅助函数来获取所有选中的节点（包括父节点）
 const getAllCheckedKeys = (checkedKeys: React.Key[], treeData: any[]) => {
   const allKeys = [...checkedKeys];
   const parentMap = new Map();
-  
+
   // 构建父子节点映射关系
   const buildParentMap = (nodes: any[], parent: any = null) => {
     nodes.forEach(node => {
@@ -32,9 +33,9 @@ const getAllCheckedKeys = (checkedKeys: React.Key[], treeData: any[]) => {
       }
     });
   };
-  
+
   buildParentMap(treeData);
-  
+
   // 查找所有父节点
   const findParents = (key: React.Key) => {
     const parentKey = parentMap.get(key);
@@ -43,10 +44,10 @@ const getAllCheckedKeys = (checkedKeys: React.Key[], treeData: any[]) => {
       findParents(parentKey);
     }
   };
-  
+
   // 对每个选中的key查找其父节点
   checkedKeys.forEach(key => findParents(key));
-  
+
   return allKeys;
 };
 
@@ -80,10 +81,10 @@ const Dispense: React.FC<RoleModalProps> = ({
   const handleSelect = (checkedKeys: React.Key[] | { checked: React.Key[]; halfChecked: React.Key[] }, info: any) => {
     console.log("checkedKeys", checkedKeys);
     console.log("info", info);
-    
+
     // 获取选中的keys
     const keys = Array.isArray(checkedKeys) ? checkedKeys : checkedKeys.checked;
-    
+
     // 获取所有需要选中的keys（包括父节点）
     const allCheckedKeys = getAllCheckedKeys(keys as React.Key[], treeData);
     console.log(allCheckedKeys)
