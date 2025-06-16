@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useIntl } from '@umijs/max';
-import { Select, Radio, Typography } from 'antd';
+import { Select, Checkbox, Typography } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { userWalletList, userWalletCount } from '@/services/ant-design-pro/UserManagement';
 import { getCurrencyCoinList } from '@/services/ant-design-pro/inviteFriends';
 import { currencyCoinList } from '@/services/ant-design-pro/spot';
 import type { ActionType } from '@ant-design/pro-components';
+import Big from 'big.js';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -31,8 +32,8 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
   const [hideZeroAssets, setHideZeroAssets] = useState<boolean>(false);
   const [totalAsset, setTotalAsset] = useState<string>('0');
   const [currencyList, setCurrencyList] = useState<any[]>([]);
-  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const actionRef = useRef<ActionType>();
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
   const { formatMessage } = useIntl();
 
   const getTotalAsset = async () => {
@@ -72,8 +73,17 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
       dataIndex: 'balance',
       key: 'balance',
       render: (_, record) => {
-        return Number(record.balance) + Number(record?.releaseBalance || 0) + Number(record?.frozenBalance || 0);
+        const balance = new Big(record.balance); // 大数推荐用字符串初始化
+        const frozenBalance = new Big(record?.frozenBalance);
+        const releaseBalance = new Big(record?.releaseBalance);
+        const sum = balance.plus(frozenBalance).plus(releaseBalance).toString(); // 转为字符串，避免科学计数法
+        return sum;
       },
+    },
+    {
+      title: formatMessage({ id: 'asset.columns.orderLock' }),
+      dataIndex: 'isLock',
+      key: 'isLock',
     },
     {
       title: formatMessage({ id: 'asset.columns.available' }),
@@ -159,10 +169,9 @@ const Asset: React.FC<AssetProps> = ({ userId }) => {
           <Text type="secondary">{formatMessage({ id: 'asset.total' })}: </Text>
           <Text strong>{totalAsset} USDT</Text>
         </div>
-
-        <Radio.Group onChange={handleRadioChange} value={hideZeroAssets}>
-          <Radio value={true}>{formatMessage({ id: 'asset.hideZero' })}</Radio>
-        </Radio.Group>
+        <Checkbox value={hideZeroAssets} onChange={handleRadioChange}>
+          {formatMessage({ id: 'asset.hideZero' })}
+        </Checkbox>
       </div>
 
       <ProTable<AssetItem>

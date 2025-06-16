@@ -207,6 +207,8 @@ export default {
   'asset.columns.position': '보유',
   'asset.columns.available': '사용 가능',
   'asset.columns.frozen': '동결',
+  'asset.columns.orderLock': '주문 잠금',
+
   // Reconciliation related
   'reconciliation.title': '사용자 대조',
   'reconciliation.hideZero': '0자산 숨기기',

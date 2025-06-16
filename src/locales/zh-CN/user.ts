@@ -196,6 +196,7 @@ export default {
   'asset.columns.position': '持仓',
   'asset.columns.available': '可用',
   'asset.columns.frozen': '冻结',
+  'asset.columns.orderLock': '下单锁定',
 
   // Reconciliation related
   'reconciliation.title': '用户对账',

@@ -194,6 +194,7 @@ export default {
   'asset.columns.position': 'Position',
   'asset.columns.available': 'Available',
   'asset.columns.frozen': 'Frozen',
+  'asset.columns.orderLock': 'Order Lock',
 
   // Reconciliation related
   'reconciliation.title': 'User Reconciliation',
