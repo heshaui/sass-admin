@@ -49,7 +49,7 @@ const PC: React.FC = () => {
     setLoading(true);
     try {
       const response = (await getPcAccessPathList({
-        pageNum: params.current,
+        pageNo: params.current,
         pageSize: params.pageSize,
       })) as PcAccessPathListResponse;
 
@@ -66,7 +66,7 @@ const PC: React.FC = () => {
         setPagination({
           ...pagination,
           current: params.current,
-          total: response.data.total || 0,
+          total: response.data.count || 0,
         });
       } else {
         message.error(response.message || 'Failed to fetch data');

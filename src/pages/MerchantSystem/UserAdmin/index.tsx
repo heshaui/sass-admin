@@ -190,7 +190,7 @@ const UserAdmin: React.FC = () => {
         setData(res.data.list || []);
         return {
           data: res.data.list || [],
-          total: res.data.total || 0,
+          total: res.data.count || 0,
           success: true,
         };
       }
