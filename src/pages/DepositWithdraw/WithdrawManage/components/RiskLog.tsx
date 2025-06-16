@@ -3,7 +3,7 @@ import { ProTable } from '@ant-design/pro-components';
 import type { ProFormInstance } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
 import { assetAccountReviewList } from '@/services/ant-design-pro/risk';
-import { useIntl } from '@umijs/max';
+import { useIntl } from 'umi';
 
 interface LogRecord {
   id: string;
@@ -15,40 +15,41 @@ interface LogRecord {
   requestTime: string;
 }
 interface LogProps {
-  userId: string | number;
-}
+    userId: string | number;
+  }
+  
 
 const Log: React.FC<LogProps> = ({ userId }) => {
   const intl = useIntl();
   const actionRef = useRef<ActionType>();
   const formRef = useRef<ProFormInstance>();
   const userIdRef = useRef(userId);
-
+  
   useEffect(() => {
     userIdRef.current = userId;
     actionRef.current?.reload();
   }, [userId]);
 
   const fetchLogData = async (params: any) => {
-    console.log(userIdRef.current, 'fetchLogDatauserId');
+    console.log(userIdRef.current, 'fetchLogDatauserId')
     let data = {
       pageNo: params.current,
       pageSize: params.pageSize,
-      userId: userIdRef.current,
-    };
-    const res = await assetAccountReviewList(data);
+      userId: userIdRef.current
+    }
+    const res = await assetAccountReviewList(data)
     if (res.code === '0') {
       return {
         data: res.data.list,
         success: true,
         total: res.data.count,
-      };
+      }
     } else {
       return {
         data: [],
         success: false,
         total: 0,
-      };
+      }
     }
   };
 
@@ -84,26 +85,28 @@ const Log: React.FC<LogProps> = ({ userId }) => {
       dataIndex: 'createTime',
       search: false,
     },
+ 
+
   ];
 
   return (
     <div>
-      <ProTable<LogRecord>
-        actionRef={actionRef}
-        formRef={formRef}
-        rowKey="id"
-        columns={columns}
-        request={fetchLogData}
-        search={false}
-        options={false}
-        pagination={{
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => intl.formatMessage({ id: 'riskLog.pagination.total' }, { total }),
-        }}
-        dateFormatter="string"
-        bordered
-      />
+    <ProTable<LogRecord>
+      actionRef={actionRef}
+      formRef={formRef}
+      rowKey="id"
+      columns={columns}
+      request={fetchLogData}
+      search={false}
+      options={false}
+      pagination={{
+        showSizeChanger: true,
+        showQuickJumper: true,
+        showTotal: (total) => intl.formatMessage({ id: 'riskLog.pagination.total' }, { total }),
+      }}
+      dateFormatter="string"
+      bordered
+    />
     </div>
   );
 };

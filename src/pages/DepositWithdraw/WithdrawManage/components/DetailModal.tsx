@@ -5,7 +5,7 @@ import {
 import { ProDescriptions } from '@ant-design/pro-components';
 import { Button, Input, message, Modal, Radio, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useIntl } from '@umijs/max';
+import { useIntl } from 'umi';
 import OperaLog from './OperaLog';
 import RiskLog from './RiskLog';
 

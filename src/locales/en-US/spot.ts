@@ -135,7 +135,6 @@ export default {
   'currency.intro.saveSuccess': 'Currency introduction saved successfully',
   'currency.intro.saveFailed': 'Failed to save currency introduction',
   'currency.intro.formValidationFailed': 'Form validation failed',
-  'currency.intro.enUS_Required': 'English is required',
 
   // ExtendInfoForm component
   'currency.extendInfo.title': 'Add Same Currency on Different Chain',

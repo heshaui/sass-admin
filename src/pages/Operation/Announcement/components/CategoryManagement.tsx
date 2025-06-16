@@ -1,16 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { ProTable } from '@ant-design/pro-components';
 import type { ProColumns, ActionType } from '@ant-design/pro-components';
-import { Button, message } from 'antd';
-import { useIntl } from '@umijs/max';
-import {
-  getClassMenuList,
-  addClassMenu,
-  updateClassMenu,
-  deleteClassMenu,
-  getClassMenuParams,
-} from '@/services/ant-design-pro/operation';
+import { Button, message, Modal } from 'antd';
+import { useIntl } from 'umi';
+import { getClassMenuList, addClassMenu, updateClassMenu, deleteClassMenu, getClassMenuParams } from '@/services/ant-design-pro/operation';
 import CategoryForm from './CategoryForm';
+
 
 type CategoryItem = {
   id: string;
@@ -26,69 +21,48 @@ const CategoryManagement: React.FC = () => {
   const [currentCategory, setCurrentCategory] = useState<CategoryItem>();
   const [formType, setFormType] = useState<'create' | 'update'>('create');
   const [confirmLoading, setConfirmLoading] = useState<boolean>(false);
-
+  
   const categoryActionRef = useRef<ActionType>();
 
   const handleCategoryFormSuccess = async (formValues: Record<string, any>) => {
     setConfirmLoading(true);
-    console.log(formValues, 'formValues');
+    console.log(formValues,'formValues');
     try {
       let response;
       // 统一使用contentList作为数据源，确保创建和更新使用相同格式的数据
       const contentList = formValues.contentList || formValues.languageCodes || [];
-
+      
       if (formType === 'create') {
         let data = {
           serialNum: formValues.serialNum,
           describe: formValues.describe,
           languageCodes: contentList,
-        };
+        }
         response = await addClassMenu(data);
       } else {
         let data = {
           id: formValues.id,
           serialNum: formValues.serialNum,
           describe: formValues.describe,
-          languageCodes: contentList,
-        };
+          languageCodes: contentList
+        }
         response = await updateClassMenu(data);
       }
-
-      if (response.code === '0' && response.data) {
-        message.success(
-          formType === 'create'
-            ? intl.formatMessage({
-                id: 'announcement.category.create.success',
-                defaultMessage: '创建成功',
-              })
-            : intl.formatMessage({
-                id: 'announcement.category.update.success',
-                defaultMessage: '更新成功',
-              }),
-        );
+      
+      if (response.code==='0'&& response.data) {
+        message.success(formType === 'create' 
+          ? intl.formatMessage({ id: 'announcement.category.create.success', defaultMessage: '创建成功' })
+          : intl.formatMessage({ id: 'announcement.category.update.success', defaultMessage: '更新成功' }));
         setCategoryFormVisible(false);
         // 刷新列表数据
         categoryActionRef.current?.reload();
       } else {
-        message.error(
-          formType === 'create'
-            ? intl.formatMessage({
-                id: 'announcement.category.create.failed',
-                defaultMessage: '创建失败',
-              })
-            : intl.formatMessage({
-                id: 'announcement.category.update.failed',
-                defaultMessage: '更新失败',
-              }),
-        );
+        message.error(formType === 'create'
+          ? intl.formatMessage({ id: 'announcement.category.create.failed', defaultMessage: '创建失败' })
+          : intl.formatMessage({ id: 'announcement.category.update.failed', defaultMessage: '更新失败' }));
       }
     } catch (error) {
-      message.error(
-        intl.formatMessage({
-          id: 'announcement.category.operation.failed',
-          defaultMessage: '操作失败',
-        }),
-      );
+      message.error(intl.formatMessage({ id: 'announcement.category.operation.failed', defaultMessage: '操作失败' }));
     } finally {
       setConfirmLoading(false);
     }
@@ -96,23 +70,20 @@ const CategoryManagement: React.FC = () => {
   // 获取分类列表
   const fetchCategoryList = async () => {
     try {
-      let data = {
-        pageNo: 1,
-        pageSize: 10,
-      };
+        let data={
+            pageNo:1,
+            pageSize:10
+        }
       const response = await getClassMenuList(data);
       return {
-        data: response.data.list || [],
-        success: response.code === '0' ? true : false,
+        data: response.data.list|| [],
+        success: response.code==='0'?true:false,
         total: response.data.count || 0,
       };
+      
+    
     } catch (error) {
-      message.error(
-        intl.formatMessage({
-          id: 'announcement.category.list.failed',
-          defaultMessage: '获取分类列表失败',
-        }),
-      );
+      message.error(intl.formatMessage({ id: 'announcement.category.list.failed', defaultMessage: '获取分类列表失败' }));
       return {
         data: [],
         success: false,
@@ -120,52 +91,38 @@ const CategoryManagement: React.FC = () => {
       };
     }
   };
-  const getEditInfo = async (id: string) => {
+  const getEditInfo = async(id: string) => {
     const response = await getClassMenuParams(id);
-
-    if (response.code === '0' && response.data) {
+    
+    if(response.code === '0' && response.data) {
       // 确保数据结构的一致性，将languageCodes设置为contentList和languageCodes
       // 这样在CategoryForm中可以正确识别任一字段
       const formattedData = {
         ...response.data,
         contentList: response.data.languageCodes || [],
-        languageCodes: response.data.languageCodes || [],
+        languageCodes: response.data.languageCodes || []
       };
-
+      
       setCurrentCategory(formattedData);
       setFormType('update');
       setCategoryFormVisible(true);
     } else {
-      message.error(
-        intl.formatMessage({
-          id: 'announcement.category.info.failed',
-          defaultMessage: '获取分类信息失败',
-        }),
-      );
+      message.error(intl.formatMessage({ id: 'announcement.category.info.failed', defaultMessage: '获取分类信息失败' }));
     }
-  };
+  }
 
   // 删除分类
   const handleRemoveCategory = async (id: string) => {
     try {
+      
       const response = await deleteClassMenu(id);
-      if (response.code === '0') {
-        message.success(
-          intl.formatMessage({
-            id: 'announcement.category.delete.success',
-            defaultMessage: '删除成功',
-          }),
-        );
+      if (response.code==='0') {
+        message.success(intl.formatMessage({ id: 'announcement.category.delete.success', defaultMessage: '删除成功' }));
         categoryActionRef.current?.reload();
         return true;
       }
     } catch (error) {
-      message.error(
-        intl.formatMessage({
-          id: 'announcement.category.delete.failed',
-          defaultMessage: '删除失败',
-        }),
-      );
+      message.error(intl.formatMessage({ id: 'announcement.category.delete.failed', defaultMessage: '删除失败' }));
       return false;
     }
   };
@@ -179,33 +136,21 @@ const CategoryManagement: React.FC = () => {
       width: 80,
     },
     {
-      title: intl.formatMessage({
-        id: 'announcement.category.column.description',
-        defaultMessage: '描述',
-      }),
+      title: intl.formatMessage({ id: 'announcement.category.column.description', defaultMessage: '描述' }),
       dataIndex: 'describe',
     },
     {
-      title: intl.formatMessage({
-        id: 'announcement.category.column.sort',
-        defaultMessage: '排序',
-      }),
+      title: intl.formatMessage({ id: 'announcement.category.column.sort', defaultMessage: '排序' }),
       dataIndex: 'serialNum',
       search: false,
     },
     {
-      title: intl.formatMessage({
-        id: 'announcement.category.column.createTime',
-        defaultMessage: '创建时间',
-      }),
+      title: intl.formatMessage({ id: 'announcement.category.column.createTime', defaultMessage: '创建时间' }),
       dataIndex: 'createTime',
-      valueType: 'dateTime',
+      valueType:'dateTime'
     },
     {
-      title: intl.formatMessage({
-        id: 'announcement.category.column.action',
-        defaultMessage: '操作',
-      }),
+      title: intl.formatMessage({ id: 'announcement.category.column.action', defaultMessage: '操作' }),
       dataIndex: 'option',
       valueType: 'option',
       search: false,
@@ -214,6 +159,7 @@ const CategoryManagement: React.FC = () => {
           key="edit"
           onClick={() => {
             getEditInfo(record.id);
+           
           }}
         >
           {intl.formatMessage({ id: 'announcement.category.action.edit', defaultMessage: '编辑' })}
@@ -238,32 +184,25 @@ const CategoryManagement: React.FC = () => {
 
   return (
     <div>
-      <ProTable<CategoryItem>
-        headerTitle={false}
-        actionRef={categoryActionRef}
-        rowKey="id"
-        request={fetchCategoryList}
-        columns={categoryColumns}
-        toolBarRender={() => [
-          <Button
-            key="add"
-            type="primary"
-            onClick={() => {
+        <ProTable<CategoryItem>
+          headerTitle={false}
+          actionRef={categoryActionRef}
+          rowKey="id"
+          request={fetchCategoryList}
+          columns={categoryColumns}
+          toolBarRender={() => [
+            <Button key="add" type="primary" onClick={() => {
               setCategoryFormVisible(true);
               setCurrentCategory(undefined);
               setFormType('create');
-            }}
-          >
-            {intl.formatMessage({
-              id: 'announcement.category.button.add',
-              defaultMessage: '添加分类',
-            })}
-          </Button>,
-        ]}
-        pagination={{
-          pageSize: 10,
-        }}
-      />
+            }}>
+              {intl.formatMessage({ id: 'announcement.category.button.add', defaultMessage: '添加分类' })}
+            </Button>
+          ]}
+          pagination={{
+            pageSize: 10,
+          }}
+        />
       {/* </Card> */}
 
       {/* 分类表单 */}
@@ -275,8 +214,8 @@ const CategoryManagement: React.FC = () => {
         onSuccess={handleCategoryFormSuccess}
         confirmLoading={confirmLoading}
       />
-    </div>
+   </div>
   );
 };
 
-export default CategoryManagement;
+export default CategoryManagement; 

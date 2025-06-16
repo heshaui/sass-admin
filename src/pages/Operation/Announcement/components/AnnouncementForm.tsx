@@ -10,7 +10,7 @@ import {
 import { Button, DatePicker, Form, Input, message, Modal, Radio, Select } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useRef, useState } from 'react';
-import { useIntl } from '@umijs/max';
+import { useIntl } from 'umi';
 const { Option } = Select;
 
 export type AnnouncementFormProps = {
@@ -256,10 +256,8 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
   };
 
   useEffect(() => {
-    if (visible) {
-      getMenu();
-    }
-  }, [visible]);
+    getMenu();
+  }, []);
 
   return (
     <Modal
@@ -268,7 +266,7 @@ const AnnouncementForm: React.FC<AnnouncementFormProps> = ({
           ? intl.formatMessage({ id: 'announcement.form.title.create' })
           : intl.formatMessage({ id: 'announcement.form.title.update' })
       }
-      open={visible}
+      visible={visible}
       width={640}
       onCancel={onCancel}
       footer={[

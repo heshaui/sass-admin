@@ -48,7 +48,8 @@ export default {
 
   // Notes
   'assetAdjustment.notes.title': '주의사항:',
-  'assetAdjustment.notes.item1': '자산 증가는 신중하게 작업하세요. 자금이 사용자에게 흐르면 해당 손실을 부담해야 합니다;',
+  'assetAdjustment.notes.item1':
+    '자산 증가는 신중하게 작업하세요. 자금이 사용자에게 흐르면 해당 손실을 부담해야 합니다;',
   'assetAdjustment.notes.item2': '마켓 메이킹 서비스에 사용하는 것을 권장합니다.',
 
   // TransferRecords Page
@@ -96,7 +97,6 @@ export default {
   'transferTool.form.validation.amount': '이체 금액을 입력해주세요',
   'transferTool.form.validation.googleCode': '구글 인증코드를 입력해주세요',
   'transferTool.form.validation.description': '메모를 입력해주세요',
-  'transferTool.form.validation.enterNumber': '숫자를 입력해주세요',
 
   // TransferTool Form Buttons
   'transferTool.form.button.cancel': '취소',
@@ -105,26 +105,75 @@ export default {
   // TransferTool Account Types
   'transferTool.account.user': '사용자 계정',
 
-  'transferTool.account.company_general_account': '회사 총 계정', // 公司总账户
-  'transferTool.account.withdrawal_fee_account': '출금 수수료 계정', // 转出账户类型描述
-  'transferTool.account.recharge_fee_account': '충전 수수료', // 充值手续费
-  'transferTool.account.invite_rebate_account': '초대 리베이트 계정', // 邀请返佣账户
-  'transferTool.account.fee_account': '거래 수수료 지갑', // 币对手续费钱包
-  'transferTool.account.virtual_accounts': '가상 계정', // 虚拟账户
-  'transferTool.account.total_withdrawal_account': '회사 출금 전환 계정', // 公司提现划转账户
+  // PresentTool Page
+  'presentTool.title': '코인 증정 도구',
 
-  // TransferTool Scene Types
-  "transferTool.scene.test": "테스트",
-  "transferTool.scene.symbol-order": "스팟 주문 차감",
-  "transferTool.scene.extraction-symbol-order": "출금 - 사용 가능에서 동결로",
-  "transferTool.scene.undo_extraction-symbol-order": "출금 - 동결에서 사용 가능으로",
-  "transferTool.scene.symbol-order-fee": "수수료",
-  "transferTool.scene.canal-symbol-order": "스팟 주문 취소",
-  "transferTool.scene.buy-trade-symbol-order": "판매자 스팟 주문 매칭 이체",
-  "transferTool.scene.sell-trade-symbol-order": "구매자 스팟 주문 매칭 이체",
-  "transferTool.scene.canal_symbol_order": "스팟 주문 - 환불 거절",
-  "transferTool.scene.M2M": "사용자 간 이체",
-  "transferTool.scene.M2U": "사용자에서 회사로 이체",
-  "transferTool.scene.U2M": "회사에서 사용자로 이체",
-  "transferTool.scene.U2U": "사용자 간 이체"
-}
+  'presentTool.select.all': '전체',
+  'presentTool.select.market': '시장 만들기 증정',
+  'presentTool.select.activity': '이벤트 증정',
+
+  'presentTool.tip.type': '유형',
+  'presentTool.tip.time': '시간',
+  'presentTool.tip.currency': '통화',
+  'presentTool.tip.input': '입력하세요',
+  'presentTool.tip.start': '시작 시간',
+  'presentTool.tip.end': '종료 시간',
+  'presentTool.tip.text': '사용자 및 수량',
+  'presentTool.tip.tip1': '형식: UID:수량. 여러 계정은 영문 "," 로 구분합니다',
+  'presentTool.tip.tip2': '예: 12345:123,987654321:456',
+
+  'presentTool.button.submit': '조회',
+  'presentTool.button.gift': '코인 증정',
+  'presentTool.button.bulkGift': '일괄 증정',
+  'presentTool.button.cancel': '취소',
+  'presentTool.button.submit2': '제출',
+  'presentTool.button.previous': '이전',
+  'presentTool.button.next': '다음',
+
+  'presentTool.table.column.time': '증정 날짜',
+  'presentTool.table.column.type': '유형',
+  'presentTool.table.column.amount': '증정 수량',
+  'presentTool.table.column.adminID': '관리자 ID',
+
+  'presentTool.modal.gift.title': '새로운 코인 증정',
+  'presentTool.modal.gift.typeError': '유형을 비워둘 수 없습니다',
+  'presentTool.modal.gift.coinTypeError': '통화를 비워둘 수 없습니다',
+  'presentTool.modal.gift.amountError': '사용자 및 증정 수량을 비워둘 수 없습니다',
+  'presentTool.modal.gift.success': '코인 증정 성공',
+  'presentTool.modal.gift.balance': '사용 가능余额',
+
+  'presentTool.steps.step1': '파일 다운로드 및 업로드',
+  'presentTool.steps.step2': '데이터 검사',
+  'presentTool.steps.step3': '일괄 코인 증정',
+
+  'presentTool.steps.tip': '유의사항',
+  'presentTool.steps.tip1':
+    '1. 이 모듈은 자산 조작을 수반합니다. UID가 정확한지 확인하고 신중하게 조작하세요!',
+  'presentTool.steps.tip2':
+    '2. 코인을 증정하기 전에 증정 계정에 자산이 충분한지 확인하세요. 부족한 경우 자금 도구-이체 도구로 이동하여 이체하세요.',
+  'presentTool.steps.downloadTemplate': '템플릿 다운로드하고 정보 입력',
+  'presentTool.steps.download': '템플릿 다운로드',
+  'presentTool.steps.downloadTip':
+    '템플릿 형식에 따라 데이터를 가져오세요. 헤더를 수정하거나 삭제하지 마세요.',
+  'presentTool.steps.uploadFile': '정보 입력하고 파일 업로드',
+  'presentTool.steps.upload': '파일 업로드',
+  'presentTool.steps.uploadTip':
+    '파일 확장자는 .xlsx여야 합니다. 최대 1000개의 데이터를 가져올 수 있습니다.',
+  'presentTool.steps.template': '일괄 코인 증정 템플릿',
+  'presentTool.steps.download.success': '템플릿이 성공적으로 다운로드되었습니다',
+  'presentTool.steps.download.failed': '템플릿 다운로드에 실패했습니다',
+  'presentTool.steps.upload.success': '파일이 성공적으로 업로드되었습니다',
+  'presentTool.steps.upload.failed': '파일 업로드에 실패했습니다',
+  'presentTool.steps.check.success': '데이터 검사에 성공했습니다',
+  'presentTool.steps.check.failed': '데이터 검사에 실패했습니다',
+  'presentTool.steps.bulkGift.success': '일괄 코인 증정에 성공했습니다',
+  'presentTool.steps.bulkGift.failed': '일괄 코인 증정에 실패했습니다',
+  'presentTool.steps.bulkGift.count':
+    '{coinName}：누적{count}명；누적 금액{coinAmount}≈{rateAmount}{rate}',
+  'presentTool.steps.bulkGift.count2': '{coinName}：누적{count}명；누적 금액{coinAmount}',
+  'presentTool.steps.bulkGift.processing': '코인 증정 처리 중입니다. 잠시만 기다려주세요.',
+  'presentTool.steps.bulkGift.notFound': '코인 증정이 처리 시작되었습니다. 잠시만 기다려주세요...',
+  'presentTool.steps.bulkGift.success2': '操作 성공!',
+  'presentTool.steps.bulkGift.failed2': '操作 실패!',
+  'presentTool.steps.download.empty': '다운로드 내용이 비어 있습니다',
+};

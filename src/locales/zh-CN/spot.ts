@@ -130,7 +130,6 @@ export default {
   'currency.intro.saveSuccess': '币种简介保存成功',
   'currency.intro.saveFailed': '币种简介保存失败',
   'currency.intro.formValidationFailed': '表单验证失败',
-  'currency.intro.enUS_Required': '英文是必填',
 
   // ExtendInfoForm component
   'currency.extendInfo.title': '添加同币异链',
