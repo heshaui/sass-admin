@@ -79,19 +79,26 @@ export default {
   'userDetail.modal.unbindGoogleAuth': '解绑谷歌验证',
 
   // Modal content
-  'userDetail.modal.confirmFreezeLoginText': '您确定要冻结用户 {account} (ID: {userId}) 的登录权限吗？',
-  'userDetail.modal.confirmUnfreezeLoginText': '您确定要解冻用户 {account} (ID: {userId}) 的登录权限吗？',
+  'userDetail.modal.confirmFreezeLoginText':
+    '您确定要冻结用户 {account} (ID: {userId}) 的登录权限吗？',
+  'userDetail.modal.confirmUnfreezeLoginText':
+    '您确定要解冻用户 {account} (ID: {userId}) 的登录权限吗？',
   'userDetail.modal.freezeLoginDescription': '冻结后，该用户将无法登录系统。',
   'userDetail.modal.unfreezeLoginDescription': '解冻后，该用户将恢复登录系统的权限。',
-  'userDetail.modal.confirmFreezeTransactionText': '您确定要冻结用户 {account} (ID: {userId}) 的交易权限吗？',
-  'userDetail.modal.confirmUnfreezeTransactionText': '您确定要解冻用户 {account} (ID: {userId}) 的交易权限吗？',
+  'userDetail.modal.confirmFreezeTransactionText':
+    '您确定要冻结用户 {account} (ID: {userId}) 的交易权限吗？',
+  'userDetail.modal.confirmUnfreezeTransactionText':
+    '您确定要解冻用户 {account} (ID: {userId}) 的交易权限吗？',
   'userDetail.modal.freezeTransactionDescription': '冻结后，该用户将无法进行任何交易操作。',
   'userDetail.modal.unfreezeTransactionDescription': '解冻后，该用户将恢复交易功能。',
-  'userDetail.modal.confirmFreezeWithdrawalText': '您确定要冻结用户 {account} (ID: {userId}) 的提现权限吗？',
-  'userDetail.modal.confirmUnfreezeWithdrawalText': '您确定要解冻用户 {account} (ID: {userId}) 的提现权限吗？',
+  'userDetail.modal.confirmFreezeWithdrawalText':
+    '您确定要冻结用户 {account} (ID: {userId}) 的提现权限吗？',
+  'userDetail.modal.confirmUnfreezeWithdrawalText':
+    '您确定要解冻用户 {account} (ID: {userId}) 的提现权限吗？',
   'userDetail.modal.freezeWithdrawalDescription': '冻结后，该用户将无法进行提现操作。',
   'userDetail.modal.unfreezeWithdrawalDescription': '解冻后，该用户将恢复提现功能。',
-  'userDetail.modal.updatePhoneWarning': '更改手机号后，{time}小时内无法出金，请确保已告知终端用户！',
+  'userDetail.modal.updatePhoneWarning':
+    '更改手机号后，{time}小时内无法出金，请确保已告知终端用户！',
   'userDetail.modal.updateEmailWarning': '更改邮箱后，{time}小时内无法出金，请确保已告知终端用户！',
   'userDetail.modal.unbindGoogleAuthDescription': '解绑谷歌后，该用户可登录账号重新绑定！',
 
@@ -207,6 +214,7 @@ export default {
   'reconciliation.columns.withdrawal': '提现',
   'reconciliation.columns.inviteRebate': '邀请奖励',
   'reconciliation.columns.recharge': '充值',
+  'reconciliation.columns.gift': '赠币',
   'reconciliation.columns.pointsRedeem': 'M积分兑换',
   'reconciliation.columns.mfilRedeem': 'MFIL兑换',
   'reconciliation.columns.incomeImport': '收益兑入',
@@ -220,6 +228,4 @@ export default {
   'reconciliation.columns.leveragedBuying': '杠杆买入',
   'reconciliation.columns.withdrawalFee': '提现手续费',
   'reconciliation.columns.spotFee': '现货手续费',
-
-
 };

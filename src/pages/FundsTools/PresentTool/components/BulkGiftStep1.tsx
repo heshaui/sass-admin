@@ -115,7 +115,7 @@ const BulkGiftSetp1: React.FC<BulkGiftProps> = ({ type, onCancel, onNext }) => {
             {intl.formatMessage({ id: 'presentTool.steps.downloadTemplate' })}
           </p>
           <p className={styles.outlined_item_icon}>
-            <DownloadOutlined style={{ fontSize: '50px', marginRight: 10 }} />
+            <DownloadOutlined style={{ fontSize: '24px', marginRight: 10 }} />
             {intl.formatMessage({ id: 'presentTool.steps.download' })}
           </p>
           {/* <UploadOutlined /> */}
@@ -128,16 +128,17 @@ const BulkGiftSetp1: React.FC<BulkGiftProps> = ({ type, onCancel, onNext }) => {
           style={{ display: 'inline-block' }}
           className={`${styles.outlined_item} ${styles.ml_20}`}
           name="file"
-          showUploadList={false}
+          showUploadList={true}
           customRequest={customUpload}
           onChange={handleChange}
+          maxCount={1}
         >
           <div className={`${styles.outlined_item2} `}>
             <p className={styles.outlined_item_title}>
               {intl.formatMessage({ id: 'presentTool.steps.uploadFile' })}
             </p>
             <p className={styles.outlined_item_icon}>
-              <UploadOutlined style={{ fontSize: '50px', marginRight: 10 }} />
+              <UploadOutlined style={{ fontSize: '24px', marginRight: 10 }} />
               {intl.formatMessage({ id: 'presentTool.steps.upload' })}
             </p>
             <p className={styles.outlined_item_tip}>

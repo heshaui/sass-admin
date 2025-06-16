@@ -96,7 +96,6 @@ export default {
   'transferTool.form.validation.amount': '请输入转账金额',
   'transferTool.form.validation.googleCode': '请输入谷歌验证码',
   'transferTool.form.validation.description': '请输入备注',
-  'transferTool.form.validation.enterNumber': '请输入数字',
 
   // TransferTool Form Buttons
   'transferTool.form.button.cancel': '取消',
@@ -155,7 +154,7 @@ export default {
   'presentTool.steps.downloadTip': '请按照模板的格式导入数据，不可修改或删除表头。',
   'presentTool.steps.uploadFile': '填写信息并上传文件',
   'presentTool.steps.upload': '上传文件',
-  'presentTool.steps.uploadTip': '文件后缀需为.xls或.xlsx，最多支持导入1000条数据。',
+  'presentTool.steps.uploadTip': '文件后缀需为.xlsx，最多支持导入1000条数据。',
   'presentTool.steps.template': '批量赠币模板',
   'presentTool.steps.download.success': '模板下载成功',
   'presentTool.steps.download.failed': '模板下载失败',
@@ -167,7 +166,12 @@ export default {
   'presentTool.steps.bulkGift.failed': '批量赠币失败',
   'presentTool.steps.bulkGift.count':
     '{coinName}：累计{count}人；累计金额{coinAmount}≈{rateAmount}{rate}',
-  'presentTool.steps.bulkGift.loading': '赠币处理中，请稍等几分钟。',
+  'presentTool.steps.bulkGift.count2': '{coinName}：累计{count}人；累计金额{coinAmount}',
+  'presentTool.steps.bulkGift.processing': '赠币处理中，请稍等几分钟。',
+  'presentTool.steps.bulkGift.notFound': '赠币开始处理，请稍等...',
   'presentTool.steps.bulkGift.success2': '操作成功！',
+  'presentTool.steps.bulkGift.failed2': '操作失败！',
   'presentTool.steps.download.empty': '下载内容为空',
+  'presentTool.steps.bulkGift.failed3': '超时未进入处理状态',
+  'presentTool.steps.bulkGift.failed4': '请稍后刷新查看结果',
 };

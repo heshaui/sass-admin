@@ -8,8 +8,10 @@ import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import type { SelectProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import BulkGiftType from './components/BulkGiftTypeModal';
 import GiftModal from './components/GiftModal';
+
 const { RangePicker } = DatePicker;
 
 interface TransferRecord {
@@ -28,7 +30,7 @@ interface TransferRecord {
 const TransferTool: React.FC = () => {
   const intl = useIntl();
   const [form] = Form.useForm();
-
+  const navigate = useNavigate();
   const [loading] = useState<boolean>(false);
   const [coinOptions, setCoinOptions] = useState<SelectProps['options']>([]);
   const [tableData, setTableData] = useState<TransferRecord[]>([]);
@@ -61,11 +63,13 @@ const TransferTool: React.FC = () => {
     const res = await tenantCurrencyCoinList(data);
     if (res.code === '0') {
       setCoinOptions(
-        res.data.list.map((item: any) => ({
-          ...item,
-          label: item.coinName,
-          value: item.id,
-        })),
+        res.data.list
+          .map((item: any) => ({
+            ...item,
+            label: item.coinName,
+            value: item.coinName,
+          }))
+          .filter((item: any) => item.status !== 0),
       );
     }
   };
@@ -80,11 +84,19 @@ const TransferTool: React.FC = () => {
       title: intl.formatMessage({ id: 'presentTool.table.column.time' }), //'赠币日期',
       dataIndex: 'createTime',
       key: 'createTime',
+      render: (text) => {
+        return dayjs(text).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
     {
       title: 'UID',
       dataIndex: 'userId',
       key: 'userId',
+      render: (employeeId) => (
+        <a onClick={() => navigate(`/user-management/user-list?userId=${employeeId}`)}>
+          {employeeId}
+        </a>
+      ),
     },
     {
       title: intl.formatMessage({ id: 'presentTool.table.column.type' }), //'类型',

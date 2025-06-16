@@ -13,11 +13,7 @@ interface checkDataType {
   total: number;
   errorTotal: number;
   successTotal: number;
-  successList: {
-    coinName: string;
-    count: number;
-    amount: string;
-  }[];
+  successList: { [key: string]: { coinName: string; count: number; amount: string } };
   errorList: string[];
   batchId: string;
 }
@@ -66,20 +62,20 @@ const BulkGiftSetp2: React.FC<BulkGiftProps> = ({ current, onPrevious, onNext })
     <div style={{ marginTop: '20px' }}>
       <ul>
         <li className={styles.check_box}>
-          <p>正常数据：{checkData.successTotal || 0}条</p>
-          <p>赠币详情</p>
+          <span>正常数据：{checkData?.successTotal || 0}条</span>
+          <span className={styles.mt_10}>赠币详情</span>
           <ul className={``} style={{ padding: 0 }}>
-            {checkData.successList
-              ? checkData.successList.map((item: any, index: number) => (
-                  <li key={`item-${index}`}>
+            {checkData?.successList
+              ? Object.keys(checkData.successList).map((key: any, index: number) => (
+                  <li key={`item-${index}`} className={styles.mt_10}>
                     {intl.formatMessage(
-                      { id: 'presentTool.steps.bulkGift.count' },
+                      { id: 'presentTool.steps.bulkGift.count2' },
                       {
-                        coinName: item.coinName || '--',
-                        count: item.count || '--',
-                        coinAmount: item.amount || '--',
-                        rateAmount: '--',
-                        rate: '--',
+                        coinName: key || '--',
+                        count: checkData.successList[key].count || '--',
+                        coinAmount: checkData.successList[key].amount || '--',
+                        // rateAmount: '--',
+                        // rate: '--',
                       },
                     )}
                   </li>
@@ -100,11 +96,13 @@ const BulkGiftSetp2: React.FC<BulkGiftProps> = ({ current, onPrevious, onNext })
           </ul>
         </li> */}
         <li className={styles.check_box}>
-          <p>异常提示</p>
+          <span>异常提示</span>
           <ul className={styles.mt_tipList}>
-            {checkData.errorList ? (
+            {checkData?.errorList && checkData?.errorList.length > 0 ? (
               checkData.errorList.map((item: any, index: number) => (
-                <li key={`errorItem-${index}`}>{item}</li>
+                <li key={`errorItem-${index}`} className={styles.mt_10}>
+                  {item}
+                </li>
               ))
             ) : (
               <span style={{ color: '#333' }}>无</span>
