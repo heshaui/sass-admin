@@ -111,6 +111,11 @@ const TransferTool: React.FC = () => {
       },
     },
     {
+      title: intl.formatMessage({ id: 'basicConfig.benefit.coin' }), //'币种',
+      dataIndex: 'coinName',
+      key: 'coinName',
+    },
+    {
       title: intl.formatMessage({ id: 'presentTool.table.column.amount' }), //'赠币数量',
       dataIndex: 'amount',
       key: 'amount',
