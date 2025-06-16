@@ -67,7 +67,7 @@ const TransferTool: React.FC = () => {
           .map((item: any) => ({
             ...item,
             label: item.coinName,
-            value: item.coinName,
+            value: item.coinId,
           }))
           .filter((item: any) => item.status !== 0),
       );
@@ -163,7 +163,7 @@ const TransferTool: React.FC = () => {
     >
       <PageContainer>
         <Card title={intl.formatMessage({ id: 'presentTool.title' })}>
-          <Form form={form} name="advanced_search" layout="inline" onFinish={onFinish}>
+          <Form form={form} name="advanced_search" layout="inline" onFinish={onGiftFinish}>
             <Form.Item
               name="type"
               label={intl.formatMessage({ id: 'presentTool.tip.type' })}
@@ -229,6 +229,7 @@ const TransferTool: React.FC = () => {
                 pageSize: 10,
                 total: pagination.current.total,
                 current: pagination.current.current,
+                showSizeChanger: false,
                 onChange: (page, pageSize) => {
                   pagination.current.current = page;
                   pagination.current.pageSize = pageSize;
