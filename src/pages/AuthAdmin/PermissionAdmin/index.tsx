@@ -109,7 +109,7 @@ const PermissionAdmin: React.FC = () => {
       render: (_, record) => (
         <Space>
           <a onClick={() => handleEdit(record)}>{intl.formatMessage({ id: 'permissionAdmin.table.actions.edit' })}</a>
-          <a style={{ color: '#ff4d4f' }} onClick={() => handleDelete(record.id)}>{intl.formatMessage({ id: 'permissionAdmin.table.actions.delete' })}</a>
+          {/* <a style={{ color: '#ff4d4f' }} onClick={() => handleDelete(record.id)}>{intl.formatMessage({ id: 'permissionAdmin.table.actions.delete' })}</a> */}
         </Space>
       ),
     },
