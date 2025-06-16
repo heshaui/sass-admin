@@ -7,17 +7,17 @@ import type { ProColumns, RequestData } from '@ant-design/pro-components';
 
 // key  value 对应
 const fromAccountTypeMap = {
-  'company_general_account': 'transferTool.account.company_general_account',
-  'withdrawal_fee_account': 'transferTool.account.withdrawal_fee_account',
-  'recharge_fee_account': 'transferTool.account.recharge_fee_account',
-  'invite_rebate_account': 'transferTool.account.invite_rebate_account',
-  'fee_account': 'transferTool.account.fee_account',
-  'virtual_accounts': 'transferTool.account.virtual_accounts',
-  'total_withdrawal_account':'transferTool.account.total_withdrawal_account'
+  company_general_account: 'transferTool.account.company_general_account',
+  withdrawal_fee_account: 'transferTool.account.withdrawal_fee_account',
+  recharge_fee_account: 'transferTool.account.recharge_fee_account',
+  invite_rebate_account: 'transferTool.account.invite_rebate_account',
+  fee_account: 'transferTool.account.fee_account',
+  virtual_accounts: 'transferTool.account.virtual_accounts',
+  total_withdrawal_account: 'transferTool.account.total_withdrawal_account',
 };
 
 const sceneTypeMap = {
-  'test': 'transferTool.scene.test',
+  test: 'transferTool.scene.test',
   'symbol-order': 'transferTool.scene.symbol-order',
   'extraction-symbol-order': 'transferTool.scene.extraction-symbol-order',
   'undo_extraction-symbol-order': 'transferTool.scene.undo_extraction-symbol-order',
@@ -25,11 +25,11 @@ const sceneTypeMap = {
   'canal-symbol-order': 'transferTool.scene.canal-symbol-order',
   'buy-trade-symbol-order': 'transferTool.scene.buy-trade-symbol-order',
   'sell-trade-symbol-order': 'transferTool.scene.sell-trade-symbol-order',
-  'canal_symbol_order': 'transferTool.scene.canal_symbol_order',
-  'M2M': 'transferTool.scene.M2M',
-  'M2U': 'transferTool.scene.M2U',
-  'U2M': 'transferTool.scene.U2M',
-  'U2U': 'transferTool.scene.U2U',
+  canal_symbol_order: 'transferTool.scene.canal_symbol_order',
+  M2M: 'transferTool.scene.M2M',
+  M2U: 'transferTool.scene.M2U',
+  U2M: 'transferTool.scene.U2M',
+  U2U: 'transferTool.scene.U2U',
 };
 
 type FromAccountTypeMap = keyof typeof fromAccountTypeMap;
@@ -52,11 +52,7 @@ const TransferRecords: React.FC = () => {
   const intl = useIntl();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getTransferRecords = async (
-    params: any,
-    sort: Record<string, 'ascend' | 'descend' | null>,
-    filter: Record<string, (string | number)[] | null>,
-  ): Promise<Partial<RequestData<TransferRecord>>> => {
+  const getTransferRecords = async (params: any): Promise<Partial<RequestData<TransferRecord>>> => {
     setLoading(true);
     try {
       const res = await fundFlowDirectionOperationList({
@@ -99,7 +95,7 @@ const TransferRecords: React.FC = () => {
       render: (_, record) => {
         const text = fromAccountTypeMap[record.fromAccountType];
         return text ? intl.formatMessage({ id: text }) : record.fromAccountType;
-      }
+      },
     },
     {
       title: intl.formatMessage({ id: 'transferRecords.column.toAccount' }),
@@ -113,7 +109,7 @@ const TransferRecords: React.FC = () => {
       render: (_, record) => {
         const text = sceneTypeMap[record.sceneType];
         return text ? intl.formatMessage({ id: text }) : record.sceneType;
-      }
+      },
     },
     {
       title: intl.formatMessage({ id: 'transferRecords.column.amount' }),

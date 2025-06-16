@@ -38,6 +38,7 @@ export default {
   'inviteFriends.rewardConfig.isRealname': 'Identity Verification Required',
   'inviteFriends.rewardConfig.isRealname.required': 'Required',
   'inviteFriends.rewardConfig.isRealname.notRequired': 'Not Required',
+  'inviteFriends.rewardConfig.coinType.tips': 'When the actual fee currency is different from the commission currency, it will be converted to the commission currency based on the real-time exchange rate.',
 
   // Invitation Page Configuration
   'inviteFriends.pageConfig.title': 'Invitation Page Configuration',

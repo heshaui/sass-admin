@@ -1,23 +1,23 @@
 export default {
   // Page Title
   'inviteFriends.basicConfig.title': '친구 초대 기본 설정',
-  
+
   // Messages
   'inviteFriends.message.imageConfigSaveSuccess': '이미지 설정 저장 성공',
   'inviteFriends.message.configSaveSuccess': '설정 저장 성공',
   'inviteFriends.message.formSubmitValues': '제출된 양식 값:',
-  
+
   // Account Configuration
   'inviteFriends.accountConfig.title': '계정 설정',
   'inviteFriends.accountConfig.enabled': '활성화 여부',
   'inviteFriends.accountConfig.tips': '팁:',
   'inviteFriends.accountConfig.tips.content': '1. 활성화 시 개인 센터에 진입점 표시, 비활성화 시 미표시. URL 설정을 통한 접근도 활성화 필요',
-  
+
   // Account Alert
   'inviteFriends.alert.lowBalance.title': '계정 잔액 부족 알림!',
   'inviteFriends.alert.lowBalance.description': '귀하의 추천 수수료 계정 잔액이 부족합니다! 잔액을 보충해 주세요! 잔액 부족 시 보상 지급이 자동 중단되며, 자금 충분 시 자동 재개됩니다.',
   'inviteFriends.alert.lowBalance.action': '이동',
-  
+
   // Reward Configuration
   'inviteFriends.rewardConfig.title': '보상 설정',
   'inviteFriends.rewardConfig.edit': '수정',
@@ -36,14 +36,15 @@ export default {
   'inviteFriends.rewardConfig.isRealname': '실명 인증 요구',
   'inviteFriends.rewardConfig.isRealname.required': '실명 인증 필요',
   'inviteFriends.rewardConfig.isRealname.notRequired': '실명 인증 불필요',
-  
+  'inviteFriends.rewardConfig.coinType.tips': '실제 수수료 코인과 지급 코인이 다를 경우, 실시간 환율을 기준으로 지급 코인으로 환산됩니다.',
+
   // Invitation Page Configuration
   'inviteFriends.pageConfig.title': '초대 페이지 설정',
   'inviteFriends.pageConfig.languageInfo': '영어 스타일 설정 시 기본적으로 다른 언어에 동기화됩니다. 미설정 시 시스템 기본값 사용',
   'inviteFriends.pageConfig.configImage': '이미지 설정',
   'inviteFriends.pageConfig.backgroundTitle': '초대 페이지 배경 설정 (PC)',
   'inviteFriends.pageConfig.posterTitle': '초대 포스터 베이스 이미지 (PC)',
-  
+
   // Image Config Modal
   'inviteFriends.imageConfigModal.title': '초대 페이지 이미지 설정',
   'inviteFriends.imageConfigModal.cancel': '취소',
@@ -56,7 +57,7 @@ export default {
   'inviteFriends.imageConfigModal.language.koKR': '한국어',
   'inviteFriends.imageConfigModal.backgroundSize': '권장 사이즈 1236*452',
   'inviteFriends.imageConfigModal.posterSize': '권장 사이즈 856*452',
-  
+
   // Fund Account List
   'inviteFriends.fundAccount.title': '자금 계정 목록',
   'inviteFriends.fundAccount.column.coin': '코인',
@@ -67,7 +68,7 @@ export default {
   'inviteFriends.fundAccount.status.unlocked': '미사용',
   'inviteFriends.fundAccount.status.locked': '사용 중',
   'inviteFriends.fundAccount.action.records': '지급 기록',
-  
+
   // Invite Records
   'inviteFriends.inviteRecords.column.id': '번호',
   'inviteFriends.inviteRecords.column.userId': 'UID',
@@ -78,18 +79,18 @@ export default {
   'inviteFriends.inviteRecords.column.inviteStatus': '초대 상태',
   'inviteFriends.inviteRecords.column.distributeStatus': '지급 상태',
   'inviteFriends.inviteRecords.column.action': '작업',
-  
+
   // Invite Status
   'inviteFriends.inviteRecords.status.success': '성공',
   'inviteFriends.inviteRecords.status.failed': '실패',
-  
+
   // Distribute Status
   'inviteFriends.inviteRecords.distribute.distributed': '지급 완료',
   'inviteFriends.inviteRecords.distribute.undistributed': '미지급',
-  
+
   // Actions
   'inviteFriends.inviteRecords.action.manualDistribute': '수동 지급',
-  
+
   // Reward Records
   'inviteFriends.rewardRecords.title': '지급 기록',
   'inviteFriends.rewardRecords.column.id': '번호',
@@ -106,7 +107,7 @@ export default {
   'inviteFriends.rewardRecords.column.type': '지급 유형',
   'inviteFriends.rewardRecords.column.createTime': '지급 시간',
   'inviteFriends.rewardRecords.column.dateTimeRange': '지급 시간',
-  
+
   // Distribution Types
   'inviteFriends.rewardRecords.type.auto': '자동',
   'inviteFriends.rewardRecords.type.manual': '수동'

@@ -10,10 +10,9 @@ import {
   message,
   Select,
   Radio,
-  Image,
-  Upload,
   Tabs,
   TabsProps,
+  Space,
 } from 'antd';
 import {
   getRewardConfigurationDetail,
@@ -43,6 +42,7 @@ const BasicConfig: React.FC = () => {
   const [languages, setLanguages] = useState<any[]>([]);
   const [imagesConfig, setImagesConfig] =
     useState<Record<string, { backgroundImage: string; posterImage: string }>>();
+  const [isThrottle, setIsThrottle] = useState(false);
 
   const getCoin = async () => {
     let data = {
@@ -58,7 +58,6 @@ const BasicConfig: React.FC = () => {
   const getConfig = async () => {
     const res = await getTenantKeyParams({ key: 'account_configuration' });
     if (res.code === '0') {
-      console.log(res.data);
       setConfig(res.data?.keyValue);
     }
   };
@@ -209,7 +208,7 @@ const BasicConfig: React.FC = () => {
     {
       title: intl.formatMessage({ id: 'inviteFriends.fundAccount.column.action' }),
       valueType: 'option',
-      render: (_, record) => [
+      render: () => [
         <a key="records" href="/invite-friends/reward-records">
           {intl.formatMessage({ id: 'inviteFriends.fundAccount.action.records' })}
         </a>,
@@ -267,16 +266,30 @@ const BasicConfig: React.FC = () => {
           <div style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
             <div>
               <h4>{intl.formatMessage({ id: 'inviteFriends.pageConfig.backgroundTitle' })}</h4>
-              <AvatarUpload onChange={handleBackgroundImageChange} value={imagesConfig?.[language]?.backgroundImage || ''}/>
+              <AvatarUpload
+                onChange={handleBackgroundImageChange}
+                value={imagesConfig?.[language]?.backgroundImage || ''}
+              />
               <p>{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.backgroundSize' })}</p>
             </div>
             <div>
               <h4>{intl.formatMessage({ id: 'inviteFriends.pageConfig.posterTitle' })}</h4>
-              <AvatarUpload onChange={handlePosterImageChange} value={imagesConfig?.[language]?.posterImage || ''}/>
+              <AvatarUpload
+                onChange={handlePosterImageChange}
+                value={imagesConfig?.[language]?.posterImage || ''}
+              />
               <p>{intl.formatMessage({ id: 'inviteFriends.imageConfigModal.posterSize' })}</p>
             </div>
           </div>
-          <Button type="primary" onClick={() => handleSave(imagesConfig?.[language]?.backgroundImage || '', imagesConfig?.[language]?.posterImage || '')}>
+          <Button
+            type="primary"
+            onClick={() =>
+              handleSave(
+                imagesConfig?.[language]?.backgroundImage || '',
+                imagesConfig?.[language]?.posterImage || '',
+              )
+            }
+          >
             保存
           </Button>
         </div>
@@ -285,9 +298,17 @@ const BasicConfig: React.FC = () => {
   });
 
   // 邀请页面配置 TabBar
-  const renderTabBar: TabsProps['renderTabBar'] = (props, DefaultTabBar) => (
+  const renderTabBar: TabsProps['renderTabBar'] = () => (
     <div>
-      <div style={{ display: 'flex', flexDirection: 'row', gap: 20, marginBottom: 20 }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: 20,
+          marginBottom: 20,
+        }}
+      >
         {languages.map((lang) => (
           <Button
             key={lang.langEncode}
@@ -318,20 +339,33 @@ const BasicConfig: React.FC = () => {
           valuePropName="checked"
         >
           <Switch
-            value={config === '1'}
+            loading={isThrottle}
+            disabled={isThrottle}
+            checked={config === '1'}
             onChange={async (checked) => {
-              const res = await updateAccountConfiguration({
-                keyProperty: 'account_configuration',
-                keyValue: checked ? '1' : '0',
-              });
-              if (res.code === '0') {
-                message.success(
-                  intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }),
-                );
-              } else {
-                message.error(res.message);
+              if (isThrottle) return;
+              setIsThrottle(true);
+              try {
+                setConfig(checked ? '1' : '0');
+                const res = await updateAccountConfiguration({
+                  keyProperty: 'account_configuration',
+                  keyValue: checked ? '1' : '0',
+                });
+                if (res.code === '0') {
+                  message.success(
+                    intl.formatMessage({ id: 'inviteFriends.message.configSaveSuccess' }),
+                  );
+                } else {
+                  message.error(res.message);
+                  setConfig(checked ? '0' : '1');
+                }
+              } catch (error) {
+                message.error(intl.formatMessage({ id: 'common.networkError' }));
+                setConfig(checked ? '0' : '1');
+              } finally {
+                setIsThrottle(false);
+                await getConfig();
               }
-              getConfig();
             }}
           />
         </Form.Item>
@@ -356,33 +390,31 @@ const BasicConfig: React.FC = () => {
         }
       >
         <Form form={form} onFinish={saveConfiguration} disabled={!isEditing}>
-          <div style={{display: 'flex',flexDirection: 'row'}}>
-          <Form.Item
-            name="coinId"
-            label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.coinType' })}
-            rules={[
-              {
-                required: true,
-                message: intl.formatMessage({
-                  id: 'inviteFriends.rewardConfig.coinType.placeholder',
-                }),
-              },
-            ]}
-          >
-            <Select style={{ width: 200 }}>
-              {coinList.map((item: any) => (
-                <Option value={item.coinId} key={item.coinId}>
-                  {item.coinName}
-                </Option>
-              ))}
-            </Select>
-           
-          </Form.Item>
-          <span style={{ marginLeft: 10, color: 'rgba(0,0,0,0.45)',}}>
-              实际手续费币种与返佣币种不一致时,将根据实时汇率折算为返佣币种
-            </span>
-          </div>
-          
+          <Space>
+            <Form.Item
+              name="coinId"
+              label={intl.formatMessage({ id: 'inviteFriends.rewardConfig.coinType' })}
+              rules={[
+                {
+                  required: true,
+                  message: intl.formatMessage({
+                    id: 'inviteFriends.rewardConfig.coinType.placeholder',
+                  }),
+                },
+              ]}
+            >
+              <Select style={{ width: 200 }}>
+                {coinList.map((item: any) => (
+                  <Option value={item.coinId} key={item.coinId}>
+                    {item.coinName}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <div style={{ marginLeft: 10, color: 'rgba(0,0,0,0.45)' ,width: 300}}>
+              {intl.formatMessage({ id: 'inviteFriends.rewardConfig.coinType.tips' })}
+            </div>
+          </Space>
 
           <Form.Item
             name="rebateRatio"
