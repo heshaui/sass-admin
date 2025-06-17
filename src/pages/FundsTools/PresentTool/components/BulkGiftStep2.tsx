@@ -32,10 +32,10 @@ const BulkGiftSetp2: React.FC<BulkGiftProps> = ({ current, onPrevious, onNext })
     const checkData = JSON.parse(data || '{}');
     setCheckData(checkData);
     // 是否有异常数据和异常提示
-    if (checkData?.errorList?.length > 0 || checkData?.errorTotal?.length > 0) {
-      setSteps2NextFlag(false);
-    } else {
+    if (checkData?.successTotal >= 1) {
       setSteps2NextFlag(true);
+    } else {
+      setSteps2NextFlag(false);
     }
   };
   const getCoinGiftConfirmData = async () => {
@@ -62,25 +62,36 @@ const BulkGiftSetp2: React.FC<BulkGiftProps> = ({ current, onPrevious, onNext })
     <div style={{ marginTop: '20px' }}>
       <ul>
         <li className={styles.check_box}>
-          <span>正常数据：{checkData?.successTotal || 0}条</span>
-          <span className={styles.mt_10}>赠币详情</span>
+          <span>
+            {/* 正常数据：{checkData?.successTotal || 0}条 */}
+            {intl.formatMessage(
+              { id: 'presentTool.steps.total1' },
+              { count: checkData?.successTotal || 0 },
+            )}
+          </span>
+          <span className={styles.mt_10}>
+            {/* 赠币详情 */}
+            {intl.formatMessage({ id: 'presentTool.steps.detail' })}
+          </span>
           <ul className={``} style={{ padding: 0 }}>
-            {checkData?.successList
-              ? Object.keys(checkData.successList).map((key: any, index: number) => (
-                  <li key={`item-${index}`} className={styles.mt_10}>
-                    {intl.formatMessage(
-                      { id: 'presentTool.steps.bulkGift.count2' },
-                      {
-                        coinName: key || '--',
-                        count: checkData.successList[key].count || '--',
-                        coinAmount: checkData.successList[key].amount || '--',
-                        // rateAmount: '--',
-                        // rate: '--',
-                      },
-                    )}
-                  </li>
-                ))
-              : '无'}
+            {checkData?.successList ? (
+              Object.keys(checkData.successList).map((key: any, index: number) => (
+                <li key={`item-${index}`} className={styles.mt_10}>
+                  {intl.formatMessage(
+                    { id: 'presentTool.steps.bulkGift.count2' },
+                    {
+                      coinName: key || '--',
+                      count: checkData.successList[key].count || '--',
+                      coinAmount: checkData.successList[key].amount || '--',
+                      // rateAmount: '--',
+                      // rate: '--',
+                    },
+                  )}
+                </li>
+              ))
+            ) : (
+              <>{intl.formatMessage({ id: 'presentTool.steps.null' })}</>
+            )}
           </ul>
         </li>
         {/* <li className={styles.check_box}>
@@ -96,7 +107,7 @@ const BulkGiftSetp2: React.FC<BulkGiftProps> = ({ current, onPrevious, onNext })
           </ul>
         </li> */}
         <li className={styles.check_box}>
-          <span>异常提示</span>
+          <span>{intl.formatMessage({ id: 'presentTool.steps.errtotal' })}</span>
           <ul className={styles.mt_tipList}>
             {checkData?.errorList && checkData?.errorList.length > 0 ? (
               checkData.errorList.map((item: any, index: number) => (
@@ -105,7 +116,9 @@ const BulkGiftSetp2: React.FC<BulkGiftProps> = ({ current, onPrevious, onNext })
                 </li>
               ))
             ) : (
-              <span style={{ color: '#333' }}>无</span>
+              <span style={{ color: '#333' }}>
+                {intl.formatMessage({ id: 'presentTool.steps.null' })}
+              </span>
             )}
           </ul>
         </li>

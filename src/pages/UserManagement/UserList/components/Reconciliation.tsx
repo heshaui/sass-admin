@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useIntl } from '@umijs/max';
-import { Table, Card, Checkbox, Spin, Empty, message } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import { userReconciliation } from '@/services/ant-design-pro/UserManagement';
+import { useIntl } from '@umijs/max';
+import { Card, Checkbox, Empty, message, Spin, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import React, { useEffect, useState } from 'react';
 
 interface ReconciliationItem {
   currency: string;
@@ -75,6 +75,13 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
       title: formatMessage({ id: 'reconciliation.columns.recharge' }),
       dataIndex: 'recharge',
       key: 'recharge',
+      width: 100,
+      align: 'right',
+    },
+    {
+      title: formatMessage({ id: 'presentTool.button.gift' }),
+      dataIndex: 'gift',
+      key: 'gift',
       width: 100,
       align: 'right',
     },

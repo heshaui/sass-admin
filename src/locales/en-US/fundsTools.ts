@@ -140,6 +140,7 @@ export default {
   'presentTool.modal.gift.amountError': 'User and gifting amount cannot be empty',
   'presentTool.modal.gift.success': 'Coin gifting successful',
   'presentTool.modal.gift.balance': 'Available Balance',
+  'presentTool.modal.gift.error': 'Format error',
 
   'presentTool.steps.step1': 'Download and Upload File',
   'presentTool.steps.step2': 'Data Check',
@@ -176,4 +177,9 @@ export default {
   'presentTool.steps.bulkGift.success2': 'Operation successful!',
   'presentTool.steps.bulkGift.failed2': 'Operation failed!',
   'presentTool.steps.download.empty': 'Download content is empty',
+
+  'presentTool.steps.total1': 'Normal data: {count} items',
+  'presentTool.steps.detail': 'Coin gift details',
+  'presentTool.steps.errtotal': 'Exception prompt',
+  'presentTool.steps.null': 'None',
 };

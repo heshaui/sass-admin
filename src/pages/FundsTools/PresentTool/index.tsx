@@ -8,8 +8,10 @@ import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import type { SelectProps } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
 import BulkGiftType from './components/BulkGiftTypeModal';
 import GiftModal from './components/GiftModal';
+
 const { RangePicker } = DatePicker;
 
 interface TransferRecord {
@@ -28,7 +30,7 @@ interface TransferRecord {
 const TransferTool: React.FC = () => {
   const intl = useIntl();
   const [form] = Form.useForm();
-
+  const navigate = useNavigate();
   const [loading] = useState<boolean>(false);
   const [coinOptions, setCoinOptions] = useState<SelectProps['options']>([]);
   const [tableData, setTableData] = useState<TransferRecord[]>([]);
@@ -65,7 +67,7 @@ const TransferTool: React.FC = () => {
           .map((item: any) => ({
             ...item,
             label: item.coinName,
-            value: item.coinName,
+            value: item.coinId,
           }))
           .filter((item: any) => item.status !== 0),
       );
@@ -90,6 +92,11 @@ const TransferTool: React.FC = () => {
       title: 'UID',
       dataIndex: 'userId',
       key: 'userId',
+      render: (employeeId) => (
+        <a onClick={() => navigate(`/user-management/user-list?userId=${employeeId}`)}>
+          {employeeId}
+        </a>
+      ),
     },
     {
       title: intl.formatMessage({ id: 'presentTool.table.column.type' }), //'类型',
@@ -102,6 +109,11 @@ const TransferTool: React.FC = () => {
           ? intl.formatMessage({ id: 'presentTool.select.activity' })
           : '--';
       },
+    },
+    {
+      title: intl.formatMessage({ id: 'basicConfig.benefit.coin' }), //'币种',
+      dataIndex: 'coinName',
+      key: 'coinName',
     },
     {
       title: intl.formatMessage({ id: 'presentTool.table.column.amount' }), //'赠币数量',
@@ -156,7 +168,7 @@ const TransferTool: React.FC = () => {
     >
       <PageContainer>
         <Card title={intl.formatMessage({ id: 'presentTool.title' })}>
-          <Form form={form} name="advanced_search" layout="inline" onFinish={onFinish}>
+          <Form form={form} name="advanced_search" layout="inline" onFinish={onGiftFinish}>
             <Form.Item
               name="type"
               label={intl.formatMessage({ id: 'presentTool.tip.type' })}
@@ -172,7 +184,7 @@ const TransferTool: React.FC = () => {
               label={intl.formatMessage({ id: 'presentTool.tip.currency' })}
               initialValue=""
             >
-              <Select style={{ width: 180 }} options={coinOptions} allowClear></Select>
+              <Select style={{ width: 180 }} options={coinOptions} allowClear />
             </Form.Item>
             <Form.Item name="bulkId" label={'Bulk ID'} initialValue="">
               <Input placeholder={intl.formatMessage({ id: 'presentTool.tip.input' })} allowClear />
@@ -222,6 +234,7 @@ const TransferTool: React.FC = () => {
                 pageSize: 10,
                 total: pagination.current.total,
                 current: pagination.current.current,
+                showSizeChanger: false,
                 onChange: (page, pageSize) => {
                   pagination.current.current = page;
                   pagination.current.pageSize = pageSize;

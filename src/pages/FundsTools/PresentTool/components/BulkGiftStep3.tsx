@@ -91,12 +91,12 @@ const BulkGiftSetp3: React.FC<BulkGiftProps> = ({ current, onPrevious, onCancel,
     try {
       const res = await getCoinGiftImportStatus({ batchId: batchId });
       if (res.code === '0') {
-        if (res.data.status === 'completed') {
+        if (res.data.status && res.data.status.toLowerCase()?.includes('completed')) {
           setStatus('success');
           // 重置计时器
           setStartTime(null);
           setProcessingStartTime(null);
-        } else if (res.data.status === 'processing') {
+        } else if (res.data.status && res.data.status.toLowerCase()?.includes('processing')) {
           setStatus('loading');
           // 如果首次进入processing状态，记录时间
           if (processingStartTime === null) {
@@ -105,12 +105,12 @@ const BulkGiftSetp3: React.FC<BulkGiftProps> = ({ current, onPrevious, onCancel,
           // 2秒后重新请求
           const timer = setTimeout(() => getImportStatus(data), 2000);
           setPollingTimer(timer);
-        } else if (res.data.status === 'not_found') {
+        } else if (res.data.status && res.data.status.toLowerCase()?.includes('not_found')) {
           setStatus('startLoading');
           // 2秒后重新请求
           const timer = setTimeout(() => getImportStatus(data), 2000);
           setPollingTimer(timer);
-        } else if (res.data.status === 'failed') {
+        } else if (res.data.status && res.data.status.toLowerCase()?.includes('failed')) {
           setStatus('error');
           message.error(
             res.data.message || intl.formatMessage({ id: 'presentTool.steps.bulkGift.failed2' }),
@@ -197,7 +197,7 @@ const BulkGiftSetp3: React.FC<BulkGiftProps> = ({ current, onPrevious, onCancel,
           </div>
           <p className={`${styles.loading_p} ${styles.mt_20} `}>
             {/* 赠币处理中，请稍等几分钟。 */}
-            {intl.formatMessage({ id: 'presentTool.steps.bulkGift.loading' })}
+            {intl.formatMessage({ id: 'presentTool.steps.bulkGift.processing' })}
           </p>
         </div>
       )}

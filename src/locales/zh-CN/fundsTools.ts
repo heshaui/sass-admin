@@ -140,6 +140,7 @@ export default {
   'presentTool.modal.gift.amountError': '用户和赠币数量不能为空',
   'presentTool.modal.gift.success': '赠币成功',
   'presentTool.modal.gift.balance': '可用余额',
+  'presentTool.modal.gift.error': '格式错误',
 
   'presentTool.steps.step1': '下载并上传文件',
   'presentTool.steps.step2': '数据检查',
@@ -174,4 +175,9 @@ export default {
   'presentTool.steps.download.empty': '下载内容为空',
   'presentTool.steps.bulkGift.failed3': '超时未进入处理状态',
   'presentTool.steps.bulkGift.failed4': '请稍后刷新查看结果',
+
+  'presentTool.steps.total1': '正常数据：{count} 条',
+  'presentTool.steps.detail': '赠币详情',
+  'presentTool.steps.errtotal': '异常提示',
+  'presentTool.steps.null': '无',
 };

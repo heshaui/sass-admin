@@ -219,6 +219,7 @@ export default {
   'reconciliation.columns.withdrawal': '출금',
   'reconciliation.columns.inviteRebate': '초대 보상',
   'reconciliation.columns.recharge': '충전',
+  'reconciliation.columns.gift': '선물 코인',
   'reconciliation.columns.pointsRedeem': 'M포인트 교환',
   'reconciliation.columns.mfilRedeem': 'MFIL 교환',
   'reconciliation.columns.incomeImport': '수익 전환',

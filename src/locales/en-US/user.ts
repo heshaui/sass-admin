@@ -219,6 +219,7 @@ export default {
   'reconciliation.columns.withdrawal': 'Withdrawal',
   'reconciliation.columns.inviteRebate': 'Invitation Rebate',
   'reconciliation.columns.recharge': 'Recharge',
+  'reconciliation.columns.gift': 'Gift Coins',
   'reconciliation.columns.pointsRedeem': 'Points Redemption',
   'reconciliation.columns.mfilRedeem': 'MFIL Redemption',
   'reconciliation.columns.incomeImport': 'Income Import',

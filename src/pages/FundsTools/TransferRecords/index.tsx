@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Card } from 'antd';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { fundFlowDirectionOperationList } from '@/services/ant-design-pro/fundsTools';
-import { useIntl } from '@umijs/max';
 import type { ProColumns, RequestData } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
+import { Card } from 'antd';
+import React, { useState } from 'react';
 
 // key  value 对应
 const fromAccountTypeMap = {
@@ -30,6 +30,7 @@ const sceneTypeMap = {
   M2U: 'transferTool.scene.M2U',
   U2M: 'transferTool.scene.U2M',
   U2U: 'transferTool.scene.U2U',
+  COIN_GIFT: 'presentTool.button.gift',
 };
 
 type FromAccountTypeMap = keyof typeof fromAccountTypeMap;
@@ -52,7 +53,11 @@ const TransferRecords: React.FC = () => {
   const intl = useIntl();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const getTransferRecords = async (params: any): Promise<Partial<RequestData<TransferRecord>>> => {
+  const getTransferRecords = async (
+    params: any,
+    // sort: Record<string, 'ascend' | 'descend' | null>,
+    // filter: Record<string, (string | number)[] | null>,
+  ): Promise<Partial<RequestData<TransferRecord>>> => {
     setLoading(true);
     try {
       const res = await fundFlowDirectionOperationList({

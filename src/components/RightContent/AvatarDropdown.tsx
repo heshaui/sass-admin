@@ -158,7 +158,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
   }
 
   // 检查用户是否已绑定谷歌验证
-  const isGoogleAuthEnabled = initialState?.currentUser?.employeeResp?.googleAuthenticatorEnabled;
+  const isGoogleAuthEnabled = currentUser?.employeeResp?.googleCode;
 
   const menuItems = [
     ...(menu
@@ -184,7 +184,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
           {
             key: 'bindGoogle',
             icon: <SafetyOutlined />,
-            label: intl.formatMessage({ id: 'menu.account.bindGoogle' }) || '绑定谷歌验证',
+            label: intl.formatMessage({ id: 'menu.account.bindGoogle' }),
           },
         ]
       : []),

@@ -27,8 +27,7 @@ export default {
         }
       : {
           '/tenant/': {
-            // target: 'http://10.233.50.129:8063',
-            target: 'https://merchant.imsaas.work',
+            target: 'https://merchant.imsaas.work', //'http://10.233.50.129:8063',
             changeOrigin: true,
           },
         }),

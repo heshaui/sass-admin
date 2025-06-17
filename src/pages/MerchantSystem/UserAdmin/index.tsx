@@ -1,4 +1,4 @@
-import { PageContainer, ProTable, ProColumns } from '@ant-design/pro-components';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Dropdown, Menu, Button, Tag, message, Modal } from 'antd';
 import { PlusOutlined, DownOutlined } from '@ant-design/icons';
 import { useState, useEffect, useCallback } from 'react';
@@ -349,6 +349,10 @@ const UserAdmin: React.FC = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    getUserList(); // 获取用户列表
+  }, []);
 
   return (
     <PageContainer>

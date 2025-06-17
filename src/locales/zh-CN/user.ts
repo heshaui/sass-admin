@@ -215,6 +215,7 @@ export default {
   'reconciliation.columns.withdrawal': '提现',
   'reconciliation.columns.inviteRebate': '邀请奖励',
   'reconciliation.columns.recharge': '充值',
+  'reconciliation.columns.gift': '赠币',
   'reconciliation.columns.pointsRedeem': 'M积分兑换',
   'reconciliation.columns.mfilRedeem': 'MFIL兑换',
   'reconciliation.columns.incomeImport': '收益兑入',
@@ -228,5 +229,4 @@ export default {
   'reconciliation.columns.leveragedBuying': '杠杆买入',
   'reconciliation.columns.withdrawalFee': '提现手续费',
   'reconciliation.columns.spotFee': '现货手续费',
-  'reconciliation.columns.gift': '赠币',
 };

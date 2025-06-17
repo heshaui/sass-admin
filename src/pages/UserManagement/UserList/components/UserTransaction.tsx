@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { useIntl } from '@umijs/max';
-import { Card, Row, Col, Statistic, Tooltip } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
-import type { ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
 import {
-  userTransactionLogList,
   userTransactionCount,
+  userTransactionLogList,
 } from '@/services/ant-design-pro/UserManagement';
 import { getCurrencyCoinList } from '@/services/ant-design-pro/inviteFriends';
 import { currencyCoinList } from '@/services/ant-design-pro/spot';
+import { InfoCircleOutlined } from '@ant-design/icons';
+import type { ProColumns } from '@ant-design/pro-components';
+import { ProTable } from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
+import { Card, Col, Row, Statistic, Tooltip } from 'antd';
+import React, { useEffect, useState } from 'react';
 interface TransactionItem {
   id: string;
   type: number;
@@ -25,7 +25,7 @@ interface UserTransactionProps {
   userId: string | number;
 }
 const sceneTypeMap = {
-  'test': 'transferTool.scene.test',
+  test: 'transferTool.scene.test',
   'symbol-order': 'transferTool.scene.symbol-order',
   'extraction-symbol-order': 'transferTool.scene.extraction-symbol-order',
   'undo_extraction-symbol-order': 'transferTool.scene.undo_extraction-symbol-order',
@@ -33,11 +33,12 @@ const sceneTypeMap = {
   'canal-symbol-order': 'transferTool.scene.canal-symbol-order',
   'buy-trade-symbol-order': 'transferTool.scene.buy-trade-symbol-order',
   'sell-trade-symbol-order': 'transferTool.scene.sell-trade-symbol-order',
-  'canal_symbol_order': 'transferTool.scene.canal_symbol_order',
-  'M2M': 'transferTool.scene.M2M',
-  'M2U': 'transferTool.scene.M2U',
-  'U2M': 'transferTool.scene.U2M',
-  'U2U': 'transferTool.scene.U2U',
+  canal_symbol_order: 'transferTool.scene.canal_symbol_order',
+  M2M: 'transferTool.scene.M2M',
+  M2U: 'transferTool.scene.M2U',
+  U2M: 'transferTool.scene.U2M',
+  U2U: 'transferTool.scene.U2U',
+  COIN_GIFT: 'presentTool.button.gift',
 };
 type SceneTypeMap = keyof typeof sceneTypeMap;
 
@@ -86,8 +87,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
       title: intl.formatMessage({ id: 'userTransaction.columns.type' }),
       dataIndex: 'transactionType',
       width: 100,
-      render: (_, record) =>
-        intl.formatMessage({ id: transactionTypeMap[record.transactionType] }),
+      render: (_, record) => intl.formatMessage({ id: transactionTypeMap[record.transactionType] }),
     },
     {
       title: intl.formatMessage({ id: 'userTransaction.columns.business' }),
@@ -207,9 +207,7 @@ const UserTransaction: React.FC<UserTransactionProps> = ({ userId }) => {
         </Col>
 
         <Col span={6}>
-          <Card
-            title={intl.formatMessage({ id: 'userTransaction.summary.title' })}
-          >
+          <Card title={intl.formatMessage({ id: 'userTransaction.summary.title' })}>
             <Statistic
               title={
                 <span>

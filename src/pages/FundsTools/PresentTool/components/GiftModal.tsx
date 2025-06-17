@@ -40,7 +40,11 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
       value: 'ACTIVITY_GIFT',
     },
   ];
-
+  const handleCancel = () => {
+    onCancel();
+    setWalletList({} as walletListType);
+    form.resetFields();
+  };
   const getCoin = async () => {
     let data = {
       pageNo: 1,
@@ -49,11 +53,13 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
     const res = await tenantCurrencyCoinList(data);
     if (res.code === '0') {
       setCoinList(
-        res.data.list.map((item: any) => ({
-          ...item,
-          label: item.coinName,
-          value: item.coinId,
-        })),
+        res.data.list
+          .map((item: any) => ({
+            ...item,
+            label: item.coinName,
+            value: item.coinId,
+          }))
+          .filter((item: any) => item.status !== 0),
       );
     }
   };
@@ -80,7 +86,7 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
       if (res.code === '0') {
         message.success(intl.formatMessage({ id: 'presentTool.modal.gift.success' }));
         onSubmit();
-        onCancel();
+        handleCancel();
       } else {
         message.error(res.message);
       }
@@ -103,9 +109,9 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
     <Modal
       title={intl.formatMessage({ id: 'presentTool.modal.gift.title' })}
       open={open}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       footer={[
-        <Button key="cancel" onClick={onCancel}>
+        <Button key="cancel" onClick={handleCancel}>
           {intl.formatMessage({ id: 'presentTool.button.cancel' })}
         </Button>,
         <Button
@@ -114,7 +120,6 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
           onClick={() => {
             form.validateFields().then((values) => {
               handleSubmit(values);
-              form.resetFields();
             });
           }}
         >
@@ -134,7 +139,7 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
             // alignItems: 'center'
           }}
         >
-          <Form form={form} layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
+          <Form form={form} layout="horizontal" labelCol={{ span: 7 }} wrapperCol={{ span: 18 }}>
             <Form.Item
               name="type"
               label={intl.formatMessage({ id: 'presentTool.tip.type' })}
@@ -167,9 +172,9 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
                   onClear={() => setWalletList({} as walletListType)}
                 />
               </Form.Item>
-              <div style={{ paddingLeft: 110, marginBottom: 20 }}>
+              <Form.Item label={null}>
                 {intl.formatMessage({ id: 'presentTool.modal.gift.balance' })}：{walletList.balance}
-              </div>
+              </Form.Item>
             </div>
             <Form.Item
               label={intl.formatMessage({ id: 'presentTool.tip.text' })}
@@ -179,6 +184,29 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
                   required: true,
                   message: intl.formatMessage({ id: 'presentTool.modal.gift.amountError' }),
                 },
+                {
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+                    // 处理可能有多个账号或单个账号的情况
+                    const items = value.includes(',') ? value.split(',') : [value];
+                    for (const item of items) {
+                      const parts = item.trim().split(':');
+                      if (parts.length !== 2) {
+                        return Promise.reject(
+                          new Error(intl.formatMessage({ id: 'presentTool.modal.gift.error' })),
+                        );
+                      }
+                      const [uid, amount] = parts;
+                      // UID必须是纯数字，数量可以是数字或小数
+                      if (!/^\d+$/.test(uid) || !/^\d+(\.\d+)?$/.test(amount)) {
+                        return Promise.reject(
+                          new Error(intl.formatMessage({ id: 'presentTool.modal.gift.error' })),
+                        );
+                      }
+                    }
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <Input.TextArea
@@ -186,14 +214,15 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
                 placeholder={intl.formatMessage({ id: 'presentTool.modal.gift.amountError' })}
               />
             </Form.Item>
+            <Form.Item label={null}>
+              <p className={styles.warningText}>
+                {intl.formatMessage({ id: 'presentTool.tip.tip1' })}
+              </p>
+              <p className={styles.warningText}>
+                {intl.formatMessage({ id: 'presentTool.tip.tip2' })}
+              </p>
+            </Form.Item>
           </Form>
-          <div
-            className={styles.warningText}
-            // style={{ color: '#ff4d4f' }}
-          >
-            <p>{intl.formatMessage({ id: 'presentTool.tip.tip1' })}</p>
-            <p>{intl.formatMessage({ id: 'presentTool.tip.tip2' })}</p>
-          </div>
         </div>
       </div>
     </Modal>
