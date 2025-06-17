@@ -140,7 +140,7 @@ export default {
   'presentTool.modal.gift.coinTypeError': '통화를 비워둘 수 없습니다',
   'presentTool.modal.gift.amountError': '사용자 및 증정 수량을 비워둘 수 없습니다',
   'presentTool.modal.gift.success': '코인 증정 성공',
-  'presentTool.modal.gift.balance': '사용 가능余额',
+  'presentTool.modal.gift.balance': '사용 가능 잔액',
 
   'presentTool.steps.step1': '파일 다운로드 및 업로드',
   'presentTool.steps.step2': '데이터 검사',
@@ -173,7 +173,12 @@ export default {
   'presentTool.steps.bulkGift.count2': '{coinName}：누적{count}명；누적 금액{coinAmount}',
   'presentTool.steps.bulkGift.processing': '코인 증정 처리 중입니다. 잠시만 기다려주세요.',
   'presentTool.steps.bulkGift.notFound': '코인 증정이 처리 시작되었습니다. 잠시만 기다려주세요...',
-  'presentTool.steps.bulkGift.success2': '操作 성공!',
-  'presentTool.steps.bulkGift.failed2': '操作 실패!',
+  'presentTool.steps.bulkGift.success2': '작업이 성공했습니다!',
+  'presentTool.steps.bulkGift.failed2': '작업이 실패했습니다!',
   'presentTool.steps.download.empty': '다운로드 내용이 비어 있습니다',
+
+  'presentTool.steps.total1': '정상 데이터: {count} 건',
+  'presentTool.steps.detail': '코인 선물 상세',
+  'presentTool.steps.errtotal': '오류 안내',
+  'presentTool.steps.null': '없음',
 };

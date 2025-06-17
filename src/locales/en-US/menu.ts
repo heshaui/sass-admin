@@ -111,7 +111,7 @@ export default {
   'menu.fundsTools.assetAdjustment': 'Asset Adjustment',
   'menu.fundsTools.transferTool': 'Transfer Tool',
   'menu.fundsTools.transferRecords': 'Transfer Records',
-  'menu.fundsTools.PresentTool': 'Gift Coin Tool',
+  'menu.fundsTools.presentTool': 'Gift Coin Tool',
   'menu.riskControl': 'Fund Risk Control',
   'menu.riskControl.config': 'Risk Control Configuration',
   'menu.riskControl.suggestions': 'Processing Suggestions',
