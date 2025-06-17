@@ -78,13 +78,6 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
       width: 100,
       align: 'right',
     },
-    {
-      title: formatMessage({ id: 'presentTool.button.gift' }),
-      dataIndex: 'gift',
-      key: 'gift',
-      width: 100,
-      align: 'right',
-    },
     // {
     //   title: '充币',
     //   dataIndex: 'rechargeCoin',
