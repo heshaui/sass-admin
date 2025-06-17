@@ -140,6 +140,7 @@ export default {
   'presentTool.modal.gift.amountError': '用户和赠币数量不能为空',
   'presentTool.modal.gift.success': '赠币成功',
   'presentTool.modal.gift.balance': '可用余额',
+  'presentTool.modal.gift.error': '格式错误',
 
   'presentTool.steps.step1': '下载并上传文件',
   'presentTool.steps.step2': '数据检查',

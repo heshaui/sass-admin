@@ -40,7 +40,11 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
       value: 'ACTIVITY_GIFT',
     },
   ];
-
+  const handleCancel = () => {
+    onCancel();
+    setWalletList({} as walletListType);
+    form.resetFields();
+  };
   const getCoin = async () => {
     let data = {
       pageNo: 1,
@@ -49,11 +53,13 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
     const res = await tenantCurrencyCoinList(data);
     if (res.code === '0') {
       setCoinList(
-        res.data.list.map((item: any) => ({
-          ...item,
-          label: item.coinName,
-          value: item.coinId,
-        })),
+        res.data.list
+          .map((item: any) => ({
+            ...item,
+            label: item.coinName,
+            value: item.coinId,
+          }))
+          .filter((item: any) => item.status !== 0),
       );
     }
   };
@@ -80,7 +86,7 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
       if (res.code === '0') {
         message.success(intl.formatMessage({ id: 'presentTool.modal.gift.success' }));
         onSubmit();
-        onCancel();
+        handleCancel();
       } else {
         message.error(res.message);
       }
@@ -103,9 +109,9 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
     <Modal
       title={intl.formatMessage({ id: 'presentTool.modal.gift.title' })}
       open={open}
-      onCancel={onCancel}
+      onCancel={handleCancel}
       footer={[
-        <Button key="cancel" onClick={onCancel}>
+        <Button key="cancel" onClick={handleCancel}>
           {intl.formatMessage({ id: 'presentTool.button.cancel' })}
         </Button>,
         <Button
@@ -114,7 +120,6 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
           onClick={() => {
             form.validateFields().then((values) => {
               handleSubmit(values);
-              form.resetFields();
             });
           }}
         >
@@ -178,6 +183,29 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
                 {
                   required: true,
                   message: intl.formatMessage({ id: 'presentTool.modal.gift.amountError' }),
+                },
+                {
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+                    // 处理可能有多个账号或单个账号的情况
+                    const items = value.includes(',') ? value.split(',') : [value];
+                    for (const item of items) {
+                      const parts = item.trim().split(':');
+                      if (parts.length !== 2) {
+                        return Promise.reject(
+                          new Error(intl.formatMessage({ id: 'presentTool.modal.gift.error' })),
+                        );
+                      }
+                      const [uid, amount] = parts;
+                      // UID必须是纯数字，数量可以是数字或小数
+                      if (!/^\d+$/.test(uid) || !/^\d+(\.\d+)?$/.test(amount)) {
+                        return Promise.reject(
+                          new Error(intl.formatMessage({ id: 'presentTool.modal.gift.error' })),
+                        );
+                      }
+                    }
+                    return Promise.resolve();
+                  },
                 },
               ]}
             >

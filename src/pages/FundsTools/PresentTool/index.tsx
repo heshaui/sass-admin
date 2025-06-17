@@ -184,7 +184,7 @@ const TransferTool: React.FC = () => {
               label={intl.formatMessage({ id: 'presentTool.tip.currency' })}
               initialValue=""
             >
-              <Select style={{ width: 180 }} options={coinOptions} allowClear></Select>
+              <Select style={{ width: 180 }} options={coinOptions} allowClear />
             </Form.Item>
             <Form.Item name="bulkId" label={'Bulk ID'} initialValue="">
               <Input placeholder={intl.formatMessage({ id: 'presentTool.tip.input' })} allowClear />

@@ -141,6 +141,7 @@ export default {
   'presentTool.modal.gift.amountError': '사용자 및 증정 수량을 비워둘 수 없습니다',
   'presentTool.modal.gift.success': '코인 증정 성공',
   'presentTool.modal.gift.balance': '사용 가능 잔액',
+  'presentTool.modal.gift.error': '형식 오류',
 
   'presentTool.steps.step1': '파일 다운로드 및 업로드',
   'presentTool.steps.step2': '데이터 검사',
