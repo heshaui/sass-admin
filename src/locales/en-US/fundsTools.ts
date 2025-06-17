@@ -158,7 +158,7 @@ export default {
   'presentTool.steps.uploadFile': 'Fill in Information and Upload File',
   'presentTool.steps.upload': 'Upload File',
   'presentTool.steps.uploadTip':
-    'File suffix must be .xlsx. Up to 1000 pieces of data can be imported.',
+    'File suffix must be .xls or .xlsx. Up to 1000 pieces of data can be imported.',
   'presentTool.steps.template': 'Bulk Coin Gifting Template',
   'presentTool.steps.download.success': 'Template downloaded successfully',
   'presentTool.steps.download.failed': 'Template download failed',
