@@ -23,25 +23,23 @@ export default {
           '/tenant-admin/': {
             target: 'http://10.233.29.13:8064',
             changeOrigin: true,
-          }
+          },
         }
       : {
           '/tenant/': {
-            target: 'http://10.233.50.129:8063',
+            // target: 'http://10.233.50.129:8063',
+            target: 'https://merchant.imsaas.work',
             changeOrigin: true,
           },
         }),
-        '/api/ambit-oss/': {
-          target: 'https://www.imsaas.work',
-          changeOrigin: true,
-        }
-        // '/admin/': {
-        //   target: 'http://static.imgtest.work',
-        //   changeOrigin: true,
-        // }
-
-
-
+    '/api/ambit-oss/': {
+      target: 'https://www.imsaas.work',
+      changeOrigin: true,
+    },
+    // '/admin/': {
+    //   target: 'http://static.imgtest.work',
+    //   changeOrigin: true,
+    // }
   },
 
   /**

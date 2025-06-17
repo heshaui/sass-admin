@@ -1,5 +1,4 @@
-import { request } from 'umi';
-
+import { request } from '@umijs/max';
 
 export async function assetAccountReviewList(data?: any) {
   return request('/tenant/v1/assetAccountReviewList', {
@@ -8,8 +7,6 @@ export async function assetAccountReviewList(data?: any) {
   });
 }
 
-
-
 export async function riskConditionTemplateList(data?: any) {
   return request('/tenant/v1/riskConditionTemplateList', {
     method: 'POST',
@@ -17,16 +14,12 @@ export async function riskConditionTemplateList(data?: any) {
   });
 }
 
-
-
 export async function saveRiskConditions(data?: any) {
   return request('/tenant/v1/saveRiskConditions', {
     method: 'POST',
     data,
   });
 }
-
-
 
 // /tenant/v1/riskConditionList
 export async function riskConditionList(data?: any) {
@@ -36,7 +29,6 @@ export async function riskConditionList(data?: any) {
   });
 }
 
-
 export async function saveActionRiskLevel(data?: any) {
   return request('/tenant/v1/saveActionRiskLevels', {
     method: 'POST',
@@ -44,14 +36,12 @@ export async function saveActionRiskLevel(data?: any) {
   });
 }
 
-
 export async function riskSceneList(data?: any) {
   return request('/tenant/v1/riskSceneList', {
     method: 'POST',
     data,
   });
 }
-
 
 //风控等级处理建议查询详情列表
 export async function actionRiskLevelParams(data?: any) {
