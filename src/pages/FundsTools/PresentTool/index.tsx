@@ -231,13 +231,16 @@ const TransferTool: React.FC = () => {
               columns={columns}
               dataSource={tableData}
               pagination={{
-                pageSize: 10,
+                pageSize: pagination.current.pageSize,
                 total: pagination.current.total,
                 current: pagination.current.current,
+                showQuickJumper: true,
                 showSizeChanger: false,
+                hideOnSinglePage: true,
                 onChange: (page, pageSize) => {
                   pagination.current.current = page;
                   pagination.current.pageSize = pageSize;
+
                   onFinish();
                 },
               }}
