@@ -174,4 +174,9 @@ export default {
   'presentTool.steps.download.empty': '下载内容为空',
   'presentTool.steps.bulkGift.failed3': '超时未进入处理状态',
   'presentTool.steps.bulkGift.failed4': '请稍后刷新查看结果',
+
+  'presentTool.steps.total1': '正常数据：{count} 条',
+  'presentTool.steps.detail': '赠币详情',
+  'presentTool.steps.errtotal': '异常提示',
+  'presentTool.steps.null': '无',
 };

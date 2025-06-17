@@ -134,7 +134,7 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
             // alignItems: 'center'
           }}
         >
-          <Form form={form} layout="horizontal" labelCol={{ span: 6 }} wrapperCol={{ span: 18 }}>
+          <Form form={form} layout="horizontal" labelCol={{ span: 7 }} wrapperCol={{ span: 18 }}>
             <Form.Item
               name="type"
               label={intl.formatMessage({ id: 'presentTool.tip.type' })}
@@ -167,9 +167,9 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
                   onClear={() => setWalletList({} as walletListType)}
                 />
               </Form.Item>
-              <div style={{ paddingLeft: 110, marginBottom: 20 }}>
+              <Form.Item label={null}>
                 {intl.formatMessage({ id: 'presentTool.modal.gift.balance' })}：{walletList.balance}
-              </div>
+              </Form.Item>
             </div>
             <Form.Item
               label={intl.formatMessage({ id: 'presentTool.tip.text' })}
@@ -186,14 +186,15 @@ const GiftModal: React.FC<GiftModalProps> = ({ open, onCancel, onSubmit }) => {
                 placeholder={intl.formatMessage({ id: 'presentTool.modal.gift.amountError' })}
               />
             </Form.Item>
+            <Form.Item label={null}>
+              <p className={styles.warningText}>
+                {intl.formatMessage({ id: 'presentTool.tip.tip1' })}
+              </p>
+              <p className={styles.warningText}>
+                {intl.formatMessage({ id: 'presentTool.tip.tip2' })}
+              </p>
+            </Form.Item>
           </Form>
-          <div
-            className={styles.warningText}
-            // style={{ color: '#ff4d4f' }}
-          >
-            <p>{intl.formatMessage({ id: 'presentTool.tip.tip1' })}</p>
-            <p>{intl.formatMessage({ id: 'presentTool.tip.tip2' })}</p>
-          </div>
         </div>
       </div>
     </Modal>

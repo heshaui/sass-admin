@@ -176,4 +176,9 @@ export default {
   'presentTool.steps.bulkGift.success2': 'Operation successful!',
   'presentTool.steps.bulkGift.failed2': 'Operation failed!',
   'presentTool.steps.download.empty': 'Download content is empty',
+
+  'presentTool.steps.total1': 'Normal data: {count} items',
+  'presentTool.steps.detail': 'Coin gift details',
+  'presentTool.steps.errtotal': 'Exception prompt',
+  'presentTool.steps.null': 'None',
 };
