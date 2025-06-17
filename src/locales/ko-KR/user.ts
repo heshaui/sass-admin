@@ -232,4 +232,5 @@ export default {
   'reconciliation.columns.leveragedBuying': '레버리지 매수',
   'reconciliation.columns.withdrawalFee': '출금 수수료',
   'reconciliation.columns.spotFee': '현물 수수료',
+  'reconciliation.columns.gift': '선물',
 };
