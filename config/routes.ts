@@ -449,17 +449,17 @@ export default [
     routes: [
       {
         path: '/flash-exchange/basic-config',
-        name: 'basicConfig',
+        name: 'flashBasicConfig',
         component: './FlashExchange/BasicConfig',
       },
       {
         path: '/flash-exchange/order-list',
-        name: 'orderList',
+        name: 'flashOrderList',
         component: './FlashExchange/OrderList',
       },
       {
         path: '/flash-exchange',
-        redirect: '/flash-exchange/basic-config',
+        redirect: '/flash-exchange/order-list',
       },
     ],
   },

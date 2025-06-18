@@ -118,4 +118,9 @@ export default {
   'menu.riskControl.suggestions': '处理建议',
   'menu.riskControl.alerts': '报警记录',
   'menu.riskControl.templates': '风控模板',
+  'menu.flashExchange':'闪兑',
+  'menu.flashExchange.flashBasicConfig':'基础配置',
+  'menu.flashExchange.flashOrderList': '订单列表',
+
+
 };

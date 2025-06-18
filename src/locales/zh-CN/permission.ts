@@ -65,4 +65,7 @@ export default {
   'permission.suggestions': '处理建议',
   'permission.alerts': '报警记录',
   'permission.templates': '风控模板',
+  'permission.flashExchange': '闪兑',
+  'permission.flashBasicConfig':'基础配置',
+  'permission.flashOrderList': '订单列表',
 };
