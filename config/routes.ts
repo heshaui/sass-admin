@@ -443,6 +443,27 @@ export default [
     redirect: '/welcome',
   },
   {
+    path: '/flash-exchange',
+    name: 'flashExchange',
+    icon: 'SwapOutlined',
+    routes: [
+      {
+        path: '/flash-exchange/basic-config',
+        name: 'basicConfig',
+        component: './FlashExchange/BasicConfig',
+      },
+      {
+        path: '/flash-exchange/order-list',
+        name: 'orderList',
+        component: './FlashExchange/OrderList',
+      },
+      {
+        path: '/flash-exchange',
+        redirect: '/flash-exchange/basic-config',
+      },
+    ],
+  },
+  {
     path: '*',
     layout: false,
     component: './404',

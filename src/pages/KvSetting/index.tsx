@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Space, Select, message } from 'antd';
+import { Space, Select, message,Button } from 'antd';
 import { useIntl } from 'umi';
 import { 
   getKvList, 
@@ -219,10 +219,19 @@ message.error(intl.formatMessage({ id: 'kv.message.operationFailed' }));
     <PageContainer title={intl.formatMessage({ id: 'kv.title' })}>
       <ProTable
         loading={loading}
+          rowKey="id"
         columns={columns as any}
         actionRef={actionRef}
         request={fetchKvList}
-        rowKey="id"
+        toolBarRender={() => [
+          <Button
+            type="primary"
+            onClick={handleAdd}
+            key="add"
+          >
+            {intl.formatMessage({ id: 'kv.table.action.add' })}
+          </Button>
+        ]}
       />
       
       <AddModal

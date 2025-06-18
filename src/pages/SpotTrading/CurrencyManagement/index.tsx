@@ -481,6 +481,12 @@ const CurrencyManagement: React.FC = () => {
         coinId: record.coinId,
         status: record.status === 1 ? 0 : 1,
       };
+    }else if (type === 'isTradeConvert') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        isTradeConvert: record.isTradeConvert === 1 ? 0 : 1,
+      };
     }
     const tip: Record<string, string> = {
       canRecharge: intl.formatMessage({
@@ -500,6 +506,12 @@ const CurrencyManagement: React.FC = () => {
           record.canAutoWithdraw === 1
             ? 'currency.tip.canAutoWithdraw.off'
             : 'currency.tip.canAutoWithdraw.on',
+      }),
+      isTradeConvert: intl.formatMessage({
+        id:
+          record.isTradeConvert === 1
+            ? 'currency.tip.isTradeConvert.off'
+            : 'currency.tip.isTradeConvert.on',
       }),
     };
     let res = await adminUpdateCurrencyCoinById(data);
@@ -559,6 +571,31 @@ const CurrencyManagement: React.FC = () => {
               ),
               onOk: () => {
                 handleSwtich(record, 'status');
+              },
+            });
+          }}
+        />
+      ),
+    },
+    {
+      title: '闪兑',
+      dataIndex: 'isTradeConvert',
+      search:false,
+      render: (_, record) => (
+        <Switch
+          checked={record.isTradeConvert === 1}
+          onChange={(checked) => {
+            Modal.confirm({
+              title: intl.formatMessage(
+                { id: 'currency.modal.confirm.isTradeConvert' },
+                {
+                  action: intl.formatMessage({
+                    id: checked ? 'currency.switch.on' : 'currency.switch.off',
+                  }),
+                },
+              ),
+              onOk: () => {
+                handleSwtich(record, 'isTradeConvert');
               },
             });
           }}
