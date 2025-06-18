@@ -103,6 +103,27 @@ export default {
 
   // TransferTool Account Types
   'transferTool.account.user': '用户账户',
+  'transferTool.account.company_general_account': '公司总账户',
+  'transferTool.account.withdrawal_fee_account': '提现手续费',
+  'transferTool.account.recharge_fee_account': '充值手续费',
+  'transferTool.account.invite_rebate_account': '邀请返佣账户',
+  'transferTool.account.fee_account': '币对手续费钱包',
+  'transferTool.account.virtual_accounts': '虚拟账户',
+  'transferTool.account.total_withdrawal_account': '公司提现划转账户',
+
+  'transferTool.scene.test': '测试',
+  'transferTool.scene.symbol-order': '币币下单扣款',
+  'transferTool.scene.extraction-symbol-order': '提现-可用-冻结',
+  'transferTool.scene.undo_extraction-symbol-order': '提现-冻结-可用',
+  'transferTool.scene.symbol-order-fee': '手续费',
+  'transferTool.scene.canal-symbol-order': '取消币币订单',
+  'transferTool.scene.buy-trade-symbol-order': '卖方币币订单戳和划转',
+  'transferTool.scene.sell-trade-symbol-order': '买方币币订单戳和划转',
+  'transferTool.scene.canal_symbol_order': '币币下单-拒绝回款',
+  'transferTool.scene.M2M': '商户转商户',
+  'transferTool.scene.M2U': '商户转用户',
+  'transferTool.scene.U2M': '用户转商户',
+  'transferTool.scene.U2U': '用户转用户',
 
   // PresentTool Page
   'presentTool.title': '赠币工具',
