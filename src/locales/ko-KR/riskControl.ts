@@ -10,7 +10,7 @@ export default {
   'riskControl.alerts.startDate': '시작 날짜',
   'riskControl.alerts.endDate': '종료 날짜',
   'riskControl.alerts.filterConditions': '필터 조건 상태',
-  
+
   // Config page
   'riskControl.config.saveSuccess': '저장 성공',
   'riskControl.config.assetImbalance': '자산 불규형',
@@ -21,21 +21,22 @@ export default {
   'riskControl.config.riskLevel': '리스크 레벨',
   'riskControl.config.level': '레벨',
   'riskControl.config.alarmNotification': '경보 알림',
-  'riskControl.config.emailOrPhoneHint': '이메일 또는 휴대폰, 콤마로 구분',
+  'riskControl.config.emailOrPhoneHint': '이메일 또는 휴대폰 번호 (쉼표로 구분)',
   'riskControl.config.googleVerificationCode': '구글 인증코드',
   'riskControl.config.enterGoogleVerificationCode': '구글 인증코드를 입력하세요',
   'riskControl.config.moneyLaundering': '돈세탁 의혈',
-  'riskControl.config.minutesWithdrawalCount': '분 내에 출금 건수 누적',
+  'riskControl.config.withdrawalCount': '누적 인출액',
   'riskControl.config.times': '회',
   'riskControl.config.rechargeWithin24Hours': '24시간 내 입금>',
-  'riskControl.config.usdtAndWithdrawalAmountGreaterThan': 'USDT 그리고 출금 금액이 다음보다 큼',
+  'riskControl.config.withdrawalAmountGreaterThan': '그리고 출금 금액이 더 큰 경우',
   'riskControl.config.percentOfRechargeAmount': '>의 입금 금액',
   'riskControl.config.theftWarning': '도난 경보',
   'riskControl.config.userWithdrawalIPChangePercentageLessThan': '사용자 출금 IP 변경 비율 <',
   'riskControl.config.riskLevelPlus': '리스크 레벨+',
   'riskControl.config.userWithdrawalAddressNoSuccess': '사용자 출금 주소가 이전에 성공적으로 출금하지 않음 >',
   'riskControl.config.twoAccountsWithdrawToSameAddress': '두 개의 다른 계정에서 동일한 주소로 출금',
-  
+  'riskControl.config.minute': '분 내',
+
   // Suggestions page
   'riskControl.suggestions.riskControlSuggestions': '리스크 관리 제안 데이터',
   'riskControl.suggestions.editingStatus': '추가 편집 상태',

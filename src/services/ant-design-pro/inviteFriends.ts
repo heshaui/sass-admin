@@ -84,3 +84,29 @@ export async function getFundAccountsList(params: any) {
   });
 }
 
+
+
+export async function batchGrantRebate(params: any) {
+  return request('/tenant/v1/batchGrantRebate', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+// 手动发放返佣
+export async function grantUserRebates(params: any) {
+  return request('/tenant/v1/grantUserRebates', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+//获取返佣金额
+export async function getUserGrantRebate(params: any) {
+  return request('/tenant/v1/getUserGrantRebate?userId='+params.userId, {
+    method: 'POST',
+    data: params,
+  });
+}
+
+

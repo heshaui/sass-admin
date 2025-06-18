@@ -60,7 +60,7 @@ export default {
   'currency.column.protocolId': '프로토콜 ID',
   'currency.column.mainAddress': '주소',
   'currency.column.contractAddress': '계약 주소',
-  'currency.column.decimals': '정밀도', 
+  'currency.column.decimals': '정밀도',
   'currency.column.withdrawFee': '출금 수수료',
   'currency.column.minWithdrawFee': '최소 출금 수수료',
   'currency.column.minWithdraw': '최소 출금량',
@@ -72,7 +72,7 @@ export default {
   'currency.log.formSubmit': '제출 데이터:',
   'currency.log.extendInfoFormSubmit': '추가 정보 제출 데이터:',
   'currency.log.extendInfoMode': '모드:',
-  
+
   // CurrencyForm component
   'currency.form.validation.failed': '표单 검증 실패',
   'currency.form.basicInfo': '기본 정보',
@@ -114,7 +114,7 @@ export default {
   'currency.form.minWithdrawalAmount': '출금 최소값',
   'currency.form.maxWithdrawalAmount': '출금 최대값',
   'currency.form.save': '저장',
-  
+
   // CurrencyIntroForm component
   'currency.intro.title': '코인 소개',
   'currency.intro.cancel': '취소',
@@ -130,7 +130,7 @@ export default {
   'currency.intro.saveSuccess': '코인 소개 저장 성공',
   'currency.intro.saveFailed': '코인 소개 저장 실패',
   'currency.intro.formValidationFailed': '표单 검증 실패',
-  
+
   // ExtendInfoForm component
   'currency.extendInfo.title': '동일 코인 추가',
   'currency.extendInfo.cancel': '취소',
@@ -169,7 +169,7 @@ export default {
   'currency.extendInfo.pleaseEnterMinDepositAmount': '최소 입금액을 입력해주세요',
   'currency.extendInfo.confirmations': '확인 수',
   'currency.extendInfo.pleaseEnterConfirmations': '확인 수를 입력해주세요',
-  
+
   // OrderManagement component
   'order.management.cancelSuccess': '취소 성공',
   'order.management.cancelFailed': '취소 실패',
@@ -216,7 +216,7 @@ export default {
   'order.management.tradeDetails': '거래 상세',
   'order.management.noTradeRecords': '거래 기록이 없습니다',
   'order.management.orderList': '주문 목록',
-  
+
   // CurrencyProtocol component
 'protocol.title': '프로토콜 관리',
 'protocol.add': '프로토콜 추가',
@@ -236,7 +236,7 @@ export default {
 'protocol.column.action': '관리',
 'protocol.button.cancel': '취소',
 'protocol.button.submit': '저장',
-  
+
   // ProtocolForm component
 'protocol.form.protocolName': '프로토콜 명칭',
 'protocol.form.protocolName.required': '프로토콜 명칭을 입력해 주세요',
@@ -254,7 +254,7 @@ export default {
 'protocol.form.chainId': 'Chain ID',
 'protocol.form.chainId.required': 'Chain ID를 선택해 주세요',
 'protocol.form.chainId.placeholder': 'Chain ID',
-  
+
   // TradingFees component
   'tradingFees.updateSuccess': '업데이트 성공',
   'tradingFees.column.tradingPair': '거래 쌍',
@@ -262,7 +262,7 @@ export default {
   'tradingFees.column.takerFee': 'Taker 수수료',
   'tradingFees.column.action': '작업',
   'tradingFees.button.edit': '편집',
-  
+
   // EditForm component
   'tradingFees.form.title': '거래 수수료 편집',
   'tradingFees.form.tradingPair': '거래 쌍',
@@ -274,7 +274,7 @@ export default {
   'tradingFees.form.cancel': '取消',
   'tradingFees.form.submit': '제출',
   'tradingFees.form.error': '제출 테이블 폼 오류:',
-  
+
   // TradingPairManagement component
   'tradingPair.message.editSuccess': '거래 쌍 수정 성공',
   'tradingPair.message.addSuccess': '거래 쌍 추가 성공',
@@ -284,14 +284,14 @@ export default {
   'tradingPair.message.matchingTypeFailed': '매칭 유형 설정 실패',
   'tradingPair.message.cancelOrderSuccess': '주문 취소 성공',
   'tradingPair.message.bindSuccess': '바인딩 성공',
-  
+
 'tradingPair.modal.confirmEnable': '이 거래 쌍을 활성화하시겠습니까?',
 'tradingPair.modal.confirmDisable': '이 거래 쌍을 비활성화하시겠습니까?',
 'tradingPair.modal.confirmShow': '이 거래 쌍을 표시하시겠습니까?',
 'tradingPair.modal.confirmHide': '이 거래 쌍을 숨기시겠습니까?',
 'tradingPair.modal.confirmCancelOrders': '모든 {coinSymbol}/{baseSymbol} 주문을 취소하시겠습니까?',
   'tradingPair.modal.matchingType': '매칭 유형',
-  
+
   'tradingPair.column.sortOrder': '정렬',
   'tradingPair.column.tradingPair': '거래 쌍',
   'tradingPair.column.enableTrading': '거래 허가',
@@ -302,35 +302,35 @@ export default {
   'tradingPair.column.tag': '币对标签',
   'tradingPair.column.createTime': '추가 시간',
   'tradingPair.column.action': '작업',
-  
+
   'tradingPair.action.edit': '수정',
   'tradingPair.action.cancelOrders': '주문 취소',
   'tradingPair.action.matchingType': '매칭 유형',
-  
+
   'tradingPair.table.title': '거래 쌍 관리',
   'tradingPair.button.add': '추가',
-  
+
   'tradingPair.status.disabled': '비활성화',
   'tradingPair.status.enabled': '활성화',
   'tradingPair.status.hidden': '숨김',
   'tradingPair.status.visible': '표시',
-  
+
   'tradingPair.matchingType.centralized': '중심화된 매칭',
   'tradingPair.matchingType.independent': '독립적인 매칭',
   'tradingPair.button.cancel': '취소',
   'tradingPair.button.confirm': '확인',
-  
+
   // TradingPairForm component
   'tradingPair.form.editTitle': '수정',
   'tradingPair.form.addTitle': '추가',
   'tradingPair.form.cancel': '취소',
   'tradingPair.form.confirm': '확인',
   'tradingPair.form.validationFailed': '테이블 폼 검증 실패:',
-  
+
   'tradingPair.form.section.basicInfo': '기본 정보',
   'tradingPair.form.section.tradingRules': '거래 규칙',
   'tradingPair.form.section.depthPrecision': '깊이 정밀도 설정',
-  
+
   'tradingPair.form.baseCurrency': '기본 화폐',
   'tradingPair.form.baseCurrency.required': '기본 화폐를 선택해주세요',
   'tradingPair.form.quoteCurrency': '가격 화폐',
@@ -362,10 +362,15 @@ export default {
   'tradingPair.form.depthPrecision3': '깊이 정밀도 3',
   'tradingPair.form.depthPrecision4': '깊이 정밀도 4',
   'tradingPair.form.depthPrecision5': '깊이 정밀도 5',
-  
+
+  'tradingPair.form.priceDeviationPercentage.tips':'주문가격 > 편차율(주문가격 - 시장가격 / 시장가격 * 100%)인 경우 주문 실패',
+  'tradingPair.column.takerFee.tips': '수수료는 0~1% 사이',
+  'tradingPair.form.depthPrecision.tips': '프런트엔드는 깊이 정밀도를 1~5로 표시합니다. 1~9는 소수점 자릿수를 나타냅니다. 즉, 1은 0.1을 나타냅니다.',
+
+
   'tradingPair.form.yes': '예',
   'tradingPair.form.no': '아니오',
-  
+
 'tradingPair.category.mainstream': '메인스트림 영역',
 'tradingPair.category.innovation': '혁신 영역',
 'tradingPair.category.new': '신규 코인 영역',

@@ -1,10 +1,10 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
-import { Button, Space,message } from 'antd';
-import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
-import { useIntl } from 'umi';
-import { getTenantAuthorityList} from '@/services/ant-design-pro/merchantSystem';
+import { message } from 'antd';
+import { getTenantAuthorityList } from '@/services/ant-design-pro/merchantSystem';
 import PermissionModal from './component/PermissionModal'; // 引入PermissionModal
+import { useIntl } from '@umijs/max';
+import { useState } from 'react';
+import { saveTenantAuthority, updateTenantById } from '@/services/ant-design-pro/authAdmin';
 
 const PermissionAdmin: React.FC = () => {
   const intl = useIntl();
@@ -12,16 +12,25 @@ const PermissionAdmin: React.FC = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [editingRecord, setEditingRecord] = useState(null); // 编辑时的记录
+  const [editingRecord, setEditingRecord] = useState<API.TenantAuthority | null>(null); // 编辑时的记录
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 }); // 添加分页状态
 
   // 表格列配置
   const columns = [
     {
+      title: intl.formatMessage({ id: 'language.table.column.index' }),
+      key: 'index',
+      render: (_: any, record: any, index: number) => {
+        const { current = 1, pageSize = 10 } = pagination; // 从分页器获取当前页和每页条数
+        return (current - 1) * pageSize + index + 1; // 关键公式
+      },
+      search: false,
+    },
+    {
       title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.id' }),
       dataIndex: 'id',
       key: 'id',
-       search: false,
+      search: false,
     },
     {
       title: intl.formatMessage({ id: 'merchantSystem.permissionAdmin.column.description' }),
@@ -87,10 +96,12 @@ const PermissionAdmin: React.FC = () => {
       dataIndex: 'systemType',
       key: 'systemType',
       search: false,
-      render: (text) => {
-        return text === '1' ? intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.admin' }) : 
-               text === '2' ? intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.merchant' }) : 
-               intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.common' });
+      render: (_: any, record: any) => {
+        return record.systemType === '1'
+          ? intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.admin' })
+          : record.systemType === '2'
+          ? intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.merchant' })
+          : intl.formatMessage({ id: 'merchantSystem.permissionAdmin.systemType.common' });
       },
     },
     {
@@ -99,7 +110,6 @@ const PermissionAdmin: React.FC = () => {
       key: 'icon',
       search: false,
     },
-
   ];
 
   // 获取权限列表
@@ -122,50 +132,58 @@ const PermissionAdmin: React.FC = () => {
       setLoading(false); // 结束加载状态
     }
   };
-    // 新建/编辑提交
-    const handleSubmit = async (values) => {
-      try {
-        if (editingRecord) {
-          // 编辑
-          await updateTenantById({ ...editingRecord, ...values });
-          message.success(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.edit.success' }));
+  // 新建/编辑提交
+  const handleSubmit = async (values: any) => {
+    try {
+      if (editingRecord) {
+        // 编辑
+        await updateTenantById({ ...editingRecord, ...values });
+        message.success(
+          intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.edit.success' }),
+        );
+      } else {
+        // 新建
+        const res = await saveTenantAuthority(values);
+        if (res.code === '0') {
+          message.success(
+            intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.create.success' }),
+          );
         } else {
-          // 新建
-       const res=  await saveTenantAuthority(values);
-       if(res.code==='0'){
-        message.success(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.create.success' }));
-       }else{
-        message.error(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.create.failed' }));
-       }
-         
+          message.error(
+            intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.create.failed' }),
+          );
         }
-        setModalVisible(false);
-        setEditingRecord(null);
-        getAuthorityList();
-      } catch (error) {
-        message.error(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.operation.failed' }));
       }
-    };
-  
-    // 编辑
-    const handleEdit = (record: any) => {
-      setEditingRecord(record);
-      setModalVisible(true);
-    };
-  
-    // 删除
-    const handleDelete = async (id: string | number) => {
-      try {
-        await deleteTenantById(id);
-        message.success(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.delete.success' }));
-        getAuthorityList();
-      } catch (error) {
-        message.error(intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.delete.failed' }));
-      }
-    };
+      setModalVisible(false);
+      setEditingRecord(null);
+      getAuthorityList();
+    } catch (error) {
+      message.error(
+        intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.operation.failed' }),
+      );
+    }
+  };
 
-   
-  
+  // 编辑
+  // const handleEdit = (record: any) => {
+  //   setEditingRecord(record);
+  //   setModalVisible(true);
+  // };
+
+  // 删除
+  // const handleDelete = async (id: string | number) => {
+  //   try {
+  //     await deleteTenantById(id);
+  //     message.success(
+  //       intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.delete.success' }),
+  //     );
+  //     getAuthorityList();
+  //   } catch (error) {
+  //     message.error(
+  //       intl.formatMessage({ id: 'merchantSystem.permissionAdmin.message.delete.failed' }),
+  //     );
+  //   }
+  // };
 
   return (
     <PageContainer>
@@ -177,8 +195,8 @@ const PermissionAdmin: React.FC = () => {
         scroll={{ x: 'max-content' }}
         request={async (params) => {
           await getAuthorityList({
-            pageNo: params.current,
-            pageSize: params.pageSize,
+            pageNo: params.current || 1,
+            pageSize: params.pageSize || 10,
             ...params, // 添加其他查询参数
           });
           return {
@@ -204,9 +222,7 @@ const PermissionAdmin: React.FC = () => {
             getAuthorityList({ pageNo: page, pageSize });
           },
         }}
-        toolBarRender={() => [
-
-        ]}
+        toolBarRender={() => []}
       />
       <PermissionModal
         visible={modalVisible}

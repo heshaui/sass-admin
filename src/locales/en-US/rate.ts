@@ -35,6 +35,11 @@ export default {
   'rate.form.status.yes': 'Yes',
   'rate.form.status.no': 'No',
 
+  'rate.form.img.png': 'Only supports uploading png format images',
+  'rate.form.img.size': 'Image size cannot exceed 500k',
+  'rate.form.img.limit': 'The image width and height must be a multiple of 24!',
+
+  'rate.form.upload.env': 'The current environment does not support previewing images',
   'rate.form.upload.size': 'Please upload less than 500k',
   'rate.form.upload.png': '24*24 png picture',
 

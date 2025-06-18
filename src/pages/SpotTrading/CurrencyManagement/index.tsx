@@ -401,56 +401,76 @@ const CurrencyManagement: React.FC = () => {
     }
   };
 
-  const handleSwtich=async(record:CurrencyItem,type:string)=>{
-    let data
-      if(type==='canRecharge'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          canRecharge:record.canRecharge===1?0:1
-        }
-      }else if(type==='canWithdraw'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          canWithdraw:record.canWithdraw===1?0:1
-        }
-      }else if(type==='canTransfer'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          canTransfer:record.canTransfer===1?0:1
-        }
-      }else if(type==='canAutoWithdraw'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          canAutoWithdraw:record.canAutoWithdraw===1?0:1
-        }
-      }else if(type==='status'){
-        data={
-          id:record.id,
-          coinId:record.coinId,
-          status:record.status===1?0:1
-        }
-      }
-      const tip: Record<string, string> = {
-        canRecharge: intl.formatMessage({ 
-          id: record.canRecharge === 1 ? 'currency.tip.canRecharge.off' : 'currency.tip.canRecharge.on' 
-        }),
-        canWithdraw: intl.formatMessage({ 
-          id: record.canWithdraw === 1 ? 'currency.tip.canWithdraw.off' : 'currency.tip.canWithdraw.on' 
-        }),
-        canTransfer: intl.formatMessage({ 
-          id: record.canTransfer === 1 ? 'currency.tip.canTransfer.off' : 'currency.tip.canTransfer.on' 
-        }),
-        canAutoWithdraw: intl.formatMessage({ 
-          id: record.canAutoWithdraw === 1 ? 'currency.tip.canAutoWithdraw.off' : 'currency.tip.canAutoWithdraw.on' 
-        }),
-      }
-    let res=await adminUpdateCurrencyCoinById(data);
-    if(res.code==='0'&&res.data){
-      message.success(intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }));
+  const handleSwtich = async (record: CurrencyItem, type: string) => {
+    let data;
+    if (type === 'canRecharge') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        canRecharge: record.canRecharge === 1 ? 0 : 1,
+      };
+    } else if (type === 'canWithdraw') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        canWithdraw: record.canWithdraw === 1 ? 0 : 1,
+      };
+    } else if (type === 'canTransfer') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        canTransfer: record.canTransfer === 1 ? 0 : 1,
+      };
+    } else if (type === 'canAutoWithdraw') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        canAutoWithdraw: record.canAutoWithdraw === 1 ? 0 : 1,
+      };
+    } else if (type === 'status') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        status: record.status === 1 ? 0 : 1,
+      };
+    }else if (type === 'isTradeConvert') {
+      data = {
+        id: record.id,
+        coinId: record.coinId,
+        isTradeConvert: record.isTradeConvert === 1 ? 0 : 1,
+      };
+    }
+    const tip: Record<string, string> = {
+      canRecharge: intl.formatMessage({
+        id:
+          record.canRecharge === 1 ? 'currency.tip.canRecharge.off' : 'currency.tip.canRecharge.on',
+      }),
+      canWithdraw: intl.formatMessage({
+        id:
+          record.canWithdraw === 1 ? 'currency.tip.canWithdraw.off' : 'currency.tip.canWithdraw.on',
+      }),
+      canTransfer: intl.formatMessage({
+        id:
+          record.canTransfer === 1 ? 'currency.tip.canTransfer.off' : 'currency.tip.canTransfer.on',
+      }),
+      canAutoWithdraw: intl.formatMessage({
+        id:
+          record.canAutoWithdraw === 1
+            ? 'currency.tip.canAutoWithdraw.off'
+            : 'currency.tip.canAutoWithdraw.on',
+      }),
+      isTradeConvert: intl.formatMessage({
+        id:
+          record.isTradeConvert === 1
+            ? '关闭闪兑？'
+            : '开启闪兑？',
+      }),
+    };
+    let res = await adminUpdateCurrencyCoinById(data);
+    if (res.code === '0' && res.data) {
+      message.success(
+        intl.formatMessage({ id: 'currency.message.success' }, { action: tip[type] }),
+      );
       actionRef.current?.reload();
       if(type==='status'||type==='canWithdraw'||type==='canRecharge'){
         fetchExtendInfo(record.coinId);
@@ -499,6 +519,31 @@ const CurrencyManagement: React.FC = () => {
               ),
               onOk: () => {
                 handleSwtich(record,'status');
+              },
+            });
+          }}
+        />
+      ),
+    },
+    {
+      title: '闪兑',
+      dataIndex: 'isTradeConvert',
+      search:false,
+      render: (_, record) => (
+        <Switch
+          checked={record.isTradeConvert === 1}
+          onChange={(checked) => {
+            Modal.confirm({
+              title: intl.formatMessage(
+                { id: 'currency.modal.confirm.isTradeConvert',defaultMessage:'确定开启闪兑吗？' },
+                {
+                  action: intl.formatMessage({
+                    id: checked ? '开启' : '关闭',
+                  }),
+                },
+              ),
+              onOk: () => {
+                handleSwtich(record, 'isTradeConvert');
               },
             });
           }}

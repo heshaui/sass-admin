@@ -10,7 +10,7 @@ export default {
   'riskControl.alerts.startDate': '开始日期',
   'riskControl.alerts.endDate': '结束日期',
   'riskControl.alerts.filterConditions': '筛选条件状态',
-  
+
   // Config page
   'riskControl.config.saveSuccess': '保存成功',
   'riskControl.config.assetImbalance': '资产不平',
@@ -21,21 +21,25 @@ export default {
   'riskControl.config.riskLevel': '风控等级',
   'riskControl.config.level': '级',
   'riskControl.config.alarmNotification': '报警通知',
-  'riskControl.config.emailOrPhoneHint': '邮箱或手机，以类文通号啓开',
+  'riskControl.config.emailOrPhoneHint': '邮箱或手机，以英文逗号隔开',
   'riskControl.config.googleVerificationCode': '谷歌验证码',
   'riskControl.config.enterGoogleVerificationCode': '请输入谷歌验证码',
   'riskControl.config.moneyLaundering': '洗钱嫌疑',
-  'riskControl.config.minutesWithdrawalCount': '分钟内，累计提现笔数',
+  'riskControl.config.withdrawalCount': '累计提现笔数',
   'riskControl.config.times': '次',
   'riskControl.config.rechargeWithin24Hours': '24小时内充值>',
-  'riskControl.config.usdtAndWithdrawalAmountGreaterThan': 'USDT 且提现金额大于',
+  'riskControl.config.withdrawalAmountGreaterThan': '且提现金额大于',
   'riskControl.config.percentOfRechargeAmount': '>的充值金额',
   'riskControl.config.theftWarning': '被盗预警',
   'riskControl.config.userWithdrawalIPChangePercentageLessThan': '用户提现的IP更换次数占比 <',
   'riskControl.config.riskLevelPlus': '风控等级+',
   'riskControl.config.userWithdrawalAddressNoSuccess': '用户提现地址之前未成功提现 >',
   'riskControl.config.twoAccountsWithdrawToSameAddress': '两个不同的账户提现到同一个地址',
-  
+  'riskControl.config.minute': ' 分钟内',
+
+  'riskControl.config.enterAssetEquivalent':'请输入资产折合',
+  'riskControl.config.enterRiskLevel':'请输入风控等级',
+
   // Suggestions page
   'riskControl.suggestions.riskControlSuggestions': '风控建议数据',
   'riskControl.suggestions.editingStatus': '添加编辑状态',

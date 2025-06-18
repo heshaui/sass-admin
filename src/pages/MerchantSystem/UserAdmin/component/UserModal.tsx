@@ -1,8 +1,7 @@
 // src/components/UserModal.tsx
 import { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 import { Modal, Form, Input, Select, message } from 'antd';
-import { roleList as fetchRoleListApi } from '@/services/ant-design-pro/authAdmin';
 import { getTenantRoleList } from '@/services/ant-design-pro/merchantSystem';
 
 interface UserModalProps {
@@ -12,17 +11,28 @@ interface UserModalProps {
   initialValues?: any; // 编辑时传递的初始值
 }
 
-const UserModal: React.FC<UserModalProps> = ({
-  visible,
-  onClose,
-  onSubmit,
-  initialValues,
-}) => {
+const UserModal: React.FC<UserModalProps> = ({ visible, onClose, onSubmit, initialValues }) => {
   const [form] = Form.useForm();
   const intl = useIntl();
 
   const [roleList, setRoleList] = useState<API.RoleListItem[]>([]);
-  
+  const fetchRoleList = async () => {
+    try {
+      let data = {
+        pageNo: 1,
+        pageSize: 10000,
+      };
+      const result = await getTenantRoleList(data);
+      if (result.code === '0') {
+        setRoleList(result.data.list || []);
+      }
+    } catch (error) {
+      console.error(
+        intl.formatMessage({ id: 'merchantSystem.userModal.message.fetchRoles.failed' }),
+        error,
+      );
+    }
+  };
   useEffect(() => {
     if (visible) {
       if (initialValues) {
@@ -30,23 +40,8 @@ const UserModal: React.FC<UserModalProps> = ({
       } else {
         form.resetFields();
       }
+      fetchRoleList();
     }
-    const fetchRoleList = async () => {
-      try {
-          let data={
-            pageNo:1,
-            pageSize:10000
-          }
-        const result = await getTenantRoleList(data);
-        if (result.code==='0') {
-          setRoleList(result.data.list|| []);
-        }
-      } catch (error) {
-        console.error(intl.formatMessage({ id: 'merchantSystem.userModal.message.fetchRoles.failed' }), error);
-      }
-    };
-    
-    fetchRoleList();
   }, [visible, initialValues, form]);
 
   // 提交表单
@@ -66,7 +61,11 @@ const UserModal: React.FC<UserModalProps> = ({
   return (
     <Modal
       visible={visible}
-      title={initialValues ? intl.formatMessage({ id: 'merchantSystem.userModal.title.edit' }) : intl.formatMessage({ id: 'merchantSystem.userModal.title.create' })}
+      title={
+        initialValues
+          ? intl.formatMessage({ id: 'merchantSystem.userModal.title.edit' })
+          : intl.formatMessage({ id: 'merchantSystem.userModal.title.create' })
+      }
       onCancel={onClose}
       onOk={handleSubmit}
     >
@@ -74,7 +73,14 @@ const UserModal: React.FC<UserModalProps> = ({
         <Form.Item
           name="nickname"
           label={intl.formatMessage({ id: 'merchantSystem.userModal.form.nickname' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'merchantSystem.userModal.form.nickname.required' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({
+                id: 'merchantSystem.userModal.form.nickname.required',
+              }),
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -82,7 +88,12 @@ const UserModal: React.FC<UserModalProps> = ({
         <Form.Item
           name="phone"
           label={intl.formatMessage({ id: 'merchantSystem.userModal.form.phone' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'merchantSystem.userModal.form.phone.required' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'merchantSystem.userModal.form.phone.required' }),
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -90,7 +101,12 @@ const UserModal: React.FC<UserModalProps> = ({
         <Form.Item
           name="email"
           label={intl.formatMessage({ id: 'merchantSystem.userModal.form.email' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'merchantSystem.userModal.form.email.required' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'merchantSystem.userModal.form.email.required' }),
+            },
+          ]}
         >
           <Input />
         </Form.Item>
@@ -104,10 +120,17 @@ const UserModal: React.FC<UserModalProps> = ({
         <Form.Item
           name="role"
           label={intl.formatMessage({ id: 'merchantSystem.userModal.form.permission' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'merchantSystem.userModal.form.permission.required' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({
+                id: 'merchantSystem.userModal.form.permission.required',
+              }),
+            },
+          ]}
         >
-           <Select>
-            {roleList.map(role => (
+          <Select>
+            {roleList.map((role) => (
               <Select.Option key={role.roleId} value={String(role.roleId)}>
                 {role.roleName}
               </Select.Option>
@@ -118,11 +141,20 @@ const UserModal: React.FC<UserModalProps> = ({
         <Form.Item
           name="status"
           label={intl.formatMessage({ id: 'merchantSystem.userModal.form.status' })}
-          rules={[{ required: true, message: intl.formatMessage({ id: 'merchantSystem.userModal.form.status.required' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'merchantSystem.userModal.form.status.required' }),
+            },
+          ]}
         >
           <Select>
-            <Select.Option value={1}>{intl.formatMessage({ id: 'merchantSystem.userModal.form.status.normal' })}</Select.Option>
-            <Select.Option value={0}>{intl.formatMessage({ id: 'merchantSystem.userModal.form.status.disabled' })}</Select.Option>
+            <Select.Option value={1}>
+              {intl.formatMessage({ id: 'merchantSystem.userModal.form.status.normal' })}
+            </Select.Option>
+            <Select.Option value={0}>
+              {intl.formatMessage({ id: 'merchantSystem.userModal.form.status.disabled' })}
+            </Select.Option>
           </Select>
         </Form.Item>
       </Form>

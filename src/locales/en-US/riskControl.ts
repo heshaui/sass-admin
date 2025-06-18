@@ -10,7 +10,7 @@ export default {
   'riskControl.alerts.startDate': 'Start Date',
   'riskControl.alerts.endDate': 'End Date',
   'riskControl.alerts.filterConditions': 'Filter Condition Status',
-  
+
   // Config page
   'riskControl.config.saveSuccess': 'Save Successful',
   'riskControl.config.assetImbalance': 'Asset Imbalance',
@@ -21,21 +21,23 @@ export default {
   'riskControl.config.riskLevel': 'Risk Control Level',
   'riskControl.config.level': 'Level',
   'riskControl.config.alarmNotification': 'Alarm Notification',
-  'riskControl.config.emailOrPhoneHint': 'Email or phone, separated by commas',
+  'riskControl.config.emailOrPhoneHint': 'Email or mobile phone number, separated by commas',
   'riskControl.config.googleVerificationCode': 'Google Verification Code',
   'riskControl.config.enterGoogleVerificationCode': 'Please enter Google verification code',
   'riskControl.config.moneyLaundering': 'Money Laundering Suspicion',
-  'riskControl.config.minutesWithdrawalCount': 'Within minutes, cumulative withdrawal count',
+  'riskControl.config.withdrawalCount': 'Cumulative withdrawals',
   'riskControl.config.times': 'times',
   'riskControl.config.rechargeWithin24Hours': 'Deposit within 24 hours >',
-  'riskControl.config.usdtAndWithdrawalAmountGreaterThan': 'USDT and withdrawal amount greater than',
+  'riskControl.config.withdrawalAmountGreaterThan': 'Withdrawal amount greater than',
   'riskControl.config.percentOfRechargeAmount': '> of deposit amount',
   'riskControl.config.theftWarning': 'Theft Warning',
   'riskControl.config.userWithdrawalIPChangePercentageLessThan': 'User withdrawal IP change percentage <',
   'riskControl.config.riskLevelPlus': 'Risk Level +',
   'riskControl.config.userWithdrawalAddressNoSuccess': 'User withdrawal address with no previous successful withdrawals >',
   'riskControl.config.twoAccountsWithdrawToSameAddress': 'Two different accounts withdrawing to the same address',
-  
+  'riskControl.config.minute': 'minutes',
+
+
   // Suggestions page
   'riskControl.suggestions.riskControlSuggestions': 'Risk Control Suggestions Data',
   'riskControl.suggestions.editingStatus': 'Add/Edit Status',

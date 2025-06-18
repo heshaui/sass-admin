@@ -1,4 +1,5 @@
 export default {
+<<<<<<< HEAD
 'permission.authAdmin': 'Permission Management',
 'permission.permission': 'Permission List',
 'permission.userAdmin': 'User Management',

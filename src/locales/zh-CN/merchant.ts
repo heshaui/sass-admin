@@ -37,11 +37,12 @@ export default {
   'merchant.message.roleAssignSuccess': '角色分配成功',
   'merchant.message.roleAssignFailed': '角色分配失败',
   'merchant.message.roleAssignError': '角色分配异常',
+  'merchant.message.roleAssignConfirm': '确定要分配角色吗？',
 
   // Form
   'merchant.form.role.selectLabel': '选择功能',
-  'merchant.form.role.placeholder': '请选择角色',
-  'merchant.form.role.required': '请选择角色',
+  'merchant.form.role.placeholder': '请选择功能',
+  'merchant.form.role.required': '请选择功能',
 
   // Table Columns
   'merchant.table.id': 'ID',
@@ -56,6 +57,7 @@ export default {
   'merchant.action.resetPassword': '重置密码',
   'merchant.action.resetGoogle': '重置谷歌',
   'merchant.action.assignRole': '角色分配',
+  'merchant.action.functionalDistribution': '功能分配',
 
   // Account Page
   'account.table.id': 'ID',

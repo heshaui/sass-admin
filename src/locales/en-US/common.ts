@@ -39,7 +39,7 @@ export default {
     'common.status_update_retry': 'Status update failed, please try again later',
     'common.copy': 'Copy',
     'common.welcome': 'Welcome to Seed Admin',
-  "common.view_detail": "View Details",   
+  "common.view_detail": "View Details",
   "common.dictionary.name": "Dictionary Name",
   "common.dictionary.value": "Dictionary Value",
   "common.status": "Status",
@@ -62,8 +62,12 @@ export default {
   "common.trc20error": "TRC20 address is empty, cannot grant",
   "common.select.country": "Please select country",
   "common.no_data": "No data available",
-  
-  
-  
+
+  "common.upload.limit": "File size exceeds limit",
+  "common.upload.type": "Unsupported file type",
+  "common.upload.env": "Current environment does not support image preview",
+  "common.upload.dimension": "Incorrect image size",
+  "common.upload.dimension.multiple": "Incorrect image size",
+
+
   };
-  

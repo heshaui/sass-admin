@@ -333,7 +333,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         </Col>
         </Row>
       </Card>
-      <Card title={intl.formatMessage({ id: 'currency.form.isPlatformCoin' })} style={{ marginBottom: 16 }}>
+      {/* <Card title={intl.formatMessage({ id: 'currency.form.isPlatformCoin' })} style={{ marginBottom: 16 }}>
       <Row gutter={24}>
       <Col span={8}>
         <Form.Item
@@ -348,7 +348,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
         </Form.Item>
         </Col>
         </Row>
-      </Card>
+      </Card>2025-06-12 zyj */}
       
       <Card title={intl.formatMessage({ id: 'currency.form.depositInfo' })} style={{ marginBottom: 16 }}>
         <Row gutter={24}>
@@ -367,7 +367,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             <span>{intl.formatMessage({ id: 'currency.form.statusAffectsSubCoins' })}</span>
           </Col>
           
-          <Col span={12}>
+          {/* <Col span={12}>
             <Form.Item
               name="minTopUp"
               label={intl.formatMessage({ id: 'currency.form.minDepositAmount' })}
@@ -375,7 +375,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             >
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
-          </Col>
+          </Col> 2025-06-12 zyj */}
         </Row>
       </Card>
       
@@ -395,7 +395,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             </Form.Item>
             <span>{intl.formatMessage({ id: 'currency.form.statusAffectsSubCoins' })}</span>
           </Col>
-          <Col span={12}>
+          {/* <Col span={12}>
             <Form.Item
               name="minWithdrawAmount"
               label={intl.formatMessage({ id: 'currency.form.minWithdrawalAmount' })}
@@ -403,9 +403,9 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             >
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
-          </Col>
+          </Col> 2025-06-12 zyj */}
           
-          <Col span={12}>
+          {/* <Col span={12}>
             <Form.Item
               name="maxWithdrawAmount"
               label={intl.formatMessage({ id: 'currency.form.maxWithdrawalAmount' })}
@@ -413,7 +413,7 @@ const CurrencyForm: React.FC<CurrencyFormProps> = ({ initialValues, onSubmit, on
             >
               <InputNumber style={{ width: '100%' }} />
             </Form.Item>
-          </Col>
+          </Col> 2025-06-12 zyj */}
         </Row>
       </Card>
       

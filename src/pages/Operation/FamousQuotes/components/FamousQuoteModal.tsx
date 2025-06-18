@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, message,Select} from 'antd';
-import { getFamousAphorismsDetail, addFamousAphorisms, updateFamousAphorisms } from '@/services/ant-design-pro/operation';
+import { Modal, Form, Input, message, Select } from 'antd';
+import {
+  getFamousAphorismsDetail,
+  addFamousAphorisms,
+  updateFamousAphorisms,
+} from '@/services/ant-design-pro/operation';
 import LanguageSelector from '@/components/LanguageSelector';
-import  {languages}  from '@/config/language';
-import { useIntl } from 'umi';
+import { languages } from '@/config/language';
+import { useIntl } from '@umijs/max';
 interface FamousQuoteModalProps {
   visible: boolean;
   editingId: number | null;
+  languageCode?: string;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -20,20 +25,21 @@ interface LanguageContent {
 const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
   visible,
   editingId,
+  languageCode,
   onSuccess,
   onCancel,
 }) => {
   const intl = useIntl();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
-  const [language, setLanguage] = useState<string>('en_US');
+  const [language, setLanguage] = useState<string>();
   const [content, setContent] = useState<string>('');
-  
+
   // 多语言内容列表
   const [contentList, setContentList] = useState<LanguageContent[]>([
-    { languageCode: 'en_US', languageContent: '' }
+    { languageCode: 'en_US', languageContent: '' },
   ]);
-  
+
   // 添加重置表单和状态的函数
   const resetFormAndState = () => {
     form.resetFields();
@@ -41,30 +47,29 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
     setContent('');
     setContentList([{ languageCode: 'en_US', languageContent: '' }]);
   };
-  
+
   // 修改onCancel处理函数，在关闭模态框时重置状态
   const handleCancel = () => {
     resetFormAndState();
     onCancel();
   };
-  
+
   // 添加获取名言详情的函数
   const fetchQuoteDetails = async () => {
     if (!editingId) return;
-    
+
     try {
       setLoading(true);
       const res = await getFamousAphorismsDetail(editingId.toString());
-      
+
       if (res.code === '0' && res.data) {
-        // 获取所有语言内容
-      
-        
-        
-        // 更新表单
-        form.setFieldsValue({
-          langId: res.data.famousAphorismsContents[0].languageCode,
-          text:  res.data.famousAphorismsContents[0].languageContent
+        res.data.famousAphorismsContents.filter((item: any) => {
+          if (item.languageCode === languageCode) {
+            form.setFieldsValue({
+              langId: item.languageCode,
+              text: item.languageContent,
+            });
+          }
         });
       }
     } catch (error) {
@@ -78,11 +83,11 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
     // 更新当前语言的内容
     setContent(value);
     // 同时更新contentList
-    setContentList(prev => {
-      const exists = prev.some(item => item.languageCode === language);
+    setContentList((prev: any) => {
+      const exists = prev.some((item) => item.languageCode === language);
       if (exists) {
-        return prev.map(item => 
-          item.languageCode === language ? { ...item, languageContent: value } : item
+        return prev.map((item) =>
+          item.languageCode === language ? { ...item, languageContent: value } : item,
         );
       } else {
         return [...prev, { languageCode: language, languageContent: value }];
@@ -91,67 +96,66 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
   };
   const handleLanguageChange = (value: string) => {
     // 保存当前语言的内容
-    setContentList(prev => {
-      const exists = prev.some(item => item.languageCode === language);
+    setContentList((prev: any) => {
+      const exists = prev.some((item) => item.languageCode === language);
       if (exists) {
-        return prev.map(item => 
-          item.languageCode === language ? { ...item, languageContent: content } : item
+        return prev.map((item) =>
+          item.languageCode === language ? { ...item, languageContent: content } : item,
         );
       } else {
         return [...prev, { languageCode: language, languageContent: content }];
       }
     });
-    
+
     // 设置新语言
     setLanguage(value);
-    
+
     // 从contentList获取对应语言的内容
-    const langContent = contentList.find(item => item.languageCode === value)?.languageContent || '';
+    const langContent =
+      contentList.find((item) => item.languageCode === value)?.languageContent || '';
     form.setFieldsValue({ text: langContent });
     setContent(langContent);
   };
 
-  const getCurrentContent = (langKey: string): string => {
-    const langItem = contentList.find(item => item.languageCode === langKey);
-    return langItem ? langItem.languageContent : '';
-  };
+  // 提交表单
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      if(language==='en_US'){
-       if(values.text.trim()===''){
-        message.error(intl.formatMessage({ id: 'famousQuotes.modal.form.englishRequired' }));
-        return;
+      if (language === 'en_US') {
+        if (values.text.trim() === '') {
+          message.error(intl.formatMessage({ id: 'famousQuotes.modal.form.englishRequired' }));
+          return;
+        }
       }
-    }
       // 更新当前语言内容到contentList
       const updatedContentList = [...contentList];
-      const existingIndex = updatedContentList.findIndex(item => item.languageCode === language);
+      const existingIndex = updatedContentList.findIndex((item) => item.languageCode === language);
       if (existingIndex >= 0) {
         updatedContentList[existingIndex].languageContent = values.text;
       } else {
         updatedContentList.push({
           languageCode: language,
-          languageContent: values.text
+          languageContent: values.text,
         });
       }
-      
+
       // 检查是否包含英文内容
-      const englishContent = updatedContentList.find(item => item.languageCode === 'en_US')?.languageContent || '';
+      const englishContent =
+        updatedContentList.find((item) => item.languageCode === 'en_US')?.languageContent || '';
       if (!englishContent.trim()) {
         message.error(intl.formatMessage({ id: 'famousQuotes.modal.form.englishRequired' }));
         return;
       }
-      
+
       setLoading(true);
-      
+
       if (editingId) {
         // 更新操作
         const res = await updateFamousAphorisms({
           id: editingId,
-          famousAphorismsContents: updatedContentList
+          famousAphorismsContents: updatedContentList,
         });
-        if(res.code==='0') {
+        if (res.code === '0') {
           message.success(intl.formatMessage({ id: 'famousQuotes.modal.message.updateSuccess' }));
         } else {
           message.error(intl.formatMessage({ id: 'famousQuotes.modal.message.updateFailed' }));
@@ -159,26 +163,23 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
       } else {
         // 过滤掉内容为空的语言
         const filteredContentList = updatedContentList.filter(
-          item => item.languageContent.trim() !== ''
+          (item) => item.languageContent.trim() !== '',
         );
-     
-        const data = {
-          famousAphorismsContents: filteredContentList
-        };
-          
-        const res = await addFamousAphorisms(data);
-        if(res.code==='0') {
+
+        const res = await addFamousAphorisms({
+          famousAphorismsContents: filteredContentList,
+        });
+        if (res.code === '0') {
           message.success(intl.formatMessage({ id: 'famousQuotes.modal.message.addSuccess' }));
         } else {
           message.error(intl.formatMessage({ id: 'famousQuotes.modal.message.addFailed' }));
         }
       }
-      
+
       onSuccess();
       resetFormAndState();
     } catch (error) {
       console.log(error);
-
     } finally {
       setLoading(false);
     }
@@ -197,7 +198,11 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
 
   return (
     <Modal
-      title={editingId ? intl.formatMessage({ id: 'famousQuotes.modal.edit' }) : intl.formatMessage({ id: 'famousQuotes.modal.add' })}
+      title={
+        editingId
+          ? intl.formatMessage({ id: 'famousQuotes.modal.edit' })
+          : intl.formatMessage({ id: 'famousQuotes.modal.add' })
+      }
       open={visible}
       onOk={handleSubmit}
       onCancel={handleCancel}
@@ -207,22 +212,26 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
         <Form.Item
           label={intl.formatMessage({ id: 'famousQuotes.modal.form.language' })}
           name="langId"
-          rules={[{ required: true, message: intl.formatMessage({ id: 'famousQuotes.modal.form.language.required' }) }]}
+          rules={[
+            {
+              required: true,
+              message: intl.formatMessage({ id: 'famousQuotes.modal.form.language.required' }),
+            },
+          ]}
         >
-          {
-           editingId ? <Select>
-              {
-                languages.map((item:any)=>(
-                  <Select.Option key={item.key} value={item.key} disabled={true}>{item.label}</Select.Option>
-                ))
-              }
-            </Select> : <LanguageSelector value={language} onChange={handleLanguageChange} />
-          }{
-
-          }
-          
+          {editingId ? (
+            <Select disabled={true}>
+              {languages.map((item: any) => (
+                <Select.Option key={item.key} value={item.key}>
+                  {item.label}
+                </Select.Option>
+              ))}
+            </Select>
+          ) : (
+            <LanguageSelector value={language} onChange={handleLanguageChange} />
+          )}
         </Form.Item>
-        
+
         <Form.Item
           name="text"
           label={intl.formatMessage({ id: 'famousQuotes.modal.form.content' })}
@@ -231,16 +240,20 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
               validator: (_, value) => {
                 const currentLang = getFieldValue('langId') || language;
                 if (currentLang === 'en_US' && (!value || value.trim() === '')) {
-                  return Promise.reject(new Error(intl.formatMessage({ id: 'famousQuotes.modal.form.englishRequired' })));
+                  return Promise.reject(
+                    new Error(
+                      intl.formatMessage({ id: 'famousQuotes.modal.form.englishRequired' }),
+                    ),
+                  );
                 }
                 return Promise.resolve();
-              }
-            })
+              },
+            }),
           ]}
         >
-          <Input.TextArea 
+          <Input.TextArea
             rows={4}
-            placeholder={intl.formatMessage({ id: 'famousQuotes.modal.form.content.placeholder' })} 
+            placeholder={intl.formatMessage({ id: 'famousQuotes.modal.form.content.placeholder' })}
             value={content}
             onChange={(e) => handleContentChange(e.target.value)}
           />
@@ -250,4 +263,4 @@ const FamousQuoteModal: React.FC<FamousQuoteModalProps> = ({
   );
 };
 
-export default FamousQuoteModal; 
+export default FamousQuoteModal;

@@ -48,7 +48,7 @@ export async function HomeMenuTranslationList(body: API.FackeParams, options?: {
 
 
 
-export async function tenantLangList(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function tenantLangList(body: API.TenantLangParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/tenantLangList', {
     method: 'POST',
     data: body,
@@ -86,7 +86,7 @@ export async function addLangList(body: API.FackeParams, options?: { [key: strin
 
 
 // 删除语言端:传tenantLangEndPointId
-export async function deleteTenantLangEndpoint(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function deleteTenantLangEndpoint(body: API.TenantLangEndpointIdParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/deleteTenantLangEndpoint', {
     method: 'POST',
     data: body,
@@ -95,7 +95,7 @@ export async function deleteTenantLangEndpoint(body: API.FackeParams, options?: 
 }
 
 // /tenant/v1/enablePackage
-export async function enablePackage(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function enablePackage(body: API.TenantLangIdParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/enablePackage', {
     method: 'POST',
     data: body,
@@ -108,7 +108,7 @@ export async function enablePackage(body: API.FackeParams, options?: { [key: str
 
 
 // /tenant/v1/disablePackage
-export async function disablePackage(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function disablePackage(body: API.TenantLangIdParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/disablePackage', {
     method: 'POST',
     data: body,
@@ -121,7 +121,7 @@ export async function disablePackage(body: API.FackeParams, options?: { [key: st
 
 
 // /tenant/v1/updateEndpointInfo
-export async function updateEndpointInfo(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function updateEndpointInfo(body: API.UpdateEndpointInfoParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/updateEndpointInfo', {
     method: 'POST',
     data: body,
@@ -134,7 +134,7 @@ export async function updateEndpointInfo(body: API.FackeParams, options?: { [key
 
 
 // /tenant/v1/deleteTenantLangPackage
-export async function deleteTenantLangPackage(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function deleteTenantLangPackage(body: API.TenantLangIdParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/deleteTenantLangPackage', {
     method: 'POST',
     data: body,
@@ -146,12 +146,12 @@ export async function deleteTenantLangPackage(body: API.FackeParams, options?: {
 }
 
 // /tenant/v1/checkUpdate
-export async function checkUpdate(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function checkUpdate(body: API.TenantLangIdParams, options?: { [key: string]: any }) {
   return request<API.FackeResult>('/tenant/v1/checkUpdate', {
     method: 'POST',
     data: body,
     headers: {
-      'Content-Type': 'application/json', 
+      'Content-Type': 'application/json',
     },
     ...(options || {}),
   });
@@ -322,10 +322,9 @@ export async function updateHomeBottomFooterById(body: API.FackeParams, options?
 
 
 
-export async function pcAccessPathAll(body: API.FackeParams, options?: { [key: string]: any }) {
+export async function pcAccessPathAll() {
   return request<API.FackeResult>('/tenant/v1/pcAccessPathAll', {
     method: 'GET',
-    ...(options || {}),
   });
 }
 
@@ -378,7 +377,7 @@ export async function deleteHomeBottom(body: API.FackeParams, options?: { [key: 
     ...(options || {}),
   });
 }
-  
+
 
 // /tenant/v1/homeBottomParams
 export async function homeBottomParams(body: API.FackeParams, options?: { [key: string]: any }) {

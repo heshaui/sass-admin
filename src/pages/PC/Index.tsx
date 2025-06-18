@@ -49,7 +49,7 @@ const PC: React.FC = () => {
     setLoading(true);
     try {
       const response = (await getPcAccessPathList({
-        pageNum: params.current,
+        pageNo: params.current,
         pageSize: params.pageSize,
       })) as PcAccessPathListResponse;
 
@@ -66,7 +66,7 @@ const PC: React.FC = () => {
         setPagination({
           ...pagination,
           current: params.current,
-          total: response.data.total || 0,
+          total: response.data.count || 0,
         });
       } else {
         message.error(response.message || 'Failed to fetch data');
@@ -122,11 +122,11 @@ const PC: React.FC = () => {
     try {
       const values = await form.validateFields();
       setLoading(true);
-      
+
       // Ensure status is a number
       const formData = {
         ...values,
-        status: Number(values.status)
+        status: Number(values.status),
       };
 
       if (editingRecord) {
@@ -283,9 +283,16 @@ const PC: React.FC = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item name="languageKey" label={intl.formatMessage({ id: 'pc.languageKey' })} rules={[
-            { required: true, message: intl.formatMessage({ id: 'pc.form.languageKey.required' }) },
-          ]}>
+          <Form.Item
+            name="languageKey"
+            label={intl.formatMessage({ id: 'pc.languageKey' })}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({ id: 'pc.form.languageKey.required' }),
+              },
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item

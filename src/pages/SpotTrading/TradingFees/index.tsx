@@ -4,7 +4,7 @@ import {  Button, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import type { ActionType } from '@ant-design/pro-components';
 import EditForm from './components/EditForm';
-import { exchangeCoinList,saveExchangeCoin,updateExchangeGroup,updateExchangeCoinById } from '@/services/ant-design-pro/spot';
+import { exchangeCoinList,tenantCurrencyCoinList,updateExchangeCoinById } from '@/services/ant-design-pro/spot';
 import { useIntl } from 'umi';
 
 interface TradingFee {
@@ -25,10 +25,23 @@ const TradingFees: React.FC = () => {
   const [tradingFees, setTradingFees] = useState<TradingFee[]>([]);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] = useState<TradingFee | null>(null);
+  const [coinList, setCoinList] = useState<TradingFee[]>([]);
 
-  // 模拟数据，实际项目中应从API获取
+  const getCoin=async()=>{
+    let data={
+      pageNo: 1,
+      pageSize: 10000
+    }
+    const res=await tenantCurrencyCoinList(data)
+    if(res.code==='0'){
+      setCoinList(res.data.list)
+
+    }
+  }
+
+
   useEffect(() => {
-    // 这里模拟从API获取数据
+    getCoin()
   
   }, []);
 
@@ -38,6 +51,8 @@ const TradingFees: React.FC = () => {
     const res = await exchangeCoinList({
       pageNo: params.current,
       pageSize: params.pageSize,
+      coinSymbol: params.coinSymbol,
+      
     });
     if(res.code==='0'){
       return {
@@ -83,6 +98,19 @@ const TradingFees: React.FC = () => {
 
   const columns: ColumnsType<TradingFee> = [
     {
+      title: intl.formatMessage({ id: 'deposit.column.coin' }),
+      dataIndex: 'coinSymbol',
+      key: 'coinSymbol',
+      hideInTable:true,
+      valueType: 'select',
+      fieldProps: {
+        options: coinList.map((item) => ({
+          label: item.coinName,
+          value: item.coinName,
+        })),
+      },
+    },
+    {
       title: intl.formatMessage({ id: 'tradingFees.column.tradingPair' }),
       search: false,
       render: (_, record) => (
@@ -125,7 +153,6 @@ const TradingFees: React.FC = () => {
       <ProTable<TradingFee>
         actionRef={actionRef}
         columns={columns}
-        search={false}
         request={fetchTradingPairs}
         rowKey="id"
         loading={loading}

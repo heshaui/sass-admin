@@ -1,7 +1,7 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, InputNumber, Modal, Radio, Select, Button } from 'antd';
 import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 type TradingPair = {
   id?: string;
   pairName?: string;
@@ -33,10 +33,10 @@ type TradingPair = {
   depthPrecision3?: string;
   depthPrecision4?: string;
   depthPrecision5?: string;
-  coinScale?:number;
-  baseCoinScale?:number;
-  show?:number;
-  enable?:number;
+  coinScale?: number;
+  baseCoinScale?: number;
+  show?: number;
+  enable?: number;
 };
 
 interface TradingPairFormProps {
@@ -45,7 +45,6 @@ interface TradingPairFormProps {
   onSubmit: (values: TradingPair) => void;
   values?: TradingPair;
 }
-
 
 const TradingPairForm: React.FC<TradingPairFormProps> = ({
   visible,
@@ -57,17 +56,16 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
   const [form] = Form.useForm();
 
   const [currencyList, setCurrencyList] = useState<any[]>([]);
-  const getCoinList=async()=>{
-    let data={
-      "pageNo": 1,
-      "pageSize": 10000
-    }
-    const res=await tenantCurrencyCoinList(data);
-    if(res.code==='0'){
+  const getCoinList = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
+    };
+    const res = await tenantCurrencyCoinList(data);
+    if (res.code === '0') {
       setCurrencyList(res.data.list);
     }
-  }
-
+  };
 
   useEffect(() => {
     getCoinList();
@@ -77,7 +75,9 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
         tradingFee: values.tradingFee ? values.tradingFee * 100 : undefined,
         makerFee: values.makerFee ? values.makerFee * 100 : undefined,
         takerFee: values.takerFee ? values.takerFee * 100 : undefined,
-        priceDeviationPercentage: values.priceDeviationPercentage ? values.priceDeviationPercentage * 100 : undefined,
+        priceDeviationPercentage: values.priceDeviationPercentage
+          ? values.priceDeviationPercentage * 100
+          : undefined,
       });
     } else {
       form.resetFields();
@@ -103,7 +103,11 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
 
   return (
     <Modal
-      title={values ? intl.formatMessage({ id: 'tradingPair.form.editTitle' }) : intl.formatMessage({ id: 'tradingPair.form.addTitle' })}
+      title={
+        values
+          ? intl.formatMessage({ id: 'tradingPair.form.editTitle' })
+          : intl.formatMessage({ id: 'tradingPair.form.addTitle' })
+      }
       open={visible}
       onCancel={onCancel}
       destroyOnClose
@@ -119,21 +123,25 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
         </div>
       }
     >
-      <Form
-        form={form}
-        layout="vertical"
-      >
+      <Form form={form} layout="vertical">
         <h3>{intl.formatMessage({ id: 'tradingPair.form.section.basicInfo' })}</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
           <Form.Item
             name="coinSymbol"
             label={intl.formatMessage({ id: 'tradingPair.form.baseCurrency' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'tradingPair.form.baseCurrency.required' }) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({ id: 'tradingPair.form.baseCurrency.required' }),
+              },
+            ]}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
               {currencyList.map((item) => (
-                <Select.Option value={item.coinName} key={item.coinName}>{item.coinName}</Select.Option>
+                <Select.Option value={item.coinName} key={item.coinName}>
+                  {item.coinName}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
@@ -141,12 +149,19 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
           <Form.Item
             name="baseSymbol"
             label={intl.formatMessage({ id: 'tradingPair.form.quoteCurrency' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'tradingPair.form.quoteCurrency.required' }) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({ id: 'tradingPair.form.quoteCurrency.required' }),
+              },
+            ]}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
               {currencyList.map((item) => (
-                <Select.Option value={item.coinName} key={item.coinName}>{item.coinName}</Select.Option>
+                <Select.Option value={item.coinName} key={item.coinName}>
+                  {item.coinName}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>
@@ -156,7 +171,11 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             required
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <Input placeholder={intl.formatMessage({ id: 'tradingPair.form.baseCoinDecimal.placeholder' })} />
+            <Input
+              placeholder={intl.formatMessage({
+                id: 'tradingPair.form.baseCoinDecimal.placeholder',
+              })}
+            />
           </Form.Item>
           <Form.Item
             name="baseCoinScale"
@@ -164,7 +183,11 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             required
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <Input placeholder={intl.formatMessage({ id: 'tradingPair.form.quoteCurrencyDecimal.placeholder' })} />
+            <Input
+              placeholder={intl.formatMessage({
+                id: 'tradingPair.form.quoteCurrencyDecimal.placeholder',
+              })}
+            />
           </Form.Item>
 
           <Form.Item
@@ -173,22 +196,54 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
-            <Select.Option value="1">{intl.formatMessage({ id: 'tradingPair.category.mainstream' })}</Select.Option>
-            <Select.Option value="2">{intl.formatMessage({ id: 'tradingPair.category.innovation' })}</Select.Option>
-            <Select.Option value="3">{intl.formatMessage({ id: 'tradingPair.category.new' })}</Select.Option>
-            <Select.Option value="4">{intl.formatMessage({ id: 'tradingPair.category.ai' })}</Select.Option>
-            <Select.Option value="5">{intl.formatMessage({ id: 'tradingPair.category.meme' })}</Select.Option>
-            <Select.Option value="6">{intl.formatMessage({ id: 'tradingPair.category.nft' })}</Select.Option>
-            <Select.Option value="7">{intl.formatMessage({ id: 'tradingPair.category.defi' })}</Select.Option>
-            <Select.Option value="8">{intl.formatMessage({ id: 'tradingPair.category.web3' })}</Select.Option>
-            <Select.Option value="9">{intl.formatMessage({ id: 'tradingPair.category.payments' })}</Select.Option>
-            <Select.Option value="10">{intl.formatMessage({ id: 'tradingPair.category.launchpad' })}</Select.Option>
-            <Select.Option value="11">{intl.formatMessage({ id: 'tradingPair.category.layer2' })}</Select.Option>
-            <Select.Option value="12">{intl.formatMessage({ id: 'tradingPair.category.solana' })}</Select.Option>
-            <Select.Option value="13">{intl.formatMessage({ id: 'tradingPair.category.rwa' })}</Select.Option>
-            <Select.Option value="14">{intl.formatMessage({ id: 'tradingPair.category.launchpool' })}</Select.Option>
-            <Select.Option value="15">{intl.formatMessage({ id: 'tradingPair.category.gameMetaverse' })}</Select.Option>
-            <Select.Option value="16">{intl.formatMessage({ id: 'tradingPair.category.storage' })}</Select.Option>
+              <Select.Option value="1">
+                {intl.formatMessage({ id: 'tradingPair.category.mainstream' })}
+              </Select.Option>
+              <Select.Option value="2">
+                {intl.formatMessage({ id: 'tradingPair.category.innovation' })}
+              </Select.Option>
+              <Select.Option value="3">
+                {intl.formatMessage({ id: 'tradingPair.category.new' })}
+              </Select.Option>
+              <Select.Option value="4">
+                {intl.formatMessage({ id: 'tradingPair.category.ai' })}
+              </Select.Option>
+              <Select.Option value="5">
+                {intl.formatMessage({ id: 'tradingPair.category.meme' })}
+              </Select.Option>
+              <Select.Option value="6">
+                {intl.formatMessage({ id: 'tradingPair.category.nft' })}
+              </Select.Option>
+              <Select.Option value="7">
+                {intl.formatMessage({ id: 'tradingPair.category.defi' })}
+              </Select.Option>
+              <Select.Option value="8">
+                {intl.formatMessage({ id: 'tradingPair.category.web3' })}
+              </Select.Option>
+              <Select.Option value="9">
+                {intl.formatMessage({ id: 'tradingPair.category.payments' })}
+              </Select.Option>
+              <Select.Option value="10">
+                {intl.formatMessage({ id: 'tradingPair.category.launchpad' })}
+              </Select.Option>
+              <Select.Option value="11">
+                {intl.formatMessage({ id: 'tradingPair.category.layer2' })}
+              </Select.Option>
+              <Select.Option value="12">
+                {intl.formatMessage({ id: 'tradingPair.category.solana' })}
+              </Select.Option>
+              <Select.Option value="13">
+                {intl.formatMessage({ id: 'tradingPair.category.rwa' })}
+              </Select.Option>
+              <Select.Option value="14">
+                {intl.formatMessage({ id: 'tradingPair.category.launchpool' })}
+              </Select.Option>
+              <Select.Option value="15">
+                {intl.formatMessage({ id: 'tradingPair.category.gameMetaverse' })}
+              </Select.Option>
+              <Select.Option value="16">
+                {intl.formatMessage({ id: 'tradingPair.category.storage' })}
+              </Select.Option>
             </Select>
           </Form.Item>
 
@@ -207,8 +262,12 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             style={{ width: 'calc(50% - 10px)' }}
           >
             <Select>
-              <Select.Option value={1}>{intl.formatMessage({ id: "tradingPair.form.yes" })}</Select.Option>
-              <Select.Option value={0}>{intl.formatMessage({ id: "tradingPair.form.no" })}</Select.Option>
+              <Select.Option value={1}>
+                {intl.formatMessage({ id: 'tradingPair.form.yes' })}
+              </Select.Option>
+              <Select.Option value={0}>
+                {intl.formatMessage({ id: 'tradingPair.form.no' })}
+              </Select.Option>
             </Select>
           </Form.Item>
 
@@ -248,19 +307,30 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
           <Form.Item
             name="buyFee"
             label={intl.formatMessage({ id: 'tradingPair.form.makerFee' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'tradingPair.form.makerFee.required' }) }]}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({ id: 'tradingPair.form.makerFee.required' }),
+              },
+            ]}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <Input style={{ width: '100%' }}  />
+            <InputNumber suffix="%" style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
             name="sellFee"
             label={intl.formatMessage({ id: 'tradingPair.form.takerFee' })}
-            rules={[{ required: true, message: intl.formatMessage({ id: 'tradingPair.form.takerFee.required' }) }]}
+            extra={intl.formatMessage({ id: 'tradingPair.form.takerFee.tips' })}
+            rules={[
+              {
+                required: true,
+                message: intl.formatMessage({ id: 'tradingPair.form.takerFee.required' }),
+              },
+            ]}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <Input style={{ width: '100%' }}  />
+            <InputNumber  step="0.001" stringMode suffix="%" max={1} min={0} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -268,18 +338,20 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.openPrice' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }}  />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
         </div>
 
-        <h3 style={{ marginTop: '20px' }}>{intl.formatMessage({ id: 'tradingPair.form.tradingRules' })}</h3>
+        <h3 style={{ marginTop: '20px' }}>
+          {intl.formatMessage({ id: 'tradingPair.form.tradingRules' })}
+        </h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
           <Form.Item
             name="maxBaseVolume"
             label={intl.formatMessage({ id: 'tradingPair.form.maxOrderAmount' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }}  />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -287,7 +359,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.minOrderAmount' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }}  />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -303,12 +375,13 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.minOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }}  />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           {/* <Form.Item
             name="baseCoinScale"
             label={intl.formatMessage({ id: 'tradingPair.form.priceDecimal' })}
+            extra={'请填写小数位数,如: 3代表0.001'}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }}  max={18} />
@@ -317,6 +390,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
           <Form.Item
             name="coinScale"
             label={intl.formatMessage({ id: 'tradingPair.form.quantityDecimal' })}
+            extra={'请填写小数位数,如: 3代表0.001'}
             style={{ width: 'calc(50% - 10px)' }}
           >
             <InputNumber style={{ width: '100%' }} max={18} />
@@ -327,7 +401,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.maxMarketOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }}  />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -335,26 +409,29 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.maxLimitOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }}  />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
             name="priceOffset"
+            extra={intl.formatMessage({ id: 'tradingPair.form.priceDeviationPercentage.tips' })}
             label={intl.formatMessage({ id: 'tradingPair.form.priceDeviationPercentage' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} addonAfter="%" />
+            <InputNumber style={{ width: '100%' }} suffix="%" />
           </Form.Item>
         </div>
 
-        <h3 style={{ marginTop: '20px' }}>{intl.formatMessage({ id: 'tradingPair.form.section.depthPrecision' })}</h3>
+        <h3 style={{ marginTop: '20px' }}>
+          {intl.formatMessage({ id: 'tradingPair.form.section.depthPrecision' })}
+        </h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
           <Form.Item
             name="depthOne"
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision1' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <InputNumber style={{ width: '100%' }}   />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -362,7 +439,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision2' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-           <InputNumber style={{ width: '100%' }}   />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -370,7 +447,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision3' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-           <InputNumber style={{ width: '100%' }}   />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -378,7 +455,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision4' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <InputNumber style={{ width: '100%' }}   />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -386,13 +463,15 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision5' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <InputNumber style={{ width: '100%' }}   />
+            <InputNumber style={{ width: '100%' }} />
           </Form.Item>
         </div>
-
+        <div style={{ color: 'rgba(0,0,0,0.45)' }}>
+          { intl.formatMessage({ id: 'tradingPair.form.depthPrecision.tips' }) }
+        </div>
       </Form>
     </Modal>
   );
 };
 
-export default TradingPairForm; 
+export default TradingPairForm;

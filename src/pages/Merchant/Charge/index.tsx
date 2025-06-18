@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { PageContainer, ProTable, ProColumns } from "@ant-design/pro-components";
 import { Tabs, Button } from "antd";
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 import { tenantList } from "@/services/ant-design-pro/merchant";
 import MerchantDetail from "./component/MerchantDetail";
 import { getUserOperationLogs } from "@/services/ant-design-pro/UserManagement";
+
+type PackageType = 1 | 2 | 3;
+
 const Charge: React.FC = () => {
     const intl = useIntl();
     const [activeTab, setActiveTab] = useState<string>("basic");
@@ -31,10 +34,10 @@ const Charge: React.FC = () => {
                 ...(params.tenantName && { tenantName: params.tenantName }),
                 ...(params.packageId && { packageId: params.packageId })
             };
-            
+
             const res = await tenantList(requestData);
             if (res.code === "0") {
-                const listData = res.data.list.filter(item => item.paymentStatus === 1);
+                const listData = res.data.list.filter((item: any) => item.paymentStatus === 1);
                 setMerchantData(listData || []);
                 setPagination({
                     ...pagination,
@@ -78,7 +81,7 @@ const Charge: React.FC = () => {
         setShowDetail(false);
         setSelectedTenantId(null);
     };
-    
+
 
     useEffect(() => {
         getLogList();
@@ -125,12 +128,12 @@ const Charge: React.FC = () => {
                 3: { text: intl.formatMessage({ id: 'charge.table.package.premium' }) }
             },
             render: (_, record) => {
-                const packageMap = {
-                    1: intl.formatMessage({ id: 'charge.table.package.basic' }),
-                    2: intl.formatMessage({ id: 'charge.table.package.standard' }),
-                    3: intl.formatMessage({ id: 'charge.table.package.premium' })
-                };
-                return packageMap[record.packageId] || record.packageId;
+              const packageMap: Record<PackageType, string> = {
+                1: intl.formatMessage({ id: 'charge.table.package.basic' }),
+                2: intl.formatMessage({ id: 'charge.table.package.standard' }),
+                3: intl.formatMessage({ id: 'charge.table.package.premium' })
+            };
+            return packageMap[record.packageId as PackageType] || record.packageId;
             },
         },
         {
@@ -139,7 +142,7 @@ const Charge: React.FC = () => {
             search: false,
             render: (_, record) => (
                 <div>
-                    {record.tenantStatus === 1 
+                    {record.tenantStatus === 1
                         ? intl.formatMessage({ id: 'charge.table.status.active' })
                         : intl.formatMessage({ id: 'charge.table.status.overdue' })}
                 </div>
@@ -198,13 +201,13 @@ const Charge: React.FC = () => {
         <PageContainer>
             {/* Tab 切换 */}
             <Tabs activeKey={activeTab} onChange={setActiveTab} style={{ marginBottom: 16 }}>
-                <Tabs.TabPane 
-                    tab={intl.formatMessage({ id: 'charge.tab.basic' })} 
-                    key="basic" 
+                <Tabs.TabPane
+                    tab={intl.formatMessage({ id: 'charge.tab.basic' })}
+                    key="basic"
                 />
-                <Tabs.TabPane 
-                    tab={intl.formatMessage({ id: 'charge.tab.logs' })} 
-                    key="logs" 
+                <Tabs.TabPane
+                    tab={intl.formatMessage({ id: 'charge.tab.logs' })}
+                    key="logs"
                 />
             </Tabs>
 

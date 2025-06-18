@@ -1,52 +1,57 @@
-import { PageContainer } from "@ant-design/pro-components";
-import { Button, message, Popconfirm } from "antd";
-import React, { useEffect, useState } from "react";
-import { useIntl } from "umi";
-import { HomeMenuTranslationList, saveHomeMenu, homeMenuParams,updateHomeMenuById,updateHomeMenuTranslationById,deleteHomeMenu } from "@/services/ant-design-pro/WebConfig";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import AddMenuModals from "./component/AddMenuModals";
+import { PageContainer } from '@ant-design/pro-components';
+import { Button, message, Popconfirm } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useIntl } from '@umijs/max';
+import {
+  HomeMenuTranslationList,
+  saveHomeMenu,
+  homeMenuParams,
+  updateHomeMenuById,
+  updateHomeMenuTranslationById,
+  deleteHomeMenu,
+} from '@/services/ant-design-pro/WebConfig';
+import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import AddMenuModals from './component/AddMenuModals';
 
 import { tenantLangList } from '@/services/ant-design-pro/WebConfig';
 
-
-
 const Header: React.FC = () => {
   const intl = useIntl();
-  const [currentLanguage, setCurrentLanguage] = useState("en_US");
+  const [currentLanguage, setCurrentLanguage] = useState('en_US');
   const [menuData, setMenuData] = useState<any[]>([]);
   const [modalType, setModalType] = useState<boolean>(false);
   const [parentId, setParentId] = useState<any>(null);
   const [editingMenu, setEditingMenu] = useState<any>(null);
 
-      const [languages, setLanguages] = useState<any[]>([]);
-    
-      const getLang=async ()=>{
-         let data={
-                pageNo:1,
-                pageSize:10000
-              }
-              const res = await tenantLangList(data);
-              if (res.code === '0') {
-                setLanguages(res.data?.list || []);
-              }
-      }
+  const [languages, setLanguages] = useState<any[]>([]);
+
+  const getLang = async () => {
+    let data = {
+      pageNo: 1,
+      pageSize: 10000,
+    };
+    const res = await tenantLangList(data);
+    if (res.code === '0') {
+      setLanguages(res.data?.list || []);
+    }
+  };
 
   // 获取菜单数据
   const getMenu = async () => {
     try {
       const res = await HomeMenuTranslationList({ languageCode: currentLanguage });
-      if(res.code === "0"){
+      if (res.code === '0') {
         setMenuData(res?.data);
-      }else{
+      } else {
         message.error(intl.formatMessage({ id: 'webConfig.header.fetchFailed' }));
       }
     } catch (error) {
       message.error(intl.formatMessage({ id: 'webConfig.header.fetchFailed' }));
     }
   };
-    useEffect(() => {
-      getLang();
-    }, []);
+  useEffect(() => {
+    getLang();
+  }, []);
 
   useEffect(() => {
     getMenu();
@@ -56,7 +61,7 @@ const Header: React.FC = () => {
   const handleEdit = async (item: any) => {
     try {
       const res = await homeMenuParams({ menuId: item.id });
-      if (res.code === "0") {
+      if (res.code === '0') {
         // 查找父级菜单信息
         let parentMenuInfo = null;
         if (res.data.homeMenu.parentId) {
@@ -75,7 +80,6 @@ const Header: React.FC = () => {
           };
           parentMenuInfo = findParentMenu(menuData, res.data.homeMenu.parentId);
         }
-        
 
         setEditingMenu(res.data);
         setParentId(parentMenuInfo);
@@ -87,25 +91,31 @@ const Header: React.FC = () => {
       message.error(intl.formatMessage({ id: 'webConfig.header.fetchMenuDetailFailed' }));
     }
   };
-  
+
   // 处理删除功能
   const handleDelete = async (itemId: number) => {
     try {
       const res = await deleteHomeMenu({ id: itemId });
-      if (res.code === "0") {
+      if (res.code === '0') {
         message.success(intl.formatMessage({ id: 'webConfig.header.deleteSuccess' }));
         getMenu(); // 重新获取菜单数据
       } else {
-        message.error(intl.formatMessage({ id: 'webConfig.header.deleteFailed' }) + (res.message || intl.formatMessage({ id: 'webConfig.header.unknownError' })));
+        message.error(
+          intl.formatMessage({ id: 'webConfig.header.deleteFailed' }) +
+            (res.message || intl.formatMessage({ id: 'webConfig.header.unknownError' })),
+        );
       }
     } catch (error) {
-      message.error(intl.formatMessage({ id: 'webConfig.header.deleteFailed' }) + (error || intl.formatMessage({ id: 'webConfig.header.networkError' })));
+      message.error(
+        intl.formatMessage({ id: 'webConfig.header.deleteFailed' }) +
+          (error || intl.formatMessage({ id: 'webConfig.header.networkError' })),
+      );
     }
   };
 
   // 打开弹窗
   const handleModal = (item: any = null) => {
-    console.log(item)
+    console.log(item);
     setParentId(item);
     setEditingMenu(null); // 重置编辑状态
     setModalType(true);
@@ -119,59 +129,55 @@ const Header: React.FC = () => {
 
   // 处理表单提交
   const handleSubmit = async (values: any) => {
-    console.log(values)
-    let displayStatus
-    if(values.values.displayStatus){
-      displayStatus=1
-    }else{
-      displayStatus=0
+    console.log(values);
+    let displayStatus;
+    if (values.values.displayStatus) {
+      displayStatus = 1;
+    } else {
+      displayStatus = 0;
     }
-    if(!values.values.typeId){
-      values.values.typeId=2
+    if (!values.values.typeId) {
+      values.values.typeId = 2;
     }
-    
+
     try {
-      
-    
       if (editingMenu) {
-
         const data1 = {
-          id:editingMenu.homeMenu.id,
-          menuDescription:values.values.menuDescription,
-          parentId:editingMenu.homeMenu.parentId,
-          typeId:editingMenu.homeMenu.typeId,
-          iconUrlDay:values.iconUrlDay,
-          iconUrlNight:values.iconUrlNight,
-          cornerMarkOne:editingMenu.homeMenu.cornerMarkOne,
-          cornerMarkTwo:"",
-          displayStatus:displayStatus,
-          spreadPattern:editingMenu.homeMenu.spreadPattern,
-          accessType:values.accessType,
-          accessPath:values.values.accessPath
+          id: editingMenu.homeMenu.id,
+          menuDescription: values.values.menuDescription,
+          parentId: editingMenu.homeMenu.parentId,
+          typeId: editingMenu.homeMenu.typeId,
+          iconUrlDay: values.iconUrlDay,
+          iconUrlNight: values.iconUrlNight,
+          cornerMarkOne: editingMenu.homeMenu.cornerMarkOne,
+          cornerMarkTwo: '',
+          displayStatus: displayStatus,
+          spreadPattern: editingMenu.homeMenu.spreadPattern,
+          accessType: values.accessType,
+          accessPath: values.values.accessPath,
+        };
+
+        const response = await updateHomeMenuById(data1);
+
+        const data2 = {
+          id: editingMenu.homeMenuTranslation.id,
+          menuId: editingMenu.homeMenuTranslation.menuId,
+          languagePath: values.values.accessPath,
+          menuName: values.values.menuName,
+          menuViceName: values.values.menuViceName,
+        };
+
+        const response2 = await updateHomeMenuTranslationById(data2);
+
+        if (response.code === '0' && response2.code === '0' && response2.data && response.data) {
+          message.success(intl.formatMessage({ id: 'webConfig.header.updateSuccess' }));
+          handleCancel();
+          getMenu(); // 重新获取菜单数据
+        } else {
+          message.error(intl.formatMessage({ id: 'webConfig.header.updateFailed' }));
         }
-
-       const response = await updateHomeMenuById(data1);
-
-
-      const data2 = {
-        id:editingMenu.homeMenuTranslation.id,
-        menuId:editingMenu.homeMenuTranslation.menuId,
-        languagePath:values.values.accessPath,
-        menuName:values.values.menuName,
-        menuViceName:values.values.menuViceName,
-      }
-
-       const response2 = await updateHomeMenuTranslationById(data2);
-
-      if (response.code === "0"&&response2.code === "0"&&response2.data&&response.data) {
-        message.success(intl.formatMessage({ id: 'webConfig.header.updateSuccess' }));
-        handleCancel();
-        getMenu(); // 重新获取菜单数据
       } else {
-        message.error(intl.formatMessage({ id: 'webConfig.header.updateFailed' }));
-      }
-      } else {
-          console.log('',values);
+        console.log('', values);
         const data = {
           homeMenu: {
             menuDescription: values.values.menuDescription,
@@ -181,7 +187,7 @@ const Header: React.FC = () => {
             iconUrlDay: values.iconUrlDay,
             iconUrlNight: values.iconUrlNight,
             cornerMarkOne: values.uploadedImageUrl,
-            cornerMarkTwo: "",
+            cornerMarkTwo: '',
             displayStatus: displayStatus,
             spreadPattern: values.values.spreadPattern,
             accessType: values.accessType,
@@ -189,25 +195,27 @@ const Header: React.FC = () => {
           },
           homeMenuTranslation: {
             languageCode: currentLanguage,
-            languagePath: "/home/zh_CN",
+            languagePath: '/home/zh_CN',
             menuName: values.values.menuName,
             menuViceName: values.values.menuViceName,
             languageIcon: values.values.uploadedImageUrl,
           },
         };
-  
+
         const res = await saveHomeMenu(data);
-        if(res.code === "0"){
+        if (res.code === '0') {
           message.success(intl.formatMessage({ id: 'webConfig.header.addSuccess' }));
           handleCancel();
           getMenu(); // 重新获取菜单数据
-        }else{
+        } else {
           message.error(intl.formatMessage({ id: 'webConfig.header.addFailed' }));
         }
       }
-
     } catch (error) {
-      message.error(intl.formatMessage({ id: 'webConfig.header.submitFailed' }) + (error || intl.formatMessage({ id: 'webConfig.header.networkError' })));
+      message.error(
+        intl.formatMessage({ id: 'webConfig.header.submitFailed' }) +
+          (error || intl.formatMessage({ id: 'webConfig.header.networkError' })),
+      );
     }
   };
 
@@ -215,48 +223,63 @@ const Header: React.FC = () => {
   const renderMenu = (menuList: any[]) => {
     return menuList.map((item) =>
       item.languageCode === currentLanguage ? (
-        <div key={item.id} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           {/* 父级菜单 */}
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Button
               style={{
-                background: "#F5F5F5",
-                color: "#000",
+                background: '#F5F5F5',
+                color: '#000',
                 fontSize: 16,
-                fontWeight: "bold",
-                padding: "6px 12px",
+                fontWeight: 'bold',
+                padding: '6px 12px',
                 borderRadius: 8,
                 width: 180,
-                position: "relative",
+                position: 'relative',
                 paddingRight: 60,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Popconfirm
-                  title={intl.formatMessage({ id: 'webConfig.header.deleteConfirm' }, { name: item.menuName })}
-                  onConfirm={(e) => { e?.stopPropagation(); handleDelete(item.id); }}
+                  title={intl.formatMessage(
+                    { id: 'webConfig.header.deleteConfirm' },
+                    { name: item.menuName },
+                  )}
+                  onConfirm={(e) => {
+                    e?.stopPropagation();
+                    handleDelete(item.id);
+                  }}
                   okText={intl.formatMessage({ id: 'webConfig.header.confirmText' })}
                   cancelText={intl.formatMessage({ id: 'webConfig.header.cancelText' })}
                 >
-                  <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
+                  <DeleteOutlined
+                    onClick={(e) => e.stopPropagation()}
+                    style={{ color: '#ff4d4f', marginRight: 8 }}
+                  />
                 </Popconfirm>
                 {item.menuName}
               </div>
-              <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
-                <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(item); }} style={{ color: "#1890ff" }} />
+              <div style={{ position: 'absolute', right: '8px', display: 'flex', gap: '6px' }}>
+                <EditOutlined
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit(item);
+                  }}
+                  style={{ color: '#1890ff' }}
+                />
               </div>
             </Button>
             <Button
               onClick={() => handleModal(item)}
               style={{
-                background: "#FF6A00",
-                color: "#FFF",
+                background: '#FF6A00',
+                color: '#FFF',
                 borderRadius: 8,
                 height: 32,
                 width: 32,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}
             >
               <PlusOutlined />
@@ -265,60 +288,77 @@ const Header: React.FC = () => {
 
           {/* 递归渲染子菜单 */}
           {item.children && item.children.length > 0 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 4,}}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               {item.children.map((child: any) => (
-                <div key={child.id} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                <div key={child.id} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                     <Button
                       style={{
-                        background: child.typeId === 1 ? "transparent" : "#F5F5F5",
-                        color: "#000",
+                        background: child.typeId === 1 ? 'transparent' : '#F5F5F5',
+                        color: '#000',
                         fontSize: 14,
-                        padding: "6px 12px",
+                        padding: '6px 12px',
                         borderRadius: 8,
                         width: 180,
-                        textAlign: "left",
-                        position: "relative",
+                        textAlign: 'left',
+                        position: 'relative',
                         paddingRight: 60,
-                        border: child.typeId === 1 ? "none" : undefined,
-                        boxShadow: child.typeId === 1 ? "none" : undefined
+                        border: child.typeId === 1 ? 'none' : undefined,
+                        boxShadow: child.typeId === 1 ? 'none' : undefined,
                       }}
                     >
-                      <div style={{ display: "flex", alignItems: "center" }}>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
                         <Popconfirm
-                          title={intl.formatMessage({ id: 'webConfig.header.deleteConfirm' }, { name: child.menuName })}
-                          onConfirm={(e) => { e?.stopPropagation(); handleDelete(child.id); }}
+                          title={intl.formatMessage(
+                            { id: 'webConfig.header.deleteConfirm' },
+                            { name: child.menuName },
+                          )}
+                          onConfirm={(e) => {
+                            e?.stopPropagation();
+                            handleDelete(child.id);
+                          }}
                           okText={intl.formatMessage({ id: 'webConfig.header.confirmText' })}
                           cancelText={intl.formatMessage({ id: 'webConfig.header.cancelText' })}
                         >
-                          <DeleteOutlined onClick={(e) => e.stopPropagation()} style={{ color: "#ff4d4f", marginRight: 8 }} />
+                          <DeleteOutlined
+                            onClick={(e) => e.stopPropagation()}
+                            style={{ color: '#ff4d4f', marginRight: 8 }}
+                          />
                         </Popconfirm>
                         {child.menuName}
                       </div>
-                      <div style={{ position: "absolute", right: "8px", display: "flex", gap: "6px" }}>
-                        <EditOutlined onClick={(e) => { e.stopPropagation(); handleEdit(child); }} style={{ color: "#1890ff" }} />
+                      <div
+                        style={{ position: 'absolute', right: '8px', display: 'flex', gap: '6px' }}
+                      >
+                        <EditOutlined
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(child);
+                          }}
+                          style={{ color: '#1890ff' }}
+                        />
                       </div>
                     </Button>
                     <Button
                       onClick={() => handleModal(child)}
                       style={{
-                        background: "#FF6A00",
-                        color: "#FFF",
+                        background: '#FF6A00',
+                        color: '#FFF',
                         borderRadius: 8,
                         height: 32,
                         width: 32,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                       }}
                     >
                       <PlusOutlined />
                     </Button>
                   </div>
-                  
+
                   {/* 递归渲染更深层级的子菜单 */}
                   {child.children && child.children.length > 0 && (
-                    <div style={{ display: "flex", flexDirection: "column", gap: 4,  }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                       {renderMenu(child.children)}
                     </div>
                   )}
@@ -327,24 +367,24 @@ const Header: React.FC = () => {
             </div>
           )}
         </div>
-      ) : null
+      ) : null,
     );
   };
 
   return (
     <PageContainer>
       {/* 语言切换 */}
-      <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
+      <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
         {languages.map((lang) => (
           <Button
             key={lang.langEncode}
-            type={currentLanguage === lang.langEncode ? "primary" : "default"}
+            type={currentLanguage === lang.langEncode ? 'primary' : 'default'}
             onClick={() => setCurrentLanguage(lang.langEncode)}
             style={{
-              background: currentLanguage === lang.langEncode ? "#FF6A00" : "#F5F5F5",
-              color: currentLanguage === lang.langEncode ? "#FFF" : "#000",
+              background: currentLanguage === lang.langEncode ? '#FF6A00' : '#F5F5F5',
+              color: currentLanguage === lang.langEncode ? '#FFF' : '#000',
               borderRadius: 8,
-              fontWeight: "bold",
+              fontWeight: 'bold',
             }}
           >
             {lang.lang}
@@ -353,39 +393,45 @@ const Header: React.FC = () => {
       </div>
 
       {/* 导航菜单 */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 16, paddingBottom: 10, borderBottom: "2px solid #ddd" }}>
-          <Button style={{ background: "#F5F5F5", color: "#000", fontWeight: "bold" }}>Logo</Button>
-          <div style={{ display: "flex", gap: 24, flexWrap: "wrap", marginLeft: 20 }}>
-            
-           
-            
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 16,
+            paddingBottom: 10,
+            borderBottom: '2px solid #ddd',
+          }}
+        >
+          <Button style={{ background: '#F5F5F5', color: '#000', fontWeight: 'bold' }}>Logo</Button>
+          <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginLeft: 20 }}>
             {menuData && menuData.length > 0 && renderMenu(menuData)}
-          
 
-              <Button 
-                type="text"
-                style={{
-                  background: "#FF6A00" ,
-                  color: "#fff",
-                  borderRadius: 8,
-                  fontWeight: "bold",
-                  marginLeft: 20,
-                }}
-                onClick={() => handleModal()}
-              >{intl.formatMessage({ id: 'webConfig.header.addTopLevelMenu' })}<PlusOutlined /></Button>
-            
+            <Button
+              type="text"
+              style={{
+                background: '#FF6A00',
+                color: '#fff',
+                borderRadius: 8,
+                fontWeight: 'bold',
+                marginLeft: 20,
+              }}
+              onClick={() => handleModal()}
+            >
+              {intl.formatMessage({ id: 'webConfig.header.addTopLevelMenu' })}
+              <PlusOutlined />
+            </Button>
           </div>
         </div>
       </div>
 
       {/* 添加菜单弹窗 */}
-      <AddMenuModals 
-        visible={modalType} 
-        onCancel={handleCancel} 
-        onSubmit={handleSubmit} 
+      <AddMenuModals
+        visible={modalType}
+        onCancel={handleCancel}
+        onSubmit={handleSubmit}
         parentId={parentId}
-        editingMenu={editingMenu} 
+        editingMenu={editingMenu}
       />
     </PageContainer>
   );

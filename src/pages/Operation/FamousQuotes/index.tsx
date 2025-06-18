@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { getFamousAphorismsList,deleteFamousAphorisms } from '@/services/ant-design-pro/operation';
+import { getFamousAphorismsList, deleteFamousAphorisms } from '@/services/ant-design-pro/operation';
 import LanguageSelector from '@/components/LanguageSelector';
 import FamousQuoteModal from './components/FamousQuoteModal';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
 const FamousQuotes: React.FC = () => {
   const intl = useIntl();
@@ -23,8 +23,8 @@ const FamousQuotes: React.FC = () => {
   const handleLanguageChange = (value: string) => {
     setLanguage(value);
     actionRef.current?.reload();
-  }
-    
+  };
+
   const handleEdit = (record: any) => {
     setEditingId(record.id);
     setEditingRecord(record);
@@ -36,16 +36,14 @@ const FamousQuotes: React.FC = () => {
       title: intl.formatMessage({ id: 'famousQuotes.message.deleteConfirm' }),
       content: intl.formatMessage({ id: 'famousQuotes.message.deleteConfirmContent' }),
       onOk: async () => {
-          try {
-            const res = await deleteFamousAphorisms(id);
-            if(res.code==='0') {
-              message.success(intl.formatMessage({ id: 'famousQuotes.message.deleteSuccess' }));
-              actionRef.current?.reload();
-            } else {
-              message.error(intl.formatMessage({ id: 'famousQuotes.message.deleteFailed' }));
-            }
-       
-
+        try {
+          const res = await deleteFamousAphorisms(id);
+          if (res.code === '0') {
+            message.success(intl.formatMessage({ id: 'famousQuotes.message.deleteSuccess' }));
+            actionRef.current?.reload();
+          } else {
+            message.error(intl.formatMessage({ id: 'famousQuotes.message.deleteFailed' }));
+          }
         } catch (error) {
           message.error(intl.formatMessage({ id: 'famousQuotes.message.deleteFailed' }));
         }
@@ -71,10 +69,10 @@ const FamousQuotes: React.FC = () => {
       title: intl.formatMessage({ id: 'famousQuotes.column.text' }),
       dataIndex: 'languageContent',
       key: 'languageContent',
-      render: (_, record: any) => {
-        const content = record.famousAphorismsContents?.find(
-          (item: any) => item.languageCode === language
-        )?.languageContent || '';
+      render: (_: any, record: any) => {
+        const content =
+          record.famousAphorismsContents?.find((item: any) => item.languageCode === language)
+            ?.languageContent || '';
         return content;
       },
     },
@@ -82,10 +80,14 @@ const FamousQuotes: React.FC = () => {
       title: intl.formatMessage({ id: 'famousQuotes.column.action' }),
       key: 'action',
       width: 200,
-      render: (_, record: any) => (
+      render: (_: any, record: any) => (
         <Space>
-          <a onClick={() => handleEdit(record)}>{ intl.formatMessage({ id: 'famousQuotes.action.edit' }) }</a>
-          <a onClick={() => handleDelete(record.id)}>{ intl.formatMessage({ id: 'famousQuotes.action.delete' }) }</a>
+          <a onClick={() => handleEdit(record)}>
+            {intl.formatMessage({ id: 'famousQuotes.action.edit' })}
+          </a>
+          <a onClick={() => handleDelete(record.id)}>
+            {intl.formatMessage({ id: 'famousQuotes.action.delete' })}
+          </a>
         </Space>
       ),
     },
@@ -131,6 +133,7 @@ const FamousQuotes: React.FC = () => {
       />
 
       <FamousQuoteModal
+        languageCode={language}
         visible={visible}
         editingId={editingId}
         onSuccess={handleModalSuccess}
@@ -140,4 +143,4 @@ const FamousQuotes: React.FC = () => {
   );
 };
 
-export default FamousQuotes; 
+export default FamousQuotes;
