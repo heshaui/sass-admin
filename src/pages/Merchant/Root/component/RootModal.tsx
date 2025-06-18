@@ -38,9 +38,9 @@ const RootModal: React.FC<RootModalProps> = ({ visible, onCancel, onSubmit, curr
       fetchRoles();
       form.resetFields();
     }
-    if (currentRecord) {
+    if (currentRecord && currentRecord.role) {
+      console.log('currentRecord', currentRecord);
       const roleIds = currentRecord.role.split(',').map(Number);
-
       form.setFieldsValue({
         roleId: roleIds,
       });
@@ -56,7 +56,7 @@ const RootModal: React.FC<RootModalProps> = ({ visible, onCancel, onSubmit, curr
 
   return (
     <Modal
-      title={intl.formatMessage({ id: 'merchant.message.roleAssign' })}
+      title={intl.formatMessage({ id: 'merchant.action.functionalDistribution' })}
       open={visible}
       onCancel={onCancel}
       onOk={handleOk}

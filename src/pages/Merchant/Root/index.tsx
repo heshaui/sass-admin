@@ -219,7 +219,7 @@ const Root: React.FC = () => {
             {intl.formatMessage({ id: 'merchant.action.resetGoogle' })}
           </a>
           <a onClick={() => handleRoleAssign(record)}>
-            {intl.formatMessage({ id: 'merchant.action.assignRole' })}
+            {intl.formatMessage({ id: 'merchant.action.functionalDistribution' })}
           </a>
         </Space>
       ),

@@ -40,8 +40,8 @@ export default {
 
   // Form
   'merchant.form.role.selectLabel': 'Select Function',
-  'merchant.form.role.placeholder': 'Please select a role',
-  'merchant.form.role.required': 'Please select a role',
+  'merchant.form.role.placeholder': 'Please select a Function',
+  'merchant.form.role.required': 'Please select a Function',
 
   // Table Columns
   'merchant.table.id': 'ID',

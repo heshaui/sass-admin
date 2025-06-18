@@ -40,8 +40,8 @@ export default {
 
   // Form
   'merchant.form.role.selectLabel': '기능 선택',
-  'merchant.form.role.placeholder': '역할을 선택해주세요',
-  'merchant.form.role.required': '역할을 선택해주세요',
+  'merchant.form.role.placeholder': '기능을 선택해주세요',
+  'merchant.form.role.required': '기능을 선택해주세요',
 
   // Table Columns
   'merchant.table.id': 'ID',
