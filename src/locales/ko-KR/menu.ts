@@ -45,6 +45,7 @@ export default {
   'menu.account.settings': '개인 설정',
   'menu.account.trigger': '오류 트리거',
   'menu.account.logout': '로그아웃',
+  'menu.account.bindGoogle': '구글 연결',
   'menu.editor': '에디터',
   'menu.editor.flow': '플로우 에디터',
   'menu.editor.mind': '마인드맵',
