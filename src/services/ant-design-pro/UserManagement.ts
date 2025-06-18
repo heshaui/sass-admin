@@ -69,10 +69,15 @@ export async function getUserList(params: UserListParams) {
  * 获取用户详情
  */
 export async function getUserDetail(params: string | number) {
-  return request(isAdmin ? `/tenant-admin/v1/user/userDetail?id=${params}` : `/tenant/v1/userDetail?id=${params}`, {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin
+      ? `/tenant-admin/v1/user/userDetail?id=${params}`
+      : `/tenant/v1/userDetail?id=${params}`,
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
 
 /**
@@ -89,10 +94,13 @@ export async function updateUserById(params: UpdateUserParams) {
  * 获取用户操作日志列表
  */
 export async function getUserOperationLogs(params: OperationLogParams) {
-  return request(isAdmin ? '/tenant-admin/v1/user/userOperationLogList' : '/tenant/v1/userOperationLogList', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/userOperationLogList' : '/tenant/v1/userOperationLogList',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
 
 /**
@@ -119,40 +127,52 @@ export async function unfreezeLogin(params: UserOperationParams) {
  * 冻结交易
  */
 export async function freezeTransaction(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/user/freezeTransaction' : '/tenant/v1/freezeTransaction', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/freezeTransaction' : '/tenant/v1/freezeTransaction',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
 
 /**
  * 解冻交易
  */
 export async function unfreezeTransaction(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/user/unfreezeTransaction' : '/tenant/v1/unfreezeTransaction', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/unfreezeTransaction' : '/tenant/v1/unfreezeTransaction',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
 
 /**
  * 冻结提现
  */
 export async function freezeWithdrawal(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/user/freezeWithdrawal' : '/tenant/v1/freezeWithdrawal', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/freezeWithdrawal' : '/tenant/v1/freezeWithdrawal',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
 
 /**
  * 解冻提现
  */
 export async function unfreezeWithdrawal(params: UserOperationParams) {
-  return request(isAdmin ? '/tenant-admin/v1/user/unfreezeWithdrawal' : '/tenant/v1/unfreezeWithdrawal', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/unfreezeWithdrawal' : '/tenant/v1/unfreezeWithdrawal',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
 
 /**
@@ -177,61 +197,64 @@ export async function updateEmail(params: UpdateEmailParams) {
 
 // /tenant/v1/relieveGoogle
 export async function relieveGoogle(params: any) {
-  return request(isAdmin ?'/tenant-admin/v1/user/relieveGoogle' :'/tenant/v1/relieveGoogle', {
+  return request(isAdmin ? '/tenant-admin/v1/user/relieveGoogle' : '/tenant/v1/relieveGoogle', {
     method: 'POST',
     data: params,
   });
 }
-
 
 // 用户资产
 export async function userWalletList(params: any) {
-  return request(isAdmin ?'/tenant-admin/v1/user/userWalletList' :'/tenant/v1/userWalletList', {
+  return request(isAdmin ? '/tenant-admin/v1/user/userWalletList' : '/tenant/v1/userWalletList', {
     method: 'POST',
     data: params,
   });
 }
-
 
 // 用户流水
 export async function userTransactionLogList(params: any) {
-  return request(isAdmin ?'/tenant-admin/v1/user/userTransactionLogList' :'/tenant/v1/userTransactionLogList', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/userTransactionLogList' : '/tenant/v1/userTransactionLogList',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
-
-
 
 export async function gatewayAccessLogList(params: any) {
-  return request(isAdmin ?'/tenant-admin/v1/user/gatewayAccessLogList' :'/tenant/v1/gatewayAccessLogList', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/gatewayAccessLogList' : '/tenant/v1/gatewayAccessLogList',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
 
-
-
 export async function userTransactionCount(params: any) {
-  return request(isAdmin ?'/tenant-admin/v1/user/userTransactionCount' :'/tenant/v1/userTransactionCount', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/userTransactionCount' : '/tenant/v1/userTransactionCount',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
 
 export async function userWalletCount(params: any) {
-  return request(isAdmin ?'/tenant-admin/v1/user/userWalletCount' :'/tenant/v1/userWalletCount', {
+  return request(isAdmin ? '/tenant-admin/v1/user/userWalletCount' : '/tenant/v1/userWalletCount', {
     method: 'POST',
     data: params,
   });
 }
 
-
-
-
 export async function userReconciliation(params: any) {
-  return request(isAdmin ?'/tenant-admin/v1/userReconciliationList' :'/tenant/v1/userReconciliationList', {
-    method: 'POST',
-    data: params,
-  });
+  return request(
+    isAdmin ? '/tenant-admin/v1/user/userReconciliationList' : '/tenant/v1/userReconciliationList',
+    {
+      method: 'POST',
+      data: params,
+    },
+  );
 }
