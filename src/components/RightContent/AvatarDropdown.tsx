@@ -10,6 +10,7 @@ import React, { useCallback, useState } from 'react';
 import { flushSync } from 'react-dom';
 import HeaderDropdown from '../HeaderDropdown';
 import BindGoogleModal from './BindGoogleModal';
+// import { clearAllCookies } from '@/utils';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -103,6 +104,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu, childre
             },
           },
         }));
+        loginOut();
       } else {
         message.error(
           res.message ||
