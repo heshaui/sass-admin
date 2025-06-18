@@ -1,8 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { ActionType, PageContainer, ProTable } from '@ant-design/pro-components';
-import { Space, message } from 'antd';
 import { useIntl } from '@umijs/max';
-import { getKvList, getTenantKvList, releaseKv, cancelKv } from '@/services/ant-design-pro/kv';
+import { Space, message,Button } from 'antd';
+import { 
+  getKvList, 
+  getTenantKvList, 
+  releaseKv,
+  cancelKv
+} from '@/services/ant-design-pro/kv';
 import AddModal from './component/AddModal';
 import EditModal from './component/EditModal';
 
@@ -234,10 +239,19 @@ const KvSetting: React.FC = () => {
     <PageContainer title={intl.formatMessage({ id: 'kv.title' })}>
       <ProTable
         loading={loading}
+          rowKey="id"
         columns={columns as any}
         actionRef={actionRef}
         request={fetchKvList}
-        rowKey="id"
+        toolBarRender={() => [
+          <Button
+            type="primary"
+            onClick={handleAdd}
+            key="add"
+          >
+            {intl.formatMessage({ id: 'kv.table.action.add' })}
+          </Button>
+        ]}
       />
 
       <AddModal
