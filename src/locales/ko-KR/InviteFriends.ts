@@ -11,11 +11,13 @@ export default {
   'inviteFriends.accountConfig.title': '계정 설정',
   'inviteFriends.accountConfig.enabled': '활성화 여부',
   'inviteFriends.accountConfig.tips': '팁:',
-  'inviteFriends.accountConfig.tips.content': '1. 활성화 시 개인 센터에 진입점 표시, 비활성화 시 미표시. URL 설정을 통한 접근도 활성화 필요',
+  'inviteFriends.accountConfig.tips.content':
+    '1. 활성화 시 개인 센터에 진입점 표시, 비활성화 시 미표시. URL 설정을 통한 접근도 활성화 필요',
 
   // Account Alert
   'inviteFriends.alert.lowBalance.title': '계정 잔액 부족 알림!',
-  'inviteFriends.alert.lowBalance.description': '귀하의 추천 수수료 계정 잔액이 부족합니다! 잔액을 보충해 주세요! 잔액 부족 시 보상 지급이 자동 중단되며, 자금 충분 시 자동 재개됩니다.',
+  'inviteFriends.alert.lowBalance.description':
+    '귀하의 추천 수수료 계정 잔액이 부족합니다! 잔액을 보충해 주세요! 잔액 부족 시 보상 지급이 자동 중단되며, 자금 충분 시 자동 재개됩니다.',
   'inviteFriends.alert.lowBalance.action': '이동',
 
   // Reward Configuration
@@ -36,11 +38,13 @@ export default {
   'inviteFriends.rewardConfig.isRealname': '실명 인증 요구',
   'inviteFriends.rewardConfig.isRealname.required': '실명 인증 필요',
   'inviteFriends.rewardConfig.isRealname.notRequired': '실명 인증 불필요',
-  'inviteFriends.rewardConfig.coinType.tips': '실제 수수료 코인과 지급 코인이 다를 경우, 실시간 환율을 기준으로 지급 코인으로 환산됩니다.',
+  'inviteFriends.rewardConfig.coinType.tips':
+    '실제 수수료 코인과 지급 코인이 다를 경우, 실시간 환율을 기준으로 지급 코인으로 환산됩니다.',
 
   // Invitation Page Configuration
   'inviteFriends.pageConfig.title': '초대 페이지 설정',
-  'inviteFriends.pageConfig.languageInfo': '영어 스타일 설정 시 기본적으로 다른 언어에 동기화됩니다. 미설정 시 시스템 기본값 사용',
+  'inviteFriends.pageConfig.languageInfo':
+    '영어 스타일 설정 시 기본적으로 다른 언어에 동기화됩니다. 미설정 시 시스템 기본값 사용',
   'inviteFriends.pageConfig.configImage': '이미지 설정',
   'inviteFriends.pageConfig.backgroundTitle': '초대 페이지 배경 설정 (PC)',
   'inviteFriends.pageConfig.posterTitle': '초대 포스터 베이스 이미지 (PC)',
@@ -97,7 +101,7 @@ export default {
   'inviteFriends.rewardRecords.column.uid': 'UID',
   'inviteFriends.rewardRecords.column.account': '등록 계정',
   'inviteFriends.rewardRecords.column.accountInfo': '계정 정보',
-  'inviteFriends.rewardRecords.column.parentUserId': '초대자 ID',
+  'inviteFriends.rewardRecords.column.parentUserId': '초대받은 사람 ID',
   'inviteFriends.rewardRecords.column.orderId': '주문 ID',
   'inviteFriends.rewardRecords.column.fee': '수수료',
   'inviteFriends.rewardRecords.column.rebateRatio': '수수료 비율',
@@ -110,5 +114,5 @@ export default {
 
   // Distribution Types
   'inviteFriends.rewardRecords.type.auto': '자동',
-  'inviteFriends.rewardRecords.type.manual': '수동'
-}
+  'inviteFriends.rewardRecords.type.manual': '수동',
+};
