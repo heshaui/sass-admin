@@ -21,17 +21,20 @@ interface ReconciliationItem {
   positionDividend: string;
   inviteRebate: number;
   gift: number;
+  withdrawal: number | string;
 }
 
 interface ReconciliationProps {
   userId: string | number;
+  tenantId: string | number;
 }
 
-const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
+const Reconciliation: React.FC<ReconciliationProps> = ({ userId, tenantId }) => {
   const { formatMessage } = useIntl();
   const [loading, setLoading] = useState<boolean>(false);
   const [reconciliationData, setReconciliationData] = useState<ReconciliationItem[]>([]);
   const [hideZeroAssets, setHideZeroAssets] = useState<boolean>(false);
+  const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
 
   const columns: ColumnsType<ReconciliationItem> = [
     {
@@ -47,6 +50,7 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
       key: 'withdrawal',
       width: 120,
       align: 'right',
+      render: (_, record) => record.withdrawal || 0,
     },
     {
       title: formatMessage({ id: 'reconciliation.columns.inviteRebate' }),
@@ -77,6 +81,7 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
       key: 'recharge',
       width: 100,
       align: 'right',
+      render: (_, record) => record.recharge || 0,
     },
     // {
     //   title: '充币',
@@ -185,8 +190,13 @@ const Reconciliation: React.FC<ReconciliationProps> = ({ userId }) => {
 
     setLoading(true);
     try {
+      const params: any = { userId };
+
+      if (isAdmin) {
+        params.tenantId = tenantId;
+      }
       // 调用对账接口
-      const response = await userReconciliation({ userId });
+      const response = await userReconciliation(params);
       if (response.code === '0') {
         setReconciliationData(response.data || []);
       } else {

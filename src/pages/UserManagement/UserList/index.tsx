@@ -20,31 +20,27 @@ interface UserItem {
   ip: string;
 }
 
-
 const UserManagement: React.FC = () => {
   const intl = useIntl();
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
-  const [loading, setLoading] = useState<boolean>(false);
   const [showUserDetail, setShowUserDetail] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<UserItem | null>(null);
 
   // Use real API to fetch user data
   const fetchUserList = async (params: any) => {
-    setLoading(true);
     try {
       const response = await getUserList({
         pageNo: params.current,
         pageSize: params.pageSize,
         ...params,
       });
-      setLoading(false);
+
       return {
         data: response.data.list || [],
         success: response.code === '0' ? true : false,
         total: response.data.count,
       };
     } catch (error) {
-      setLoading(false);
       console.error(intl.formatMessage({ id: 'userManagement.error.fetchList' }), error);
       return {
         data: [],
@@ -170,12 +166,13 @@ const UserManagement: React.FC = () => {
   if (showUserDetail && currentUser) {
     return (
       <PageContainer title={intl.formatMessage({ id: 'userManagement.title' })}>
-        <UserDetail
-          visible={showUserDetail}
-          userId={currentUser?.userId}
-          tenantId={currentUser?.tenantId}
-          onClose={() => setShowUserDetail(false)}
-        />
+        {showUserDetail && currentUser?.userId && (
+          <UserDetail
+            userId={currentUser?.userId}
+            tenantId={currentUser?.tenantId}
+            onClose={() => setShowUserDetail(false)}
+          />
+        )}
       </PageContainer>
     );
   }

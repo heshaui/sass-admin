@@ -31,15 +31,13 @@ import { getTenantKeyParams, getTenantAdminKeyParams } from '@/services/ant-desi
 const { Option } = Select;
 
 interface UserDetailProps {
-  visible: boolean;
   tenantId: string | number;
   userId: string | number;
   onClose: () => void;
 }
 
-const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose, tenantId }) => {
+const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, tenantId }) => {
   const intl = useIntl();
-  if (!visible || !userId) return null;
   const { initialState, refresh } = useModel('@@initialState');
   const { currentUser } = initialState || {};
   const isAdmin = process.env.UMI_APP_ADMIN_FLAG === '1';
@@ -213,7 +211,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose, tenan
 
   const handleGoogleCodeSuccess = async (code: string) => {
     setGoogleCode(code);
-    let result:boolean = false;
+    let result: boolean = false;
 
     try {
       const res = await bindGoogleKey({ googleCode: code });
@@ -619,7 +617,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ visible, userId, onClose, tenan
             <UserTransaction userId={userId} />
           </Tabs.TabPane>
           <Tabs.TabPane tab={intl.formatMessage({ id: 'userDetail.tab.reconciliation' })} key="3">
-            <Reconciliation userId={userId} />
+            <Reconciliation userId={userId} tenantId={tenantId} />
           </Tabs.TabPane>
           <Tabs.TabPane tab={intl.formatMessage({ id: 'userDetail.tab.logs' })} key="4">
             <Log userId={userId} />
