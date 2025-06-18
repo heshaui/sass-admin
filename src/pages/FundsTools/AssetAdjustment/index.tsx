@@ -26,7 +26,7 @@ const AssetAdjustment: React.FC = () => {
       return {
         data: res.data.list,
         success: true,
-        total: res.data.total,
+        total: res.data.count,
       };
     }
   }

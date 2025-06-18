@@ -1,19 +1,46 @@
-import { AuthorityList } from '@/services/ant-design-pro/authAdmin'; // 权限API
-
-import { getTenantRoleList,saveTenantRole,updateTenantRoleById,getTenantAuthorityList,getTenantPermissionsList,deleteTenantPermissionsByIds,saveTenantPermissions} from '@/services/ant-design-pro/merchantSystem'; // 权限API
+import {
+  getTenantRoleList,
+  saveTenantRole,
+  updateTenantRoleById,
+  getTenantAuthorityList,
+  getTenantPermissionsList,
+  deleteTenantPermissionsByIds,
+  saveTenantPermissions,
+} from '@/services/ant-design-pro/merchantSystem'; // 权限API
 
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Button, Space, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 import AddCategoryModal from './component/AddCategoryModal'; // 模态框组件
 import Dispense from './component/Dispense'; // 权限分配组件
 
 // **表格列定义**
-const getColumns = (handleEdit: (record: any) => void, handleDispense: (record: any) => void, intl: any) => [
-  { title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.id' }), dataIndex: 'roleId', key: 'roleId' },
-  { title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.roleName' }), dataIndex: 'roleName', key: 'roleName' },
-  { title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.describeText' }), dataIndex: 'describeText', key: 'describeText' },
+const getColumns = (
+  handleEdit: (record: any) => void,
+  handleDispense: (record: any) => void,
+  intl: any,
+) => [
+  {
+    title: intl.formatMessage({ id: 'language.table.column.index' }),
+    key: 'index',
+    render: (_: any, record: any, index: number) => index + 1, // 将索引+1转换为自然计数
+  },
+  {
+    title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.id' }),
+    dataIndex: 'roleId',
+    key: 'roleId',
+  },
+  {
+    title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.roleName' }),
+    dataIndex: 'roleName',
+    key: 'roleName',
+  },
+  {
+    title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.describeText' }),
+    dataIndex: 'describeText',
+    key: 'describeText',
+  },
   {
     title: intl.formatMessage({ id: 'merchantSystem.roleAdmin.column.action' }),
     key: 'action',
@@ -39,7 +66,7 @@ const Allocation: React.FC = () => {
   const [disVisible, setDisVisible] = useState(false); // 权限分配模态框
   const [rolePermissions, setRolePermissions] = useState<string[]>([]); // 角色已分配权限
   const [allPermissions, setAllPermissions] = useState<string[]>([]); // 所有权限数据
-  const [roleId, setRoleId] = useState<string[]>([]); 
+  const [roleId, setRoleId] = useState<string[]>([]);
   // **获取角色列表**
   const fetchRoleList = async () => {
     try {
@@ -93,15 +120,19 @@ const Allocation: React.FC = () => {
         // 调用更新 API
         let resp = await updateTenantRoleById({ roleId: editingRecord.roleId, ...formData });
         if (resp.code === '0') {
-          message.success(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.edit.success' }));
+          message.success(
+            intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.edit.success' }),
+          );
         } else {
           message.error(resp.message);
         }
       } else {
         // 调用新增 API
         let res = await saveTenantRole(formData);
-        if (res.code === '0'){
-          message.success(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.add.success' }));
+        if (res.code === '0') {
+          message.success(
+            intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.add.success' }),
+          );
         } else {
           message.error(res.message);
         }
@@ -110,16 +141,22 @@ const Allocation: React.FC = () => {
       fetchRoleList(); // 重新加载数据
       handleCancel();
     } catch (error) {
-      message.error(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.operation.failed' }));
+      message.error(
+        intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.operation.failed' }),
+      );
     }
   };
 
   // **获取角色已分配的权限**
   const getRolePermissions = async (record: any) => {
     try {
-      const res = await getTenantPermissionsList({ roleId: record.roleId, pageNo: 1, pageSize: 1000 });
+      const res = await getTenantPermissionsList({
+        roleId: record.roleId,
+        pageNo: 1,
+        pageSize: 1000,
+      });
       if (res.code === '0') {
-        setRoleId(res.data.list)
+        setRoleId(res.data.list);
         const checkedKeys = res.data.list.map((item: any) => item.permissionsId);
         setRolePermissions(checkedKeys);
       }
@@ -137,20 +174,22 @@ const Allocation: React.FC = () => {
 
   // **提交角色权限分配**
   const handleSubmitDis = async (values: any) => {
-    console.log(values.permissions)
+    console.log(values.permissions);
     try {
       // **计算新增的权限 (去掉已分配的)**
       const newPermissions = values.permissions.filter(
-        (item: string) => !rolePermissions.includes(item)
+        (item: string) => !rolePermissions.includes(item),
       );
 
       // 获取移除的权限
       const removedPermissions = rolePermissions.filter(
-        (permId) => !values.permissions.includes(permId)
+        (permId) => !values.permissions.includes(permId),
       );
 
       if (newPermissions.length === 0 && removedPermissions.length === 0) {
-        message.info(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.noPermissionChange' }));
+        message.info(
+          intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.noPermissionChange' }),
+        );
         setDisVisible(false);
         return;
       }
@@ -165,29 +204,38 @@ const Allocation: React.FC = () => {
       if (newPermissions.length > 0) {
         const res = await saveTenantPermissions(data);
         if (res.code !== '0') {
-          message.error(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.assignPermission.failed' }));
+          message.error(
+            intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.assignPermission.failed' }),
+          );
           return;
         }
       }
 
       // 调用删除接口
       if (removedPermissions.length > 0) {
-        const allID = roleId.filter(item => removedPermissions.includes(item.permissionsId));
-        const deleteRes = await deleteTenantPermissionsByIds(allID.map(item => item.id));
+        const allID = roleId.filter((item) => removedPermissions.includes(item.permissionsId));
+        const deleteRes = await deleteTenantPermissionsByIds(allID.map((item) => item.id));
         if (deleteRes.code !== '0') {
-          message.error(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.removePermission.failed' }));
+          message.error(
+            intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.removePermission.failed' }),
+          );
           return;
         }
       }
 
-      message.success(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.updatePermission.success' }));
+      message.success(
+        intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.updatePermission.success' }),
+      );
       setDisVisible(false);
     } catch (error) {
-      console.log(error)
-      message.error(intl.formatMessage({ id: 'merchantSystem.roleAdmin.message.assignPermission.requestFailed' }));
+      console.log(error);
+      message.error(
+        intl.formatMessage({
+          id: 'merchantSystem.roleAdmin.message.assignPermission.requestFailed',
+        }),
+      );
     }
   };
-
 
   return (
     <PageContainer>

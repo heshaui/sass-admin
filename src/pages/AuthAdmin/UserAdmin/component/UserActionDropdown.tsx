@@ -1,9 +1,9 @@
 import React from 'react';
-import { Dropdown, Menu, Button, Space } from 'antd';
+import { Dropdown, Menu, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 
-const actionsMenu = (record, intl) => {
+const actionsMenu = (record: any, intl: any) => {
   return (
     <Menu>
       <Menu.Item key="edit" onClick={() => handleEdit(record)}>
@@ -25,27 +25,27 @@ const actionsMenu = (record, intl) => {
   );
 };
 
-const handleEdit = (record) => {
+const handleEdit = (record: any) => {
   // Handle editing the user
 };
 
-const handleResetPassword = (userId) => {
+const handleResetPassword = (userId: any) => {
   // Handle resetting password
 };
 
-const handleResetGoogleAuth = (userId) => {
+const handleResetGoogleAuth = (userId: any) => {
   // Handle resetting google auth
 };
 
-const handleDisable = (userId) => {
+const handleDisable = (userId: any) => {
   // Handle disabling user
 };
 
-const handleDelete = (userId) => {
+const handleDelete = (userId: any) => {
   // Handle deleting user
 };
 
-const UserActionDropdown = ({ record }) => {
+const UserActionDropdown = ({ record }: { record: any }) => {
   const intl = useIntl();
   return (
     <Dropdown overlay={() => actionsMenu(record, intl)} trigger={['click']}>

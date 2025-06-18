@@ -157,9 +157,11 @@ export default {
   'webConfig.logo.darkLogoRequired': 'Please fill in the dark mode Logo',
   'webConfig.logo.darkMode': 'Dark Mode',
   'webConfig.logo.lightMode': 'Light Mode',
-  'webConfig.logo.headerFooterNote': '(Applicable to top Header/bottom Footer),height:140*28',
-  'webConfig.logo.browserTabNote': '(Applicable to browser tab),size:32*32',
+  'webConfig.logo.headerFooterNote': '(Applicable to top Header/bottom Footer)',
+  'webConfig.logo.browserTabNote': '(Applicable to browser tab)',
   'webConfig.logo.submit': 'Submit',
+  'webConfig.logo.headerFooterNote.logo.size': 'Please upload less than 500k. Size: 140*28',
+  'webConfig.logo.headerFooterNote.icon.size': 'Please upload less than 500k. Size: 32*32',
 
   // WebStyle component
   'webConfig.webStyle.fetchFailed': 'Failed to fetch configuration:',

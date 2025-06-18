@@ -369,6 +369,10 @@ export default {
   'tradingPair.form.depthPrecision4': 'Depth Precision 4',
   'tradingPair.form.depthPrecision5': 'Depth Precision 5',
 
+  'tradingPair.form.priceDeviationPercentage.tips':"Order price > deviation rate (order price - market price / market price * 100%), the order fails",
+  'tradingPair.column.takerFee.tips': 'Fee range 0-1%',
+  'tradingPair.form.depthPrecision.tips': 'The front-end displays the depth precision as 1-5. 1-9 represents the number of decimal places, i.e. 1 represents 0.1',
+
   'tradingPair.form.yes': 'Yes',
   'tradingPair.form.no': 'No',
 

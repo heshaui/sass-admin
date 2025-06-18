@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PageContainer } from "@ant-design/pro-components";
 import { Card, Tag, Button, Space, Row, Col, Modal, Select, Typography, message, Form, Input, Spin } from "antd";
 import { CloseOutlined, PlusOutlined } from "@ant-design/icons";
-import { langPackageList,saveLangPackage,languageList,deleteLangPackage} from "@/services/ant-design-pro/langPackage";
+import { langPackageList,languageList,deleteLangPackage,saveLangPackages } from "@/services/ant-design-pro/langPackage";
 import { useIntl } from "@umijs/max";
 
 const { Option } = Select;
@@ -242,12 +242,17 @@ const Package: React.FC = () => {
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
-      const selectedLanguageId = values.languageId;
+      const selectedLanguageIds = values.languageId; // 现在是数组
+      
+      if (!selectedLanguageIds || selectedLanguageIds.length === 0) {
+        message.error(intl.formatMessage({ id: 'package.message.languageNotFound' }));
+        return;
+      }
       
       // 查找选中的语言详情
-      const selectedLanguage = availableLanguages.find(lang => lang.id === selectedLanguageId);
+      const selectedLanguages = availableLanguages.filter(lang => selectedLanguageIds.includes(lang.id));
       
-      if (!selectedLanguage) {
+      if (selectedLanguages.length === 0) {
         message.error(intl.formatMessage({ id: 'package.message.languageNotFound' }));
         return;
       }
@@ -266,52 +271,62 @@ const Package: React.FC = () => {
       }
       
       // 添加新选择的语言ID
-      const updatedLanguageIds = [...currentLanguageIds, selectedLanguageId];
+      const updatedLanguageIds = [...currentLanguageIds, ...selectedLanguageIds];
       
-      let data={
-        packageId: packageId,
-        langId: selectedLanguageId
-      }
+      // 准备请求数据 - 构造数组对象
+      const data = selectedLanguageIds.map(langId => ({
+        langId: langId,
+        packageId: packageId
+      }));
+      
+      let langPackageVo = {
+        packages: data
 
-      const response = await saveLangPackage(data);
+      };
+      // 发送保存请求
+      const response = await saveLangPackages(langPackageVo);
       
-      if (response.code==='0') {
-        const packageName = intl.formatMessage({ 
-          id: `package.type.${currentPackage}` 
-        });
+      // 显示操作结果
+      const packageName = intl.formatMessage({ 
+        id: `package.type.${currentPackage}` 
+      });
+      
+      if (response.code === '0') {
         message.success(
           intl.formatMessage(
-            { id: 'package.message.languageAdded' },
-            { package: packageName }
+            { id: 'package.message.addSuccess' },
+            { count: selectedLanguageIds.length, package: packageName }
           )
         );
-        
-        // 创建要添加的语言对象（用于本地状态更新）
-        const newLanguage = {
-          id: selectedLanguage.id,
-          name:  selectedLanguage.lang,
-          code: selectedLanguage.langEncode,
-          lang: selectedLanguage.lang
-        };
-        
-        // 更新本地状态
-        if (currentPackage === 'basic') {
-          setBasicLanguages([...basicLanguages, newLanguage]);
-        } else if (currentPackage === 'advanced') {
-          setAdvancedLanguages([...advancedLanguages, newLanguage]);
-        } else if (currentPackage === 'premium') {
-          setPremiumLanguages([...premiumLanguages, newLanguage]);
-        }
-        
-        // 重新获取最新数据
-        fetchLanguagePackages();
-        
-        // 关闭模态框并重置表单
-        setModalVisible(false);
-        form.resetFields();
       } else {
-        message.error(response?.message || intl.formatMessage({ id: 'package.message.saveFailed' }));
+        message.error(
+          response?.message || intl.formatMessage({ id: 'package.message.saveFailed' })
+        );
       }
+      
+      // 创建要添加的语言对象列表（用于本地状态更新）
+      const newLanguages = selectedLanguages.map(language => ({
+        id: language.id,
+        name: language.lang,
+        code: language.langEncode,
+        lang: language.lang
+      }));
+        
+      // 更新本地状态
+      if (currentPackage === 'basic') {
+        setBasicLanguages([...basicLanguages, ...newLanguages]);
+      } else if (currentPackage === 'advanced') {
+        setAdvancedLanguages([...advancedLanguages, ...newLanguages]);
+      } else if (currentPackage === 'premium') {
+        setPremiumLanguages([...premiumLanguages, ...newLanguages]);
+      }
+      
+      // 重新获取最新数据
+      fetchLanguagePackages();
+      
+      // 关闭模态框并重置表单
+      setModalVisible(false);
+      form.resetFields();
     } catch (error) {
       console.error('添加语言出错:', error);
       message.error(
@@ -459,6 +474,7 @@ const Package: React.FC = () => {
               }]}
             >
               <Select 
+                mode="multiple"
                 placeholder={intl.formatMessage({ id: 'package.common.selectLanguage.placeholder' })}
               >
                 {getFilteredLanguages().map(lang => (

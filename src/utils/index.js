@@ -29,7 +29,7 @@ const getIcon = (iconName) => {
 export const generateMenuTree = (menuList) => {
     const menuMap = new Map();
     const result = [];
-  
+
     menuList.forEach((item) => {
       if (item.type === 1) {
         menuMap.set(item.id, {
@@ -41,7 +41,7 @@ export const generateMenuTree = (menuList) => {
         });
       }
     });
-  
+
     menuList.forEach((item) => {
       if (item.type === 1 && item.parentId) {
         const parent = menuMap.get(item.parentId);
@@ -52,7 +52,7 @@ export const generateMenuTree = (menuList) => {
         result.push(menuMap.get(item.id));
       }
     });
-  
+
     return result;
   };
 
@@ -65,7 +65,7 @@ export const generateMenuTree = (menuList) => {
     permissions.forEach((perm) => {
       map.set(perm.id, { ...perm, key: perm.id, title: intl ? intl.formatMessage({ id: `permission.${perm.titleKey}` }) : perm.titleKey, children: [] });
     });
-  
+
     permissions.forEach((perm) => {
       if (perm.parentId && map.has(perm.parentId)) {
         map.get(perm.parentId).children.push(map.get(perm.id));
@@ -73,7 +73,7 @@ export const generateMenuTree = (menuList) => {
         tree.push(map.get(perm.id));
       }
     });
-  
+
     return tree;
   };
 
@@ -82,11 +82,11 @@ export const generateMenuTree = (menuList) => {
     console.log("permissions", permissions);
     const map = new Map();
     const tree = [];
-  
+
     permissions.forEach((perm) => {
       map.set(perm.authorityId, { ...perm, key: perm.authorityId, title: intl ? intl.formatMessage({ id: `permission.${perm.titleKey}` }) : perm.titleKey, children: [] });
     });
-  
+
     permissions.forEach((perm) => {
       if (perm.parentId && map.has(perm.parentId)) {
         map.get(perm.parentId).children.push(map.get(perm.authorityId));
@@ -111,3 +111,5 @@ export const generateMenuTree = (menuList) => {
            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
          }
   }
+
+

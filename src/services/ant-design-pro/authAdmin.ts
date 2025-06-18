@@ -89,10 +89,10 @@ export async function updateTenantById(
 
 //角色列表
 export async function roleList(
-  body:API.RoleVo,
+  body:API.PageParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.Role>('/tenant-admin/v1/role/roleList', {
+  return request<API.BaseResponse>('/tenant-admin/v1/role/roleList', {
     method: 'POST',
     data: body,
     headers: {

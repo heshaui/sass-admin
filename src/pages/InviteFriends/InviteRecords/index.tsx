@@ -1,20 +1,21 @@
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { PageContainer,ProTable } from '@ant-design/pro-components';
 import { useIntl } from 'umi';
-import { Tag, Button, Space } from 'antd';
+import {  Button, Space, message } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
-import { getUserInviteDetailList, } from '@/services/ant-design-pro/inviteFriends';
+import { getUserInviteDetailList,grantUserRebates,getUserGrantRebate} from '@/services/ant-design-pro/inviteFriends';
 
 interface InviteRecord {
-  key: string;
-  serialNumber: number;
-  uid: string;
-  registrationAccount: string;
-  inviteAID: string;
-  registrationTime: string;
-  rechargeAmount: number;
-  invitationStatus: '成功' | '未成功';
-  distributionStatus: '已发放' | '未发放';
+  id: string;
+  userId: string;
+  account: string;
+  parentUserId: string;
+  createTime: string;
+  accumulate: number;
+  inviteStatus: number; // 1: success, 0: failed
+  distributeStatus: number; // 1: distributed, 0: undistributed
+  key?: string;
+  actualCoinId?: string;
 }
 
 
@@ -22,6 +23,7 @@ interface InviteRecord {
 const InviteRecords: React.FC = () => {
   const intl = useIntl();
   const [userList, setUserList] = useState<InviteRecord[]>([]);
+  const proTableRef = useRef<any>();
 
   //获取用户邀请详情列表
   const getUserList = async (params:any) => {
@@ -39,6 +41,32 @@ const InviteRecords: React.FC = () => {
         total:res.data.count
     }
   };
+}
+
+
+const handleSend = async (record: InviteRecord) => {
+  try {
+
+    const getUserGrantRebateRes = await getUserGrantRebate({userId:record.userId});
+    if(getUserGrantRebateRes.code === '0'){
+
+      const res = await grantUserRebates({ userId: record.userId, amount:getUserGrantRebateRes.data.amount,actualCoinId:getUserGrantRebateRes.data.actualCoinId});
+    
+      if (res.code === '0'&&res.data) {
+        // Refresh the table data after successful distribution
+        proTableRef.current?.reload();
+        message.success(intl.formatMessage({ id: 'common.success' }) || 'Distribution successful');
+      } else {
+        message.error(res.msg || intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
+      }
+    }
+    
+   
+
+  } catch (error) {
+    console.error('Manual distribution error:', error);
+    message.error(intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
+  }
 }
 
   const columns: ProColumns<InviteRecord>[] = [
@@ -99,16 +127,16 @@ const InviteRecords: React.FC = () => {
       title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.action' }),
       key: 'action',
       search: false,
-      render: (_, record) => (
+      render: (_, record: InviteRecord) => (
         <Space>
-          {record.distributionStatus === intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.undistributed' }) && 
-           record.invitationStatus === intl.formatMessage({ id: 'inviteFriends.inviteRecords.status.success' }) && (
-            <Button type="link" style={{ color: '#1677ff' }}>
+          {record.distributeStatus === 0 && 
+           record.inviteStatus === 1 && (
+            <Button type="link" style={{ color: '#1677ff' }} onClick={() => handleSend(record)}>
               {intl.formatMessage({ id: 'inviteFriends.inviteRecords.action.manualDistribute' })}
             </Button>
           )}
-          {(record.distributionStatus === intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.distributed' }) || 
-            record.invitationStatus === intl.formatMessage({ id: 'inviteFriends.inviteRecords.status.failed' })) && (
+          {(record.distributeStatus === 1 || 
+            record.inviteStatus === 0) && (
             <span>-</span>
           )}
         </Space>
@@ -124,6 +152,7 @@ const InviteRecords: React.FC = () => {
       <ProTable<InviteRecord>
         columns={columns}
         rowKey="key"
+        actionRef={proTableRef}
         pagination={{ pageSize: 10 }}
         search={{
           labelWidth: 'auto',

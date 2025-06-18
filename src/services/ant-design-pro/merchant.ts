@@ -11,14 +11,12 @@ export async function tenantList(body: API.TenantAuthorityVo, options?: { [key: 
   });
 }
 
-export async function tenantParams(body: API.TenantAuthorityVo, options?: { [key: string]: any }) {
-  return request<API.TenantAuthority>('/tenant-admin/v1/tenant/tenantParams?idString=' + body, {
+export async function tenantParams(tenantId: string) {
+  return request<API.TenantAuthority>('/tenant-admin/v1/tenant/tenantParams?idString=' + tenantId, {
     method: 'POST',
-    data: body,
     headers: {
       'Content-Type': 'application/json',
     },
-    ...(options || {}),
   });
 }
 

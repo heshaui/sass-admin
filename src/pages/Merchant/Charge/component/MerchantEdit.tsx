@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Form, Input, Button, DatePicker, message, Card, Select } from "antd";
-import { useIntl } from 'umi';
+import { useIntl } from '@umijs/max';
 import dayjs from "dayjs";
 import { tenantParams, updateTenantById } from "@/services/ant-design-pro/merchant";
 import { getAreaCodeList } from "@/services/ant-design-pro/merchant";
@@ -91,8 +91,8 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
   };
 
   return (
-    <Card 
-      title={intl.formatMessage({ id: 'merchantEdit.title' })} 
+    <Card
+      title={intl.formatMessage({ id: 'merchantEdit.title' })}
       extra={
         <Button onClick={onBack}>
           {intl.formatMessage({ id: 'merchantEdit.button.back' })}
@@ -100,41 +100,41 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
       }
     >
       <Form form={form} layout="vertical" onFinish={onFinish}>
-        <Form.Item 
+        <Form.Item
           label={intl.formatMessage({ id: 'merchantEdit.form.exchangeName' })}
-          name="tenantName" 
-          rules={[{ 
-            required: true, 
-            message: intl.formatMessage({ id: 'merchantEdit.form.exchangeName.required' }) 
+          name="tenantName"
+          rules={[{
+            required: true,
+            message: intl.formatMessage({ id: 'merchantEdit.form.exchangeName.required' })
           }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item 
-          label={intl.formatMessage({ id: 'merchantEdit.form.merchantId' })} 
+        <Form.Item
+          label={intl.formatMessage({ id: 'merchantEdit.form.merchantId' })}
           name="tenantId"
         >
           <Input disabled />
         </Form.Item>
 
-        <Form.Item 
-          label={intl.formatMessage({ id: 'merchantEdit.form.contact' })} 
-          name="tenantContact" 
-          rules={[{ 
-            required: true, 
-            message: intl.formatMessage({ id: 'merchantEdit.form.contact.required' }) 
+        <Form.Item
+          label={intl.formatMessage({ id: 'merchantEdit.form.contact' })}
+          name="tenantContact"
+          rules={[{
+            required: true,
+            message: intl.formatMessage({ id: 'merchantEdit.form.contact.required' })
           }]}
         >
           <Input />
         </Form.Item>
-        
-        <Form.Item 
-          label={intl.formatMessage({ id: 'merchantEdit.form.countryCode' })} 
+
+        <Form.Item
+          label={intl.formatMessage({ id: 'merchantEdit.form.countryCode' })}
           name="areaCode"
         >
           <Select>
-            {areaList.map((item: any) => (  
+            {areaList.map((item: any) => (
               <Option key={item.areaCode} value={item.areaCode}>
                 +{item.areaCode} {item.areaName}
               </Option>
@@ -142,27 +142,27 @@ const MerchantEdit: React.FC<MerchantEditProps> = ({ tenantId, onBack }) => {
           </Select>
         </Form.Item>
 
-        <Form.Item 
+        <Form.Item
           label={intl.formatMessage({ id: 'merchantEdit.form.email' })}
-          name="tenantEmail" 
-          rules={[{ 
-            required: true, 
-            type: "email", 
-            message: intl.formatMessage({ id: 'merchantEdit.form.email.required' }) 
+          name="tenantEmail"
+          rules={[{
+            required: true,
+            type: "email",
+            message: intl.formatMessage({ id: 'merchantEdit.form.email.required' })
           }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item 
-          label={intl.formatMessage({ id: 'merchantEdit.form.serviceStart' })} 
+        <Form.Item
+          label={intl.formatMessage({ id: 'merchantEdit.form.serviceStart' })}
           name="tenantStartTime"
         >
           <DatePicker showTime style={{ width: "100%" }} disabled />
         </Form.Item>
 
-        <Form.Item 
-          label={intl.formatMessage({ id: 'merchantEdit.form.serviceEnd' })} 
+        <Form.Item
+          label={intl.formatMessage({ id: 'merchantEdit.form.serviceEnd' })}
           name="tenantEndTime"
         >
           <DatePicker showTime style={{ width: "100%" }} disabled/>

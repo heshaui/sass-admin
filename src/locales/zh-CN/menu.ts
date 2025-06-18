@@ -45,6 +45,7 @@ export default {
   'menu.account.settings': '个人设置',
   'menu.account.trigger': '触发报错',
   'menu.account.logout': '退出登录',
+  'menu.account.bindGoogle': '绑定谷歌',
   'menu.editor': '图形编辑器',
   'menu.editor.flow': '流程编辑器',
   'menu.editor.mind': '脑图编辑器',
@@ -111,10 +112,10 @@ export default {
   'menu.fundsTools.assetAdjustment': '资产调整',
   'menu.fundsTools.transferTool': '转账工具',
   'menu.fundsTools.transferRecords': '转账记录',
+  'menu.fundsTools.presentTool': '赠币工具',
   'menu.riskControl': '资金风控',
   'menu.riskControl.config': '风控配置',
   'menu.riskControl.suggestions': '处理建议',
   'menu.riskControl.alerts': '报警记录',
   'menu.riskControl.templates': '风控模板',
- 
 };

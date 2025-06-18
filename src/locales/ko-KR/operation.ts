@@ -5,12 +5,12 @@ export default {
   'helpCenter.common.add': '추가',
   'helpCenter.common.getDataFailed': '데이터 가져오기 실패',
   'helpCenter.common.requestError': '요청 오류',
-  
+
   // Help Center
   'helpCenter.tab.categoryManagement': '카테고리 관리',
   'helpCenter.tab.articleManagement': '게시글 관리',
   'helpCenter.tab.selfService': '셀프 서비스',
-  
+
   // Category Management
   'helpCenter.category.title': '고객센터 카테고리 관리',
   'helpCenter.category.button.add': '카테고리 추가',
@@ -36,7 +36,7 @@ export default {
   'helpCenter.category.pagination.total': '총 {total}개 항목',
   'helpCenter.category.type.menu': '메뉴',
   'helpCenter.category.type.category': '카테고리',
-  
+
   // Category Form Modal
   'helpCenter.category.modal.addTitle': '카테고리 추가',
   'helpCenter.category.modal.editTitle': '카테고리 편집',
@@ -61,7 +61,7 @@ export default {
   'helpCenter.category.form.validation.languageRequired': '언어를 선택해주세요',
   'helpCenter.category.form.validation.titleRequired': '제목을 입력해주세요',
   'helpCenter.category.form.validation.languageTitleRequired': '최소 한 개 언어의 제목을 추가해주세요',
-  
+
   // Article Management
   'helpCenter.article.title': '게시글 목록',
   'helpCenter.article.button.publish': '게시글 발행',
@@ -94,7 +94,7 @@ export default {
   'helpCenter.selfService.column.nightIcon': '야간 아이콘',
   'helpCenter.selfService.column.dayIcon': '주간 아이콘',
   'helpCenter.selfService.button.add': '추가',
-  
+
   // Service Modal
   'helpCenter.serviceModal.title': '서비스 추가',
   'helpCenter.serviceModal.form.icon': '아이콘',
@@ -195,7 +195,7 @@ export default {
   // PC Login Management
   'pcLogin.tips.1': '구성하면 귀하의 구성을 사용합니다. 구성하지 않으면 시스템 기본값을 사용합니다.',
   'pcLogin.tips.2': '영어 언어 및 로그인은 필수 항목입니다. 다른 언어를 구성하지 않으면 영어 설정과 동일하게 표시됩니다.',
-  'pcLogin.tips.3': '이미지 권장 크기: 126*869',
+  'pcLogin.tips.3': '이미지 권장 크기: 798*900',
   'pcLogin.tab.login': '로그인',
   'pcLogin.tab.register': '회원가입',
   'pcLogin.column.title': '제목',
@@ -205,7 +205,7 @@ export default {
   'pcLogin.column.action': '작업',
   'pcLogin.action.edit': '편집',
   'pcLogin.message.getPcLoginFailed': 'PC 로그인 데이터 가져오기 실패',
-  
+
   // PC Login EditModal
   'pcLogin.modal.title.login': '로그인 구성 편집',
   'pcLogin.modal.title.register': '회원가입 구성 편집',
@@ -214,7 +214,7 @@ export default {
   'pcLogin.modal.form.title.placeholder': '제목을 입력해주세요',
   'pcLogin.modal.form.image': '이미지',
   'pcLogin.modal.form.image.required': '이미지를 업로드해주세요',
-  'pcLogin.modal.form.image.extra': '권장 크기: 126*869',
+  'pcLogin.modal.form.image.extra': '권장 크기: 798*900',
   'pcLogin.modal.form.url': '이동 주소',
   'pcLogin.modal.form.url.required': '이동 주소를 입력해주세요',
   'pcLogin.modal.form.url.placeholder': '이동 주소를 입력해주세요',
@@ -224,7 +224,7 @@ export default {
   // Announcement Page
   'announcement.tab.category': '카테고리 관리',
   'announcement.tab.announcement': '공지 관리',
-  
+
   // Announcement Management
   'announcement.management.create.success': '생성 성공',
   'announcement.management.create.failed': '생성 실패',
@@ -309,7 +309,7 @@ export default {
     'famousQuotes.message.deleteFailed': '삭제 실패',
     'famousQuotes.message.getListFailed': '명언 목록 가져오기 실패',
     'famousQuotes.message.getDetailFailed': '명언 상세 가져오기 실패',
-    
+
     // Famous Quotes Modal
     'famousQuotes.modal.add': '명언 추가',
     'famousQuotes.modal.edit': '명언 편집',
@@ -323,5 +323,5 @@ export default {
     'famousQuotes.modal.message.updateSuccess': '수정 성공',
     'famousQuotes.modal.message.updateFailed': '수정 실패',
 
-  
+
 };

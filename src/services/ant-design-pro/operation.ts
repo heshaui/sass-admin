@@ -445,7 +445,7 @@ export async function getFamousAphorismsDetail(id: string) {
 }
 
 // 删除名言
-export async function deleteFamousAphorisms(id: string) {
+export async function deleteFamousAphorisms(id: string | number) {
   return request<{
     success: boolean;
   }>('/tenant/v1/deleteFamousAphorismsById?id='+id, {

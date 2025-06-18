@@ -7,12 +7,12 @@ interface ImagePlaceholderProps {
   height?: number | string;
 }
 
-export const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({ 
-  width = '100%', 
-  height = '100%' 
+export const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
+  width = '100%',
+  height = '100%'
 }) => {
   return (
-    <div 
+    <div
       className={styles.imagePlaceholder}
       style={{ width, height }}
     >
@@ -22,4 +22,4 @@ export const ImagePlaceholder: React.FC<ImagePlaceholderProps> = ({
   );
 };
 
-export default ImagePlaceholder; 
+export default ImagePlaceholder;

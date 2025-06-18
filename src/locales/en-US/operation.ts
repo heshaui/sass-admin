@@ -5,12 +5,12 @@ export default {
   'helpCenter.common.add': 'Add',
   'helpCenter.common.getDataFailed': 'Failed to get data',
   'helpCenter.common.requestError': 'Request error',
-  
+
   // Help Center
   'helpCenter.tab.categoryManagement': 'Category Management',
   'helpCenter.tab.articleManagement': 'Article Management',
   'helpCenter.tab.selfService': 'Self Service',
-  
+
   // Category Management
   'helpCenter.category.title': 'Help Center Category Management',
   'helpCenter.category.button.add': 'Add Category',
@@ -36,7 +36,7 @@ export default {
   'helpCenter.category.pagination.total': 'Total {total} records',
   'helpCenter.category.type.menu': 'Menu',
   'helpCenter.category.type.category': 'Category',
-  
+
   // Category Form Modal
   'helpCenter.category.modal.addTitle': 'Add Category',
   'helpCenter.category.modal.editTitle': 'Edit Category',
@@ -61,7 +61,7 @@ export default {
   'helpCenter.category.form.validation.languageRequired': 'Please select language',
   'helpCenter.category.form.validation.titleRequired': 'Please enter title',
   'helpCenter.category.form.validation.languageTitleRequired': 'Please add a title for at least one language',
-  
+
   // Article Management
   'helpCenter.article.title': 'Article List',
   'helpCenter.article.button.publish': 'Publish Article',
@@ -94,7 +94,7 @@ export default {
   'helpCenter.selfService.column.nightIcon': 'Night Icon',
   'helpCenter.selfService.column.dayIcon': 'Day Icon',
   'helpCenter.selfService.button.add': 'Add',
-  
+
   // Service Modal
   'helpCenter.serviceModal.title': 'Add Service',
   'helpCenter.serviceModal.form.icon': 'Icon',
@@ -195,7 +195,7 @@ export default {
   // PC Login Management
   'pcLogin.tips.1': 'If configured, your configuration will be used; if not configured, system defaults will be used;',
   'pcLogin.tips.2': 'English language & login are required fields. For other languages, if not configured, they will default to the same as English;',
-  'pcLogin.tips.3': 'Recommended image size: 126*869',
+  'pcLogin.tips.3': 'Recommended image size: 798*900',
   'pcLogin.tab.login': 'Login',
   'pcLogin.tab.register': 'Register',
   'pcLogin.column.title': 'Title',
@@ -205,7 +205,7 @@ export default {
   'pcLogin.column.action': 'Action',
   'pcLogin.action.edit': 'Edit',
   'pcLogin.message.getPcLoginFailed': 'Failed to get PC login data',
-  
+
   // PC Login EditModal
   'pcLogin.modal.title.login': 'Edit Login Configuration',
   'pcLogin.modal.title.register': 'Edit Registration Configuration',
@@ -214,7 +214,7 @@ export default {
   'pcLogin.modal.form.title.placeholder': 'Please enter title',
   'pcLogin.modal.form.image': 'Image',
   'pcLogin.modal.form.image.required': 'Please upload image',
-  'pcLogin.modal.form.image.extra': 'Recommended size: 126*869',
+  'pcLogin.modal.form.image.extra': 'Recommended size: 798*900',
   'pcLogin.modal.form.url': 'Redirect URL',
   'pcLogin.modal.form.url.required': 'Please enter redirect URL',
   'pcLogin.modal.form.url.placeholder': 'Please enter redirect URL',
@@ -224,7 +224,7 @@ export default {
   // Announcement Page
   'announcement.tab.category': 'Category Management',
   'announcement.tab.announcement': 'Announcement Management',
-  
+
   // Announcement Management
   'announcement.management.create.success': 'Created successfully',
   'announcement.management.create.failed': 'Creation failed',
@@ -298,7 +298,7 @@ export default {
   'famousQuotes.message.deleteFailed': 'Delete failed',
   'famousQuotes.message.getListFailed': 'Failed to get quotes list',
   'famousQuotes.message.getDetailFailed': 'Failed to get quote details',
-  
+
   // Famous Quotes Modal
   'famousQuotes.modal.add': 'Add Quote',
   'famousQuotes.modal.edit': 'Edit Quote',

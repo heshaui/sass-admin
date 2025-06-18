@@ -40,34 +40,33 @@ export default {
   'userDetail.verification.unverified': 'Unverified',
   'userDetail.idNumber.none': 'N/A',
 
+  // Action buttons
+  'userDetail.action.edit': 'Edit',
+  'userDetail.action.freezeLogin': 'Freeze Login',
+  'userDetail.action.unfreezeLogin': 'Unfreeze Login',
+  'userDetail.action.freezeTransaction': 'Freeze Transaction',
+  'userDetail.action.unfreezeTransaction': 'Unfreeze Transaction',
+  'userDetail.action.freezeWithdrawal': 'Freeze Withdrawal',
+  'userDetail.action.unfreezeWithdrawal': 'Unfreeze Withdrawal',
+  'userDetail.action.unbindGoogleAuth': 'Unbind Google Auth',
 
-    // Action buttons
-    'userDetail.action.edit': 'Edit',
-    'userDetail.action.freezeLogin': 'Freeze Login',
-    'userDetail.action.unfreezeLogin': 'Unfreeze Login',
-    'userDetail.action.freezeTransaction': 'Freeze Transaction',
-    'userDetail.action.unfreezeTransaction': 'Unfreeze Transaction',
-    'userDetail.action.freezeWithdrawal': 'Freeze Withdrawal',
-    'userDetail.action.unfreezeWithdrawal': 'Unfreeze Withdrawal',
-    'userDetail.action.unbindGoogleAuth': 'Unbind Google Auth',
-    
-    // Tabs
-    'userDetail.tab.assets': 'Asset',
-    'userDetail.tab.transactions': 'Transaction',
-    'userDetail.tab.reconciliation': 'Reconciliation',
-    'userDetail.tab.logs': 'Log',
-    'userDetail.tab.operationLogs': 'Operation Log',
-    
-    // Operation logs
-    'userDetail.operationLog.operationTime': 'Operation Time',
-    'userDetail.operationLog.adminId': 'Admin ID',
-    'userDetail.operationLog.adminName': 'Admin Name',
-    'userDetail.operationLog.operationType': 'Operation Type',
-    'userDetail.operationLog.beforeValue': 'Before Value',
-    'userDetail.operationLog.afterValue': 'After Value',
-    'userDetail.operationLog.remark': 'Remark',
-    'userDetail.operationLog.total': 'Total of {total} records',
-  
+  // Tabs
+  'userDetail.tab.assets': 'Asset',
+  'userDetail.tab.transactions': 'Transaction',
+  'userDetail.tab.reconciliation': 'Reconciliation',
+  'userDetail.tab.logs': 'Log',
+  'userDetail.tab.operationLogs': 'Operation Log',
+
+  // Operation logs
+  'userDetail.operationLog.operationTime': 'Operation Time',
+  'userDetail.operationLog.adminId': 'Admin ID',
+  'userDetail.operationLog.adminName': 'Admin Name',
+  'userDetail.operationLog.operationType': 'Operation Type',
+  'userDetail.operationLog.beforeValue': 'Before Value',
+  'userDetail.operationLog.afterValue': 'After Value',
+  'userDetail.operationLog.remark': 'Remark',
+  'userDetail.operationLog.total': 'Total of {total} records',
+
   // Modal titles
   'userDetail.modal.confirmFreezeLogin': 'Confirm Freeze Login',
   'userDetail.modal.confirmUnfreezeLogin': 'Confirm Unfreeze Login',
@@ -78,23 +77,38 @@ export default {
   'userDetail.modal.updatePhone': 'Update Phone',
   'userDetail.modal.updateEmail': 'Update Email',
   'userDetail.modal.unbindGoogleAuth': 'Unbind Google Auth',
-  
+
   // Modal content
-  'userDetail.modal.confirmFreezeLoginText': 'You sure to freeze user {account} (ID: {userId}) login permission?',
-  'userDetail.modal.confirmUnfreezeLoginText': 'You sure to unfreeze user {account} (ID: {userId}) login permission?',
-  'userDetail.modal.freezeLoginDescription': 'After freezing, the user will not be able to log in to the system.',
-  'userDetail.modal.unfreezeLoginDescription': 'After unfreezing, the user will be able to log in to the system.',
-  'userDetail.modal.confirmFreezeTransactionText': 'You sure to freeze user {account} (ID: {userId}) transaction permission?',
-  'userDetail.modal.confirmUnfreezeTransactionText': 'You sure to unfreeze user {account} (ID: {userId}) transaction permission?',
-  'userDetail.modal.freezeTransactionDescription': 'After freezing, the user will not be able to perform any transaction operations.',
-  'userDetail.modal.unfreezeTransactionDescription': 'After unfreezing, the user will be able to perform transaction operations.',
-  'userDetail.modal.confirmFreezeWithdrawalText': 'You sure to freeze user {account} (ID: {userId}) withdrawal permission?',
-  'userDetail.modal.confirmUnfreezeWithdrawalText': 'You sure to unfreeze user {account} (ID: {userId}) withdrawal permission?',
-  'userDetail.modal.freezeWithdrawalDescription': 'After freezing, the user will not be able to perform withdrawal operations.',
-  'userDetail.modal.unfreezeWithdrawalDescription': 'After unfreezing, the user will be able to perform withdrawal operations.',
-  'userDetail.modal.updatePhoneWarning': 'After changing the phone number, the user will not be able to withdraw for {time} hours. Please ensure to inform the terminal user!',
-  'userDetail.modal.updateEmailWarning': 'After changing the email, the user will not be able to withdraw for {time} hours. Please ensure to inform the terminal user!',
-  'userDetail.modal.unbindGoogleAuthDescription': 'After unbinding Google Auth, the user can log in and rebind!',
+  'userDetail.modal.confirmFreezeLoginText':
+    'You sure to freeze user {account} (ID: {userId}) login permission?',
+  'userDetail.modal.confirmUnfreezeLoginText':
+    'You sure to unfreeze user {account} (ID: {userId}) login permission?',
+  'userDetail.modal.freezeLoginDescription':
+    'After freezing, the user will not be able to log in to the system.',
+  'userDetail.modal.unfreezeLoginDescription':
+    'After unfreezing, the user will be able to log in to the system.',
+  'userDetail.modal.confirmFreezeTransactionText':
+    'You sure to freeze user {account} (ID: {userId}) transaction permission?',
+  'userDetail.modal.confirmUnfreezeTransactionText':
+    'You sure to unfreeze user {account} (ID: {userId}) transaction permission?',
+  'userDetail.modal.freezeTransactionDescription':
+    'After freezing, the user will not be able to perform any transaction operations.',
+  'userDetail.modal.unfreezeTransactionDescription':
+    'After unfreezing, the user will be able to perform transaction operations.',
+  'userDetail.modal.confirmFreezeWithdrawalText':
+    'You sure to freeze user {account} (ID: {userId}) withdrawal permission?',
+  'userDetail.modal.confirmUnfreezeWithdrawalText':
+    'You sure to unfreeze user {account} (ID: {userId}) withdrawal permission?',
+  'userDetail.modal.freezeWithdrawalDescription':
+    'After freezing, the user will not be able to perform withdrawal operations.',
+  'userDetail.modal.unfreezeWithdrawalDescription':
+    'After unfreezing, the user will be able to perform withdrawal operations.',
+  'userDetail.modal.updatePhoneWarning':
+    'After changing the phone number, the user will not be able to withdraw for {time} hours. Please ensure to inform the terminal user!',
+  'userDetail.modal.updateEmailWarning':
+    'After changing the email, the user will not be able to withdraw for {time} hours. Please ensure to inform the terminal user!',
+  'userDetail.modal.unbindGoogleAuthDescription':
+    'After unbinding Google Auth, the user can log in and rebind!',
 
   // Form labels
   'userDetail.form.freezeReason': 'Freeze Reason:',
@@ -107,45 +121,44 @@ export default {
   'userDetail.form.remark': 'Remark:',
   'userDetail.form.unbindGoogleAuthReason': 'Unbind Reason:',
 
-    // Placeholders
-    'userDetail.placeholder.enterFreezeReason': 'Please enter freeze reason',
-    'userDetail.placeholder.enterUnfreezeReason': 'Please enter unfreeze reason',
-    'userDetail.placeholder.enterNewPhone': 'Please enter new phone',
-    'userDetail.placeholder.enterNewEmail': 'Please enter new email',
-    'userDetail.placeholder.enterGoogleAuthCode': 'Please enter verification code',
-    'userDetail.placeholder.enterRemark': 'Please enter reason, 50 characters maximum',
-    
-    // Button text
-    'userDetail.button.confirm': 'Confirm',
-    'userDetail.button.cancel': 'Cancel',
-    'userDetail.button.submit': 'Submit',
-    'userDetail.button.bindGoogleAuth': 'Not bound, click to bind',
-    
-    // Messages
-    'userDetail.message.freezeWithdrawalSuccess': 'Freeze withdrawal operation successful',
-    'userDetail.message.unfreezeWithdrawalSuccess': 'Unfreeze withdrawal operation successful',
-    'userDetail.message.freezeWithdrawalError': 'Freeze withdrawal operation failed',
-    'userDetail.message.unfreezeWithdrawalError': 'Unfreeze withdrawal operation failed',
-    'userDetail.message.enterNewPhone': 'Please enter new phone',
-    'userDetail.message.enterGoogleAuthCode': 'Please enter verification code',
-    'userDetail.message.enterRemark': 'Please enter reason, 50 characters maximum',
-    'userDetail.message.updatePhoneSuccess': 'Phone number updated successfully',
-    'userDetail.message.updatePhoneError': 'Phone number update failed',
-    'userDetail.message.enterNewEmail': 'Please enter new email',
-    'userDetail.message.updateEmailSuccess': 'Email updated successfully',
-    'userDetail.message.updateEmailError': 'Email update failed',
-    'userDetail.message.unbindGoogleAuthReason': 'Please enter unbind reason',
-    'userDetail.message.unbindGoogleAuthSuccess': 'Unbind successful',
-'userDetail.message.freezeLoginSuccess': 'Login freeze successful',
-'userDetail.message.unfreezeLoginSuccess': 'Login unfreeze successful',
-'userDetail.message.freezeLoginError': 'Login freeze failed',
-'userDetail.message.unfreezeLoginError': 'Login unfreeze failed',
-'userDetail.message.freezeTransactionSuccess': 'Transaction freeze successful',
-'userDetail.message.unfreezeTransactionSuccess': 'Transaction unfreeze successful',
-'userDetail.message.freezeTransactionError': 'Transaction freeze failed',
-'userDetail.message.unfreezeTransactionError': 'Transaction unfreeze failed',
+  // Placeholders
+  'userDetail.placeholder.enterFreezeReason': 'Please enter freeze reason',
+  'userDetail.placeholder.enterUnfreezeReason': 'Please enter unfreeze reason',
+  'userDetail.placeholder.enterNewPhone': 'Please enter new phone',
+  'userDetail.placeholder.enterNewEmail': 'Please enter new email',
+  'userDetail.placeholder.enterGoogleAuthCode': 'Please enter verification code',
+  'userDetail.placeholder.enterRemark': 'Please enter reason, 50 characters maximum',
 
-    
+  // Button text
+  'userDetail.button.confirm': 'Confirm',
+  'userDetail.button.cancel': 'Cancel',
+  'userDetail.button.submit': 'Submit',
+  'userDetail.button.bindGoogleAuth': 'Not bound, click to bind',
+
+  // Messages
+  'userDetail.message.freezeWithdrawalSuccess': 'Freeze withdrawal operation successful',
+  'userDetail.message.unfreezeWithdrawalSuccess': 'Unfreeze withdrawal operation successful',
+  'userDetail.message.freezeWithdrawalError': 'Freeze withdrawal operation failed',
+  'userDetail.message.unfreezeWithdrawalError': 'Unfreeze withdrawal operation failed',
+  'userDetail.message.enterNewPhone': 'Please enter new phone',
+  'userDetail.message.enterGoogleAuthCode': 'Please enter verification code',
+  'userDetail.message.enterRemark': 'Please enter reason, 50 characters maximum',
+  'userDetail.message.updatePhoneSuccess': 'Phone number updated successfully',
+  'userDetail.message.updatePhoneError': 'Phone number update failed',
+  'userDetail.message.enterNewEmail': 'Please enter new email',
+  'userDetail.message.updateEmailSuccess': 'Email updated successfully',
+  'userDetail.message.updateEmailError': 'Email update failed',
+  'userDetail.message.unbindGoogleAuthReason': 'Please enter unbind reason',
+  'userDetail.message.unbindGoogleAuthSuccess': 'Unbind successful',
+  'userDetail.message.freezeLoginSuccess': 'Login freeze successful',
+  'userDetail.message.unfreezeLoginSuccess': 'Login unfreeze successful',
+  'userDetail.message.freezeLoginError': 'Login freeze failed',
+  'userDetail.message.unfreezeLoginError': 'Login unfreeze failed',
+  'userDetail.message.freezeTransactionSuccess': 'Transaction freeze successful',
+  'userDetail.message.unfreezeTransactionSuccess': 'Transaction unfreeze successful',
+  'userDetail.message.freezeTransactionError': 'Transaction freeze failed',
+  'userDetail.message.unfreezeTransactionError': 'Transaction unfreeze failed',
+
   // Transaction related
   'userTransaction.title': 'Transaction Records',
   'userTransaction.summary.title': 'Transaction Summary (Equivalent in USDT)',
@@ -155,10 +168,12 @@ export default {
   'userTransaction.columns.amount': 'Amount',
   'userTransaction.columns.usdtValue': 'Equivalent in USDT',
   'userTransaction.columns.time': 'Time',
-  'userTransaction.type.increase': 'Increase',
-  'userTransaction.type.decrease': 'Decrease',
-  'userTransaction.type.freeze': 'Freeze',
-  'userTransaction.type.unfreeze': 'Unfreeze',
+  'userTransaction.type.increaseBalance': 'Available balance increase',
+  'userTransaction.type.decreaseBalance': 'Available balance deduction',
+  'userTransaction.type.balanceToFrozen': 'Available to frozen transfer',
+  'userTransaction.type.frozenToBalance': 'Frozen to available transfer',
+  'userTransaction.type.decreaseFrozen': 'Frozen balance deduction',
+  'userTransaction.type.increaseFrozen': 'Frozen balance increase',
   'userTransaction.stats.totalInflow': 'Total Inflow',
   'userTransaction.stats.totalOutflow': 'Total Outflow',
   'userTransaction.stats.netInflow': 'Net Inflow',
@@ -192,6 +207,7 @@ export default {
   'asset.columns.position': 'Position',
   'asset.columns.available': 'Available',
   'asset.columns.frozen': 'Frozen',
+  'asset.columns.orderLock': 'Order Lock',
 
   // Reconciliation related
   'reconciliation.title': 'User Reconciliation',
@@ -203,6 +219,7 @@ export default {
   'reconciliation.columns.withdrawal': 'Withdrawal',
   'reconciliation.columns.inviteRebate': 'Invitation Rebate',
   'reconciliation.columns.recharge': 'Recharge',
+  'reconciliation.columns.gift': 'Gift Coins',
   'reconciliation.columns.pointsRedeem': 'Points Redemption',
   'reconciliation.columns.mfilRedeem': 'MFIL Redemption',
   'reconciliation.columns.incomeImport': 'Income Import',
@@ -216,4 +233,5 @@ export default {
   'reconciliation.columns.leveragedBuying': 'Leveraged Purchase',
   'reconciliation.columns.withdrawalFee': 'Withdrawal Fee',
   'reconciliation.columns.spotFee': 'Spot Trading Fee',
+  'reconciliation.columns.gift': 'Gift',
 };

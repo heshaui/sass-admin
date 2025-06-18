@@ -200,13 +200,13 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
           <Input style={{ width: '100%' }}  />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="minWithdrawFee"
           label={intl.formatMessage({ id: 'currency.extendInfo.minWithdrawalFee' })}
           rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseEnterMinWithdrawalFee' }) }]}
         >
           <Input style={{ width: '100%' }} />
-        </Form.Item>
+        </Form.Item> 2025-06-12 zyj */}
         <Form.Item
           name="withdraw"
           label={intl.formatMessage({ id: 'currency.extendInfo.withdrawalSwitch' })}
@@ -227,7 +227,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
             unCheckedChildren={intl.formatMessage({ id: 'currency.extendInfo.disabled' })} 
           />
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           name="autoWithdraw"
           label={intl.formatMessage({ id: 'currency.extendInfo.autoWithdrawalSwitch' })}
           rules={[{ required: true, message: intl.formatMessage({ id: 'currency.extendInfo.pleaseSelectAutoWithdrawalSwitch' }) }]}
@@ -236,7 +236,7 @@ const ExtendInfoForm: React.FC<ExtendInfoFormProps> = ({
             checkedChildren={intl.formatMessage({ id: 'currency.extendInfo.enabled' })} 
             unCheckedChildren={intl.formatMessage({ id: 'currency.extendInfo.disabled' })} 
           />
-        </Form.Item>
+        </Form.Item> 2025-06-12 zyj */}
         <Form.Item
           name="minWithdraw"
           label={intl.formatMessage({ id: 'currency.extendInfo.minWithdrawalAmount' })}

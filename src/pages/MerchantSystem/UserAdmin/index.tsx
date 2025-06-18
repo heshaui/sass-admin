@@ -1,133 +1,313 @@
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { Dropdown, Menu, Button, Tag, message, Modal } from 'antd';
-import { PlusOutlined,DownOutlined } from '@ant-design/icons';
-import { useState, useEffect } from 'react';
-import { useIntl } from 'umi';
-import { bindGoogleKey,relieveGoogleKey} from '@/services/ant-design-pro/authAdmin';
-import { getTenantEmployeeList,saveTenantEmployee,restPasswordTenantEmployee,deleteTenantEmployeeById,updateTenantEmployeeById,getTomeMenuParams} from '@/services/ant-design-pro/merchantSystem';
-
-import UserModal from './component/UserModal'; // 引入UserModal
+import { PlusOutlined, DownOutlined } from '@ant-design/icons';
+import { useState, useEffect, useCallback } from 'react';
+import { useIntl } from '@umijs/max';
+import { relieveGoogleKey } from '@/services/ant-design-pro/authAdmin';
+import {
+  getTenantEmployeeList,
+  saveTenantEmployee,
+  restPasswordTenantEmployee,
+  deleteTenantEmployeeById,
+  updateTenantEmployeeById,
+} from '@/services/ant-design-pro/merchantSystem';
+import { getTenantRoleList } from '@/services/ant-design-pro/merchantSystem';
+import UserModal from './component/UserModal';
 import ResetPasswordModal from './component/ResetPasswordModal';
 import ResetGoogleModal from './component/ResetGoogleModal';
-import GoogleCode from '@/components/GoogleCode'
-import { getTenantRoleList } from '@/services/ant-design-pro/merchantSystem';
-import { clearAllCookies } from '@/utils';
-import { sendGoogleKey } from '@/services/ant-design-pro/authAdmin';
-const UserAdmin: React.FC = () => {
-   const intl = useIntl();
-   const [data, setData] = useState([]);
-   const [loading, setLoading] = useState(false);
-   const [modalVisible, setModalVisible] = useState(false); // 控制用户弹框
-   const [resetPasswordVisible, setResetPasswordVisible] = useState(false); // 控制重置密码弹框
-   const [resetGoogleVisible, setResetGoogleVisible] = useState(false); // 控制重置谷歌弹框
-   const [bindGoogleVisible, setBindGoogleVisible] = useState(false); // 控制绑定谷歌弹框
-   const [editingRecord, setEditingRecord] = useState(null); // 当前操作的记录
-   const [roleOptions, setRoleOptions] = useState([]); // 添加角色选项状态
-    const [googleCodeVisible, setGoogleCodeVisible] = useState(false);
-    const [googleCodeData, setGoogleCodeData] = useState<any>(null);
-  
-   // 获取角色列表
-   const getRoleList = async () => {
-     try {
-      let data = { pageNo: 1, pageSize: 1000 };
-       const res = await getTenantRoleList(data);
-       if (res.code==='0') {
-         setRoleOptions(res.data.list || []);
-       }
-     } catch (error) {
-       console.error(`${intl.formatMessage({ id: 'merchantSystem.userAdmin.message.fetchRoles.failed' })}`, error);
-     }
-   };
 
-   useEffect(() => {
-     getRoleList(); // 获取角色列表
-   }, []);
-    
-  // 表格的列配置
+interface UserRecord {
+  id: number;
+  nickname: string;
+  role: number;
+  phone: string;
+  email: string;
+  googleCode: string;
+  status: number;
+}
+
+interface RoleOption {
+  roleId: number;
+  roleName: string;
+}
+
+const UserAdmin: React.FC = () => {
+  const intl = useIntl();
+  const [data, setData] = useState<UserRecord[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [resetPasswordVisible, setResetPasswordVisible] = useState(false);
+  const [resetGoogleVisible, setResetGoogleVisible] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<UserRecord | null>(null);
+  const [roleOptions, setRoleOptions] = useState<RoleOption[]>([]);
+  const [pagination, setPagination] = useState({
+    pageNo: 1, // 当前页
+    pageSize: 10, // 每页显示条数
+    count: 0, // 总数
+  });
+
+  // 获取角色列表
+  const getRoleList = useCallback(async () => {
+    try {
+      const res = await getTenantRoleList({
+        pageNo: pagination.pageNo,
+        pageSize: pagination.pageSize,
+      });
+      if (res.code === '0') {
+        setRoleOptions(res.data?.list || []);
+        setPagination((prev) => ({
+          ...prev,
+          count: res.data?.count || 0,
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to fetch roles:', error);
+      message.error(
+        intl.formatMessage({ id: 'merchantSystem.userAdmin.message.fetchRoles.failed' }),
+      );
+    }
+  }, [intl]);
+
+  // 获取用户列表
+  const getUserList = useCallback(
+    async (params: any = {}) => {
+      setLoading(true);
+      try {
+        const queryParams = {
+          pageNo: params.pageNo || pagination.pageNo,
+          pageSize: params.pageSize || pagination.pageSize,
+          phone: params.phone,
+          email: params.email,
+          nickname: params.nickname,
+          role: params.role,
+          status: params.status,
+        };
+
+        const res = await getTenantEmployeeList(queryParams);
+        if (res?.data) {
+          setData(res.data.list || []);
+          setPagination({
+            pageNo: queryParams.pageNo,
+            pageSize: queryParams.pageSize,
+            count: res.data.count || 0,
+          });
+        }
+        return {
+          data: res?.data?.list || [],
+          count: res?.data?.count || 0,
+          success: true,
+        };
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+        message.error(
+          intl.formatMessage({ id: 'merchantSystem.userAdmin.message.fetchUsers.failed' }),
+        );
+        return {
+          data: [],
+          count: 0,
+          success: false,
+        };
+      } finally {
+        setLoading(false);
+      }
+    },
+    [intl, pagination.pageNo, pagination.pageSize],
+  );
+
+  // 初始化数据
+  useEffect(() => {
+    getRoleList();
+  }, []);
+
+  // 编辑用户
+  const handleEdit = (record: UserRecord) => {
+    setEditingRecord(record);
+    setModalVisible(true);
+  };
+
+  // 删除用户
+  const handleDelete = async (userId: number) => {
+    Modal.confirm({
+      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.modal.delete.title' }),
+      content: intl.formatMessage({ id: 'merchantSystem.userAdmin.modal.delete.content' }),
+      onOk: async () => {
+        try {
+          const res = await deleteTenantEmployeeById({ userId });
+          if (res.code === '0') {
+            message.success(
+              intl.formatMessage({ id: 'merchantSystem.userAdmin.message.deleteUser.success' }),
+            );
+            getUserList();
+          } else {
+            throw new Error(res.message);
+          }
+        } catch (error) {
+          message.error(
+            intl.formatMessage({ id: 'merchantSystem.userAdmin.message.deleteUser.failed' }),
+          );
+        }
+      },
+    });
+  };
+
+  // 提交表单
+  const handleSubmit = async (values: any) => {
+    try {
+      let res;
+      if (editingRecord) {
+        res = await updateTenantEmployeeById({ ...editingRecord, ...values });
+      } else {
+        res = await saveTenantEmployee(values);
+      }
+
+      if (res.code === '0') {
+        message.success(
+          intl.formatMessage({
+            id: editingRecord
+              ? 'merchantSystem.userAdmin.message.editUser.success'
+              : 'merchantSystem.userAdmin.message.createUser.success',
+          }),
+        );
+        setModalVisible(false);
+        setEditingRecord(null);
+        getUserList();
+      } else {
+        throw new Error(res.message);
+      }
+    } catch (error) {
+      message.error(
+        intl.formatMessage({ id: 'merchantSystem.userAdmin.message.operation.failed' }),
+      );
+    }
+  };
+
+  // 重置密码
+  const handleResetPassword = async () => {
+    if (!editingRecord) return;
+
+    try {
+      const res = await restPasswordTenantEmployee({ id: editingRecord.id });
+      if (res.code === '0') {
+        message.success(
+          intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.success' }),
+        );
+        setResetPasswordVisible(false);
+      } else {
+        throw new Error(res.message);
+      }
+    } catch (error) {
+      message.error(
+        intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.failed' }),
+      );
+    }
+  };
+
+  // 重置谷歌验证
+  const handleResetGoogleAuth = async () => {
+    if (!editingRecord) return;
+
+    try {
+      const res = await relieveGoogleKey({ id: editingRecord.id });
+      if (res.code === '0') {
+        message.success(
+          intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetGoogle.success' }),
+        );
+        setResetGoogleVisible(false);
+        getUserList();
+      } else {
+        throw new Error(res.message);
+      }
+    } catch (error) {
+      message.error(
+        intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetGoogle.failed' }),
+      );
+    }
+  };
+
+  // 表格列配置
   const columns = [
     {
-      title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.id' }),
-      dataIndex: 'id',
-      key: 'id',
-      search:false
+      title: intl.formatMessage({ id: 'language.table.column.index' }),
+      key: 'index',
+      render: (_: any, __: any, index: number) =>
+        (pagination.pageNo - 1) * pagination.pageSize + index + 1,
+      search: false,
+      width: 80,
     },
     {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.nickname' }),
       dataIndex: 'nickname',
       key: 'nickname',
+      ellipsis: true,
     },
-    // {
-    //   title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.remark' }),
-    //   dataIndex: 'remark',
-    //   key: 'remark',
-    //   search:false
-    // },
     {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.role' }),
       dataIndex: 'role',
       key: 'role',
-      filters: roleOptions.map(role => ({ text: role.roleName, value: role.roleId })),
-      onFilter: (value, record) => Number(record.role) === Number(value),
-      render: (roleId) => {
-        const role = roleOptions.find(r => Number(r.roleId)=== Number(roleId));
-        return role ? role.roleName : roleId;
+      search: false,
+      render: (_: any, record: UserRecord) => {
+        const role = roleOptions.find((r) => Number(r.roleId) === Number(record.role));
+        return role?.roleName || record.role;
       },
-      valueEnum: roleOptions.reduce((acc, role) => {
-        acc[role.roleId] = { text: role.roleName, value: role.roleId }; 
-        return acc;
-      }, {} as Record<number, { text: string; value: number }>),
+      filters: roleOptions.map((role) => ({
+        text: role.roleName,
+        value: role.roleId,
+      })),
+      onFilter: (value: any, record: UserRecord) => Number(record.role) === Number(value),
     },
     {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.phone' }),
       dataIndex: 'phone',
       key: 'phone',
+      width: 120,
     },
     {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.email' }),
       dataIndex: 'email',
       key: 'email',
-      render: (text) => (text ? text : '--'),
+      render: (email: string) => email || '--',
+      ellipsis: true,
     },
     {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.2fa' }),
       dataIndex: 'googleCode',
       key: 'googleCode',
-      search:false,
-      render: (text) => {
-        return text && text !== '-' ? (
-          <Tag color="green">{intl.formatMessage({ id: 'merchantSystem.userAdmin.status.enabled' })}</Tag>
-        ) : (
-          <Tag color="red">{intl.formatMessage({ id: 'merchantSystem.userAdmin.status.disabled' })}</Tag>
-        );
-      },
-      filters: [
-        { text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.enabled' }), value: 'enabled' },
-        { text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.disabled' }), value: 'disabled' },
-      ],
-      onFilter: (value, record) => {
-        if (value === 'enabled') {
-          return record.googleCode && record.googleCode !== '';
-        }
-        return !record.googleCode || record.googleCode === '';
-      },
+      search: false,
+      render: (_: any, record: UserRecord) => (
+        <Tag color={record.googleCode && record.googleCode !== '-' ? 'green' : 'red'}>
+          {intl.formatMessage({
+            id:
+              record.googleCode && record.googleCode !== '-'
+                ? 'merchantSystem.userAdmin.status.enabled'
+                : 'merchantSystem.userAdmin.status.disabled',
+          })}
+        </Tag>
+      ),
+      width: 100,
     },
     {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.status' }),
       dataIndex: 'status',
-      valueType: 'select',
+      key: 'status',
       valueEnum: {
-        0: { text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.disabled.label' }), status: 'Error' },
-        1: { text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.normal' }), status: 'Success' }
+        0: {
+          text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.disabled.label' }),
+          status: 'Error',
+        },
+        1: {
+          text: intl.formatMessage({ id: 'merchantSystem.userAdmin.status.normal' }),
+          status: 'Success',
+        },
       },
-      filters: true,
-      onFilter: true,
       width: 100,
     },
     {
       title: intl.formatMessage({ id: 'merchantSystem.userAdmin.column.operations' }),
       key: 'action',
-      search:false,
-      render: (_, record) => (
+      search: false,
+      fixed: 'right',
+      width: 150,
+      render: (_: any, record: UserRecord) => (
         <Dropdown
           overlay={
             <Menu>
@@ -138,18 +318,7 @@ const UserAdmin: React.FC = () => {
                 key="resetPassword"
                 onClick={() => {
                   setEditingRecord(record);
-                  Modal.confirm({
-                    title: intl.formatMessage({ id: 'merchantSystem.userAdmin.modal.resetPassword.title' }),
-                    content: intl.formatMessage({ id: 'merchantSystem.userAdmin.modal.resetPassword.content' }),
-                    onOk: async () => {
-                      try {
-                        await restPasswordTenantEmployee({ id: record.id });
-                        message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.success' }));
-                      } catch (error) {
-                        message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.failed' }));
-                      }
-                    },
-                  });
+                  setResetPasswordVisible(true);
                 }}
               >
                 {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.resetPassword' })}
@@ -173,224 +342,54 @@ const UserAdmin: React.FC = () => {
           trigger={['click']}
         >
           <Button>
-            {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.operations' })} <DownOutlined />
+            {intl.formatMessage({ id: 'merchantSystem.userAdmin.button.operations' })}
+            <DownOutlined />
           </Button>
         </Dropdown>
       ),
     },
   ];
 
-  const getUserList = async (params = { pageNo: 1, pageSize: 10 }) => {
-    setLoading(true);
-    try {
-      const queryParams = { ...params };
-      
-      const res = await getTenantEmployeeList(queryParams);
-      if (res?.data) {
-        setData(res.data.list || []);
-        return {
-          data: res.data.list || [],
-          total: res.data.total || 0,
-          success: true,
-        };
-      }
-      return {
-        data: [],
-        total: 0,
-        success: false,
-      };
-    } catch (error) {
-      console.error(`${intl.formatMessage({ id: 'merchantSystem.userAdmin.message.fetchUsers.failed' })}`, error);
-      return {
-        data: [],
-        total: 0,
-        success: false,
-      };
-    } finally {
-      setLoading(false);
-    }
-  }
+  useEffect(() => {
+    getUserList(); // 获取用户列表
+  }, []);
 
-    // 新建/编辑用户提交
-    const handleSubmit = async (values: any) => {
-      console.log('values',values);
-      try {
-        if (editingRecord) {
-          // 编辑用户
-         const res= await updateTenantEmployeeById({ ...editingRecord, ...values });
-          if(res.code==='0'){
-            message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.editUser.success' }));
-          }else{
-            message.error(res.message || intl.formatMessage({ id: 'merchantSystem.userAdmin.message.editUser.failed' }));
-          }
-        } else {
-          // 新建用户
-        const res=  await saveTenantEmployee(values);
-          if(res.code==='0'){
-            message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.createUser.success' }));
-          }else{
-            message.error(res.message || intl.formatMessage({ id: 'merchantSystem.userAdmin.message.createUser.failed' }));
-          }
-
-          
-        }
-        setModalVisible(false);  // 关闭弹窗
-        setEditingRecord(null);  // 清空编辑记录
-        getUserList();  // 刷新用户列表
-      } catch (error) {
-        message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.operation.failed' }));
-      }
-    };
-  
-    // 编辑用户
-    const handleEdit = (record) => {
-      setEditingRecord(record);  // 设置编辑记录
-      setModalVisible(true);  // 打开弹窗
-    };
-  
-    // 删除用户
-    const handleDelete = async (userId) => {
-      try {
-        // 调用API删除用户
-       const res= await deleteTenantEmployeeById({ userId });
-        if(res.code==='0'){
-          message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.deleteUser.success' }));
-          getUserList();  // 刷新用户列表
-        }else{
-          message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.deleteUser.failed' }));
-        }
-      } catch (error) {
-        message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.delete.failed' }));
-      }
-    };
-
-// 重置密码
-const handleResetPassword = async (values) => {
-  try {
-   const res= await restPasswordTenantEmployee({ id: editingRecord.id });
-    if(res.code==='0'){
-      message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.success' }));
-    }else{
-      message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetPassword.failed' }));
-    }
-    setResetPasswordVisible(false);
-  } catch (error) {
-    message.error('密码重置失败');
-  }
-};
-
-// 重置谷歌
-const handleResetGoogleAuth = async () => {
-  try {
-    const res=await relieveGoogleKey({ id: editingRecord.id});
-    if(res.code==='0'){
-      message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetGoogle.success' }));
-      getUserList();  // 刷新用户列表
-    }else{
-      message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.resetGoogle.failed' }));
-    }
-    setResetGoogleVisible(false);
-  } catch (error) {
-    message.error('谷歌身份验证重置失败');
-  }
-};
-  
-    useEffect(() => {
-      getUserList();  // 获取用户列表
-    }, []);
-
-  // 处理绑定谷歌验证
-  const handleBindGoogleAuth = async (values: any) => {
-    try {
-      if (!editingRecord) return;
-      
-      const params = {
-        googleCode: values.googleCode,
-      };
-      
-      const res = await bindGoogleKey(params);
-      if (res.code === '0') {
-        message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bindGoogle.success' }));
-        setBindGoogleVisible(false);
-        getUserList(); // 刷新列表
-      } else {
-        message.error(res.msg || intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bindGoogle.failed' }));
-      }
-    } catch (error) {
-      console.error(`${intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bindGoogle.error' })}`, error);
-      message.error(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bindGoogle.failed' }));
-    }
-  };
-
-  const getGoogleCode=async()=>{
-    const res=await sendGoogleKey();
-    if(res.code==='0'){
-        
-        setGoogleCodeData(res.data);
-        setGoogleCodeVisible(true);
-    }else{
-        message.error(res.message);
-    }
-    
-  }
-  const handleGoogleCodeSuccess = async (code: string) => {
-
-    
-    const res=await bindGoogleKey({ googleCode: code });
-    if(res.code==='0'&&res.data){
-      message.success(intl.formatMessage({ id: 'merchantSystem.userAdmin.message.bind.success' }));
-      clearAllCookies();
-      window.location.reload();
-
-
-    }else{
-      message.error(res.message);
-    }
-    setGoogleCodeVisible(false);
-  }
   return (
     <PageContainer>
-      <ProTable
+      <ProTable<UserRecord>
         rowKey="id"
         columns={columns}
         scroll={{ x: 'max-content' }}
         dataSource={data}
         loading={loading}
-        request={async (params, sorter, filter) => {
-          // 转换参数格式，适配后端API
-          const queryParams = {
-            pageNo: params.current || 1,
-            pageSize: params.pageSize || 10,
-            nickname: params.nickname,
-            phone: params.phone,
-            email: params.email,
-            status: params.status, // 确保状态参数正确传递
-            role: params.role,
-            // 可以添加其他需要的搜索参数
-          };
-          return await getUserList(queryParams);
-        }}
+        request={(params) => getUserList(params)}
         search={{
           labelWidth: 'auto',
+          defaultCollapsed: false,
         }}
         options={{
           density: false,
           fullScreen: true,
-          reload: false,
-          setting: false,
+          reload: () => getUserList(),
+          setting: true,
         }}
         pagination={{
+          current: pagination.pageNo,
+          pageSize: pagination.pageSize,
+          total: pagination.count,
           showQuickJumper: true,
-          defaultPageSize: 10,
           showSizeChanger: true,
+          onChange: (page, pageSize) => {
+            setPagination((prev) => ({ ...prev, pageNo: page, pageSize, count: pagination.count }));
+          },
         }}
         toolBarRender={() => [
-          <Button 
-            key="create" 
-            icon={<PlusOutlined />} 
-            type="primary" 
+          <Button
+            key="create"
+            icon={<PlusOutlined />}
+            type="primary"
             onClick={() => {
-              setEditingRecord(null); // 清空编辑记录
+              setEditingRecord(null);
               setModalVisible(true);
             }}
           >
@@ -398,13 +397,13 @@ const handleResetGoogleAuth = async () => {
           </Button>,
         ]}
       />
-        {/* 用户弹框 */}
-       <UserModal
+
+      {/* 用户弹框 */}
+      <UserModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
         onSubmit={handleSubmit}
         initialValues={editingRecord}
-        roleOptions={roleOptions}
       />
 
       {/* 重置密码弹框 */}
@@ -419,15 +418,6 @@ const handleResetGoogleAuth = async () => {
         visible={resetGoogleVisible}
         onClose={() => setResetGoogleVisible(false)}
         onSubmit={handleResetGoogleAuth}
-      />
-      
-      {/* 绑定谷歌弹框 */}
-      <GoogleCode
-       visible={googleCodeVisible} 
-       qrCodeUrl={googleCodeData?.codeUri} 
-       secretKey={googleCodeData?.secretKey} 
-       onSubmit={handleGoogleCodeSuccess} 
-       onCancel={() => setGoogleCodeVisible(false)}
       />
     </PageContainer>
   );

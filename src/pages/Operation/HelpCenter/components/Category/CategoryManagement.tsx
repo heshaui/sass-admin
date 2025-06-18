@@ -245,12 +245,12 @@ const CategoryManagement: React.FC = () => {
             }) as ApiResponse;
             
             // 处理响应数据
-            if (response.code === '0' && response.success) {
-              const data = Array.isArray(response.data) ? response.data : [];
+            if (response.code === '0') {
+              
               return {
-                data,
+                data: response.data.list,
                 success: true,
-                total: data.length,
+                total: response.data.count,
               };
             } else {
               return {

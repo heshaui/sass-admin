@@ -45,6 +45,7 @@ export default {
   'menu.account.settings': 'Account Settings',
   'menu.account.trigger': 'Trigger Error',
   'menu.account.logout': 'Logout',
+  'menu.account.bindGoogle': 'Bind Google',
   'menu.editor': 'Graphic Editor',
   'menu.editor.flow': 'Flow Editor',
   'menu.editor.mind': 'Mind Editor',
@@ -111,10 +112,10 @@ export default {
   'menu.fundsTools.assetAdjustment': 'Asset Adjustment',
   'menu.fundsTools.transferTool': 'Transfer Tool',
   'menu.fundsTools.transferRecords': 'Transfer Records',
+  'menu.fundsTools.presentTool': 'Gift Coin Tool',
   'menu.riskControl': 'Fund Risk Control',
   'menu.riskControl.config': 'Risk Control Configuration',
   'menu.riskControl.suggestions': 'Processing Suggestions',
   'menu.riskControl.alerts': 'Alert Records',
   'menu.riskControl.templates': 'Risk Control Templates',
- 
 };
