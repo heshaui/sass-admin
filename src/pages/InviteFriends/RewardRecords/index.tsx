@@ -1,9 +1,9 @@
-import React from 'react';
+import { getGrantRecordList } from '@/services/ant-design-pro/inviteFriends';
+import type { ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useIntl } from '@umijs/max';
-import type { ProColumns } from '@ant-design/pro-components';
-import { getGrantRecordList } from '@/services/ant-design-pro/inviteFriends';
 import dayjs from 'dayjs';
+import React from 'react';
 interface RewardRecord {
   id: string;
   serialNumber: number;

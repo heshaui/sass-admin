@@ -104,6 +104,28 @@ export default {
 
   // TransferTool Account Types
   'transferTool.account.user': 'User Account',
+  'transferTool.account.company_general_account': 'Company General Account',
+  'transferTool.account.withdrawal_fee_account': 'Withdrawal Fee',
+  'transferTool.account.recharge_fee_account': 'Recharge Fee',
+  'transferTool.account.invite_rebate_account': 'Invite Rebate Account',
+  'transferTool.account.fee_account': 'Fee Account',
+  'transferTool.account.virtual_accounts': 'Virtual Accounts',
+  'transferTool.account.total_withdrawal_account': 'Total Withdrawal Account',
+
+  'transferTool.scene.test': 'Test',
+  'transferTool.scene.symbol-order': 'Crypto Order Deduction',
+  'transferTool.scene.extraction-symbol-order': 'Withdrawal - Available to Frozen',
+  'transferTool.scene.undo_extraction-symbol-order': 'Withdrawal - Frozen to Available',
+  'transferTool.scene.symbol-order-fee': 'Fee',
+  'transferTool.scene.canal-symbol-order': 'Cancel Crypto Order',
+  'transferTool.scene.buy-trade-symbol-order': 'Seller Crypto Order Execution and Transfer',
+  'transferTool.scene.sell-trade-symbol-order': 'Buyer Crypto Order Execution and Transfer',
+  'transferTool.scene.canal_symbol_order': 'Crypto Order - Payment Rejection',
+  'transferTool.scene.M2M': 'Merchant to Merchant Transfer',
+  'transferTool.scene.M2U': 'Merchant to User Transfer',
+  'transferTool.scene.U2M': 'User to Merchant Transfer',
+  'transferTool.scene.U2U': 'User to User Transfer',
+
   // PresentTool Page
   'presentTool.title': 'Coin Gifting Tool',
 

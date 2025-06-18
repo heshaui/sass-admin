@@ -104,6 +104,27 @@ export default {
 
   // TransferTool Account Types
   'transferTool.account.user': '사용자 계정',
+  'transferTool.account.company_general_account': '회사 총 계정',
+  'transferTool.account.withdrawal_fee_account': '출금 수수료',
+  'transferTool.account.recharge_fee_account': '충전 수수료',
+  'transferTool.account.invite_rebate_account': '초대 리베이트 계정',
+  'transferTool.account.fee_account': '거래 수수료 지갑',
+  'transferTool.account.virtual_accounts': '가상 계정',
+  'transferTool.account.total_withdrawal_account': '회사 출금 이체 계정',
+
+  'transferTool.scene.test': '테스트',
+  'transferTool.scene.symbol-order': '암호화폐 주문 출금',
+  'transferTool.scene.extraction-symbol-order': '출금-가용-동결',
+  'transferTool.scene.undo_extraction-symbol-order': '출금-동결-가용',
+  'transferTool.scene.symbol-order-fee': '수수료',
+  'transferTool.scene.canal-symbol-order': '암호화폐 주문 취소',
+  'transferTool.scene.buy-trade-symbol-order': '매도자 암호화폐 주문 체결 및 이체',
+  'transferTool.scene.sell-trade-symbol-order': '매수자 암호화폐 주문 체결 및 이체',
+  'transferTool.scene.canal_symbol_order': '암호화폐 주문-환불 거부',
+  'transferTool.scene.M2M': '가맹점 간 이체',
+  'transferTool.scene.M2U': '가맹점에서 사용자로 이체',
+  'transferTool.scene.U2M': '사용자에서 가맹점으로 이체',
+  'transferTool.scene.U2U': '사용자 간 이체',
 
   // PresentTool Page
   'presentTool.title': '코인 증정 도구',

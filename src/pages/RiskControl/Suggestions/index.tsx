@@ -1,12 +1,12 @@
-import { Button, Card, Form, Input, InputNumber, message, Select, Space, Spin } from 'antd';
-import { useIntl } from '@umijs/max';
-import { useEffect, useState } from 'react';
 import {
   actionRiskLevelParams,
   riskConditionTemplateList,
   saveActionRiskLevel,
   saveRiskConditions,
 } from '@/services/ant-design-pro/risk';
+import { useIntl } from '@umijs/max';
+import { Button, Card, Form, Input, InputNumber, message, Select, Space, Spin } from 'antd';
+import { useEffect, useState } from 'react';
 
 // 提现处理建议
 const Suggestion = ({
