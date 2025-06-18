@@ -20,6 +20,7 @@ interface RewardRecord {
   createTime: string;
   coinName: string;
   actualCoinName: string;
+  rebateUserId: string;
 }
 
 const RewardRecords: React.FC = () => {
@@ -86,10 +87,10 @@ const RewardRecords: React.FC = () => {
       key: 'account',
     },
     {
-      title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.parentUserId' }),
-      dataIndex: 'parentUserId',
-      key: 'parentUserId',
-      render: (_, record) => <a>{record?.parentUserId || '-'}</a>,
+      title: intl.formatMessage({ id: 'inviteFriends.rewardRecords.column.rebateUserId' }),
+      dataIndex: 'rebateUserId',
+      key: 'rebateUserId',
+      render: (_, record) => <a>{record?.rebateUserId || '-'}</a>,
       search: false,
     },
     {

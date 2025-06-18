@@ -101,7 +101,7 @@ export default {
   'inviteFriends.rewardRecords.column.uid': 'UID',
   'inviteFriends.rewardRecords.column.account': '注册账号',
   'inviteFriends.rewardRecords.column.accountInfo': '帐号信息',
-  'inviteFriends.rewardRecords.column.parentUserId': '被邀请人ID',
+  'inviteFriends.rewardRecords.column.rebateUserId': '被邀请人ID',
   'inviteFriends.rewardRecords.column.orderId': '订单ID',
   'inviteFriends.rewardRecords.column.fee': '手续费',
   'inviteFriends.rewardRecords.column.rebateRatio': '返佣比例',

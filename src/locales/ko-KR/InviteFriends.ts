@@ -101,7 +101,7 @@ export default {
   'inviteFriends.rewardRecords.column.uid': 'UID',
   'inviteFriends.rewardRecords.column.account': '등록 계정',
   'inviteFriends.rewardRecords.column.accountInfo': '계정 정보',
-  'inviteFriends.rewardRecords.column.parentUserId': '초대받은 사람 ID',
+  'inviteFriends.rewardRecords.column.rebateUserId': '초대받은 사람 ID',
   'inviteFriends.rewardRecords.column.orderId': '주문 ID',
   'inviteFriends.rewardRecords.column.fee': '수수료',
   'inviteFriends.rewardRecords.column.rebateRatio': '수수료 비율',
