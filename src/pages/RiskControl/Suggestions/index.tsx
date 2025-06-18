@@ -144,28 +144,39 @@ const Sensitive = ({
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const labels: Record<number, string> = {
-    0: intl.formatMessage({
-      id: 'riskControl.suggestions.prohibitWithdrawalAfterPasswordChange',
-    }),
-    1: intl.formatMessage({
-      id: 'riskControl.suggestions.prohibitWithdrawalAfter2FAUnbinding',
-    }),
-    2: intl.formatMessage({
-      id: 'riskControl.suggestions.prohibitWithdrawalAfterPhoneChange',
-    }),
-    3: intl.formatMessage({
-      id: 'riskControl.suggestions.prohibitWithdrawalAfterEmailChange',
-    }),
-    4: intl.formatMessage({
-      id: 'riskControl.suggestions.prohibitWithdrawalAfterFundPasswordChange',
-    }),
+  const inputList: Record<string, { label: string }> = {
+    SENSITIVE_INFO_1: {
+      label: intl.formatMessage({
+        id: 'riskControl.suggestions.prohibitWithdrawalAfterPasswordChange',
+      }),
+    },
+    SENSITIVE_INFO_2: {
+      label: intl.formatMessage({
+        id: 'riskControl.suggestions.prohibitWithdrawalAfter2FAUnbinding',
+      }),
+    },
+    SENSITIVE_INFO_3: {
+      label: intl.formatMessage({
+        id: 'riskControl.suggestions.prohibitWithdrawalAfterPhoneChange',
+      }),
+    },
+    SENSITIVE_INFO_4: {
+      label: intl.formatMessage({
+        id: 'riskControl.suggestions.prohibitWithdrawalAfterEmailChange',
+      }),
+    },
+    SENSITIVE_INFO_5: {
+      label: intl.formatMessage({
+        id: 'riskControl.suggestions.prohibitWithdrawalAfterFundPasswordChange',
+      }),
+    },
   };
-
   const onCancel = () => {
     form.resetFields();
     form.setFieldsValue({
-      riskConditionVos: initData,
+      riskConditionVos: Object.keys(inputList).map((key) => ({
+        ...initData.find((item: any) => item.conditionCode === key),
+      })),
       googleCode: undefined,
     });
     setEditing(false);
@@ -191,7 +202,9 @@ const Sensitive = ({
 
   useEffect(() => {
     form.setFieldsValue({
-      riskConditionVos: initData,
+      riskConditionVos: Object.keys(inputList).map((key) => ({
+        ...initData.find((item: any) => item.conditionCode === key),
+      })),
       googleCode: undefined,
     });
   }, [initData]);
@@ -218,33 +231,33 @@ const Sensitive = ({
     >
       <Spin spinning={loading}>
         <Form form={form} disabled={!editing} labelWrap labelAlign="left">
-          {Object.keys(labels).map((key: any) => {
+          {Object.keys(inputList).map((item, index) => {
             return (
-              <Space style={{ marginBottom: 16, display: 'flex' }} key={key}>
+              <Space style={{ marginBottom: 16, display: 'flex' }} key={item}>
                 <Form.Item
                   rules={[{ required: true }]}
-                  label={labels[key]}
-                  name={['riskConditionVos', Number(key), 'thresholdMap', 'time']}
+                  label={inputList[item].label}
+                  name={['riskConditionVos', Number(index), 'thresholdMap', 'time']}
                 >
                   <InputNumber />
                 </Form.Item>
-                <Form.Item name={['riskConditionVos', Number(key), 'thresholdMap', 'unit']}>
+                <Form.Item name={['riskConditionVos', Number(index), 'thresholdMap', 'unit']}>
                   <Select options={[{ value: 'H', label: 'H' }]} />
                 </Form.Item>
                 <Form.Item
                   label={intl.formatMessage({ id: 'riskControl.suggestions.processingAdvice' })}
-                  name={['riskConditionVos', Number(key), 'actionMethod']}
+                  name={['riskConditionVos', Number(index), 'actionMethod']}
                   rules={[{ required: true }]}
                 >
                   <Select style={{ width: 200 }} options={suggestion} />
                 </Form.Item>
-                <Form.Item name={['riskConditionVos', Number(key), 'sceneCode']} hidden>
+                <Form.Item name={['riskConditionVos', Number(index), 'sceneCode']} hidden>
                   <Input style={{ width: 200 }} />
                 </Form.Item>
-                <Form.Item name={['riskConditionVos', Number(key), 'conditionCode']} hidden>
+                <Form.Item name={['riskConditionVos', Number(index), 'conditionCode']} hidden>
                   <Input style={{ width: 200 }} />
                 </Form.Item>
-                <Form.Item name={['riskConditionVos', Number(key), 'conditionId']} hidden>
+                <Form.Item name={['riskConditionVos', Number(index), 'conditionId']} hidden>
                   <Input style={{ width: 200 }} />
                 </Form.Item>
               </Space>
