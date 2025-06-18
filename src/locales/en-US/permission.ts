@@ -64,4 +64,5 @@ export default {
 'permission.suggestions': 'Processing Suggestions',
 'permission.alerts': 'Alert Records',
 'permission.templates': 'Risk Templates',
+'permission.presentTool': 'Present Tool',
 }

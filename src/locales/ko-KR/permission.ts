@@ -64,4 +64,5 @@ export default {
 'permission.suggestions': '처리 제안',
 'permission.alerts': '알림 기록',
 'permission.templates': '리스크 템플릿',
+'permission.presentTool': '증정 화폐',
 }
