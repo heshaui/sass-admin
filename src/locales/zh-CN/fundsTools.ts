@@ -155,7 +155,7 @@ export default {
   'presentTool.steps.downloadTip': '请按照模板的格式导入数据，不可修改或删除表头。',
   'presentTool.steps.uploadFile': '填写信息并上传文件',
   'presentTool.steps.upload': '上传文件',
-  'presentTool.steps.uploadTip': '文件后缀需为.xlsx，最多支持导入1000条数据。',
+  'presentTool.steps.uploadTip': '文件后缀需为.xls或.xlsx ，最多支持导入1000条数据。',
   'presentTool.steps.template': '批量赠币模板',
   'presentTool.steps.download.success': '模板下载成功',
   'presentTool.steps.download.failed': '模板下载失败',

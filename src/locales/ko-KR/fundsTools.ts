@@ -159,7 +159,7 @@ export default {
   'presentTool.steps.uploadFile': '정보 입력하고 파일 업로드',
   'presentTool.steps.upload': '파일 업로드',
   'presentTool.steps.uploadTip':
-    '파일 확장자는 .xlsx여야 합니다. 최대 1000개의 데이터를 가져올 수 있습니다.',
+    '파일 확장자는 .xls 또는 .xlsx여야 합니다. 최대 1000개의 데이터를 가져올 수 있습니다.',
   'presentTool.steps.template': '일괄 코인 증정 템플릿',
   'presentTool.steps.download.success': '템플릿이 성공적으로 다운로드되었습니다',
   'presentTool.steps.download.failed': '템플릿 다운로드에 실패했습니다',
