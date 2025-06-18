@@ -11,11 +11,13 @@ export default {
   'inviteFriends.accountConfig.title': '账户配置',
   'inviteFriends.accountConfig.enabled': '是否开启',
   'inviteFriends.accountConfig.tips': 'Tips:',
-  'inviteFriends.accountConfig.tips.content': '1. 开启后，个人中心将显示入口，及之不显示，查通过URL配置，也需要开启;',
+  'inviteFriends.accountConfig.tips.content':
+    '1. 开启后，个人中心将显示入口，及之不显示，查通过URL配置，也需要开启;',
 
   // Account Alert
   'inviteFriends.alert.lowBalance.title': '账户余额不足提醒！',
-  'inviteFriends.alert.lowBalance.description': '尊敬的客户！检测到您邀请返佣账户余额不足！请及时补充余额！若余额不足，自动停止发放奖励，资金充足后自动补发。',
+  'inviteFriends.alert.lowBalance.description':
+    '尊敬的客户！检测到您邀请返佣账户余额不足！请及时补充余额！若余额不足，自动停止发放奖励，资金充足后自动补发。',
   'inviteFriends.alert.lowBalance.action': '前往',
 
   // Reward Configuration
@@ -36,11 +38,13 @@ export default {
   'inviteFriends.rewardConfig.isRealname': '是否要求实名',
   'inviteFriends.rewardConfig.isRealname.required': '需要实名',
   'inviteFriends.rewardConfig.isRealname.notRequired': '无需实名',
-  'inviteFriends.rewardConfig.coinType.tips': '实际手续费币种与返佣币种不一致时,将根据实时汇率折算为返佣币种',
+  'inviteFriends.rewardConfig.coinType.tips':
+    '实际手续费币种与返佣币种不一致时,将根据实时汇率折算为返佣币种',
 
   // Invitation Page Configuration
   'inviteFriends.pageConfig.title': '邀请页面配置',
-  'inviteFriends.pageConfig.languageInfo': '配置英文样式，则默认同步至其他语言。若不配置将使用系统默认。',
+  'inviteFriends.pageConfig.languageInfo':
+    '配置英文样式，则默认同步至其他语言。若不配置将使用系统默认。',
   'inviteFriends.pageConfig.configImage': '配置图片',
   'inviteFriends.pageConfig.backgroundTitle': '邀请页背景配置（PC）',
   'inviteFriends.pageConfig.posterTitle': '邀请海报底图（PC）',
@@ -97,7 +101,7 @@ export default {
   'inviteFriends.rewardRecords.column.uid': 'UID',
   'inviteFriends.rewardRecords.column.account': '注册账号',
   'inviteFriends.rewardRecords.column.accountInfo': '帐号信息',
-  'inviteFriends.rewardRecords.column.parentUserId': '邀请人ID',
+  'inviteFriends.rewardRecords.column.parentUserId': '被邀请人ID',
   'inviteFriends.rewardRecords.column.orderId': '订单ID',
   'inviteFriends.rewardRecords.column.fee': '手续费',
   'inviteFriends.rewardRecords.column.rebateRatio': '返佣比例',
@@ -110,5 +114,5 @@ export default {
 
   // Distribution Types
   'inviteFriends.rewardRecords.type.auto': '自动',
-  'inviteFriends.rewardRecords.type.manual': '手动'
-}
+  'inviteFriends.rewardRecords.type.manual': '手动',
+};
