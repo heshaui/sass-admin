@@ -1,9 +1,13 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { PageContainer,ProTable } from '@ant-design/pro-components';
-import { useIntl } from 'umi';
-import {  Button, Space, message } from 'antd';
+import React, { useEffect, useRef } from 'react';
+import { PageContainer, ProTable } from '@ant-design/pro-components';
+import { useIntl } from '@umijs/max';
+import { Button, Space, message } from 'antd';
 import type { ProColumns } from '@ant-design/pro-components';
-import { getUserInviteDetailList,grantUserRebates,getUserGrantRebate} from '@/services/ant-design-pro/inviteFriends';
+import {
+  getUserInviteDetailList,
+  grantUserRebates,
+  getUserGrantRebate,
+} from '@/services/ant-design-pro/inviteFriends';
 
 interface InviteRecord {
   id: string;
@@ -18,56 +22,60 @@ interface InviteRecord {
   actualCoinId?: string;
 }
 
-
-
 const InviteRecords: React.FC = () => {
   const intl = useIntl();
-  const [userList, setUserList] = useState<InviteRecord[]>([]);
   const proTableRef = useRef<any>();
 
   //获取用户邀请详情列表
-  const getUserList = async (params:any) => {
-    let data={
-      pageNo:params.current,
-      pageSize:params.pageSize,
-      account:params.account, 
-      parentUserId:params.parentUserId,
-    }
+  const getUserList = async (params: any) => {
+    let data = {
+      pageNo: params.current,
+      pageSize: params.pageSize,
+      account: params.account,
+      parentUserId: params.parentUserId,
+    };
     const res = await getUserInviteDetailList(data);
-    if(res.code === '0'){
+    if (res.code === '0') {
       return {
         data: res.data.list,
         success: true,
-        total:res.data.count
+        total: res.data.count,
+      };
+    }
+    return {
+      success: false,
+      total: 0,
+      data: [],
+    };
+  };
+
+  const handleSend = async (record: InviteRecord) => {
+    try {
+      const getUserGrantRebateRes = await getUserGrantRebate({ userId: record.userId });
+      if (getUserGrantRebateRes.code === '0') {
+        const res = await grantUserRebates({
+          userId: record.userId,
+          amount: getUserGrantRebateRes.data.amount,
+          actualCoinId: getUserGrantRebateRes.data.actualCoinId,
+        });
+
+        if (res.code === '0' && res.data) {
+          // Refresh the table data after successful distribution
+          proTableRef.current?.reload();
+          message.success(
+            intl.formatMessage({ id: 'common.success' }) || 'Distribution successful',
+          );
+        } else {
+          message.error(
+            res.msg || intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed',
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Manual distribution error:', error);
+      message.error(intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
     }
   };
-}
-
-
-const handleSend = async (record: InviteRecord) => {
-  try {
-
-    const getUserGrantRebateRes = await getUserGrantRebate({userId:record.userId});
-    if(getUserGrantRebateRes.code === '0'){
-
-      const res = await grantUserRebates({ userId: record.userId, amount:getUserGrantRebateRes.data.amount,actualCoinId:getUserGrantRebateRes.data.actualCoinId});
-    
-      if (res.code === '0'&&res.data) {
-        // Refresh the table data after successful distribution
-        proTableRef.current?.reload();
-        message.success(intl.formatMessage({ id: 'common.success' }) || 'Distribution successful');
-      } else {
-        message.error(res.msg || intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
-      }
-    }
-    
-   
-
-  } catch (error) {
-    console.error('Manual distribution error:', error);
-    message.error(intl.formatMessage({ id: 'common.fail' }) || 'Distribution failed');
-  }
-}
 
   const columns: ProColumns<InviteRecord>[] = [
     {
@@ -88,7 +96,7 @@ const handleSend = async (record: InviteRecord) => {
       search: false,
     },
     {
-      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.parentUserId' }),
+      title: intl.formatMessage({ id: 'inviteFriends.inviteRecords.column.rebateUserId' }),
       dataIndex: 'parentUserId',
       key: 'parentUserId',
     },
@@ -119,8 +127,12 @@ const handleSend = async (record: InviteRecord) => {
       dataIndex: 'distributeStatus',
       key: 'distributeStatus',
       valueEnum: {
-        1: { text: intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.distributed' }) },
-        0: { text: intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.undistributed' }) },
+        1: {
+          text: intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.distributed' }),
+        },
+        0: {
+          text: intl.formatMessage({ id: 'inviteFriends.inviteRecords.distribute.undistributed' }),
+        },
       },
     },
     {
@@ -129,24 +141,18 @@ const handleSend = async (record: InviteRecord) => {
       search: false,
       render: (_, record: InviteRecord) => (
         <Space>
-          {record.distributeStatus === 0 && 
-           record.inviteStatus === 1 && (
+          {record.distributeStatus === 0 && record.inviteStatus === 1 && (
             <Button type="link" style={{ color: '#1677ff' }} onClick={() => handleSend(record)}>
               {intl.formatMessage({ id: 'inviteFriends.inviteRecords.action.manualDistribute' })}
             </Button>
           )}
-          {(record.distributeStatus === 1 || 
-            record.inviteStatus === 0) && (
-            <span>-</span>
-          )}
+          {(record.distributeStatus === 1 || record.inviteStatus === 0) && <span>-</span>}
         </Space>
       ),
     },
   ];
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
   return (
     <PageContainer>
       <ProTable<InviteRecord>
@@ -164,4 +170,4 @@ const handleSend = async (record: InviteRecord) => {
   );
 };
 
-export default InviteRecords; 
+export default InviteRecords;

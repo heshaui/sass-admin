@@ -83,6 +83,7 @@ export default {
   'inviteFriends.inviteRecords.column.inviteStatus': 'Invitation Status',
   'inviteFriends.inviteRecords.column.distributeStatus': 'Distribution Status',
   'inviteFriends.inviteRecords.column.action': 'Action',
+  'inviteFriends.inviteRecords.column.rebateUserId': 'Invitee ID',
 
   // Invite Status
   'inviteFriends.inviteRecords.status.success': 'Success',
@@ -101,7 +102,7 @@ export default {
   'inviteFriends.rewardRecords.column.uid': 'UID',
   'inviteFriends.rewardRecords.column.account': 'Registered Account',
   'inviteFriends.rewardRecords.column.accountInfo': 'Account Information',
-  'inviteFriends.rewardRecords.column.rebateUserId': 'Inviter ID',
+  'inviteFriends.rewardRecords.column.parentUserId': 'Inviter ID',
   'inviteFriends.rewardRecords.column.orderId': 'Order ID',
   'inviteFriends.rewardRecords.column.fee': 'Fee',
   'inviteFriends.rewardRecords.column.rebateRatio': 'Commission Ratio',
