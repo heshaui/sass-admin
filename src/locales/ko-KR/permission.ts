@@ -59,10 +59,10 @@ export default {
   'permission.assetAdjustment': '자산 조정',
   'permission.transferTool': '전환 도구',
   'permission.transferRecords': '전환 기록',
-  'permission.presentTool': '선물 도구',
   'permission.riskControl': '자금 위험 관리',
   'permission.config': '위험 설정',
   'permission.suggestions': '처리 제안',
   'permission.alerts': '알림 기록',
   'permission.templates': '리스크 템플릿',
+  'permission.presentTool': '증정 화폐',
 };

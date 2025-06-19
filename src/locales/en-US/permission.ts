@@ -59,10 +59,10 @@ export default {
   'permission.assetAdjustment': 'Asset Adjustment',
   'permission.transferTool': 'Transfer Tool',
   'permission.transferRecords': 'Transfer Records',
-  'permission.presentTool': 'Present Tool',
   'permission.riskControl': 'Risk Control',
   'permission.config': 'Risk Configuration',
   'permission.suggestions': 'Processing Suggestions',
   'permission.alerts': 'Alert Records',
   'permission.templates': 'Risk Templates',
+  'permission.presentTool': 'Present Tool',
 };
