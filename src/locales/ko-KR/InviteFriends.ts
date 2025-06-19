@@ -83,6 +83,7 @@ export default {
   'inviteFriends.inviteRecords.column.inviteStatus': '초대 상태',
   'inviteFriends.inviteRecords.column.distributeStatus': '지급 상태',
   'inviteFriends.inviteRecords.column.action': '작업',
+  'inviteFriends.inviteRecords.column.rebateUserId': '초대받은 사람 ID',
 
   // Invite Status
   'inviteFriends.inviteRecords.status.success': '성공',

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, InputNumber, Modal, Radio, Select, Button } from 'antd';
+import { Form, InputNumber, Modal, Select, Button } from 'antd';
 import { tenantCurrencyCoinList } from '@/services/ant-design-pro/spot';
 import { useIntl } from '@umijs/max';
 type TradingPair = {
@@ -170,8 +170,11 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.baseCoinDecimal' })}
             required
             style={{ width: 'calc(50% - 10px)' }}
+            extra={intl.formatMessage({ id: 'tradingPair.form.decimalPlaces' })}
           >
-            <Input
+            <InputNumber
+              style={{ width: '100%' }}
+              min={1}
               placeholder={intl.formatMessage({
                 id: 'tradingPair.form.baseCoinDecimal.placeholder',
               })}
@@ -182,8 +185,11 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.quoteCurrencyDecimal' })}
             required
             style={{ width: 'calc(50% - 10px)' }}
+            extra={intl.formatMessage({ id: 'tradingPair.form.decimalPlaces' })}
           >
-            <Input
+            <InputNumber
+              style={{ width: '100%' }}
+              min={1}
               placeholder={intl.formatMessage({
                 id: 'tradingPair.form.quoteCurrencyDecimal.placeholder',
               })}
@@ -315,7 +321,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             ]}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber suffix="%" style={{ width: '100%' }} />
+            <InputNumber min={0} suffix="%" style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -330,7 +336,14 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             ]}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber  step="0.001" stringMode suffix="%" max={1} min={0} style={{ width: '100%' }} />
+            <InputNumber
+              step="0.001"
+              stringMode
+              suffix="%"
+              max={1}
+              min={0}
+              style={{ width: '100%' }}
+            />
           </Form.Item>
 
           <Form.Item
@@ -338,7 +351,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.openPrice' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={0} style={{ width: '100%' }} />
           </Form.Item>
         </div>
 
@@ -351,7 +364,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.maxOrderAmount' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={0} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -367,7 +380,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.maxOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={0} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -375,7 +388,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.minOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={0} style={{ width: '100%' }} />
           </Form.Item>
 
           {/* <Form.Item
@@ -401,7 +414,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.maxMarketOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={0} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -409,7 +422,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.maxLimitOrderQuantity' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={0} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -418,7 +431,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.priceDeviationPercentage' })}
             style={{ width: 'calc(50% - 10px)' }}
           >
-            <InputNumber style={{ width: '100%' }} suffix="%" />
+            <InputNumber min={0} style={{ width: '100%' }} suffix="%" />
           </Form.Item>
         </div>
 
@@ -431,7 +444,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision1' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -439,7 +452,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision2' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -447,7 +460,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision3' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -455,7 +468,7 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision4' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
 
           <Form.Item
@@ -463,11 +476,11 @@ const TradingPairForm: React.FC<TradingPairFormProps> = ({
             label={intl.formatMessage({ id: 'tradingPair.form.depthPrecision5' })}
             style={{ width: 'calc(20% - 16px)' }}
           >
-            <InputNumber style={{ width: '100%' }} />
+            <InputNumber min={1} style={{ width: '100%' }} />
           </Form.Item>
         </div>
         <div style={{ color: 'rgba(0,0,0,0.45)' }}>
-          { intl.formatMessage({ id: 'tradingPair.form.depthPrecision.tips' }) }
+          {intl.formatMessage({ id: 'tradingPair.form.depthPrecision.tips' })}
         </div>
       </Form>
     </Modal>

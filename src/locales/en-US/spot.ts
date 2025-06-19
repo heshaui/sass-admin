@@ -369,12 +369,17 @@ export default {
   'tradingPair.form.depthPrecision4': 'Depth Precision 4',
   'tradingPair.form.depthPrecision5': 'Depth Precision 5',
 
-  'tradingPair.form.priceDeviationPercentage.tips':"Order price > deviation rate (order price - market price / market price * 100%), the order fails",
+  'tradingPair.form.priceDeviationPercentage.tips':
+    'Order price > deviation rate (order price - market price / market price * 100%), the order fails',
   'tradingPair.column.takerFee.tips': 'Fee range 0-1%',
-  'tradingPair.form.depthPrecision.tips': 'The front-end displays the depth precision as 1-5. 1-9 represents the number of decimal places, i.e. 1 represents 0.1',
+  'tradingPair.form.depthPrecision.tips':
+    'The front-end displays the depth precision as 1-5. 1-9 represents the number of decimal places, i.e. 1 represents 0.1',
 
   'tradingPair.form.yes': 'Yes',
   'tradingPair.form.no': 'No',
+
+  'tradingPair.form.decimalPlaces':
+    'Please fill in the number of decimal places, such as: 3 represents 0.001',
 
   'tradingPair.category.mainstream': 'Mainstream',
   'tradingPair.category.innovation': 'Innovation',
@@ -412,9 +417,11 @@ export default {
   'tradingRiskControl.form.alarmInterval': 'Alarm Interval',
   'tradingRiskControl.form.minutes': 'minutes',
   'tradingRiskControl.form.percent': '%',
-  'tradingRiskControl.form.priceDeviationTip': 'Alarm when any transaction deviates from the previous transaction price by >{percent}%, no further alarms will be sent within {minutes} minutes after the alarm',
+  'tradingRiskControl.form.priceDeviationTip':
+    'Alarm when any transaction deviates from the previous transaction price by >{percent}%, no further alarms will be sent within {minutes} minutes after the alarm',
   'tradingRiskControl.form.priceFluctuation': 'Price Fluctuation in Last 30 Minutes',
-  'tradingRiskControl.form.priceFluctuationTip': 'Alarm when the trading pair price fluctuates by >{percent}% within the last half hour, no further alarms will be sent within {minutes} minutes after the alarm',
+  'tradingRiskControl.form.priceFluctuationTip':
+    'Alarm when the trading pair price fluctuates by >{percent}% within the last half hour, no further alarms will be sent within {minutes} minutes after the alarm',
   'tradingRiskControl.form.alarmNotification': 'Alarm Notification',
   'tradingRiskControl.form.alarmNotificationPlaceholder': 'Email accounts, separated by commas',
   'tradingRiskControl.form.enterValue': 'Please enter a value',

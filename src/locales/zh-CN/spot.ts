@@ -363,12 +363,15 @@ export default {
   'tradingPair.form.depthPrecision4': '深度精度4',
   'tradingPair.form.depthPrecision5': '深度精度5',
 
-  'tradingPair.form.priceDeviationPercentage.tips':'订单价格 > 偏差率(订单价格 - 市价 / 市价 * 100%)时订单失败',
+  'tradingPair.form.priceDeviationPercentage.tips':
+    '订单价格 > 偏差率(订单价格 - 市价 / 市价 * 100%)时订单失败',
   'tradingPair.form.takerFee.tips': '手续费范围0-1%',
   'tradingPair.form.depthPrecision.tips': '前端显示深度精度1~5，1~9代表小数位数，即1代表0.1',
 
   'tradingPair.form.yes': '是',
   'tradingPair.form.no': '否',
+
+  'tradingPair.form.decimalPlaces': '请填写小数位数,如: 3代表0.001',
 
   'tradingPair.category.mainstream': '主流区',
   'tradingPair.category.innovation': '创新区',
@@ -406,9 +409,11 @@ export default {
   'tradingRiskControl.form.alarmInterval': '报警间隔',
   'tradingRiskControl.form.minutes': '分钟',
   'tradingRiskControl.form.percent': '%',
-  'tradingRiskControl.form.priceDeviationTip': '任意一笔交易与前一笔交易价格偏离>{percent}%时报警，报警后{minutes}分钟内不在发送',
+  'tradingRiskControl.form.priceDeviationTip':
+    '任意一笔交易与前一笔交易价格偏离>{percent}%时报警，报警后{minutes}分钟内不在发送',
   'tradingRiskControl.form.priceFluctuation': '近30分钟内价格波动',
-  'tradingRiskControl.form.priceFluctuationTip': '币对近半小时内价格波动>{percent}%时报警，报警后{minutes}分钟内不在发送',
+  'tradingRiskControl.form.priceFluctuationTip':
+    '币对近半小时内价格波动>{percent}%时报警，报警后{minutes}分钟内不在发送',
   'tradingRiskControl.form.alarmNotification': '报警通知',
   'tradingRiskControl.form.alarmNotificationPlaceholder': '邮箱账号，以英文逗号隔开',
   'tradingRiskControl.form.enterValue': '请输入数值',
@@ -423,5 +428,5 @@ export default {
   'tradingRiskControl.action.edit': '修改',
   'tradingRiskControl.message.editSuccess': '修改成功',
   'tradingRiskControl.message.deleteSuccess': '删除成功',
-  'tradingRiskControl.message.deleteError': '删除失败'
+  'tradingRiskControl.message.deleteError': '删除失败',
 };

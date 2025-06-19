@@ -83,6 +83,7 @@ export default {
   'inviteFriends.inviteRecords.column.inviteStatus': '邀请状态',
   'inviteFriends.inviteRecords.column.distributeStatus': '发放状态',
   'inviteFriends.inviteRecords.column.action': '操作',
+  'inviteFriends.inviteRecords.column.rebateUserId': '被邀请人ID',
 
   // Invite Status
   'inviteFriends.inviteRecords.status.success': '成功',
